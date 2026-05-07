@@ -141,7 +141,7 @@ function getSocialIcon(platform: string): string {
               <slot name="logo" />
             ) : (
               <a href="/" class="flex items-center gap-2">
-                <Logo size="md" />
+                <Logo size="md" class="bg-brand-700" />
                 <span class="font-display text-base font-bold text-brand-700 dark:text-foreground">
                   {siteConfig.name}
                 </span>
@@ -208,7 +208,7 @@ function getSocialIcon(platform: string): string {
                 <slot name="logo" />
               ) : (
                 <a href="/" class="flex items-center gap-2">
-                  <Logo size="md" />
+                  <Logo size="md" class="bg-brand-700" />
                   <span class="font-display text-base font-bold text-brand-700 dark:text-foreground">
                     {siteConfig.name}
                   </span>
@@ -311,7 +311,7 @@ function getSocialIcon(platform: string): string {
             <slot name="logo" />
           ) : (
             <a href="/" class="flex items-center gap-2">
-              <Logo size="md" />
+              <Logo size="md" class="bg-brand-700" />
               <span class="font-display text-xl font-bold text-brand-700 dark:text-foreground">
                 {siteConfig.name}
               </span>
