@@ -17,7 +17,6 @@
       <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.05"/>
     </linearGradient>
 
-    <!-- Reusable card frame: 180x180 with brand top accent -->
     <symbol id="card" viewBox="0 0 180 180">
       <rect x="0.5" y="0.5" width="179" height="179" rx="14" ry="14" class="card-bg"/>
       <rect x="0.5" y="0.5" width="179" height="2"   rx="1"  ry="1"  class="card-accent"/>
@@ -25,42 +24,37 @@
   </defs>
 
   <!-- ============================================================== -->
-  <!-- Card 1: Performance — icon: zap                                 -->
+  <!-- Card 1: Performance                                              -->
   <!-- ============================================================== -->
   <g transform="translate(32,30)">
     <use href="#card" width="180" height="180"/>
-
-    <!-- Icon badge -->
     <rect x="68" y="22" width="44" height="44" rx="12" fill="url(#iconGrad)"/>
     <g transform="translate(78,32)" class="icon-stroke">
       <path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/>
     </g>
 
-    <!-- Count-up: 6 frames (0,20,40,60,80,100), step = 0.25s, total = 1.5s, stagger 0s -->
     <g class="num-glow">
-      <text class="num" x="90" y="120">0
-        <set attributeName="display" to="none" begin="0.25s"/>
+      <text class="num" x="90" y="120" opacity="1">
+        0<animate attributeName="opacity" to="0" dur="0.01s" begin="0.25s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">20
-        <set attributeName="display" to="inline" begin="0.25s"/>
-        <set attributeName="display" to="none"   begin="0.50s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        20<animate attributeName="opacity" to="1" dur="0.01s" begin="0.25s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.50s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">40
-        <set attributeName="display" to="inline" begin="0.50s"/>
-        <set attributeName="display" to="none"   begin="0.75s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        40<animate attributeName="opacity" to="1" dur="0.01s" begin="0.50s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.75s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">60
-        <set attributeName="display" to="inline" begin="0.75s"/>
-        <set attributeName="display" to="none"   begin="1.00s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        60<animate attributeName="opacity" to="1" dur="0.01s" begin="0.75s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.00s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">80
-        <set attributeName="display" to="inline" begin="1.00s"/>
-        <set attributeName="display" to="none"   begin="1.25s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        80<animate attributeName="opacity" to="1" dur="0.01s" begin="1.00s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.25s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">100
-        <set attributeName="display" to="inline" begin="1.25s"/>
-        <animateTransform attributeName="transform" type="scale"
-          values="1;1.15;1" dur="0.5s" begin="1.25s" additive="sum"/>
+      <text class="num" x="90" y="120" opacity="0">
+        100<animate attributeName="opacity" to="1" dur="0.01s" begin="1.25s" fill="freeze"/>
       </text>
     </g>
 
@@ -68,11 +62,10 @@
   </g>
 
   <!-- ============================================================== -->
-  <!-- Card 2: Accessibility — icon: users (stagger +0.08s)            -->
+  <!-- Card 2: Accessibility                                            -->
   <!-- ============================================================== -->
   <g transform="translate(244,30)">
     <use href="#card" width="180" height="180"/>
-
     <rect x="68" y="22" width="44" height="44" rx="12" fill="url(#iconGrad)"/>
     <g transform="translate(78,32)" class="icon-stroke">
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
@@ -82,29 +75,27 @@
     </g>
 
     <g class="num-glow">
-      <text class="num" x="90" y="120">0
-        <set attributeName="display" to="none" begin="0.33s"/>
+      <text class="num" x="90" y="120" opacity="1">
+        0<animate attributeName="opacity" to="0" dur="0.01s" begin="0.33s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">20
-        <set attributeName="display" to="inline" begin="0.33s"/>
-        <set attributeName="display" to="none"   begin="0.58s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        20<animate attributeName="opacity" to="1" dur="0.01s" begin="0.33s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.58s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">40
-        <set attributeName="display" to="inline" begin="0.58s"/>
-        <set attributeName="display" to="none"   begin="0.83s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        40<animate attributeName="opacity" to="1" dur="0.01s" begin="0.58s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.83s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">60
-        <set attributeName="display" to="inline" begin="0.83s"/>
-        <set attributeName="display" to="none"   begin="1.08s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        60<animate attributeName="opacity" to="1" dur="0.01s" begin="0.83s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.08s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">80
-        <set attributeName="display" to="inline" begin="1.08s"/>
-        <set attributeName="display" to="none"   begin="1.33s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        80<animate attributeName="opacity" to="1" dur="0.01s" begin="1.08s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.33s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">100
-        <set attributeName="display" to="inline" begin="1.33s"/>
-        <animateTransform attributeName="transform" type="scale"
-          values="1;1.15;1" dur="0.5s" begin="1.33s" additive="sum"/>
+      <text class="num" x="90" y="120" opacity="0">
+        100<animate attributeName="opacity" to="1" dur="0.01s" begin="1.33s" fill="freeze"/>
       </text>
     </g>
 
@@ -112,11 +103,10 @@
   </g>
 
   <!-- ============================================================== -->
-  <!-- Card 3: Best Practices — icon: shield-check (stagger +0.16s)    -->
+  <!-- Card 3: Best Practices                                           -->
   <!-- ============================================================== -->
   <g transform="translate(456,30)">
     <use href="#card" width="180" height="180"/>
-
     <rect x="68" y="22" width="44" height="44" rx="12" fill="url(#iconGrad)"/>
     <g transform="translate(78,32)" class="icon-stroke">
       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1Z"/>
@@ -124,29 +114,27 @@
     </g>
 
     <g class="num-glow">
-      <text class="num" x="90" y="120">0
-        <set attributeName="display" to="none" begin="0.41s"/>
+      <text class="num" x="90" y="120" opacity="1">
+        0<animate attributeName="opacity" to="0" dur="0.01s" begin="0.41s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">20
-        <set attributeName="display" to="inline" begin="0.41s"/>
-        <set attributeName="display" to="none"   begin="0.66s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        20<animate attributeName="opacity" to="1" dur="0.01s" begin="0.41s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.66s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">40
-        <set attributeName="display" to="inline" begin="0.66s"/>
-        <set attributeName="display" to="none"   begin="0.91s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        40<animate attributeName="opacity" to="1" dur="0.01s" begin="0.66s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.91s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">60
-        <set attributeName="display" to="inline" begin="0.91s"/>
-        <set attributeName="display" to="none"   begin="1.16s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        60<animate attributeName="opacity" to="1" dur="0.01s" begin="0.91s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.16s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">80
-        <set attributeName="display" to="inline" begin="1.16s"/>
-        <set attributeName="display" to="none"   begin="1.41s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        80<animate attributeName="opacity" to="1" dur="0.01s" begin="1.16s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.41s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">100
-        <set attributeName="display" to="inline" begin="1.41s"/>
-        <animateTransform attributeName="transform" type="scale"
-          values="1;1.15;1" dur="0.5s" begin="1.41s" additive="sum"/>
+      <text class="num" x="90" y="120" opacity="0">
+        100<animate attributeName="opacity" to="1" dur="0.01s" begin="1.41s" fill="freeze"/>
       </text>
     </g>
 
@@ -154,11 +142,10 @@
   </g>
 
   <!-- ============================================================== -->
-  <!-- Card 4: SEO — icon: search (stagger +0.24s)                     -->
+  <!-- Card 4: SEO                                                      -->
   <!-- ============================================================== -->
   <g transform="translate(668,30)">
     <use href="#card" width="180" height="180"/>
-
     <rect x="68" y="22" width="44" height="44" rx="12" fill="url(#iconGrad)"/>
     <g transform="translate(78,32)" class="icon-stroke">
       <circle cx="11" cy="11" r="7"/>
@@ -166,29 +153,27 @@
     </g>
 
     <g class="num-glow">
-      <text class="num" x="90" y="120">0
-        <set attributeName="display" to="none" begin="0.49s"/>
+      <text class="num" x="90" y="120" opacity="1">
+        0<animate attributeName="opacity" to="0" dur="0.01s" begin="0.49s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">20
-        <set attributeName="display" to="inline" begin="0.49s"/>
-        <set attributeName="display" to="none"   begin="0.74s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        20<animate attributeName="opacity" to="1" dur="0.01s" begin="0.49s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.74s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">40
-        <set attributeName="display" to="inline" begin="0.74s"/>
-        <set attributeName="display" to="none"   begin="0.99s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        40<animate attributeName="opacity" to="1" dur="0.01s" begin="0.74s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="0.99s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">60
-        <set attributeName="display" to="inline" begin="0.99s"/>
-        <set attributeName="display" to="none"   begin="1.24s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        60<animate attributeName="opacity" to="1" dur="0.01s" begin="0.99s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.24s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">80
-        <set attributeName="display" to="inline" begin="1.24s"/>
-        <set attributeName="display" to="none"   begin="1.49s"/>
+      <text class="num" x="90" y="120" opacity="0">
+        80<animate attributeName="opacity" to="1" dur="0.01s" begin="1.24s" fill="freeze"/>
+          <animate attributeName="opacity" to="0" dur="0.01s" begin="1.49s" fill="freeze"/>
       </text>
-      <text class="num" x="90" y="120" display="none">100
-        <set attributeName="display" to="inline" begin="1.49s"/>
-        <animateTransform attributeName="transform" type="scale"
-          values="1;1.15;1" dur="0.5s" begin="1.49s" additive="sum"/>
+      <text class="num" x="90" y="120" opacity="0">
+        100<animate attributeName="opacity" to="1" dur="0.01s" begin="1.49s" fill="freeze"/>
       </text>
     </g>
 
