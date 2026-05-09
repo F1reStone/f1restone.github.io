@@ -41,6 +41,16 @@ export interface SiteConfig {
     toc?: {
       /** Master switch — set to true to enable site-wide */
       enabled: boolean;
+      /**
+       * Where to render the TOC.
+       * - 'inline'  → card at the top of every post (default; preserves
+       *               full reading width on desktop)
+       * - 'sidebar' → sticky sidebar on `xl+` viewports (≥1280px),
+       *               hidden on smaller screens
+       * - 'auto'    → sidebar on `xl+`, inline card below `xl` so phone
+       *               and tablet readers still get the navigation
+       */
+      layout?: 'inline' | 'sidebar' | 'auto';
       /** Minimum headings before the TOC renders (avoid TOCs on short posts) */
       minHeadings?: number;
       /** Deepest heading level to include (2 = H2 only, 3 = H2+H3, etc.) */
@@ -128,6 +138,7 @@ const siteConfig: SiteConfig = {
   articleFeatures: {
     toc: {
       enabled: false,
+      layout: 'inline',
       minHeadings: 3,
       maxDepth: 3,
     },

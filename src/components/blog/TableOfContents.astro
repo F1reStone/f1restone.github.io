@@ -19,6 +19,8 @@ interface Props {
   minHeadings?: number;
   /** Title shown above the list */
   title?: string;
+  /** When true, the TOC card sticks to the top of its scrolling container */
+  sticky?: boolean;
 }
 
 const {
@@ -26,6 +28,7 @@ const {
   maxDepth = 3,
   minHeadings = 3,
   title = 'On this page',
+  sticky = false,
 } = Astro.props;
 
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= maxDepth);
@@ -34,7 +37,7 @@ const shouldRender = items.length >= minHeadings;
 
 {shouldRender && (
   <nav
-    class="toc not-prose"
+    class:list={['toc not-prose', sticky && 'toc-sticky']}
     aria-labelledby="toc-heading"
     data-toc
   >
@@ -65,6 +68,16 @@ const shouldRender = items.length >= minHeadings;
 )}
 
 <style>
+  /* Sticky positioning is opt-in (sidebar layout). The 6rem offset clears
+     the fixed header so the TOC scrolls into a comfortable reading band
+     and stays there as the article scrolls past. */
+  .toc-sticky {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+  }
+
   .toc-link[data-active='true'] {
     color: var(--color-foreground);
     border-left-color: var(--color-brand-500);

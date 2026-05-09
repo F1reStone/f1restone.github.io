@@ -60,6 +60,13 @@ const commentsConfig = siteConfig.articleFeatures?.comments;
 const showToc = !!tocConfig?.enabled && tocOverride !== false;
 const showComments = !!commentsConfig?.enabled && commentsOverride !== false;
 
+// TOC layout: 'inline' (top-of-article card), 'sidebar' (xl+ sticky aside,
+// hidden below xl), or 'auto' (sidebar on xl+, inline card below xl).
+// `sidebarActive` controls whether we render the wider grid wrapper.
+const tocLayout = tocConfig?.layout ?? 'inline';
+const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
+const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
+
 const ogImage = image?.src || siteConfig.ogImage;
 
 const breadcrumbs = [
@@ -120,12 +127,19 @@ const blogPostingSchema = createBlogPostSchema({
   />
 
   <article class="pt-8 pb-[var(--space-section-md)]">
-    <div class="mx-auto max-w-4xl px-6">
+    <div class:list={[
+      'mx-auto px-6',
+      sidebarActive ? 'max-w-7xl xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10' : 'max-w-4xl',
+    ]}>
+      <div class:list={[sidebarActive && 'min-w-0 max-w-4xl w-full mx-auto xl:mx-0']}>
       <!-- Breadcrumbs -->
       <Breadcrumbs items={breadcrumbs} class="mb-8" />
 
-      {showToc && (
-        <div class="mb-10 rounded-xl border border-border bg-background-secondary p-5">
+      {inlineActive && (
+        <div class:list={[
+          'mb-10 rounded-xl border border-border bg-background-secondary p-5',
+          tocLayout === 'auto' && 'xl:hidden',
+        ]}>
           <TableOfContents
             headings={headings}
             maxDepth={tocConfig?.maxDepth ?? 3}
@@ -168,6 +182,18 @@ const blogPostingSchema = createBlogPostSchema({
           <ShareButtons title={title} url={fullUrl} />
         </div>
       </footer>
+      </div>
+
+      {sidebarActive && (
+        <aside class="hidden xl:block" aria-label="Table of contents">
+          <TableOfContents
+            headings={headings}
+            maxDepth={tocConfig?.maxDepth ?? 3}
+            minHeadings={tocConfig?.minHeadings ?? 3}
+            sticky
+          />
+        </aside>
+      )}
     </div>
   </article>
 
