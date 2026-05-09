@@ -137,8 +137,8 @@ const siteConfig: SiteConfig = {
   blogImageOverlay: true,
   articleFeatures: {
     toc: {
-      enabled: false,
-      layout: 'inline',
+      enabled: true,
+      layout: 'auto',
       minHeadings: 3,
       maxDepth: 3,
     },
