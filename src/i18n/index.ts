@@ -81,3 +81,41 @@ export function localizedPath(path: string, locale: Locale = defaultLocale): str
   if (locale === defaultLocale) return normalized;
   return `/${locale}${normalized === '/' ? '' : normalized}`;
 }
+
+/**
+ * Strip a leading `/<locale>` segment from a path if present. Returns
+ * the path unchanged when the first segment is not a configured
+ * locale. Always returns a path starting with `/`.
+ *
+ * `/nl/about` → `/about`, `/en` → `/`, `/about` → `/about`.
+ */
+export function stripLocaleFromPath(path: string): string {
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const match = normalized.match(/^\/([^/]+)(\/.*)?$/);
+  if (!match) return normalized;
+  const [, first, rest] = match;
+  if (i18nConfig.locales.includes(first)) {
+    return rest && rest.length > 0 ? rest : '/';
+  }
+  return normalized;
+}
+
+/**
+ * Replace the locale segment of a path with a different locale.
+ * Used by the LanguageSwitcher to build "same page, other language"
+ * links. When the target is the default locale, no prefix is added.
+ */
+export function swapLocaleInPath(path: string, targetLocale: Locale): string {
+  const base = stripLocaleFromPath(path);
+  return localizedPath(base, targetLocale);
+}
+
+/**
+ * Detect the active locale from a path's first segment. Returns the
+ * default locale if no recognized locale prefix is present.
+ */
+export function getLocaleFromPath(path: string): Locale {
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const first = normalized.split('/').filter(Boolean)[0];
+  return first && i18nConfig.locales.includes(first) ? first : defaultLocale;
+}
