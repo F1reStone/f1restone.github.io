@@ -388,47 +388,54 @@ schemas.push(...extraSchemas);
 
           if (!els.length) return;
 
-          // A single IntersectionObserver handles both initial above-the-fold
-          // stagger and below-the-fold scroll-triggered reveal. The previous
-          // implementation called getBoundingClientRect() on every element to
-          // bucket above/below fold, which Lighthouse flagged as ~50ms of
-          // forced reflow on mobile. The IntersectionObserver computes
-          // visibility asynchronously without forcing a synchronous layout.
-          const eager = document.body.hasAttribute('data-eager-reveal');
-          let firstCallback = true;
-          let staggerIndex = 0;
+          // Above-the-fold = elements whose top is at least 25% inside the
+          // initial viewport. Anything just barely poking above the fold
+          // would otherwise animate while the user can't see it.
+          const fold = window.innerHeight * 0.75;
+          const aboveFold = [];
+          const belowFold = [];
+          els.forEach(function (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < fold && rect.bottom > 0) {
+              aboveFold.push(el);
+            } else {
+              belowFold.push(el);
+            }
+          });
 
+          aboveFold.forEach(function (el, i) {
+            setTimeout(function () {
+              el.classList.add('is-visible');
+            }, 250 + i * 80);
+          });
+
+          if (!belowFold.length) return;
+          // Negative bottom rootMargin: trigger only when the element is
+          // meaningfully on screen, so the user actually sees the animation
+          // play instead of finding it already finished.
+          const eager = document.body.hasAttribute('data-eager-reveal');
           const observer = new IntersectionObserver(function (entries) {
-            const isFirst = firstCallback;
-            firstCallback = false;
             entries.forEach(function (entry) {
-              if (isFirst) {
-                // Initial dispatch: any intersection with the viewport
-                // counts as above-the-fold and gets a staggered reveal.
-                if (entry.isIntersecting) {
-                  const i = staggerIndex++;
-                  setTimeout(function () {
-                    entry.target.classList.add('is-visible');
-                  }, 250 + i * 80);
-                  observer.unobserve(entry.target);
-                }
-              } else if (entry.intersectionRatio >= 0.15) {
-                // Subsequent dispatches: only fire when the element is
-                // meaningfully on screen, so the animation actually plays
-                // where the user can see it.
+              if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
                 observer.unobserve(entry.target);
               }
             });
-          }, { threshold: [0, 0.15], rootMargin: eager ? '0px 0px -5% 0px' : '0px 0px -10% 0px' });
+          }, { threshold: 0.15, rootMargin: eager ? '0px 0px -5% 0px' : '0px 0px -10% 0px' });
+          belowFold.forEach(function (el) { observer.observe(el); });
+        }
 
-          els.forEach(function (el) { observer.observe(el); });
+        // Defer to the next frame so getBoundingClientRect reads happen
+        // after the browser has computed initial layout, turning a forced
+        // sync reflow into a cheap cached read.
+        function deferredInitReveal() {
+          requestAnimationFrame(initReveal);
         }
 
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initReveal);
+          document.addEventListener('DOMContentLoaded', deferredInitReveal);
         } else {
-          initReveal();
+          deferredInitReveal();
         }
       })();
     </script>
