@@ -1186,15 +1186,10 @@ const buttonId = `${menuId}-button`;
     }
   }
 
-  /* The stagger animation leaves `transform: translateY(0)` on each row,
-     which creates a stacking context per row. Without lifting the row that
-     owns an open dropdown, the panel's z-50 is trapped inside that row's
-     context and gets covered by later siblings (e.g. the colour-theme
-     swatches below it). */
-  .mobile-menu-stagger:has(.ttg-panel:not(.hidden)) {
-    z-index: 60;
-  }
-
+  /* End at `transform: none` (not translateY(0)) so each row drops its
+     stacking context after the entry animation. Otherwise the
+     ThemeModeDropdown panel's z-50 is trapped inside its row and the
+     colour-theme swatches in the next row paint through it. */
   @keyframes mobileMenuItemIn {
     from {
       opacity: 0;
@@ -1202,7 +1197,7 @@ const buttonId = `${menuId}-button`;
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: none;
     }
   }
 </style>
