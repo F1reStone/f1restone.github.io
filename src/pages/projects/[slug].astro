@@ -34,6 +34,7 @@ const { Content } = await render(project);
   tags={project.data.tags}
   image={project.data.image}
   imageAlt={project.data.imageAlt}
+  slug={project.id.replace(/\.mdx?$/, '')}
   related={related}
 >
   <Content />

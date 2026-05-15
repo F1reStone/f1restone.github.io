@@ -9,6 +9,7 @@ import ProjectHero from '@/components/projects/ProjectHero.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
+import { getProjectOgPath } from '@/lib/og';
 
 interface Props {
   title: string;
@@ -22,6 +23,8 @@ interface Props {
   tags?: string[];
   image?: ImageMetadata;
   imageAlt?: string;
+  /** Project slug, used to resolve the per-project dynamic OG image. */
+  slug?: string;
   related?: CollectionEntry<'projects'>[];
 }
 
@@ -37,10 +40,13 @@ const {
   tags = [],
   image,
   imageAlt,
+  slug,
   related = [],
 } = Astro.props;
 
-const ogImage = image?.src || siteConfig.ogImage;
+// Prefer the project's own image; otherwise serve the per-project dynamic OG
+// image (see src/pages/og/projects/[slug].svg.ts).
+const ogImage = image?.src || (slug ? getProjectOgPath(slug) : siteConfig.ogImage);
 
 const breadcrumbs = [
   { label: 'Home', href: '/' },

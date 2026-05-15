@@ -14,6 +14,7 @@ import CTA from '@/components/ui/marketing/CTA/CTA.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import { resolveSocialLinks } from '@/lib/utils';
 import { createBlogPostSchema } from '@/lib/schema';
+import { getBlogOgPath } from '@/lib/og';
 
 const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
 
@@ -68,7 +69,10 @@ const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto
 const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
 const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 
-const ogImage = image?.src || siteConfig.ogImage;
+// Prefer the post's own image; otherwise serve the per-post dynamic OG image
+// generated at build time (see src/pages/og/blog/[slug].svg.ts). Falls back to
+// the site-wide default only when slug is missing.
+const ogImage = image?.src || (slug ? getBlogOgPath(slug.replace(/^en\//, '')) : siteConfig.ogImage);
 
 const breadcrumbs = [
   { label: 'Home', href: '/' },

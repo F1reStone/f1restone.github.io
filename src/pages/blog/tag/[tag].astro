@@ -1,0 +1,98 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import TagList from '@/components/blog/TagList.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import { Hero } from '@/components/hero';
+import {
+  collectTags,
+  getPostUrl,
+  getPublishedPosts,
+  tagToSlug,
+} from '@/lib/blog';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts('en');
+  const tags = collectTags(posts);
+
+  return tags.map((tag) => {
+    const postsForTag = posts.filter((p) => p.data.tags.includes(tag));
+    return {
+      params: { tag: tagToSlug(tag) },
+      props: { tag, posts: postsForTag, allTags: tags },
+    };
+  });
+}
+
+const { tag, posts, allTags } = Astro.props;
+---
+
+<PageLayout
+  title={`#${tag} — Blog`}
+  description={`Posts tagged "${tag}" on the Astro Rocket blog.`}
+  image={`/og/blog/tag/${tagToSlug(tag)}.svg`}
+  eagerReveal
+>
+  <Hero layout="centered" size="sm">
+    <Badge slot="badge" variant="brand" pill>
+      <Icon name="tag" size="sm" />
+      Tag
+    </Badge>
+
+    <h1 slot="title">#{tag}</h1>
+
+    <p slot="description">
+      {posts.length} post{posts.length === 1 ? '' : 's'} tagged "{tag}".
+    </p>
+  </Hero>
+
+  <section class="bg-background-secondary py-[var(--space-section-md)] border-t border-border">
+    <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
+      <div class="flex flex-wrap items-center justify-between gap-4" data-reveal>
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-2 text-sm font-medium text-foreground-muted hover:text-brand-500 transition-colors"
+        >
+          <Icon name="arrow-left" size="sm" />
+          All posts
+        </a>
+
+        {allTags.length > 1 && (
+          <TagList tags={allTags} active={tag} />
+        )}
+      </div>
+
+      {posts.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              href={getPostUrl(post.id)}
+              publishedAt={post.data.publishedAt}
+              tags={post.data.tags}
+              author={post.data.author}
+              image={post.data.image}
+              svgSlug={post.data.svgSlug}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="py-16 text-center">
+          <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+            <Icon name="file-text" size="lg" class="text-foreground-muted" />
+          </div>
+          <p class="text-foreground-muted text-lg">No posts found for this tag.</p>
+          <div class="mt-6">
+            <Button href="/blog" variant="outline" size="sm">
+              <Icon name="arrow-left" size="sm" />
+              Back to all posts
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</PageLayout>
