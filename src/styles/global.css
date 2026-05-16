@@ -1253,3 +1253,25 @@
 .dark .hero-btn-learn:hover {
   background-color: rgba(255, 255, 255, 0.9) !important;
 }
+
+[data-icon='arrow-right'],
+[data-icon='arrow-left'] {
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.group:hover [data-icon='arrow-right'] {
+  transform: translateX(0.25rem);
+}
+.group:hover [data-icon='arrow-left'] {
+  transform: translateX(-0.25rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-icon='arrow-right'],
+  [data-icon='arrow-left'] {
+    transition: none;
+  }
+  .group:hover [data-icon='arrow-right'],
+  .group:hover [data-icon='arrow-left'] {
+    transform: none;
+  }
+}
