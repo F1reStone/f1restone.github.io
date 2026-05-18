@@ -99,7 +99,7 @@ const breadcrumbs = [
     size="lg"
     showCta={false}
     showScrollProgress
-    maxWidth={sidebarActive ? '7xl' : '6xl'}
+    maxWidth="7xl"
   />
 
   <div class="min-h-screen pt-16">
@@ -121,11 +121,10 @@ const breadcrumbs = [
 
     <article class="pt-8 pb-[var(--space-section-md)]">
       <div class:list={[
-        'mx-auto px-6',
+        'mx-auto px-6 max-w-7xl',
         sidebarActive && (sidebarOnLeft
-          ? 'max-w-7xl xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
-          : 'max-w-7xl xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
-        !sidebarActive && 'max-w-4xl',
+          ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
+          : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
       ]}>
         {sidebarActive && sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label="Table of contents">
@@ -138,7 +137,7 @@ const breadcrumbs = [
           </aside>
         )}
 
-        <div class:list={[sidebarActive && 'min-w-0 max-w-4xl w-full mx-auto xl:mx-0']}>
+        <div class:list={['min-w-0 max-w-4xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
           <Breadcrumbs items={breadcrumbs} class="mb-8" />
 
           {inlineActive && (
@@ -183,7 +182,7 @@ const breadcrumbs = [
 
     {related.length > 0 && (
       <section class="py-[var(--space-section-md)] bg-background-secondary border-t border-border" data-reveal>
-        <div class="mx-auto max-w-6xl px-6">
+        <div class="mx-auto max-w-7xl px-6">
           <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8">More projects</h2>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((project) => (
@@ -247,7 +246,7 @@ const breadcrumbs = [
       </div>
 
       <!-- Desktop: LetterGlitch band with glass card -->
-      <LetterGlitchBand>
+      <LetterGlitchBand maxWidth="7xl">
         <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
           Have a project in mind?
         </h2>
@@ -272,6 +271,6 @@ const breadcrumbs = [
     slot="footer"
     layout="simple"
     background="secondary"
-    maxWidth={sidebarActive ? '7xl' : '6xl'}
+    maxWidth="7xl"
   />
 </BaseLayout>

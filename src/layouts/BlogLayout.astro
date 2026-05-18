@@ -116,7 +116,7 @@ const blogPostingSchema = createBlogPostSchema({
     size="lg"
     showCta={false}
     showScrollProgress
-    maxWidth={sidebarActive ? '7xl' : '6xl'}
+    maxWidth="7xl"
   />
 
   <div class="min-h-screen pt-16">
@@ -135,11 +135,10 @@ const blogPostingSchema = createBlogPostSchema({
 
   <article class="pt-8 pb-[var(--space-section-md)]">
     <div class:list={[
-      'mx-auto px-6',
+      'mx-auto px-6 max-w-7xl',
       sidebarActive && (sidebarOnLeft
-        ? 'max-w-7xl xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
-        : 'max-w-7xl xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
-      !sidebarActive && 'max-w-4xl',
+        ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
+        : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
     ]}>
       {sidebarActive && sidebarOnLeft && (
         <aside class="hidden xl:block" aria-label="Table of contents">
@@ -152,7 +151,7 @@ const blogPostingSchema = createBlogPostSchema({
         </aside>
       )}
 
-      <div class:list={[sidebarActive && 'min-w-0 max-w-4xl w-full mx-auto xl:mx-0']}>
+      <div class:list={['min-w-0 max-w-4xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
       <!-- Breadcrumbs -->
       <Breadcrumbs items={breadcrumbs} class="mb-8" />
 
@@ -224,7 +223,7 @@ const blogPostingSchema = createBlogPostSchema({
 
   <!-- Related Posts -->
   {tags.length > 0 && (
-    <div class="mx-auto max-w-screen-xl px-6" data-reveal>
+    <div class="mx-auto max-w-7xl px-6" data-reveal>
       <RelatedPosts currentSlug={slug} tags={tags} locale="en" maxPosts={3} />
     </div>
   )}
@@ -266,7 +265,7 @@ const blogPostingSchema = createBlogPostSchema({
 
   <!-- Desktop: contained LetterGlitch band with glass card -->
   <section class="hidden glitch:block relative z-10 py-[var(--space-section-md)] bg-background-secondary">
-    <LetterGlitchBand>
+    <LetterGlitchBand maxWidth="7xl">
       <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">Follow along</h2>
       <p class="text-lg text-foreground-muted mb-8 text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
 
@@ -301,5 +300,5 @@ const blogPostingSchema = createBlogPostSchema({
   </section>
   </div>
 
-  <Footer slot="footer" layout="simple" background="secondary" maxWidth={sidebarActive ? '7xl' : '6xl'} />
+  <Footer slot="footer" layout="simple" background="secondary" maxWidth="7xl" />
 </BaseLayout>

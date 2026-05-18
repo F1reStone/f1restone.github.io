@@ -1,8 +1,16 @@
 ---
 import LetterGlitch from '@/components/effects/LetterGlitch';
+
+interface Props {
+  maxWidth?: '6xl' | '7xl';
+}
+
+const { maxWidth = '6xl' } = Astro.props;
+
+const maxWidthClass = maxWidth === '7xl' ? 'max-w-7xl' : 'max-w-6xl';
 ---
 
-<div class="hidden glitch:block mx-auto max-w-6xl px-6">
+<div class:list={['hidden glitch:block mx-auto px-6', maxWidthClass]}>
   <div class="relative isolate">
     <div
       class="pointer-events-none absolute inset-0 -z-10 rounded-3xl blur-3xl dark:bg-brand-500/25"
