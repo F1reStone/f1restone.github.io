@@ -54,9 +54,7 @@ const projects = items.sort((a, b) => a.data.order - b.data.order);
                   <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
                     <Icon name="layers" size="sm" />
                   </div>
-                  {!project.data.placeholder && (
-                    <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
-                  )}
+                  <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
                 </div>
                 <div class="mb-2 flex items-baseline gap-2">
                   <h3 class="font-display text-lg font-bold text-foreground">{project.data.title}</h3>
