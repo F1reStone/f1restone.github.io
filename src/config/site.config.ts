@@ -120,29 +120,28 @@ export interface SiteConfig {
 }
 
 const siteConfig: SiteConfig = {
-  name: 'Astro Rocket',
+  name: '火石的博客 / FireStone\'s Blog | FireStone 火石',
   description:
-    'Astro Rocket — A production-ready Astro 6 starter with 12 beautiful themes, 57+ components, built-in i18n, dark mode and a fast, modern foundation to build anything on.',
-  url: SITE_URL || 'https://astrorocket.dev',
+    'FireStone\'s personal tech blog built with Astro. Sharing some cool stuffs by me',
   ogImage: '/og-default.svg',
-  author: 'Hans Martens',
-  email: 'hello@hansmartens.dev',
+  author: 'FireStone',
+  email: 'fsfirestone@outlook.com',
   address: {
     street: '',
-    city: 'Veghel',
+    city: '',
     state: '',
     zip: '',
-    country: 'the Netherlands',
+    country: 'People\'s Republic of China',
   },
   socialLinks: [
-    'https://github.com/hansmartensdev',
-    'https://x.com/hansmartens_dev',
+    'https://github.com/f1restone',
+    'https://x.com/FSFireStone',
     'https://www.linkedin.com',
     'https://bsky.app/profile/hansmartensdev.bsky.social',
   ],
   twitter: {
-    site: 'https://x.com/hansmartens_dev',
-    creator: '@hansmartens_dev',
+    site: 'https://x.com/FSFireStone',
+    creator: '@FSFireStone',
   },
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
