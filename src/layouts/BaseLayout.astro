@@ -160,7 +160,8 @@ const locale = getLocaleFromPath(Astro.url.pathname);
          When mode === 'system', <html>.dark tracks prefers-color-scheme live. -->
     <script is:inline>
       (function () {
-        const COLOR_THEMES = ['orange', 'amber', 'lime', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'magenta'];
+        //const COLOR_THEMES = ['orange', 'amber', 'lime', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'magenta'];
+        const COLOR_THEMES = ['firestone-cyan'];
         const VALID_MODES = ['system', 'light', 'dark'];
 
         function getMode() {
