@@ -197,7 +197,7 @@
     line-height: 1.1;
     letter-spacing: var(--theme-heading-tracking);
     text-transform: uppercase;
-    font-feature-settings: ;
+    font-feature-settings: 'dlig';
     color: var(--color-foreground);
     -webkit-text-fill-color: currentColor;
   }
