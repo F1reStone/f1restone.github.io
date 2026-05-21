@@ -1,21 +1,19 @@
 ---
 /**
- * Logo Component — Custom SVG Logo
+ * Logo Component — Custom Inline SVG
  */
 import { cn } from '@/lib/cn';
 import siteConfig from '@/config/site.config';
 
 interface Props {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  forceDark?: boolean;
-  variant?: 'logomark' | 'full';
   class?: string;
-  letter?: string; // FireStone: Only for API compatibility.
 }
 
-const { size = 'lg' } = Astro.props;
+// FireStone: Avoid destructuring to work around ESLint Astro plugin parsing bug
+const size = Astro.props.size ?? 'lg';
+const className = Astro.props.class;
 
-// FireStone: To full SVG, we only restrict height (h) and set width to auto (w-auto) to prevent distortion.
 const sizeClasses: Record<string, string> = {
   sm:    'h-6 w-auto',
   md:    'h-7 w-auto',
@@ -30,11 +28,8 @@ const dimensions = sizeClasses[size] ?? sizeClasses.lg;
 <svg
   class={cn(
     'block shrink-0 transition-colors duration-300',
-    // Default to brand color in light mode, white in dark mode. If forceDark is true, always use white.
-    // If outside of a dark parent, the logo will inherit the parent's text color (e.g. in the header), so we don't need to do anything special for that case.
-    forceDark ? 'text-white' : 'text-brand-600 dark:text-foreground',
     dimensions,
-    className
+    className // FireStone: Pass through additional classes for color control (e.g. text-foreground, text-brand-600, etc.)
   )}
   viewBox="0 0 75 70"
   fill="none"
