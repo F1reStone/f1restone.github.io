@@ -8,11 +8,13 @@ import siteConfig from '@/config/site.config';
 interface Props {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   class?: string;
+  letter?: string;
 }
 
 // FireStone: Avoid destructuring to work around ESLint Astro plugin parsing bug
 const size = Astro.props.size ?? 'lg';
 const className = Astro.props.class;
+
 
 const sizeClasses: Record<string, string> = {
   sm:    'h-6 w-auto',
