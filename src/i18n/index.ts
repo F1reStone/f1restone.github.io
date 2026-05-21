@@ -1,5 +1,5 @@
 import enUS from './en-US.json';
-import nlNL from './nl-NL.json';
+import zhCN from './zh-CN.json';
 import i18nConfig from '../config/i18n.config';
 
 export { i18nConfig };
@@ -11,7 +11,7 @@ export type Dictionary = typeof enUS;
 
 const dictionaries: Record<string, Dictionary> = {
   'en-US': enUS as Dictionary,
-  'nl-NL': nlNL as Dictionary,
+  'zh-CN': zhCN as Dictionary,
 };
 
 export const defaultLocale: Locale = i18nConfig.defaultLocale;
