@@ -10,9 +10,24 @@
 @import './tokens/spacing.css';
 
 /* Self-hosted fonts via Fontsource (CSP-safe, no external requests) */
-@import '@fontsource-variable/manrope';
-@import '@fontsource-variable/outfit';
-@import '@fontsource-variable/jetbrains-mono';
+/* 引入自定义本地字体 */
+@font-face {
+  font-family: 'Wix Madefor Text';
+  src: url('/fonts/wix-madefor-text-variable.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Regrade';
+  src: url('/fonts/neue-regrade-variable.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NKDuy Mono';
+  src: url('/fonts/nkduy-mono-variable.woff2') format('woff2');
+  font-display: swap;
+}
 
 /* Metric-adjusted fallback fonts.
    The variable fonts above arrive after first paint, so headings and body
@@ -21,7 +36,7 @@
    "Outfit Fallback" / "Manrope Fallback" with overrides that match each
    variable font's metrics, so the pre-load fallback box has the same size
    as the eventual webfont and the swap is invisible. */
-@font-face {
+/*@font-face {
   font-family: 'Outfit Fallback';
   src: local('Arial');
   ascent-override: 92.5%;
@@ -36,7 +51,7 @@
   descent-override: 26%;
   line-gap-override: 0%;
   size-adjust: 99.5%;
-}
+}*/
 
 /* Dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));

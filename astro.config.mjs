@@ -4,11 +4,11 @@ import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel';
-import netlify from '@astrojs/netlify';
+//import vercel from '@astrojs/vercel';
+//import netlify from '@astrojs/netlify';
 import i18nConfig from './src/config/i18n.config.ts';
 
-const isNetlify = process.env.DEPLOY_TARGET === 'netlify';
+//const isNetlify = process.env.DEPLOY_TARGET === 'netlify';
 
 /**
  * Native Astro i18n is only wired up when the user opts in *and* has
