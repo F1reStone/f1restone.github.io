@@ -27,11 +27,23 @@ const sizeClasses: Record<string, string> = {
 const dimensions = sizeClasses[size] ?? sizeClasses.lg;
 ---
 
-<img
-  src="/firestone-logo.svg"
-  alt={siteConfig.name}
+<svg
   class={cn(
-    'block object-contain shrink-0',
-    dimensions
+    'block shrink-0 transition-colors duration-300',
+    // Default to brand color in light mode, white in dark mode. If forceDark is true, always use white.
+    // If outside of a dark parent, the logo will inherit the parent's text color (e.g. in the header), so we don't need to do anything special for that case.
+    forceDark ? 'text-white' : 'text-brand-600 dark:text-foreground',
+    dimensions,
+    className
   )}
-/>
+  viewBox="0 0 75 70"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-label={siteConfig.name}
+  role="img"
+>
+  <path d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z" fill="currentColor"/>
+  <path d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z" fill="currentColor"/>
+  <path d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z" fill="currentColor"/>
+  <path d="M0 56.823L14.2634 69.9948L20.8454 70L48.7419 2.12105L47.2519 0H34.2695L0.00381908 32.0278L0 56.823Z" fill="currentColor"/>
+</svg>
