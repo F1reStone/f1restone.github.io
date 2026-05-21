@@ -3,8 +3,17 @@ name: Deploy
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+
+# FireStone: Core Change 1 - Must grant permissions for the automation script to publish Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# FireStone: Core Change 2 - Ensure that only one deployment job runs at a time to avoid conflicts.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -37,37 +46,22 @@ jobs:
       - name: Build
         run: pnpm run build
         env:
-          SITE_URL: ${{ secrets.SITE_URL }}
+          SITE_URL: https://f1restone.github.io # FireStone: Core Change 3: Directly pass your website URL to the build tool
 
-      # Uncomment and configure for your deployment platform
-      #
-      # Vercel deployment:
-      # - name: Deploy to Vercel
-      #   if: github.ref == 'refs/heads/main'
-      #   uses: amondnet/vercel-action@v25
-      #   with:
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     vercel-args: '--prod'
-      #
-      # Netlify deployment:
-      # - name: Deploy to Netlify
-      #   if: github.ref == 'refs/heads/main'
-      #   uses: nwtgck/actions-netlify@v2
-      #   with:
-      #     publish-dir: './dist'
-      #     production-branch: main
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #   env:
-      #     NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      #     NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      #
-      # Cloudflare Pages deployment:
-      # - name: Deploy to Cloudflare Pages
-      #   if: github.ref == 'refs/heads/main'
-      #   uses: cloudflare/wrangler-action@v3
-      #   with:
-      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      #     accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      #     command: pages deploy dist --project-name=astro-rocket
+      # FireStone: Core Change 4: Upload the generated dist directory as a GitHub artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # FireStone: Core Change 5 - Add a separate deployment job that takes the artifact from the build job and deploys it to GitHub Pages.
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
