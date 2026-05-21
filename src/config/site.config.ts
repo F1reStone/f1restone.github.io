@@ -123,6 +123,7 @@ const siteConfig: SiteConfig = {
   name: '火石的博客 / FireStone\'s Blog | FireStone 火石',
   description:
     'FireStone\'s personal tech blog built with Astro. Sharing some cool stuffs by me',
+  url: SITE_URL || 'https://f1restone.github.io',
   ogImage: '/og-default.svg',
   author: 'FireStone',
   email: 'fsfirestone@outlook.com',
