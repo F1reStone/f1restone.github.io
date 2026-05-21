@@ -29,6 +29,12 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Noto Sans CJK SC';
+  src: url('/fonts/noto-sans-cjk-sc-variable.woff2') format('woff2');
+  font-display: swap;
+}
+
 /* Metric-adjusted fallback fonts.
    The variable fonts above arrive after first paint, so headings and body
    text used to reflow when the swap landed (Lighthouse reported CLS on the
@@ -175,6 +181,7 @@
 
   html {
     font-family: var(--font-sans);
+    font-feature-settings: 'palt';
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -197,7 +204,7 @@
     line-height: 1.1;
     letter-spacing: var(--theme-heading-tracking);
     text-transform: uppercase;
-    font-feature-settings: 'dlig';
+    font-feature-settings: 'dlig', 'palt';
     color: var(--color-foreground);
     -webkit-text-fill-color: currentColor;
   }
