@@ -90,14 +90,15 @@ html[data-theme="firestone-cyan"] {
   /* -------------------------------------------------------------------------
      FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
      ------------------------------------------------------------------------- */
-  --theme-font-sans: 'Wix Madefor Text', 'Noto Sans CJK SC', ui-sans-serif, system-ui,
+  --theme-font-sans: 'Wix Madefor Text', 'Noto Sans CJK SC',
     -apple-system, BlinkMacSystemFont, 'HarmonyOS Sans SC', 'Segoe UI Variable Text', 'Segoe UI', 'Google Sans Flex', 'Noto Sans', 'Roboto', 'Helvetica Neue', 'Arial',
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', 'Noto Color Emoji';
+    'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Microsoft YaHei UI',
+    ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --theme-font-display: 'Neue Regrade', var(--theme-font-sans);
   --theme-font-mono: 'NKDuy Mono', 'Noto Sans CJK SC',
     'SFMono-Regular', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
-    'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI'
+    'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Microsoft YaHei UI',
     ui-monospace, monospace,
     'Apple Color Emoji', 'Segoe UI Emoji','Segoe UI Symbol', 'Noto Color Emoji';
   --theme-heading-weight: 700;
