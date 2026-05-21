@@ -1,54 +1,37 @@
 ---
 /**
- * Logo Component — first-letter monogram badge
- *
- * Renders a brand-coloured square badge with the first letter of the site
- * name, used in the navbar, footer, and blog post bylines.
+ * Logo Component — Custom SVG Logo
  */
 import { cn } from '@/lib/cn';
 import siteConfig from '@/config/site.config';
 
 interface Props {
-  /** Size preset */
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  /** Force dark mode logo (for dark backgrounds) — no-op here, kept for API compat */
   forceDark?: boolean;
-  /** Use full logo instead of logomark — no-op here, kept for API compat */
   variant?: 'logomark' | 'full';
-  /** Additional CSS classes */
   class?: string;
-  /** Override the displayed letter (e.g. for author avatars). Defaults to first letter of site name. */
-  letter?: string;
+  letter?: string; // FireStone: Only for API compatibility.
 }
 
-const {
-  size = 'md',
-  class: className,
-  letter: letterProp,
-} = Astro.props;
+const { size = 'lg' } = Astro.props;
 
-const sizeClasses: Record<string, { box: string; text: string; radius: string }> = {
-  sm:    { box: 'w-5 h-5',   text: 'text-[14px]', radius: 'rounded-[4px]' },
-  md:    { box: 'w-6 h-6',   text: 'text-[16px]', radius: 'rounded-[5px]' },
-  lg:    { box: 'w-8 h-8',   text: 'text-[22px]', radius: 'rounded-[6px]' },
-  xl:    { box: 'w-12 h-12', text: 'text-[34px]', radius: 'rounded-[8px]' },
-  '2xl': { box: 'w-24 h-24', text: 'text-[68px]', radius: 'rounded-[14px]' },
+// FireStone: To full SVG, we only restrict height (h) and set width to auto (w-auto) to prevent distortion.
+const sizeClasses: Record<string, string> = {
+  sm:    'h-6 w-auto',
+  md:    'h-7 w-auto',
+  lg:    'h-8 w-auto',
+  xl:    'h-12 w-auto',
+  '2xl': 'h-24 w-auto',
 };
 
-const { box, text, radius } = sizeClasses[size] ?? sizeClasses.md;
-const letter = letterProp ?? siteConfig.name.charAt(0).toUpperCase();
+const dimensions = sizeClasses[size] ?? sizeClasses.lg;
 ---
 
-<span
+<img
+  src="/firestone-logo.svg"
+  alt={siteConfig.name}
   class={cn(
-    'inline-flex items-center justify-center shrink-0',
-    'bg-brand-500 text-white',
-    'font-display font-bold leading-none select-none',
-    box, text, radius,
-    className
+    'block object-contain shrink-0',
+    dimensions
   )}
-  aria-label={siteConfig.branding.logo.alt}
-  role="img"
->
-  {letter}
-</span>
+/>
