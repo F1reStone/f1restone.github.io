@@ -27,32 +27,26 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 <LandingLayout
   title="首页"
-  description="FireStone火石的个人博客，基于 Astro 构建。在这里分享我的一些有趣作品和技术心得。"
+  description="兴趣使然的个人开发者 / 设计师 / 创作者「FireStone火石」的个人网站。在这里分享一些我的有趣作品和技术心得。"
   image="/og-default.svg"
   includePersonSchema={true}
   includeProfessionalServiceSchema={true}
 >
   <!-- Hero -->
   <Hero layout="centered" size="xl" class="hero-dark-gradient" showScrollIndicator>
-    <Badge slot="badge" variant="brand" pill pulse class="dark:text-brand-200">承接新项目中</Badge>
-
     <h1 slot="title" class="!text-[clamp(2rem,11.2vw,3rem)] sm:!text-5xl md:!text-6xl lg:!text-7xl">
-      <span class="text-brand-600 dark:text-foreground [-webkit-text-fill-color:currentColor] whitespace-nowrap">Astro Rocket —</span><br />
-      <span class="text-brand-600 dark:text-foreground [-webkit-text-fill-color:currentColor]">网页设计师</span><br class="md:hidden" /><span class="text-brand-600 dark:text-foreground [-webkit-text-fill-color:currentColor]"> &amp; 全栈开发</span>
+      <span class="text-brand-600 dark:text-foreground [-webkit-text-fill-color:currentColor] whitespace-nowrap">To the</span><br />
+      <span class="text-brand-600 dark:text-foreground [-webkit-text-fill-color:currentColor]">Infinite Future</span>
     </h1>
 
-    <p slot="description">
-      基于 Astro 6 的现代化起始模板。内置 12 款精美主题、57+ 个精选组件，原生支持深色模式。为您搭建高效、现代化的建站基础。
-    </p>
-
    <Fragment slot="actions">
-      <Button size="lg" href="https://github.com/hansmartensdev/Astro-Rocket">
-        在 GitHub 上获取
+      <Button size="lg" href="/about">
+        关于我
         <Icon name="arrow-right" size="sm" />
       </Button>
-      <Button size="lg" variant="outline" href="/blog/astro-rocket-getting-started">
+      <Button size="lg" variant="outline" href="/projects">
         <Icon name="rocket" size="sm" />
-        快速开始
+        探索我的项目
         <Icon name="arrow-right" size="sm" />
       </Button>
     </Fragment>
