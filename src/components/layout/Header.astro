@@ -198,7 +198,7 @@ const buttonId = `${menuId}-button`;
             <Logo
               size={size === 'sm' ? 'md' : 'lg'}
               class={cn(
-                isFloating ? 'hdr-logo-text' : (isInvert ? 'text-brand-600 dark:text-foreground lg:text-on-invert' : 'text-brand-600 dark:text-foreground')
+                isFloating ? 'floating-color' : (isInvert ? 'text-foreground lg:text-on-invert' : 'text-foreground')
               )}
             />
           </a>
@@ -830,11 +830,11 @@ const buttonId = `${menuId}-button`;
     transition: color 300ms;
   }
   [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-text {
-    color: var(--color-foreground);
+    color: var(--color-brand-600);
   }
 
   [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-logo-text {
-    color: var(--color-foreground);
+    color: var(--color-brand-600);
   }
   [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text {
     color: var(--color-foreground-muted);

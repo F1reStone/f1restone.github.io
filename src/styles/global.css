@@ -1305,3 +1305,14 @@
     transform: none;
   }
 }
+
+/* Custom black-and-white adaptive logo color logic */
+.floating-color {
+  color: var(--color-foreground); /* Default text color: dark in light mode, light in dark mode */
+  transition: color 300ms ease;
+}
+
+/* When the header is floating and not scrolled or returned */
+[data-header-shape="floating"]:not([data-scrolled]):not([data-header-returned]) .my-floating-logo {
+  color: var(--color-on-invert); 
+}
