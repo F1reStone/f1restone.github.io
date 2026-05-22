@@ -12,19 +12,19 @@ import { Hero } from '@/components/hero';
 const recoveryLinks = [
   {
     icon: 'layers',
-    title: '项目',
+    title: 'Projects',
     description: 'Selected work and case studies.',
     href: '/projects',
   },
   {
     icon: 'book',
-    title: '博客',
+    title: 'Blog',
     description: 'Notes on design, code, and the craft.',
     href: '/blog',
   },
   {
     icon: 'mail',
-    title: '联系',
+    title: 'Contact',
     description: 'Start a conversation about your project.',
     href: '/contact',
   },
@@ -32,32 +32,32 @@ const recoveryLinks = [
 ---
 
 <PageLayout
-  title="页面未找到"
-  description="此页面已移动、已删除或从未存在过。"
+  title="Page not found"
+  description="This page has moved, been removed, or never existed in the first place."
   noindex
   eagerReveal
 >
   <Hero layout="centered" size="sm">
     <Badge slot="badge" variant="brand" pill>
       <Icon name="compass" size="sm" />
-      404 - 页面未找到
+      404 - page not found
     </Badge>
 
     <h1 slot="title">
-      页面未<span class="text-brand-500">找到。</span>
+      Page not <span class="text-brand-500">found.</span>
     </h1>
 
     <p slot="description">
-      此页面已移动、已删除或从未存在过。
+      This page has moved, been removed, or never existed in the first place. Let's get you back on track.
     </p>
 
     <div slot="actions" class="flex flex-col sm:flex-row items-center justify-center gap-4">
       <Button href="/" size="lg">
         <Icon name="arrow-left" size="sm" />
-        回到首页
+        Back to home
       </Button>
       <Button href="/blog" variant="outline" size="lg">
-        浏览博客
+        Browse the blog
         <Icon name="arrow-right" size="sm" />
       </Button>
     </div>
@@ -68,7 +68,7 @@ const recoveryLinks = [
     <div class="mx-auto max-w-6xl px-6">
       <div class="mb-8 text-center" data-reveal>
         <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-          不妨了解一下这些
+          Try one of these instead
         </h2>
       </div>
 
