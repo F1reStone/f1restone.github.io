@@ -347,24 +347,78 @@
     );
   }
 
-  /* Hero gradient — dark mode */
-  .dark .hero-dark-gradient {
-    background: linear-gradient(to bottom, var(--color-brand-500) 0%, #000 100%);
-  }
-
+  /* =========================================================================
+     Dynamic Brand Fluid Gradient Hero (Cyan, Pink, Gold)
+     Uses GPU compositor-thread (transform) for silky-smooth 60/120fps rendering.
+     ========================================================================= */
   .hero-dark-gradient {
     position: relative;
     isolation: isolate;
-    background: linear-gradient(to bottom, var(--color-brand-500) 0%, #000 100%);
+    background-color: #030712 !important; /* 极具质感的深空黑色作为底色 */
+    overflow: hidden;
   }
-  html:not(.dark) .hero-dark-gradient {
-    --color-foreground:           oklch(91% 0.008 250);
-    --color-foreground-secondary: oklch(82% 0.012 250);
-    --color-foreground-muted:     oklch(68% 0.01 250);
-    --color-background:           var(--surface-invert);
-    --color-secondary:            var(--surface-invert-secondary);
-    --color-secondary-hover:      var(--surface-invert-tertiary);
-    --color-ring:                 oklch(91% 0.008 250);
+
+  .dark .hero-dark-gradient {
+    background: #030712 !important;
+  }
+
+  /* 动态渐变流体光斑基类 */
+  .hero-dark-gradient::before,
+  .hero-dark-gradient::after {
+    content: '';
+    position: absolute;
+    width: 650px;
+    height: 650px;
+    border-radius: 50%;
+    filter: blur(120px); /* 极高的模糊度，实现温润的极光晕染效果 */
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.24; /* 严格控制不透明度，确保前台白字和按钮具备完美的阅读对比度 */
+    will-change: transform;
+  }
+
+  /* 粒子 1: 极光蓝 + 黄金色 */
+  .hero-dark-gradient::before {
+    background: radial-gradient(circle, rgba(0, 195, 255, 0.9) 0%, rgba(248, 215, 98, 0.4) 50%, transparent 100%);
+    top: -15%;
+    left: -10%;
+    animation: float-fluid-left 28s infinite alternate ease-in-out;
+  }
+
+  /* 粒子 2: 魅惑粉 + 极光蓝 */
+  .hero-dark-gradient::after {
+    background: radial-gradient(circle, rgba(253, 87, 156, 0.9) 0%, rgba(0, 195, 255, 0.3) 60%, transparent 100%);
+    bottom: -20%;
+    right: -10%;
+    animation: float-fluid-right 22s infinite alternate ease-in-out;
+  }
+
+  /* ── 硬件加速的位移 + 缩放 + 旋转轨迹 ── */
+  @keyframes float-fluid-left {
+    0% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    33% {
+      transform: translate(180px, 90px) scale(1.15) rotate(120deg);
+    }
+    66% {
+      transform: translate(60px, 200px) scale(0.9) rotate(240deg);
+    }
+    100% {
+      transform: translate(0, 0) scale(1) rotate(360deg);
+    }
+  }
+
+  @keyframes float-fluid-right {
+    0% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    50% {
+      transform: translate(-200px, -140px) scale(1.25) rotate(-180deg);
+    }
+    100% {
+      transform: translate(0, 0) scale(1) rotate(-360deg);
+    }
   }
 
   /* H1 spans: first span uses remapped foreground (near-white), remaining
