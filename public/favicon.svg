@@ -1,15 +1,16 @@
-<svg width="75" height="70" viewBox="0 0 75 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-<!-- Write CSS media queries inside the SVG -->
+<svg viewBox="0 0 75 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 在 SVG 内部写入 CSS 媒体查询 -->
   <style>
-    /* Light Mode (Default): Dark logo */
+    /* 浅色模式（默认）：深色/黑色 Logo */
     .logo-path { fill: #222526; }
     
-    /* Dark Mode: when system/browser switches to dark mode, auto turn to light white */
+    /* 深色模式：系统/浏览器切换为暗黑时，自动变成亮白色 */
     @media (prefers-color-scheme: dark) {
       .logo-path { fill: #FFFFFF; }
     }
   </style>
   
+  <!-- 将原先的 fill="currentColor" 替换为 class="logo-path" -->
   <path class="logo-path" d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z"/>
   <path class="logo-path" d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z"/>
   <path class="logo-path" d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z"/>
