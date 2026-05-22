@@ -80,7 +80,7 @@ interface Props extends HTMLAttributes<'footer'> {
 }
 
 const {
-  layout = 'simple',
+  layout = 'columns',
   columns = 3,
   background = 'default',
   nav,
@@ -88,11 +88,11 @@ const {
   socialLinks = [],
   showSocial = true,
   showCopyright = true,
-  copyright = '© {year} {siteName}. Designed by <a href="https://hansmartens.dev" class="underline hover:text-foreground transition-colors" target="_blank" rel="noopener noreferrer">Hans Martens</a>.',
+  copyright = 'Copyright © {year} {siteName}. All Rights Reserved.',
   legalLinks,
   hideLogo = false,
   tagline,
-  maxWidth = '6xl',
+  maxWidth = '7xl',
   class: className,
   ...attrs
 } = Astro.props;
@@ -158,11 +158,8 @@ function getSocialIcon(platform: string): string {
             {hasLogoSlot ? (
               <slot name="logo" />
             ) : (
-              <a href="/" class="flex items-center gap-2">
-                <Logo size="md" class="bg-brand-600" />
-                <span class="font-display text-base font-bold text-brand-600 dark:text-foreground">
-                  {siteConfig.name}
-                </span>
+              <a href="/" class="flex items-center">
+                <Logo size="md" class="text-foreground" />
               </a>
             )}
             {(hasTaglineSlot || tagline) && (
@@ -225,11 +222,8 @@ function getSocialIcon(platform: string): string {
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center gap-2">
-                  <Logo size="md" class="bg-brand-600" />
-                  <span class="font-display text-base font-bold text-brand-600 dark:text-foreground">
-                    {siteConfig.name}
-                  </span>
+                <a href="/" class="flex items-center">
+                  <Logo size="md" class="text-foreground" />
                 </a>
               )}
               {(hasTaglineSlot || tagline) && (
@@ -328,11 +322,8 @@ function getSocialIcon(platform: string): string {
           hasLogoSlot ? (
             <slot name="logo" />
           ) : (
-            <a href="/" class="flex items-center gap-2">
-              <Logo size="md" class="bg-brand-600" />
-              <span class="font-display text-xl font-bold text-brand-600 dark:text-foreground">
-                {siteConfig.name}
-              </span>
+            <a href="/" class="flex items-center">
+              <Logo size="md" class="text-foreground" />
             </a>
           )
         )}
