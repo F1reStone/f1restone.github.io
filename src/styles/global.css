@@ -1307,12 +1307,12 @@
 }
 
 /* Custom black-and-white adaptive logo color logic */
-.floating-color {
+.bar-intop-color {
   color: var(--color-foreground); /* Default text color: dark in light mode, light in dark mode */
   transition: color 300ms ease;
 }
 
-/* When the header is floating and not scrolled or returned */
-[data-header-shape="floating"]:not([data-scrolled]):not([data-header-returned]) .my-floating-logo {
+/* When the header is bar and not scrolled or returned */
+[data-header-shape="bar"][data-header-color-scheme="invert"]:not([data-scrolled]) .bar-logo {
   color: var(--color-on-invert); 
 }
