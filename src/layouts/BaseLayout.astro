@@ -101,6 +101,56 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->
     <Analytics />
 
+    <!-- Dynamic favicon: syncs perfectly with system dark/light mode -->
+    <script is:inline>
+      (function () {
+        function updateFavicon() {
+          // 1. 获取当前操作系统的深浅模式 (不依赖网页本身的暗黑模式设置)
+          const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          
+          // 2. 根据系统模式设定颜色：深色模式用白色，浅色模式用近黑色
+          const fillColor = isSystemDark ? '#FFFFFF' : '#222526';
+
+          // 3. 把 SVG Logo 拼成字符串，并注入动态颜色
+          const svg = 
+            '<svg viewBox="0 0 75 70" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<path d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z" fill="' + fillColor + '"/>' +
+            '<path d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z" fill="' + fillColor + '"/>' +
+            '<path d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z" fill="' + fillColor + '"/>' +
+            '<path d="M0 56.823L14.2634 69.9948L20.8454 70L48.7419 2.12105L47.2519 0H34.2695L0.00381908 32.0278L0 56.823Z" fill="' + fillColor + '"/>' +
+            '</svg>';
+
+          // 4. 找到页面的 icon 标签并替换为 Data URI
+          const link = document.querySelector('link[rel="icon"]');
+          if (link) {
+            link.setAttribute('href', 'data:image/svg+xml,' + encodeURIComponent(svg));
+          }
+        }
+
+        // 页面刚加载时执行一次
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', updateFavicon);
+        } else {
+          updateFavicon();
+        }
+
+        // 设置监听器，当用户在操作系统里切换深浅模式时，立刻更新图标
+        if (!window.__faviconSystemListenerInit && window.matchMedia) {
+          window.__faviconSystemListenerInit = true;
+          const mql = window.matchMedia('(prefers-color-scheme: dark)');
+          
+          if (mql.addEventListener) {
+            mql.addEventListener('change', updateFavicon);
+          } else if (mql.addListener) { // 兼容旧版 Safari
+            mql.addListener(updateFavicon);
+          }
+
+          // 兼容 Astro 视图切换
+          document.addEventListener('astro:after-swap', updateFavicon);
+        }
+      })();
+    </script>
+
     <!-- Client-side view transitions are intentionally disabled. They composed
          poorly with the theme's CSS keyframe animations (hero slide-up,
          data-reveal fades) and produced a visible post-fade "aftershake" on
