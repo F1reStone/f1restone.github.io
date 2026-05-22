@@ -8,7 +8,7 @@ import CursorTrail from '@/components/effects/CursorTrail.astro';
 import { createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
 import type { Thing, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
-import { getLocaleFromPath } from '@/i18n';
+import { getLocaleFromPath, getLocales, defaultLocale } from '@/i18n';
 
 interface Props {
   title?: string;
@@ -58,6 +58,7 @@ if (includeProfessionalServiceSchema) {
 }
 schemas.push(...extraSchemas);
 
+const locales = getLocales();
 const locale = getLocaleFromPath(Astro.url.pathname);
 ---
 
@@ -147,6 +148,68 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 
           // 兼容 Astro 视图切换
           document.addEventListener('astro:after-swap', updateFavicon);
+        }
+      })();
+    </script>
+
+    <!-- Auto-redirect based on browser locale -->
+    <script is:inline define:vars={{ defaultLocale, locales }}>
+      (function() {
+        try {
+          // 1. 如果用户已经手动选过语言，尊重用户选择，不再自动跳转
+          if (localStorage.getItem('preferred_locale')) return;
+
+          // 2. 获取访客浏览器语言 (例如 "zh-CN", "en-GB")
+          var browserLang = navigator.language || navigator.userLanguage || '';
+          var baseBrowserLang = browserLang.split('-')[0].toLowerCase();
+
+          // 3. 智能匹配目标语言
+          // A. 精确匹配 (比如 zh-CN 完美匹配 zh-CN)
+          var targetLang = locales.find(function(l) { 
+            return l.toLowerCase() === browserLang.toLowerCase(); 
+          });
+
+          // B. 模糊前缀匹配 (比如 en-GB 也能匹配到 en-US)
+          if (!targetLang) {
+            targetLang = locales.find(function(l) { 
+              return l.toLowerCase().startsWith(baseBrowserLang); 
+            });
+          }
+
+          // C. 匹配不到（如法语 fr），则回退到 defaultLocale
+          targetLang = targetLang || defaultLocale;
+
+          // 4. 获取当前网页正使用的语言
+          var htmlLang = document.documentElement.lang;
+
+          // 5. 如果当前语言不是目标语言，执行平滑重定向
+          if (htmlLang && htmlLang.toLowerCase() !== targetLang.toLowerCase()) {
+            var currentPath = window.location.pathname;
+            var newPath = currentPath;
+
+            if (targetLang === defaultLocale) {
+              // 场景 A: 跳转到默认语言，需剥离前缀 (如 /en-US/about -> /about)
+              var nonDefaultLocales = locales.filter(function(l) { return l !== defaultLocale; });
+              var prefixRegex = new RegExp('^/(' + nonDefaultLocales.join('|') + ')(/|$)');
+              newPath = currentPath.replace(prefixRegex, '/');
+            } else {
+              // 场景 B: 跳转到其他语言，需加上前缀 (如 /about -> /en-US/about)
+              // 先确保去掉可能存在的旧语言前缀
+              var allLocalesRegex = new RegExp('^/(' + locales.join('|') + ')(/|$)');
+              var pathWithoutLocale = currentPath.replace(allLocalesRegex, '/');
+              
+              if (pathWithoutLocale === '/') {
+                newPath = '/' + targetLang + '/';
+              } else {
+                newPath = '/' + targetLang + pathWithoutLocale;
+              }
+            }
+
+            // 执行替换跳转 (携带参数和锚点)
+            window.location.replace(newPath + window.location.search + window.location.hash);
+          }
+        } catch (e) {
+          // 忽略隐私模式下的异常
         }
       })();
     </script>

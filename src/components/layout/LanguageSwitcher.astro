@@ -202,6 +202,15 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     const wrappers = document.querySelectorAll<HTMLElement>('.lang-wrapper');
     if (!wrappers.length) return;
 
+      document.querySelectorAll('.lang-row').forEach((row) => {
+      row.addEventListener('click', function () {
+        const locale = this.getAttribute('data-locale');
+        if (locale) {
+          localStorage.setItem('preferred_locale', locale);// FireStone: Save preferred locale (e.g., 'en', 'zh')
+        }
+      });
+    });
+
     wrappers.forEach((wrapper) => {
       if (wrapper.dataset.langInit) return;
       wrapper.dataset.langInit = 'true';
