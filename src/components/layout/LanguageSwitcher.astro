@@ -203,10 +203,10 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     if (!wrappers.length) return;
 
       document.querySelectorAll('.lang-row').forEach((row) => {
-      row.addEventListener('click', function () {
-        const locale = this.getAttribute('data-locale');
+      row.addEventListener('click', () => {
+        const locale = row.getAttribute('data-locale');
         if (locale) {
-          localStorage.setItem('preferred_locale', locale);// FireStone: Save preferred locale (e.g., 'en', 'zh')
+          localStorage.setItem('preferred_locale', locale);
         }
       });
     });
