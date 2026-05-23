@@ -367,6 +367,16 @@
     isolation: isolate;
     background-color: #080C13 !important; /* 同步参考网站的极客深空蓝底色 */
     overflow: hidden;
+
+    /* FireStone: 增加首屏高度至满屏，并使用 Grid 完美垂直居中内层容器 */
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+  }
+
+  /* FireStone: 强制要求 Hero 内部的排版容器保持 100% 宽度，防止 Grid 布局导致内部塌陷缩放 */
+  .hero-dark-gradient > div {
+    width: 100%;
   }
 
   .dark .hero-dark-gradient {
