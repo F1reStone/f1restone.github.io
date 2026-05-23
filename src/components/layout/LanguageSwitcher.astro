@@ -67,7 +67,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
           <path stroke-linecap="round" d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
         </svg>
         {!compact && (
-          <span class="text-xs font-semibold uppercase tracking-wide">{currentLocale}</span>
+          <span class="text-xs font-semibold uppercase tracking-wide">{getLocaleName(currentLocale)}</span>
         )}
         <svg
           class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200"
