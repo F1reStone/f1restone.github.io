@@ -33,14 +33,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   includeProfessionalServiceSchema={true}
 >
 <!-- Hero -->
-  <Hero layout="centered" size="xl" class="hero-dark-gradient" showScrollIndicator>
-    <!-- 我们包裹一层 div 让内容在 centered 布局中依然能靠左对其内部文本 -->
-    <div slot="title" class="w-full flex justify-center lg:justify-start">
-      <h1 class="hero-title-wrapper !text-[clamp(3.5rem,10vw,5.5rem)] sm:!text-7xl md:!text-8xl lg:!text-[8rem] tracking-tight z-10 relative">
-        <span class="hero-title-text whitespace-nowrap">To the Infinite</span><br />
-        <span class="hero-title-text hero-title-serif mt-2">Future</span>
-      </h1>
-    </div>
+  <!-- 移除 layout="centered" 替换为 layout="split"，衔接整站左对齐基准线 -->
+  <Hero layout="split" size="xl" class="hero-dark-gradient" showScrollIndicator>
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(3.5rem,10vw,5.5rem)] sm:!text-7xl md:!text-8xl lg:!text-[8rem] tracking-tight z-10 relative">
+      <span class="hero-title-text whitespace-nowrap">To the Infinite</span><br />
+      <span class="hero-title-text">Future</span>
+    </h1>
 
    <Fragment slot="actions">
       <Button size="lg" href="/about">

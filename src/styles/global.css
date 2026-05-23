@@ -349,6 +349,7 @@
 
 /* =========================================================================
      Dynamic Brand Conic Aura Hero (Cyan, Pink, Purple)
+     优化：加入径向透明遮罩(mask-image)消除边界感，色彩闭环平滑过渡，减缓转速
      ========================================================================= */
   .hero-dark-gradient {
     position: relative;
@@ -358,54 +359,59 @@
   }
   .dark .hero-dark-gradient { background-color: #080C13 !important; }
 
-  /* 主光环：大幅降低模糊度，提高不透明度，让色彩产生极强冲击力 */
+  /* 主光环：完美闭环的圆锥渐变 + 边缘羽化遮罩 */
   .hero-dark-gradient::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 140vw;
-    height: 140vw;
-    max-width: 1300px;
-    max-height: 1300px;
+    width: 150vw;
+    height: 150vw;
+    max-width: 1400px;
+    max-height: 1400px;
     background: conic-gradient(
       from 0deg at 50% 50%,
-      #080C13 0%,
-      #00C3FF 25%,
-      #7832FF 50%,
-      #FD579C 75%,
-      #080C13 100%
+      rgba(0, 195, 255, 0.8) 0%,   /* Cyan */
+      rgba(120, 50, 255, 0.8) 33%, /* Purple */
+      rgba(253, 87, 156, 0.8) 66%, /* Pink */
+      rgba(0, 195, 255, 0.8) 100%  /* 首尾闭环回到 Cyan，消灭硬边断层 */
     );
-    filter: blur(60px); /* 模糊度降低，光束感更锐利 */
-    opacity: 0.9; /* 极高的不透明度，匹配原站点的奔放质感 */
+    filter: blur(80px);
+    opacity: 0.75;
     z-index: -1;
     pointer-events: none;
-    animation: spin-aura 15s linear infinite; /* 加快流转速度 */
+    animation: spin-aura 35s linear infinite; /* 减速：变得更加从容深邃 */
+    
+    /* 核心魔法：使用径向蒙版让光晕在边缘自然消散进背景，彻底消除矩形边界感 */
+    mask-image: radial-gradient(circle at center, black 30%, transparent 65%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 65%);
   }
 
-  /* 副光斑：增加交错感 */
+  /* 副光斑：增加光影交织的空间厚度 */
   .hero-dark-gradient::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100vw;
-    height: 100vw;
-    max-width: 900px;
-    max-height: 900px;
+    width: 120vw;
+    height: 120vw;
+    max-width: 1100px;
+    max-height: 1100px;
     background: conic-gradient(
       from 180deg at 50% 50%,
       transparent 0%,
-      #7832FF 30%,
+      rgba(120, 50, 255, 0.6) 25%,
       transparent 50%,
-      #00C3FF 80%,
+      rgba(0, 195, 255, 0.6) 75%,
       transparent 100%
     );
-    filter: blur(80px);
+    filter: blur(90px);
     opacity: 0.6;
     z-index: -1;
     pointer-events: none;
-    animation: spin-aura-reverse 10s linear infinite;
+    animation: spin-aura-reverse 45s linear infinite; /* 副光斑转速更慢 */
+    mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
+    -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
   }
 
   @keyframes spin-aura {
@@ -418,11 +424,10 @@
     100% { transform: translate(-50%, -50%) rotate(0deg); }
   }
 
-  /* 标题容器：强制左对齐，并实现 Figma 中的 75% 行高 */
+  /* 标题容器：保持原有属性 */
   .hero-title-wrapper {
-    text-align: left;
-    line-height: 0.75 !important;
-    cursor: default; /* 提示可交互 */
+    line-height: 0.8 !important; /* 75%-80% 视觉压缩 */
+    cursor: default;
   }
 
   /* 晶态金属文字基础样式 & 可变字体动画 */
@@ -433,15 +438,17 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     
-    font-weight: 600; /* 默认起始字重 */
-    display: inline-block; /* 防止斜体被边缘裁切并允许 transform 优化 */
-    padding-right: 0.1em; 
+    font-weight: 600; 
+    display: inline-block;
     
-    /* 采用原站的经典贝塞尔曲线，过渡时长 0.5s */
-    transition: font-weight 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
+    /* 核心修复：用 padding 撑大渲染区域防止裁切，用负 margin 把位置拉回来 */
+    padding: 0.1em 0.15em; 
+    margin: -0.1em -0.15em;
+
+    transition: font-weight 0.75s cubic-bezier(0.32, 0.99, 0.62, 1);
   }
 
-  /* 交互特效：PC鼠标悬停 & 移动端触摸激活时，字重膨胀至 900 */
+  /* 交互特效：悬停增粗 */
   .hero-title-wrapper:hover .hero-title-text,
   .hero-title-wrapper:active .hero-title-text {
     font-weight: 900;
@@ -449,7 +456,7 @@
 
   /* 专属 Serif Italic 混搭类 */
   .hero-title-serif {
-    font-family: 'Playfair Display', serif; /* 请确保你后续在顶部 @font-face 引入了它 */
+    font-family: 'Playfair Display', serif; 
     font-style: italic;
   }
 
