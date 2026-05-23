@@ -348,70 +348,71 @@
   }
 
 /* =========================================================================
-     Dynamic Brand Conic Aura Hero (Cyan, Pink, Purple)
-     优化：加入径向透明遮罩(mask-image)消除边界感，色彩闭环平滑过渡，减缓转速
+     Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
+     参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
      ========================================================================= */
   .hero-dark-gradient {
     position: relative;
     isolation: isolate;
-    background-color: #080C13 !important;
+    background-color: #080C13 !important; /* 同步参考网站的极客深空蓝底色 */
     overflow: hidden;
   }
-  .dark .hero-dark-gradient { background-color: #080C13 !important; }
 
-  /* 主光环：完美闭环的圆锥渐变 + 边缘羽化遮罩 */
+  .dark .hero-dark-gradient {
+    background-color: #080C13 !important;
+  }
+
+  /* 底层主光环：多色圆锥渐变环绕 */
   .hero-dark-gradient::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 150vw;
-    height: 150vw;
+    width: 140vw;
+    height: 140vw;
     max-width: 1400px;
     max-height: 1400px;
+    /* 严格使用品牌色调色盘：#00C3FF(青), #FD579C(粉), #F8D762(金) */
     background: conic-gradient(
       from 0deg at 50% 50%,
-      rgba(0, 195, 255, 0.8) 0%,   /* Cyan */
-      rgba(120, 50, 255, 0.8) 33%, /* Purple */
-      rgba(253, 87, 156, 0.8) 66%, /* Pink */
-      rgba(0, 195, 255, 0.8) 100%  /* 首尾闭环回到 Cyan，消灭硬边断层 */
+      #080C13 0%,
+      #00C3FF 20%,
+      #080C13 35%,
+      #FD579C 55%,
+      #080C13 70%,
+      #7D3CFA 85%,
+      #080C13 100%
     );
-    filter: blur(80px);
-    opacity: 0.75;
+    filter: blur(100px); /* 极高斯模糊，化线为影，形成类似极光的高级流体感 */
+    opacity: 0.55; /* 控制通透感，不喧宾夺主 */
     z-index: -1;
     pointer-events: none;
-    animation: spin-aura 35s linear infinite; /* 减速：变得更加从容深邃 */
-    
-    /* 核心魔法：使用径向蒙版让光晕在边缘自然消散进背景，彻底消除矩形边界感 */
-    mask-image: radial-gradient(circle at center, black 30%, transparent 65%);
-    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 65%);
+    animation: spin-aura 24s linear infinite;
   }
 
-  /* 副光斑：增加光影交织的空间厚度 */
+  /* 顶层辅助光环：反向旋转的副光斑，产生交织融合的光学错觉 */
   .hero-dark-gradient::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 120vw;
-    height: 120vw;
-    max-width: 1100px;
-    max-height: 1100px;
+    width: 100vw;
+    height: 100vw;
+    max-width: 1000px;
+    max-height: 1000px;
     background: conic-gradient(
       from 180deg at 50% 50%,
       transparent 0%,
-      rgba(120, 50, 255, 0.6) 25%,
+      #7D3CFA 30%,
       transparent 50%,
-      rgba(0, 195, 255, 0.6) 75%,
+      #00C3FF 80%,
       transparent 100%
     );
-    filter: blur(90px);
-    opacity: 0.6;
+    filter: blur(120px);
+    opacity: 0.4;
     z-index: -1;
     pointer-events: none;
-    animation: spin-aura-reverse 45s linear infinite; /* 副光斑转速更慢 */
-    mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
-    -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 60%);
+    animation: spin-aura-reverse 18s linear infinite;
   }
 
   @keyframes spin-aura {
@@ -426,7 +427,7 @@
 
   /* 标题容器：保持原有属性 */
   .hero-title-wrapper {
-    line-height: 0.8 !important; /* 75%-80% 视觉压缩 */
+    line-height: 0.75 !important;
     cursor: default;
   }
 
@@ -438,14 +439,11 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     
-    font-weight: 600; 
+    font-weight: 700;
+    font-style: italic;
     display: inline-block;
-    
-    /* 核心修复：用 padding 撑大渲染区域防止裁切，用负 margin 把位置拉回来 */
-    padding: 0.1em 0.15em; 
-    margin: -0.1em -0.15em;
 
-    transition: font-weight 0.75s cubic-bezier(0.32, 0.99, 0.62, 1);
+    transition: font-weight 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
   }
 
   /* 交互特效：悬停增粗 */
