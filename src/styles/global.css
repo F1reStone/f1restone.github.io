@@ -439,7 +439,7 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     
-    font-weight: 600;
+    font-weight: 700;
     font-style: italic;
     display: inline-block;
 
@@ -447,7 +447,7 @@
     padding: 0.1em 0.15em; 
     margin: -0.1em -0.15em;
 
-    transition: font-weight 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
+    transition: font-weight 0.5s cubic-bezier(0.22, 1.6, 0.36, 1);
   }
 
   /* 交互特效：悬停增粗 */

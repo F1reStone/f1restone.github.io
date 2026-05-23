@@ -33,9 +33,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   includeProfessionalServiceSchema={true}
 >
 <!-- Hero -->
-  <!-- 移除 layout="centered" 替换为 layout="split"，衔接整站左对齐基准线 -->
-  <Hero layout="split" size="xl" class="hero-dark-gradient" showScrollIndicator>
-    <h1 slot="title" class="hero-title-wrapper !text-[clamp(3.5rem,10vw,5.5rem)] sm:!text-7xl md:!text-8xl lg:!text-[8rem] tracking-tight z-10 relative">
+  <Hero size="xl" class="hero-dark-gradient" showScrollIndicator>
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2rem,11.2vw,3rem)] sm:!text-5xl md:!text-6xl lg:!text-7xl tracking-tight z-10 relative">
       <span class="hero-title-text whitespace-nowrap">To the Infinite</span><br />
       <span class="hero-title-text">Future</span>
     </h1>
