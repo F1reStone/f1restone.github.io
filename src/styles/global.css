@@ -439,9 +439,13 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     
-    font-weight: 700;
+    font-weight: 600;
     font-style: italic;
     display: inline-block;
+
+    /* 用 padding 撑大渲染区域防止裁切，用负 margin 把位置拉回来 */
+    padding: 0.1em 0.15em; 
+    margin: -0.1em -0.15em;
 
     transition: font-weight 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
   }
@@ -449,7 +453,7 @@
   /* 交互特效：悬停增粗 */
   .hero-title-wrapper:hover .hero-title-text,
   .hero-title-wrapper:active .hero-title-text {
-    font-weight: 900;
+    font-weight: 800;
   }
 
   /* 专属 Serif Italic 混搭类 */
