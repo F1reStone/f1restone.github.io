@@ -169,10 +169,15 @@
   --container-max: 1200px;
 }
 
-/* FireStone: [Register 8xl (1408px) and 9xl (1536px) max-width utilities in Tailwind layer to guarantee compatibility] */
+/* FireStone: [Register adaptive 8xl and 9xl max-width utilities in Tailwind layer] */
 @layer utilities {
-  .max-w-8xl { max-width: 80rem; }
-  .max-w-9xl { max-width: 90rem; }
+  /* 
+     使用现代 CSS max() 函数实现终极响应式宽屏适配：
+     - 在普通/较小屏幕上，它保持至少 88rem (1408px) 的最大宽度设定，由外层的 px-6 保证移动端边距。
+     - 在 21:9 等带鱼屏/超宽屏上，它会自动突破像素限制，展开为 80vw（占据屏幕 80% 宽度），实现完美比例。
+  */
+  .max-w-8xl { max-width: max(80rem, 80vw); }
+  .max-w-9xl { max-width: max(90rem, 90vw); }
 }
 
 /* -------------------------------------------------------------------------
