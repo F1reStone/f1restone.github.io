@@ -26,17 +26,17 @@ export interface LegalLink {
 }
 
 export const navItems: NavItem[] = [
-  { label: 'Projects', href: '/projects', order: 1 },
-  { label: 'Blog', href: '/blog', order: 2 },
+  { label: '项目', href: '/projects', order: 1 },
+  { label: '博客', href: '/blog', order: 2 },
   { label: 'FireStone AI', href: '/ai', order: 3 },
-  { label: 'About', href: '/about', order: 4 },
+  { label: '关于', href: '/about', order: 4 },
 ];
 
 export const footerNavItems: NavItem[] = [
-  { label: 'Projects', href: '/projects', order: 1 },
-  { label: 'Blog', href: '/blog', order: 2 },
+  { label: '项目', href: '/projects', order: 1 },
+  { label: '博客', href: '/blog', order: 2 },
   { label: 'FireStone AI', href: '/ai', order: 3 },
-  { label: 'About', href: '/about', order: 4 },
+  { label: '关于', href: '/about', order: 4 },
 ];
 
 export const legalLinks: LegalLink[] = [
