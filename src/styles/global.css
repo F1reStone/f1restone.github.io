@@ -347,89 +347,92 @@
     );
   }
 
-  /* =========================================================================
-     Dynamic Brand Fluid Gradient Hero (Cyan, Pink, Gold)
-     Uses GPU compositor-thread (transform) for silky-smooth 60/120fps rendering.
+/* =========================================================================
+     Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
+     参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
      ========================================================================= */
   .hero-dark-gradient {
     position: relative;
     isolation: isolate;
-    background-color: #030712 !important; /* 极具质感的深空黑色作为底色 */
+    background-color: #080C13 !important; /* 同步参考网站的极客深空蓝底色 */
     overflow: hidden;
   }
 
   .dark .hero-dark-gradient {
-    background: #030712 !important;
+    background-color: #080C13 !important;
   }
 
-  /* 动态渐变流体光斑基类 */
-  .hero-dark-gradient::before,
+  /* 底层主光环：多色圆锥渐变环绕 */
+  .hero-dark-gradient::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140vw;
+    height: 140vw;
+    max-width: 1400px;
+    max-height: 1400px;
+    /* 严格使用品牌色调色盘：#00C3FF(青), #FD579C(粉), #F8D762(金) */
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      #080C13 0%,
+      #00C3FF 20%,
+      #080C13 35%,
+      #FD579C 55%,
+      #080C13 70%,
+      #F8D762 85%,
+      #080C13 100%
+    );
+    filter: blur(100px); /* 极高斯模糊，化线为影，形成类似极光的高级流体感 */
+    opacity: 0.55; /* 控制通透感，不喧宾夺主 */
+    z-index: -1;
+    pointer-events: none;
+    animation: spin-aura 24s linear infinite;
+  }
+
+  /* 顶层辅助光环：反向旋转的副光斑，产生交织融合的光学错觉 */
   .hero-dark-gradient::after {
     content: '';
     position: absolute;
-    width: 650px;
-    height: 650px;
-    border-radius: 50%;
-    filter: blur(120px); /* 极高的模糊度，实现温润的极光晕染效果 */
-    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vw;
+    max-width: 1000px;
+    max-height: 1000px;
+    background: conic-gradient(
+      from 180deg at 50% 50%,
+      transparent 0%,
+      #FD579C 30%,
+      transparent 50%,
+      #00C3FF 80%,
+      transparent 100%
+    );
+    filter: blur(120px);
+    opacity: 0.4;
     z-index: -1;
-    opacity: 0.24; /* 严格控制不透明度，确保前台白字和按钮具备完美的阅读对比度 */
-    will-change: transform;
+    pointer-events: none;
+    animation: spin-aura-reverse 18s linear infinite;
   }
 
-  /* 粒子 1: 极光蓝 + 黄金色 */
-  .hero-dark-gradient::before {
-    background: radial-gradient(circle, rgba(0, 195, 255, 0.9) 0%, rgba(248, 215, 98, 0.4) 50%, transparent 100%);
-    top: -15%;
-    left: -10%;
-    animation: float-fluid-left 28s infinite alternate ease-in-out;
+  @keyframes spin-aura {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
   }
 
-  /* 粒子 2: 魅惑粉 + 极光蓝 */
-  .hero-dark-gradient::after {
-    background: radial-gradient(circle, rgba(253, 87, 156, 0.9) 0%, rgba(0, 195, 255, 0.3) 60%, transparent 100%);
-    bottom: -20%;
-    right: -10%;
-    animation: float-fluid-right 22s infinite alternate ease-in-out;
+  @keyframes spin-aura-reverse {
+    0% { transform: translate(-50%, -50%) rotate(360deg); }
+    100% { transform: translate(-50%, -50%) rotate(0deg); }
   }
 
-  /* ── 硬件加速的位移 + 缩放 + 旋转轨迹 ── */
-  @keyframes float-fluid-left {
-    0% {
-      transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    33% {
-      transform: translate(180px, 90px) scale(1.15) rotate(120deg);
-    }
-    66% {
-      transform: translate(60px, 200px) scale(0.9) rotate(240deg);
-    }
-    100% {
-      transform: translate(0, 0) scale(1) rotate(360deg);
-    }
-  }
-
-  @keyframes float-fluid-right {
-    0% {
-      transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    50% {
-      transform: translate(-200px, -140px) scale(1.25) rotate(-180deg);
-    }
-    100% {
-      transform: translate(0, 0) scale(1) rotate(-360deg);
-    }
-  }
-
-  /* H1 spans: first span uses remapped foreground (near-white), remaining
-     spans use pure #fff. Mirrors the dark-mode treatment. */
-  html:not(.dark) .hero-dark-gradient h1 > span:first-of-type {
-    color: var(--color-foreground);
-    -webkit-text-fill-color: currentColor;
-  }
-  html:not(.dark) .hero-dark-gradient h1 > span:not(:first-of-type) {
-    color: #fff;
-    -webkit-text-fill-color: currentColor;
+  /* 参考设计：文字晶态/金属渐变质感 */
+  .hero-title-text {
+    background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    transition: all 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
   }
 
   /* Primary CTA — near-white gradient pill. Targets .btn-primary, which is
