@@ -126,9 +126,9 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
     size="lg"
     showCta={false}
     showScrollProgress
-    maxWidth="7xl"
+    maxWidth="8xl"
   />
-  <!-- ↑FireStone mark: Change blog width in here -->
+  <!-- FireStone: [Update Header maxWidth] -->
 
   <div class="min-h-screen pt-16">
   <!-- Article Hero -->
@@ -146,7 +146,8 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <article class="pt-8 pb-[var(--space-section-md)]">
     <div class:list={[
-      'mx-auto px-6 max-w-7xl',
+      // FireStone: [Update main article wrapper to 8xl]
+      'mx-auto px-6 max-w-8xl',
       sidebarActive && (sidebarOnLeft
         ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
         : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
@@ -221,7 +222,8 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <!-- Related Posts -->
   {tags.length > 0 && (
-    <div class="mx-auto max-w-7xl px-6" data-reveal>
+    // FireStone: [Update related posts wrapper to 8xl]
+    <div class="mx-auto max-w-8xl px-6" data-reveal>
       <RelatedPosts currentSlug={slug} tags={tags} locale={locale} maxPosts={3} />
     </div>
   )}
@@ -263,7 +265,8 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <!-- Desktop: contained LetterGlitch band with glass card -->
   <section class="hidden glitch:block relative z-10 py-[var(--space-section-md)] bg-background-secondary">
-    <LetterGlitchBand maxWidth="7xl">
+    <!-- FireStone: [Update LetterGlitchBand width] -->
+    <LetterGlitchBand maxWidth="8xl">
       <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">Follow along</h2>
       <p class="text-lg text-foreground-muted mb-8 text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
 
@@ -298,5 +301,6 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
   </section>
   </div>
 
-  <Footer slot="footer" layout="simple" background="secondary" maxWidth="7xl" />
+  <!-- FireStone: [Update Footer width] -->
+  <Footer slot="footer" layout="columns" background="secondary" maxWidth="8xl" />
 </BaseLayout>

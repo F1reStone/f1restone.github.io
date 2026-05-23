@@ -19,11 +19,12 @@ export const headerVariants = cva('z-50', {
   },
   compoundVariants: [
     // Floating + fixed: centered with gap
-    { shape: 'floating', position: 'fixed', class: '!left-1/2 !right-auto -translate-x-1/2 w-[calc(100%-3rem)] max-w-6xl mt-4 animate-header-drop' },
+    // FireStone: [Update hardcoded max-w-6xl to max-w-8xl for wider floating headers]
+    { shape: 'floating', position: 'fixed', class: '!left-1/2 !right-auto -translate-x-1/2 w-[calc(100%-3rem)] max-w-8xl mt-4 animate-header-drop' },
     // Floating + sticky: centered with gap
-    { shape: 'floating', position: 'sticky', class: '!top-4 mx-auto max-w-6xl' },
+    { shape: 'floating', position: 'sticky', class: '!top-4 mx-auto max-w-8xl' },
     // Floating + static: centered
-    { shape: 'floating', position: 'static', class: 'mx-auto max-w-6xl' },
+    { shape: 'floating', position: 'static', class: 'mx-auto max-w-8xl' },
     // Floating + transparent: glass effect
     { shape: 'floating', variant: 'transparent', class: 'bg-white/[0.08] border border-white/[0.1]' },
     // Floating + default: semi-transparent with blur
@@ -48,7 +49,7 @@ export const headerInnerVariants = cva(
         lg: 'h-16',
       },
       shape: {
-        bar: 'mx-auto max-w-6xl px-6',
+        bar: 'mx-auto max-w-8xl px-6',
         floating: 'px-6',
       },
     },

@@ -75,8 +75,8 @@ interface Props extends HTMLAttributes<'footer'> {
   hideLogo?: boolean;
   /** Tagline text under logo */
   tagline?: string;
-  /** Max width of the inner container. Defaults to `'6xl'`. */
-  maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | 'full';
+  // FireStone: [Add '8xl' and '9xl' to the props interface]
+  maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl' | 'full';
 }
 
 const {
@@ -88,11 +88,11 @@ const {
   socialLinks = [],
   showSocial = true,
   showCopyright = true,
-  copyright = 'Copyright © {year} {siteName}. All Rights Reserved.',
+  copyright = '© {year} {siteName}. All Rights Reserved.',
   legalLinks,
   hideLogo = false,
   tagline,
-  maxWidth = 'full',// FireStone: Change max width to full to adapt out designs.
+  maxWidth = '8xl',// FireStone: Change max width to 8xl to adapt out designs.
   class: className,
   ...attrs
 } = Astro.props;
@@ -102,6 +102,8 @@ const maxWidthClass = {
   '5xl': 'max-w-5xl',
   '6xl': 'max-w-6xl',
   '7xl': 'max-w-7xl',
+  '8xl': 'max-w-8xl',
+  '9xl': 'max-w-9xl',
   full: 'max-w-full',
 }[maxWidth];
 

@@ -2,12 +2,20 @@
 import LetterGlitch from '@/components/effects/LetterGlitch';
 
 interface Props {
-  maxWidth?: '6xl' | '7xl';
+  // FireStone: [Add '8xl' and '9xl' to accepted properties]
+  maxWidth?: '6xl' | '7xl' | '8xl' | '9xl';
 }
 
-const { maxWidth = '6xl' } = Astro.props;
+// FireStone: [Set default to 8xl]
+const { maxWidth = '8xl' } = Astro.props;
 
-const maxWidthClass = maxWidth === '7xl' ? 'max-w-7xl' : 'max-w-6xl';
+// FireStone: [Map new width keys to Tailwind classes]
+const maxWidthClass = {
+  '6xl': 'max-w-6xl',
+  '7xl': 'max-w-7xl',
+  '8xl': 'max-w-8xl',
+  '9xl': 'max-w-9xl'
+}[maxWidth];
 ---
 
 <div class:list={['hidden glitch:block mx-auto px-6', maxWidthClass]}>

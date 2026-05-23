@@ -75,7 +75,8 @@ interface Props extends HTMLAttributes<'header'> {
    * Max width of the inner container (only applies when `shape='bar'`).
    * Defaults to `'6xl'` (the historical width).
    */
-  maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | 'full';
+  // FireStone: [Add '8xl' and '9xl' to the props interface]
+  maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl' | 'full';
 }
 
 const {
@@ -101,7 +102,7 @@ const {
   autoHide = true,
   invertOnReturn = true,
   hideLogo = false,
-  maxWidth = 'full',// FireStone: Change max width to full to adapt out designs.
+  maxWidth = '8xl',// FireStone: Change max width to full to adapt out designs.
   class: className,
   ...attrs
 } = Astro.props;
@@ -112,6 +113,8 @@ const maxWidthClass = {
   '5xl': 'max-w-5xl',
   '6xl': 'max-w-6xl',
   '7xl': 'max-w-7xl',
+  '8xl': 'max-w-8xl',
+  '9xl': 'max-w-9xl',
   full: 'max-w-full',
 }[maxWidth];
 const effectiveShowScrollProgress = showScrollProgress || (isFloating && !autoHide);
