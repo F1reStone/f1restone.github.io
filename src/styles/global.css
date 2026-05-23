@@ -348,21 +348,17 @@
   }
 
 /* =========================================================================
-     Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
-     参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
+     Dynamic Brand Conic Aura Hero (Cyan, Pink, Purple)
      ========================================================================= */
   .hero-dark-gradient {
     position: relative;
     isolation: isolate;
-    background-color: #080C13 !important; /* 同步参考网站的极客深空蓝底色 */
+    background-color: #080C13 !important;
     overflow: hidden;
   }
+  .dark .hero-dark-gradient { background-color: #080C13 !important; }
 
-  .dark .hero-dark-gradient {
-    background-color: #080C13 !important;
-  }
-
-  /* 底层主光环：多色圆锥渐变环绕 */
+  /* 主光环：大幅降低模糊度，提高不透明度，让色彩产生极强冲击力 */
   .hero-dark-gradient::before {
     content: '';
     position: absolute;
@@ -370,27 +366,24 @@
     left: 50%;
     width: 140vw;
     height: 140vw;
-    max-width: 1400px;
-    max-height: 1400px;
-    /* 严格使用品牌色调色盘：#00C3FF(青), #FD579C(粉), #F8D762(金) */
+    max-width: 1300px;
+    max-height: 1300px;
     background: conic-gradient(
       from 0deg at 50% 50%,
       #080C13 0%,
-      #00C3FF 20%,
-      #080C13 35%,
-      #FD579C 55%,
-      #080C13 70%,
-      #F8D762 85%,
+      #00C3FF 25%,
+      #7832FF 50%,
+      #FD579C 75%,
       #080C13 100%
     );
-    filter: blur(100px); /* 极高斯模糊，化线为影，形成类似极光的高级流体感 */
-    opacity: 0.55; /* 控制通透感，不喧宾夺主 */
+    filter: blur(60px); /* 模糊度降低，光束感更锐利 */
+    opacity: 0.9; /* 极高的不透明度，匹配原站点的奔放质感 */
     z-index: -1;
     pointer-events: none;
-    animation: spin-aura 24s linear infinite;
+    animation: spin-aura 15s linear infinite; /* 加快流转速度 */
   }
 
-  /* 顶层辅助光环：反向旋转的副光斑，产生交织融合的光学错觉 */
+  /* 副光斑：增加交错感 */
   .hero-dark-gradient::after {
     content: '';
     position: absolute;
@@ -398,21 +391,21 @@
     left: 50%;
     width: 100vw;
     height: 100vw;
-    max-width: 1000px;
-    max-height: 1000px;
+    max-width: 900px;
+    max-height: 900px;
     background: conic-gradient(
       from 180deg at 50% 50%,
       transparent 0%,
-      #FD579C 30%,
+      #7832FF 30%,
       transparent 50%,
       #00C3FF 80%,
       transparent 100%
     );
-    filter: blur(120px);
-    opacity: 0.4;
+    filter: blur(80px);
+    opacity: 0.6;
     z-index: -1;
     pointer-events: none;
-    animation: spin-aura-reverse 18s linear infinite;
+    animation: spin-aura-reverse 10s linear infinite;
   }
 
   @keyframes spin-aura {
@@ -425,14 +418,39 @@
     100% { transform: translate(-50%, -50%) rotate(0deg); }
   }
 
-  /* 参考设计：文字晶态/金属渐变质感 */
+  /* 标题容器：强制左对齐，并实现 Figma 中的 75% 行高 */
+  .hero-title-wrapper {
+    text-align: left;
+    line-height: 0.75 !important;
+    cursor: default; /* 提示可交互 */
+  }
+
+  /* 晶态金属文字基础样式 & 可变字体动画 */
   .hero-title-text {
     background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    transition: all 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
+    
+    font-weight: 600; /* 默认起始字重 */
+    display: inline-block; /* 防止斜体被边缘裁切并允许 transform 优化 */
+    padding-right: 0.1em; 
+    
+    /* 采用原站的经典贝塞尔曲线，过渡时长 0.5s */
+    transition: font-weight 0.5s cubic-bezier(0.32, 0.99, 0.62, 1);
+  }
+
+  /* 交互特效：PC鼠标悬停 & 移动端触摸激活时，字重膨胀至 900 */
+  .hero-title-wrapper:hover .hero-title-text,
+  .hero-title-wrapper:active .hero-title-text {
+    font-weight: 900;
+  }
+
+  /* 专属 Serif Italic 混搭类 */
+  .hero-title-serif {
+    font-family: 'Playfair Display', serif; /* 请确保你后续在顶部 @font-face 引入了它 */
+    font-style: italic;
   }
 
   /* Primary CTA — near-white gradient pill. Targets .btn-primary, which is
