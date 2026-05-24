@@ -73,7 +73,7 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
           class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
         >
           <Icon name="arrow-left" size="sm" />
-          Newest posts
+          最新文章
         </a>
 
         {topTags.length > 0 && (
@@ -105,8 +105,8 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
   </section>
 
   <CTA variant="default" size="md" maxWidth="lg" glow={false} data-reveal>
-    <h2 slot="heading" class="!text-4xl">Follow along</h2>
-    <p slot="description" class="!text-lg text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
+    <h2 slot="heading" class="!text-4xl">持续关注</h2>
+    <p slot="description" class="!text-lg text-balance">随时掌握最新动态 - 新文章、观点和更新。</p>
 
     <div class="flex flex-wrap items-center justify-center gap-3">
       <a
@@ -114,7 +114,7 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
         class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
       >
         <Icon name="rss" size="sm" />
-        RSS Feed
+        RSS 订阅源
       </a>
       {socialLinks.map((link) => (
         <a
@@ -132,7 +132,7 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
         class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
       >
         <Icon name="mail" size="sm" />
-        Email
+        电子邮件
       </a>
     </div>
   </CTA>
