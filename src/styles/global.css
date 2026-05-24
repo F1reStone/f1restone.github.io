@@ -369,6 +369,7 @@
     isolation: isolate;
     background-color: #080C13 !important;
     overflow: hidden;
+  }
 
   .dark .hero-dark-gradient {
     background-color: #080C13 !important;
