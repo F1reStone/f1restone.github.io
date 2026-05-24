@@ -46,7 +46,7 @@ export const footerNavItems: NavItem[] = [
 ];
 
 export const legalLinks: LegalLink[] = [
-  { label: 'ICP 备案测试', href: 'https://beian.miit.gov.cn/' },
+  { label: '反馈网站 Bug', href: 'https://github.com/F1reStone/f1restone.github.io/issues' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [
@@ -56,6 +56,7 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: '项目', href: '/projects', order: 1 },
       { label: '博客', href: '/blog', order: 2 },
       { label: 'FireStone AI', href: '/ai', order: 3 },
+      { label: '关于 FireStone', href: '/about', order: 4 },
     ],
   },
   {
@@ -74,14 +75,6 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: 'GitHub Pages', href: 'https://docs.github.com/pages/', order: 4 },
       { label: 'React', href: 'https://react.dev/', order: 5 },
       { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 6 },
-    ],
-  },
-  {
-    title: '关于',
-    links: [
-      { label: '关于 FireStone', href: '/about', order: 1 },
-      { label: '负责任 AI 声明', href: '/ai/responsible-ai', order: 2 },
-      { label: '反馈网站 Bug', href: 'https://github.com/F1reStone/f1restone.github.io/issues', order: 3 },
     ],
   },
 ];
