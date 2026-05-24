@@ -370,12 +370,6 @@
     background-color: #080C13 !important;
     overflow: hidden;
 
-    /* FireStone: 增加首屏高度至满屏，并使用 Grid 垂直居中内层容器 */
-    min-height: 100svh;
-    display: grid;
-    align-items: center;
-  }
-
   /* FireStone: 强制要求 Hero 内部的排版容器保持 100% 宽度，防止 Grid 布局导致内部塌陷缩放 */
   .hero-dark-gradient > div {
     width: 100%;
@@ -383,17 +377,6 @@
 
   .dark .hero-dark-gradient {
     background-color: #080C13 !important;
-  }
-
-  /* FireStone: 恢复原主题的局部变量覆盖。将深色背景容器内的 CSS 变量重置为亮色，使得按钮即使在全局浅色模式下，依然能保持正确的浅色样式 */
-  html:not(.dark) .hero-dark-gradient {
-    --color-foreground:           oklch(91% 0.008 250);
-    --color-foreground-secondary: oklch(82% 0.012 250);
-    --color-foreground-muted:     oklch(68% 0.01 250);
-    --color-background:           var(--surface-invert);
-    --color-secondary:            var(--surface-invert-secondary);
-    --color-secondary-hover:      var(--surface-invert-tertiary);
-    --color-ring:                 oklch(91% 0.008 250);
   }
 
   /* 底层主光环：多色圆锥渐变环绕 */

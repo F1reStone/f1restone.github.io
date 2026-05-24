@@ -33,7 +33,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   includeProfessionalServiceSchema={true}
 >
 <!-- Hero -->
-  <Hero layout="split" size="xl" class="hero-dark-gradient" showScrollIndicator>
+  <Hero layout="split" size="xl" class="hero-dark-gradient invert-section min-h-[100svh] grid items-center [&>div]:w-full" showScrollIndicator>
     <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
       <span class="hero-title-text whitespace-nowrap">To the</span><br />
       <span class="hero-title-text">Infinite Future</span>
