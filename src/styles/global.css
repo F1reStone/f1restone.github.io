@@ -461,7 +461,6 @@
   .hero-title-wrapper {
     line-height: 0.75 !important;
     cursor: default;
-    overflow: visible !important; /* 确保字体增粗时不会被裁切 */
   }
 
   /* 晶态金属文字基础样式 & 可变字体动画 */
@@ -476,7 +475,8 @@
     font-style: italic;
     display: inline-block;
 
-    /* padding-right: 0.2em;  */
+    padding: 0.2em; 
+    margin: -0.2em;
 
     transition: font-weight 0.5s cubic-bezier(0.22, 1.6, 0.36, 1);
   }
