@@ -137,6 +137,7 @@ const siteConfig: SiteConfig = {
   socialLinks: [
     'https://github.com/f1restone',
     'https://space.bilibili.com/299649937',
+    'https://music.163.com/#/user/home?id=435228979',
     'https://www.youtube.com/@FSFireStone',
     'https://x.com/FSFireStone',
   ],

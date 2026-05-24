@@ -34,6 +34,7 @@ const iconMap: Record<string, string> = {
   // Social & brand → Simple Icons
   'github':           'simple-icons:github',
   'bilibili':         'simple-icons:bilibili',
+  'neteasecloudmusic':'simple-icons:neteasecloudmusic',
   'youtube':          'simple-icons:youtube',
   'x-twitter':        'simple-icons:x',
   'twitter':          'simple-icons:x',

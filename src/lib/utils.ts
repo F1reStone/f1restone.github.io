@@ -40,6 +40,7 @@ const SOCIAL_PLATFORMS = [
   { key: 'github',    match: /github\.com/i,                  label: 'GitHub',      icon: 'github'    },
   { key: 'twitter',   match: /x\.com|twitter\.com/i,          label: 'X', icon: 'x-twitter' },
   { key: 'bilibili',  match: /bilibili\.com/i,                label: '哔哩哔哩',    icon: 'bilibili'  },
+  { key: 'neteasecloudmusic', match: /music\.163\.com/i,      label: '网易云音乐',    icon: 'neteasecloudmusic' },
   { key: 'youtube',   match: /youtube\.com/i,                 label: 'YouTube',     icon: 'youtube'   },
 ] as const;
 
