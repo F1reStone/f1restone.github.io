@@ -56,7 +56,6 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: '项目', href: '/projects', order: 1 },
       { label: '博客', href: '/blog', order: 2 },
       { label: 'FireStone AI', href: '/ai', order: 3 },
-      { label: '关于 FireStone', href: '/about', order: 1 },
     ],
   },
   {
@@ -72,7 +71,17 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: 'Astro', href: 'https://astro.build/', order: 1 },
       { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
       { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
-      { label: 'GitHub Pages', href: 'https://docs.github.com/pages', order: 4 },
+      { label: 'GitHub Pages', href: 'https://docs.github.com/pages/', order: 4 },
+      { label: 'React', href: 'https://react.dev/', order: 5 },
+      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 6 },
+    ],
+  },
+  {
+    title: '关于',
+    links: [
+      { label: '关于 FireStone', href: '/about', order: 1 },
+      { label: '负责任 AI 声明', href: '/ai/responsible-ai', order: 2 },
+      { label: '反馈网站 Bug', href: 'https://github.com/F1reStone/f1restone.github.io/issues', order: 3 },
     ],
   },
 ];

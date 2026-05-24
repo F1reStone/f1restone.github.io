@@ -70,8 +70,9 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <meta name="generator" content={Astro.generator} />
 
     <!-- Preload display + body fonts so they're ready for first paint -->
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/wix-madefor.woff2" crossorigin="anonymous" />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/neue-regrade.woff2" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/wix-madefor-text-variable.woff2" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/neue-regrade-variable.woff2" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/noto-sans-cjk-sc-variable.woff2" crossorigin="anonymous" />
 
     {siteConfig.articleFeatures?.comments?.enabled && (
       <link rel="preconnect" href="https://giscus.app" crossorigin />
