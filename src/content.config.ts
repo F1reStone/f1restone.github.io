@@ -42,7 +42,7 @@ const pages = defineCollection({
     title: z.string(),
     description: z.string(),
     updatedAt: z.coerce.date().optional(),
-    locale: z.enum(['en', 'es', 'fr']).default('en'),
+    locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
   }),
 });
 
