@@ -480,7 +480,7 @@
     padding: 0.25em; 
     margin: -0.25em;
 
-    transition: font-weight 0.75s cubic-bezier(0.22, 1.6, 0.36, 1);
+    transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1);
   }
 
   /* 交互特效：悬停增粗 */

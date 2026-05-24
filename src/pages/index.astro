@@ -39,6 +39,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <span class="hero-title-text">Infinite Future</span>
     </h1>
 
+    <p slot="description">
+      交织视觉美学、算法逻辑与人工智能。
+    </p>
+
    <Fragment slot="actions">
       <Button size="lg" href="/about">
         关于我

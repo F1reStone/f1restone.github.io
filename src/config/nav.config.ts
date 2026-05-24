@@ -69,10 +69,10 @@ export const footerLinkGroups: FooterLinkGroup[] = [
   {
     title: '技术支持',
     links: [
-      { label: 'GitHub Pages', href: 'https://docs.github.com/pages', order: 1 },
-      { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 2 },
-      { label: 'Astro', href: 'https://astro.build/', order: 3 },
-      { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 4 },
+      { label: 'Astro', href: 'https://astro.build/', order: 1 },
+      { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
+      { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
+      { label: 'GitHub Pages', href: 'https://docs.github.com/pages', order: 4 },
       { label: 'MDN Web Docs', href: 'https://developer.mozilla.org/', order: 5 },
     ],
   },
