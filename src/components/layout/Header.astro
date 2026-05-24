@@ -152,6 +152,7 @@ function isActive(href: string): boolean {
 function getSocialIconData(url: string): { icon: string; label: string } {
   if (url.includes('github.com'))    return { icon: 'github',    label: 'GitHub' };
   if (url.includes('bilibili.com'))   return { icon: 'bilibili',   label: '哔哩哔哩' };
+  if (url.includes('music.163.com'))  return { icon: 'neteasecloudmusic', label: '网易云音乐' };
   if (url.includes('youtube.com'))   return { icon: 'youtube',   label: 'YouTube' };
   if (url.includes('x.com') || url.includes('twitter.com')) return { icon: 'x-twitter', label: 'X' };
   return { icon: 'link', label: 'Social' };
@@ -169,7 +170,7 @@ function getNavIcon(href: string): string {
   return 'chevron-right';
 }
 
-const mobileSocialOrder = ['github.com', 'bilibili.com', 'youtube.com', 'x.com'];
+const mobileSocialOrder = ['github.com', 'bilibili.com', 'music.163.com', 'youtube.com', 'x.com'];
 const mobileSocialLinks = mobileSocialOrder
   .map((host) => siteConfig.socialLinks.find((u) => u.includes(host)))
   .filter((u): u is string => Boolean(u));
