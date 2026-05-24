@@ -28,6 +28,7 @@ import { footerVariants, footerColumnGridVariants } from './footer.variants';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
+import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: [Import the central resolver]
 
 export interface NavItem {
   label: string;
@@ -40,11 +41,11 @@ export interface FooterLinkGroup {
   links: NavItem[];
 }
 
-export interface SocialLink {
+/**export interface SocialLink {
   platform: 'github' | 'bilibili' | 'youtube' | 'x-twitter' | string;
   href: string;
   label?: string;
-}
+}*/
 
 export interface LegalLink {
   label: string;
@@ -63,7 +64,7 @@ interface Props extends HTMLAttributes<'footer'> {
   /** Link groups for columns layout */
   linkGroups?: FooterLinkGroup[];
   /** Social media links */
-  socialLinks?: SocialLink[];
+  socialLinks?: ResolvedSocialLink[]; // FireStone: [Use the shared interface]
   /** Show social links */
   showSocial?: boolean;
   /** Show copyright */
@@ -86,7 +87,7 @@ const {
   background = 'default',
   nav,
   linkGroups = getFooterLinkGroups(),// FireStone: [Fallback to global link groups instead of an empty array]
-  socialLinks = [],
+  socialLinks = resolveSocialLinks(siteConfig.socialLinks),
   showSocial = true,
   showCopyright = true,
   copyright = '© {year} FireStone. All Rights Reserved.',
@@ -138,17 +139,17 @@ const hasBottomSlot = Astro.slots.has('bottom');
 const footerClasses = cn(footerVariants({ background }), className);
 
 // Social platform to icon mapping
-const socialIcons: Record<string, string> = {
+/**const socialIcons: Record<string, string> = {
   'github': 'github',
   'bilibili': 'bilibili',
   'youtube': 'youtube',
   'x-twitter': 'x-twitter',
-};
+};*/
 
 // Get icon for social platform
-function getSocialIcon(platform: string): string {
+/**function getSocialIcon(platform: string): string {
   return socialIcons[platform] || platform;
-}
+}*/
 ---
 
 <footer class={footerClasses} {...attrs}>
@@ -202,7 +203,7 @@ function getSocialIcon(platform: string): string {
                   rel="noopener noreferrer"
                   aria-label={social.label || `Follow us on ${social.platform}`}
                 >
-                  <Icon name={getSocialIcon(social.platform)} size="md" />
+                  <Icon name={<Icon name={social.icon} size="md" />} size="md" />
                 </a>
               ))}
             </div>
@@ -246,7 +247,7 @@ function getSocialIcon(platform: string): string {
                       rel="noopener noreferrer"
                       aria-label={social.label || `Follow us on ${social.platform}`}
                     >
-                      <Icon name={getSocialIcon(social.platform)} size="md" />
+                      <Icon name={<Icon name={social.icon} size="md" />} size="md" />
                     </a>
                   ))}
                 </div>
@@ -364,7 +365,7 @@ function getSocialIcon(platform: string): string {
                 rel="noopener noreferrer"
                 aria-label={social.label || `Follow us on ${social.platform}`}
               >
-                <Icon name={getSocialIcon(social.platform)} size="md" />
+                <Icon name={<Icon name={social.icon} size="md" />} size="md" />
               </a>
             ))}
           </div>

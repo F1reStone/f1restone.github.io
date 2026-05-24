@@ -51,9 +51,13 @@ export interface ResolvedSocialLink {
 }
 
 export function resolveSocialLinks(urls: string[]): ResolvedSocialLink[] {
-  return urls.flatMap((href) => {
+  // FireStone: [Optimized to map all URLs. Returns a fallback icon for unknown platforms]
+  return urls.map((href) => {
     const platform = SOCIAL_PLATFORMS.find((p) => p.match.test(href));
-    if (!platform) return [];
-    return [{ key: platform.key, href, label: platform.label, icon: platform.icon }];
+    if (platform) {
+      return { key: platform.key, href, label: platform.label, icon: platform.icon };
+    }
+    // Fallback for unknown links
+    return { key: 'link', href, label: 'Social', icon: 'link' };
   });
 }
