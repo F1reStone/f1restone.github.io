@@ -17,21 +17,22 @@ const projects = items.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <PageLayout
-  title="Projects — Astro Rocket"
-  description="Selected work — websites, tools, and open-source projects built by Astro Rocket."
+  title="项目"
+  description="项目与作品 - 一些 FireStone 火石制作的有趣（？）作品。"
   eagerReveal
 >
-  <Hero layout="centered" size="sm">
+  </Hero>
+    <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="layers" size="sm" />
-      Selected work
+      项目与作品
     </Badge>
+    
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">Projects & Works</span>
+    </h1>
 
-    <h1 slot="title">Projects</h1>
-
-    <p slot="description">
-      Work I'm most proud of.
-    </p>
+    <p slot="description">一些我制作的有趣（？）作品。</p>
   </Hero>
 
   <!-- All projects -->
