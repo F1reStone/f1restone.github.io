@@ -370,11 +370,6 @@
     background-color: #080C13 !important;
     overflow: hidden;
 
-  /* FireStone: 强制要求 Hero 内部的排版容器保持 100% 宽度，防止 Grid 布局导致内部塌陷缩放 */
-  .hero-dark-gradient > div {
-    width: 100%;
-  }
-
   .dark .hero-dark-gradient {
     background-color: #080C13 !important;
   }
