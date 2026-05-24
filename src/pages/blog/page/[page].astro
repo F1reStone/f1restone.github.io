@@ -48,20 +48,21 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
 ---
 
 <PageLayout
-  title={`Blog — Page ${page}`}
-  description={`Page ${page} of ${totalPages} — articles on Astro, web performance, design, and the web.`}
-  showScrollProgress
+  title={`博客 | 第 ${page} 页`}
+  description={`第 ${page} 页，共 ${totalPages} 页 - 有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。`}
   eagerReveal
 >
-  <Hero layout="centered" size="sm">
+  <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="book" size="sm" />
-      Page {page} of {totalPages}
+      博客
     </Badge>
+    
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">Blog</span>
+    </h1>
 
-    <h1 slot="title">Blog</h1>
-
-    <p slot="description">Articles on Astro, web performance, design systems, and building with Astro Rocket.</p>
+    <p slot="description">有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。</p>
   </Hero>
 
   <section class="bg-background-secondary py-[var(--space-section-md)] border-t border-border">
