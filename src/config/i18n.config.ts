@@ -34,7 +34,7 @@ export interface I18nConfig {
 const i18nConfig: I18nConfig = {
   enabled: true,
   defaultLocale: 'zh-CN',
-  locales: ['en-US', 'zh-CN'],
+  locales: ['zh-CN'],
   localeNames: {
     'en-US': 'English',
     'zh-CN': '简体中文',
