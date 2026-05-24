@@ -37,16 +37,16 @@ const regularPosts = regularPostsAll.slice(0, BLOG_POSTS_PER_PAGE);
 const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
 ---
 
-<PageLayout title="Blog — Astro Rocket" description="Articles on web design, development, and the web by Astro Rocket." showScrollProgress eagerReveal>
+<PageLayout title="博客" description="Articles on web design, development, and the web by Astro Rocket." showScrollProgress eagerReveal>
   <Hero layout="centered" size="sm">
     <Badge slot="badge" variant="brand" pill>
       <Icon name="book" size="sm" />
-      All posts
+      所有文章
     </Badge>
 
-    <h1 slot="title">Blog</h1>
+    <h1 slot="title">博客</h1>
 
-    <p slot="description">Articles on Astro, web performance, design systems, and building with Astro Rocket.</p>
+    <p slot="description">有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。</p>
   </Hero>
 
   <!-- Featured Posts Section -->
@@ -55,7 +55,7 @@ const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
       <section id="featured-section" class="bg-background-secondary py-[var(--space-section-md)] border-t border-border">
         <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
           <h2 class="font-display text-foreground text-3xl md:text-4xl font-bold text-center" data-reveal>
-            Featured
+            推荐
           </h2>
 
           <div class="grid gap-6 md:grid-cols-2">
@@ -83,7 +83,7 @@ const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
       <div class="flex flex-col items-center gap-4" data-reveal>
         {
           featuredPosts.length > 0 && nonFeaturedPosts.length > 0 && (
-            <h2 class="font-display text-foreground text-3xl md:text-4xl font-bold text-center">All posts</h2>
+            <h2 class="font-display text-foreground text-3xl md:text-4xl font-bold text-center">所有文章</h2>
           )
         }
 

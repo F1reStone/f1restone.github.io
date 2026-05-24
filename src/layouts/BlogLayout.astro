@@ -289,18 +289,14 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
             {link.label}
           </a>
         ))}
-        <a
-          href={`mailto:${siteConfig.email}`}
-          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
-        >
-          <Icon name="mail" size="sm" />
-          Email
-        </a>
       </div>
     </LetterGlitchBand>
   </section>
   </div>
 
-  <!-- FireStone: [Update Footer width] -->
-  <Footer slot="footer" layout="columns" background="secondary" maxWidth="8xl" />
+  <Footer 
+    slot="footer" 
+    layout="columns" 
+    background="secondary"
+  />
 </BaseLayout>

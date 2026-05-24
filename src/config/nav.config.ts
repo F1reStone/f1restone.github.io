@@ -73,7 +73,6 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
       { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
       { label: 'GitHub Pages', href: 'https://docs.github.com/pages', order: 4 },
-      { label: 'MDN Web Docs', href: 'https://developer.mozilla.org/', order: 5 },
     ],
   },
 ];
