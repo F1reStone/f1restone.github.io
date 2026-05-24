@@ -367,10 +367,10 @@
   .hero-dark-gradient {
     position: relative;
     isolation: isolate;
-    background-color: #080C13 !important; /* 同步参考网站的极客深空蓝底色 */
+    background-color: #080C13 !important;
     overflow: hidden;
 
-    /* FireStone: 增加首屏高度至满屏，并使用 Grid 完美垂直居中内层容器 */
+    /* FireStone: 增加首屏高度至满屏，并使用 Grid 垂直居中内层容器 */
     min-height: 100svh;
     display: grid;
     align-items: center;
@@ -477,8 +477,8 @@
     font-style: italic;
     display: inline-block;
 
-    padding: 0.25em; 
-    margin: -0.25em;
+    padding: 0.3em; 
+    margin: -0.3em;
 
     transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1);
   }
@@ -491,7 +491,9 @@
 
   /* 专属 Serif Italic 混搭类 */
   .hero-title-serif {
-    font-family: 'Playfair Display', 'Roboto Serif', 'Noto Serif', 'Noto Serif CJK SC', ui-serif, serif; 
+    font-family: 'Playfair Display', 'New York', 'Garamond', 'Roboto Serif', 'Noto Serif', 'Noto Serif CJK SC', ui-serif, serif; 
+    letter-spacing: -0.03em;
+    font-weight: 600;
     font-style: italic;
   }
 

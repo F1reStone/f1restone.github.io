@@ -90,15 +90,15 @@ html[data-theme="firestone-cyan"] {
   /* -------------------------------------------------------------------------
      FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
      ------------------------------------------------------------------------- */
-  --theme-font-sans: 'Wix Madefor Text', 'Noto Sans CJK SC',
-    -apple-system, BlinkMacSystemFont, 'HarmonyOS Sans SC', 'Segoe UI Variable Text', 'Segoe UI', 'Google Sans Flex', 'Noto Sans', 'Roboto', 'Helvetica Neue', 'Arial',
-    'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Microsoft YaHei UI',
+  --theme-font-sans: 'Wix Madefor Text', 'Montserrat', 'Outfit',
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Google Sans Flex', 'HarmonyOS Sans', 'Segoe UI Variable Text', 'Segoe UI', 'Noto Sans', 'Roboto', 'Helvetica Neue', 'Arial',
+    'Noto Sans CJK SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
     ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --theme-font-display: 'Neue Regrade', var(--theme-font-sans);
-  --theme-font-mono: 'NKDuy Mono', 'Noto Sans CJK SC',
+  --theme-font-mono: 'NKDuy Mono',
     'SFMono-Regular', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
-    'PingFang SC', 'HarmonyOS Sans SC', 'Source Han Sans SC', 'Microsoft YaHei UI',
+    'Noto Sans CJK SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
     ui-monospace, monospace,
     'Apple Color Emoji', 'Segoe UI Emoji','Segoe UI Symbol', 'Noto Color Emoji';
   --theme-heading-weight: 700;
