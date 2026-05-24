@@ -480,7 +480,7 @@
     padding: 0.25em; 
     margin: -0.25em;
 
-    transition: font-weight 0.5s cubic-bezier(0.22, 1.6, 0.36, 1);
+    transition: font-weight 0.75s cubic-bezier(0.22, 1.6, 0.36, 1);
   }
 
   /* 交互特效：悬停增粗 */
@@ -491,7 +491,7 @@
 
   /* 专属 Serif Italic 混搭类 */
   .hero-title-serif {
-    font-family: 'Playfair Display', serif; 
+    font-family: 'Playfair Display', 'Roboto Serif', 'Noto Serif', 'Noto Serif CJK SC', ui-serif, serif; 
     font-style: italic;
   }
 
