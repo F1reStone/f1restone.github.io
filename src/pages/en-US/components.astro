@@ -514,8 +514,8 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               background="secondary"
               showCopyright={false}
               socialLinks={[
-                { platform: 'github', href: '#' },
-                { platform: 'twitter', href: '#' },
+                { key: 'github', href: '#', label: 'GitHub', icon: 'github' },
+                { key: 'twitter', href: '#', label: 'X', icon: 'x-twitter' },
               ]}
             />
           </div>
@@ -546,8 +546,8 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               layout="stacked"
               tagline="Build faster, ship with confidence"
               socialLinks={[
-                { platform: 'github', href: '#' },
-                { platform: 'twitter', href: '#' },
+                { key: 'github', href: '#', label: 'GitHub', icon: 'github' },
+                { key: 'twitter', href: '#', label: 'X', icon: 'x-twitter' },
               ]}
               legalLinks={[
                 { label: 'Privacy', href: '#' },
@@ -569,8 +569,8 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               columns={4}
               tagline="Modern starter kit for production websites"
               socialLinks={[
-                { platform: 'github', href: '#' },
-                { platform: 'twitter', href: '#' },
+                { key: 'github', href: '#', label: 'GitHub', icon: 'github' },
+                { key: 'twitter', href: '#', label: 'X', icon: 'x-twitter' },
               ]}
               linkGroups={[
                 {
