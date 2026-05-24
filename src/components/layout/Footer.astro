@@ -21,6 +21,7 @@ import { cn } from '@/lib/cn';
 import {
   getFooterNavItems,
   getLegalLinks,
+  getFooterLinkGroups, // FireStone: [Import the new global getter]
   type NavItem as NavConfigItem,
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
@@ -84,7 +85,7 @@ const {
   columns = 3,
   background = 'default',
   nav,
-  linkGroups = [],
+  linkGroups = getFooterLinkGroups(),// FireStone: [Fallback to global link groups instead of an empty array]
   socialLinks = [],
   showSocial = true,
   showCopyright = true,

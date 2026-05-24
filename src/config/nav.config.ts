@@ -25,6 +25,12 @@ export interface LegalLink {
   href: string;
 }
 
+export interface FooterLinkGroup {
+  title: string;
+  links: NavItem[];
+}
+// FireStone: [Added FooterLinkGroup interface and footerLinkGroups array to manage column-based footer globally]
+
 export const navItems: NavItem[] = [
   { label: '项目', href: '/projects', order: 1 },
   { label: '博客', href: '/blog', order: 2 },
@@ -41,6 +47,35 @@ export const footerNavItems: NavItem[] = [
 
 export const legalLinks: LegalLink[] = [
   { label: 'ICP 备案测试', href: 'https://beian.miit.gov.cn/' },
+];
+
+export const footerLinkGroups: FooterLinkGroup[] = [
+  {
+    title: '探索',
+    links: [
+      { label: '项目', href: '/projects', order: 1 },
+      { label: '博客', href: '/blog', order: 2 },
+      { label: 'FireStone AI', href: '/ai', order: 3 },
+      { label: '关于 FireStone', href: '/about', order: 1 },
+    ],
+  },
+  {
+    title: '项目',
+    links: [
+      { label: 'FireStone 网站', href: '/projects/firestone-website', order: 1 },
+      { label: 'SparkForge', href: '/projects/sparkforge', order: 2 },
+    ],
+  },
+  {
+    title: '技术支持',
+    links: [
+      { label: 'GitHub Pages', href: 'https://docs.github.com/pages', order: 1 },
+      { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 2 },
+      { label: 'Astro', href: 'https://astro.build/', order: 3 },
+      { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 4 },
+      { label: 'MDN Web Docs', href: 'https://developer.mozilla.org/', order: 5 },
+    ],
+  },
 ];
 
 /**
@@ -65,4 +100,11 @@ export function getFooterNavItems(): NavItem[] {
  */
 export function getLegalLinks(): LegalLink[] {
   return [...legalLinks];
+}
+
+/**
+ * Get configured footer link groups for the columns layout.
+ */
+export function getFooterLinkGroups(): FooterLinkGroup[] {
+  return [...footerLinkGroups];
 }

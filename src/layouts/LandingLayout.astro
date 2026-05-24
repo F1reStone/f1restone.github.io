@@ -63,5 +63,15 @@ const {
 
   <slot />
 
-  <Footer slot="footer" layout="columns" background="secondary" />
+  <Footer 
+    slot="footer" 
+    layout="columns" 
+    background="secondary"
+    maxWidth="8xl"
+    socialLinks={[
+      { platform: 'github', href: 'https://github.com/F1reStone', label: 'GitHub' },
+      { platform: 'bilibili', href: 'https://space.bilibili.com/your_id', label: 'Bilibili' },
+      { platform: 'x-twitter', href: 'https://x.com/your_handle', label: 'X (Twitter)' },
+    ]}
+  />
 </BaseLayout>
