@@ -35,12 +35,12 @@ export function findTagBySlug(slug: string, allTags: string[]): string | undefin
  * Strip the locale prefix from a blog entry's id to get its URL slug
  * (e.g. "en/welcome" → "welcome").
  */
-export function getPostSlug(postId: string, locale = 'en'): string {
+export function getPostSlug(postId: string, locale = 'zh-CN'): string {
   return postId.replace(new RegExp(`^${locale}/`), '');
 }
 
 /** URL path for an individual blog post. */
-export function getPostUrl(postId: string, locale = 'en'): string {
+export function getPostUrl(postId: string, locale = 'zh-CN'): string {
   return `/blog/${getPostSlug(postId, locale)}`;
 }
 
