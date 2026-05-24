@@ -38,10 +38,9 @@ export function isExternalUrl(url: string): boolean {
  */
 const SOCIAL_PLATFORMS = [
   { key: 'github',    match: /github\.com/i,                  label: 'GitHub',      icon: 'github'    },
-  { key: 'twitter',   match: /x\.com|twitter\.com/i,          label: 'X / Twitter', icon: 'x-twitter' },
-  { key: 'linkedin',  match: /linkedin\.com/i,                label: 'LinkedIn',    icon: 'linkedin'  },
-  { key: 'instagram', match: /instagram\.com/i,               label: 'Instagram',   icon: 'instagram' },
-  { key: 'bluesky',   match: /bsky\.app|bluesky\.social/i,    label: 'Bluesky',     icon: 'bluesky'   },
+  { key: 'twitter',   match: /x\.com|twitter\.com/i,          label: 'X', icon: 'x-twitter' },
+  { key: 'bilibili',  match: /bilibili\.com/i,                label: '哔哩哔哩',    icon: 'bilibili'  },
+  { key: 'youtube',   match: /youtube\.com/i,                 label: 'YouTube',     icon: 'youtube'   },
 ] as const;
 
 export interface ResolvedSocialLink {

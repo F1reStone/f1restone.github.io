@@ -122,23 +122,23 @@ export interface SiteConfig {
 const siteConfig: SiteConfig = {
   name: 'FireStone火石',
   description:
-    'FireStone\'s personal blog built with Astro. Sharing some cool stuffs by me',
+    'FireStone\'s personal blog. Sharing some cool stuffs by me',
   url: SITE_URL || 'https://f1restone.github.io',
   ogImage: '/og-default.svg',
   author: 'FireStone',
-  email: 'fsfirestone@outlook.com',
+  email: 'fstfirestone@gmail.com',
   address: {
     street: '',
     city: '',
     state: '',
     zip: '',
-    country: 'People\'s Republic of China',
+    country: 'China',
   },
   socialLinks: [
     'https://github.com/f1restone',
+    'https://space.bilibili.com/299649937',
+    'https://www.youtube.com/@FSFireStone',
     'https://x.com/FSFireStone',
-    'https://www.linkedin.com',
-    'https://bsky.app/profile/hansmartensdev.bsky.social',
   ],
   twitter: {
     site: 'https://x.com/FSFireStone',

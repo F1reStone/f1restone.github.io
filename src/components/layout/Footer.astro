@@ -40,7 +40,7 @@ export interface FooterLinkGroup {
 }
 
 export interface SocialLink {
-  platform: 'github' | 'twitter' | 'linkedin' | string;
+  platform: 'github' | 'bilibili' | 'youtube' | 'x-twitter' | string;
   href: string;
   label?: string;
 }
@@ -138,9 +138,10 @@ const footerClasses = cn(footerVariants({ background }), className);
 
 // Social platform to icon mapping
 const socialIcons: Record<string, string> = {
-  github: 'github',
-  twitter: 'x-twitter',
-  linkedin: 'linkedin',
+  'github': 'github',
+  'bilibili': 'bilibili',
+  'youtube': 'youtube',
+  'x-twitter': 'x-twitter',
 };
 
 // Get icon for social platform

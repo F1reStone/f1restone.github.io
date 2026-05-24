@@ -151,11 +151,9 @@ function isActive(href: string): boolean {
 
 function getSocialIconData(url: string): { icon: string; label: string } {
   if (url.includes('github.com'))    return { icon: 'github',    label: 'GitHub' };
-  if (url.includes('instagram.com')) return { icon: 'instagram', label: 'Instagram' };
-  if (url.includes('x.com') || url.includes('twitter.com')) return { icon: 'x-twitter', label: 'X' };
-  if (url.includes('linkedin.com'))  return { icon: 'linkedin',  label: 'LinkedIn' };
-  if (url.includes('bsky.app'))      return { icon: 'bluesky',   label: 'Bluesky' };
+  if (url.includes('bilibili.com'))   return { icon: 'bilibili',   label: '哔哩哔哩' };
   if (url.includes('youtube.com'))   return { icon: 'youtube',   label: 'YouTube' };
+  if (url.includes('x.com') || url.includes('twitter.com')) return { icon: 'x-twitter', label: 'X' };
   return { icon: 'link', label: 'Social' };
 }
 
@@ -402,7 +400,7 @@ const buttonId = `${menuId}-button`;
             isFloating ? 'px-3' : cn('mx-auto px-4', maxWidthClass)
           )}>
             <section class="mobile-menu-section">
-              <p class="mobile-menu-label">Navigate</p>
+              <p class="mobile-menu-label">导航</p>
               <ul class="space-y-0.5">
                 {navItems.map(({ label, href }, idx) => {
                   const active = isActive(href);
@@ -434,12 +432,12 @@ const buttonId = `${menuId}-button`;
 
             {showThemeSelector && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">Theme</p>
+                <p class="mobile-menu-label">主题</p>
                 <div
                   class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
                   style={`--stagger-index: ${navItems.length}`}
                 >
-                  <span class="text-sm text-foreground-muted">Colour theme</span>
+                  <span class="text-sm text-foreground-muted">颜色主题</span>
                   <ThemeSelector />
                 </div>
               </section>
@@ -447,12 +445,12 @@ const buttonId = `${menuId}-button`;
 
             {showLanguageSwitcher && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">Language</p>
+                <p class="mobile-menu-label">语言</p>
                 <div
                   class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
                   style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0)}`}
                 >
-                  <span class="text-sm text-foreground-muted">Language</span>
+                  <span class="text-sm text-foreground-muted">语言</span>
                   <LanguageSwitcher />
                 </div>
               </section>
@@ -460,7 +458,7 @@ const buttonId = `${menuId}-button`;
 
             {mobileSocialLinks.length > 0 && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">Connect</p>
+                <p class="mobile-menu-label">在社交媒体上关注我</p>
                 <div class="flex flex-wrap items-center gap-2 px-2 pt-1 pb-2">
                   {mobileSocialLinks.map((url, sIdx) => {
                     const { icon, label } = getSocialIconData(url);
