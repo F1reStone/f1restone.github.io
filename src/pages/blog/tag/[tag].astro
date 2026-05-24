@@ -42,24 +42,21 @@ const { tag, posts, visibleTags } = Astro.props;
 ---
 
 <PageLayout
-  title={`#${tag} — Blog`}
-  description={`Posts tagged "${tag}".`}
+  title={`博客 | ${tag}`}
+  description={`带有 ${tag} 标签的文章。`}
   eagerReveal
 >
-  <Hero layout="centered" size="sm">
+  <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="tag" size="sm" />
-      Tag
+      标签
     </Badge>
+    
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">#{tag}</span>
+    </h1>
 
-    <h1
-      slot="title"
-      class="!text-4xl sm:!text-5xl md:!text-6xl lg:!text-7xl break-words [overflow-wrap:anywhere]"
-    >#{tag}</h1>
-
-    <p slot="description">
-      {posts.length} post{posts.length === 1 ? '' : 's'} tagged "{tag}".
-    </p>
+    <p slot="description">{posts.length} 篇文章带有 #{tag} 标签。</p>
   </Hero>
 
   <section class="bg-background-secondary py-[var(--space-section-md)] border-t border-border">
@@ -70,7 +67,7 @@ const { tag, posts, visibleTags } = Astro.props;
           class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
         >
           <Icon name="arrow-left" size="sm" />
-          All posts
+          全部文章
         </a>
 
         {visibleTags.length > 0 && (
@@ -98,11 +95,11 @@ const { tag, posts, visibleTags } = Astro.props;
           <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
             <Icon name="file-text" size="lg" class="text-foreground-muted" />
           </div>
-          <p class="text-foreground-muted text-lg">No posts found for this tag.</p>
+          <p class="text-foreground-muted text-lg">未找到带有此标签的文章。</p>
           <div class="mt-6">
             <Button href="/blog" variant="outline" size="sm">
               <Icon name="arrow-left" size="sm" />
-              Back to all posts
+              返回「所有文章」
             </Button>
           </div>
         </div>
