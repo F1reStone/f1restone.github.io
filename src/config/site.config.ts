@@ -120,9 +120,9 @@ export interface SiteConfig {
 }
 
 const siteConfig: SiteConfig = {
-  name: 'FireStone火石',
+  name: 'FireStone 火石',
   description:
-    'FireStone\'s personal blog. Sharing some cool stuffs by me',
+    '兴趣使然的个人开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。',
   url: SITE_URL || 'https://f1restone.github.io',
   ogImage: '/og-default.svg',
   author: 'FireStone',

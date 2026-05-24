@@ -15,25 +15,21 @@ import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
 import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
 ---
 <PageLayout
-  title="关于 FireStone"
-  description="Verse the Infinite"
+  title="关于"
+  description="一名兴趣使然的个人开发者 / 设计师 / 内容创作者"
 >
-  <Hero layout="centered" size="sm">
+  </Hero>
+    <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="user" size="sm" />
-      About me
+      关于我
     </Badge>
-    <h1 slot="title">
-      <span class="text-foreground [-webkit-text-fill-color:currentColor]">Astro Rocket —</span><br />
-      <span class="text-brand-500 [-webkit-text-fill-color:var(--color-brand-500)]">
-        <TypingEffect words={["Web Designer", "Web Developer", "Astro Developer", "Claude Code User", "UI / UX Enthusiast", "Blogger", "Coffee lover"]} />
-      </span>
+    
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">About me</span>
     </h1>
 
-    <p slot="description">
-      I care about both sides of the craft — how a site looks and how it
-      performs. Here's a bit more about how I think and work.
-    </p>
+    <p slot="description">一名兴趣使然的<TypingEffect words={["设计师", "开发者", "内容创作者", "技术美术", "Sensei", "《THE FINALS》选手", "奇袭者"]} /></p>
   </Hero>
 
   <!-- What's possible now -->
