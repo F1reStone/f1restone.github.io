@@ -4,10 +4,10 @@ import { renderOgSvg } from '@/lib/og';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('blog', ({ data }) => {
-    return data.locale === 'en' && (import.meta.env.PROD ? data.draft !== true : true);
+    return data.locale === 'zh-CN' && (import.meta.env.PROD ? data.draft !== true : true);
   });
   return posts.map((post) => ({
-    params: { slug: post.id.replace('en/', '') },
+    params: { slug: post.id.replace('zh-CN/', '') },
     props: {
       title: post.data.title,
       description: post.data.description,
