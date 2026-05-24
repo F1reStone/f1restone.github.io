@@ -143,6 +143,8 @@
   --font-size-5xl: 3rem;       /* 48px */
   --font-size-6xl: 3.75rem;    /* 60px */
   --font-size-7xl: 4.5rem;     /* 72px */
+  --font-size-8xl: 6rem;       /* 96px */
+  --font-size-9xl: 8rem;       /* 128px */
 
   /* Border Radius - theme-controlled */
   --radius-sm: var(--theme-radius-sm);
