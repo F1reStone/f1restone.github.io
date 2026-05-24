@@ -169,7 +169,7 @@ function getNavIcon(href: string): string {
   return 'chevron-right';
 }
 
-const mobileSocialOrder = ['x.com', 'instagram.com', 'bsky.app', 'github.com', 'linkedin.com', 'youtube.com'];
+const mobileSocialOrder = ['github.com', 'bilibili.com', 'youtube.com', 'x.com'];
 const mobileSocialLinks = mobileSocialOrder
   .map((host) => siteConfig.socialLinks.find((u) => u.includes(host)))
   .filter((u): u is string => Boolean(u));
