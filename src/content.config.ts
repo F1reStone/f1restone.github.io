@@ -18,7 +18,7 @@ const blog = defineCollection({
       svgSlug: z.string().optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
-      locale: z.enum(['en', 'es', 'fr']).default('en'),
+      locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
       /** Optional FAQs — when set, emit FAQ JSON-LD alongside the BlogPosting schema. */
       faqs: z
         .array(
@@ -72,7 +72,7 @@ const faqs = defineCollection({
     answer: z.string(),
     category: z.string().optional(),
     order: z.number().default(0),
-    locale: z.enum(['en', 'es', 'fr']).default('en'),
+    locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
   }),
 });
 
