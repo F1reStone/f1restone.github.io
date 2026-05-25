@@ -6,7 +6,7 @@ const consentConfig: ConsentConfig = {
 
   /** 'consent_mode_v2' = scripts load with denied defaults, cookieless pings
    *  'strict' = scripts fully blocked until consent granted */
-  mode: 'consent_mode_v2',
+  mode: 'strict',
 
   /** localStorage key for stored preferences */
   storageKey: 'cookie-consent',
@@ -44,9 +44,9 @@ const consentConfig: ConsentConfig = {
 
   ui: {
     heading: 'Cookie 首选项',
-    description: '本网站使用 Cookie 以提供个性化内容、分析访问情况并改善使用体验。点击「接受全部」即表示您同意我们使用所有 Cookie。您也可以选择「仅必要 Cookie」或点击「自定义」来选择您希望启用的 Cookie 类型。访问《隐私政策》以详细了解我们如何使用 Cookie。',
+    description: '本网站使用 Cookie 以提供个性化内容、分析访问情况并改善使用体验。点击「接受全部」即表示您同意我们使用所有 Cookie。您也可以选择「仅必要 Cookie」或「自定义」来选择您希望启用的 Cookie 类型。访问《隐私政策》以详细了解我们如何使用 Cookie。',
     acceptAll: '接受全部',
-    declineAll: '仅必要 Cookie',
+    declineAll: '仅必要',
     customize: '自定义',
     savePreferences: '保存偏好设置',
     settingsHeading: 'Cookie 与隐私设置',

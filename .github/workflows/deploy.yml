@@ -19,7 +19,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PUBLIC_GA_MEASUREMENT_ID: ${{ secrets.PUBLIC_GA_MEASUREMENT_ID }}
       PUBLIC_GTM_ID: ${{ secrets.PUBLIC_GTM_ID }}
 
     steps:
