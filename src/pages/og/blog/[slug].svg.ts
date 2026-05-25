@@ -2,12 +2,22 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { renderOgSvg } from '@/lib/og';
 
+function getSlugFromEntryId(id: string): string {
+  // 例：
+  // "zh-CN/astro-rocket-getting-started" -> "astro-rocket-getting-started"
+  // "en-US/some-post" -> "some-post"
+  return id.split('/').slice(1).join('/');
+}
+
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('blog', ({ data }) => {
     return data.locale === 'zh-CN' && (import.meta.env.PROD ? data.draft !== true : true);
   });
+
   return posts.map((post) => ({
-    params: { slug: post.id.replace('zh-CN/', '') },
+    params: {
+      slug: getSlugFromEntryId(post.id),
+    },
     props: {
       title: post.data.title,
       description: post.data.description,

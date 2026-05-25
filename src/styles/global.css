@@ -30,8 +30,8 @@
 }
 
 @font-face {
-  font-family: 'Noto Sans CJK SC';
-  src: url('/fonts/noto-sans-cjk-sc-variable.woff2') format('woff2');
+  font-family: 'Noto Sans SC';
+  src: url('/fonts/noto-sans-sc-variable.woff2') format('woff2');
   font-display: swap;
 }
 
@@ -214,7 +214,7 @@
      gradient text effects from showing between heading characters */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    line-height: 1.1;
+    line-height: 0.9;
     letter-spacing: var(--theme-heading-tracking);
     text-transform: uppercase;
     font-feature-settings: 'dlig', 'palt';

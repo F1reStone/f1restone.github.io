@@ -33,15 +33,18 @@ export function findTagBySlug(slug: string, allTags: string[]): string | undefin
 
 /**
  * Strip the locale prefix from a blog entry's id to get its URL slug
- * (e.g. "en/welcome" → "welcome").
+ * (e.g. "en-US/welcome" → "welcome").
  */
-export function getPostSlug(postId: string, locale = 'zh-CN'): string {
-  return postId.replace(new RegExp(`^${locale}/`), '');
+export function stripLocalePrefix(id: string): string {
+  return id.includes('/') ? id.split('/').slice(1).join('/') : id;
 }
 
-/** URL path for an individual blog post. */
-export function getPostUrl(postId: string, locale = 'zh-CN'): string {
-  return `/blog/${getPostSlug(postId, locale)}`;
+export function getPostSlug(postId: string): string {
+  return stripLocalePrefix(postId);
+}
+
+export function getPostUrl(postId: string): string {
+  return `/blog/${stripLocalePrefix(postId)}`;
 }
 
 /**
@@ -49,7 +52,7 @@ export function getPostUrl(postId: string, locale = 'zh-CN'): string {
  * out in production, kept visible in dev so authors can preview them.
  */
 export async function getPublishedPosts(
-  locale = 'en',
+  locale = 'zh-CN',
 ): Promise<CollectionEntry<'blog'>[]> {
   const all = await getCollection('blog', ({ data }) => {
     return data.locale === locale && (import.meta.env.PROD ? data.draft !== true : true);

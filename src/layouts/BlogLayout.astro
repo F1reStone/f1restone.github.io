@@ -80,8 +80,8 @@ const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 // Prefer the post's own image; otherwise serve the per-post dynamic OG image
 // generated at build time (see src/pages/og/blog/[slug].svg.ts). Falls back to
 // the site-wide default only when slug is missing.
-const slugForOg = slug.replace(/^[^/]+\//, '');
-const ogImage = image?.src || (slugForOg ? getBlogOgPath(slugForOg) : siteConfig.ogImage);
+const ogSlug = slug ? slug.split('/').pop() : '';
+const ogImage = image?.src || (ogSlug ? getBlogOgPath(ogSlug) : siteConfig.ogImage);
 
 const breadcrumbs = [
   { label: '首页', href: '/' },

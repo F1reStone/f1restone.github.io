@@ -91,16 +91,16 @@ html[data-theme="firestone-cyan"] {
      FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
      ------------------------------------------------------------------------- */
   --theme-font-sans: 'Wix Madefor Text', 'Montserrat', 'Outfit',
-    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Google Sans Flex', 'HarmonyOS Sans', 'Segoe UI Variable Text', 'Segoe UI', 'Noto Sans', 'Roboto', 'Helvetica Neue', 'Arial',
-    'Noto Sans CJK SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Google Sans Flex', 'Inter', 'HarmonyOS Sans', 'Segoe UI Variable Text', 'Segoe UI', 'Noto Sans', 'Roboto', 'Helvetica Neue', 'Arial',
+    'Noto Sans SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
     ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --theme-font-display: 'Neue Regrade', var(--theme-font-sans);
-  --theme-font-mono: 'NKDuy Mono',
-    'SFMono-Regular', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
-    'Noto Sans CJK SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+  --theme-font-display: 'Neue Regrade', 'Helvetica Now Var Text', 'Inter', var(--theme-font-sans);
+  --theme-font-mono: 'NKDuy Mono', 'JetBrains Mono',
+    'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
+    'Noto Sans SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
     ui-monospace, monospace,
-    'Apple Color Emoji', 'Segoe UI Emoji','Segoe UI Symbol', 'Noto Color Emoji';
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --theme-heading-weight: 700;
   --theme-heading-tracking: -0.10em;
   --theme-body-leading: 1.6;
