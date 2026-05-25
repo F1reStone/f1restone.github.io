@@ -377,6 +377,8 @@
     --nav-link-color: rgba(255, 255, 255, 0.75);
     --nav-link-hover-color: #ffffff;
     --nav-link-hover-bg: rgba(255, 255, 255, 0.1);
+    --nav-link-active-color: var(--on-invert);
+    --nav-link-active-bg: var(--surface-invert-secondary);
   }
 
   /* 重置所有弹出式面板（下拉菜单）的变量，使它们恢复跟随网站默认深浅模式的表现 */
@@ -897,7 +899,7 @@
    Components
    ------------------------------------------------------------------------- */
 @layer components {
-  /* -------------------------------------------------------------------------
+/* -------------------------------------------------------------------------
      Navigation Component Tokens
      Customize header navigation via these CSS custom properties
      ------------------------------------------------------------------------- */
@@ -910,11 +912,12 @@
     /* Nav link - hover state */
     --nav-link-hover-color: var(--color-foreground);
     --nav-link-hover-bg: var(--color-secondary);
+    --nav-link-hover-font-weight: 700; /* FireStone: 定义悬停字重目标 */
 
     /* Nav link - active state (current page) */
     --nav-link-active-color: var(--color-foreground);
     --nav-link-active-bg: var(--color-secondary);
-    --nav-link-active-font-weight: 600;
+    --nav-link-active-font-weight: 700;
 
     /* Nav link - focus state */
     --nav-link-focus-ring: var(--color-ring);
@@ -923,6 +926,8 @@
   .nav-link {
     color: var(--nav-link-color);
     background-color: var(--nav-link-bg);
+    /* FireStone: 引入专属的可变字体动画。使用 !important 覆盖 HTML 上自带的 Tailwind transition-all，防止动画被截断！ */
+    transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1), background-color 150ms, color 150ms !important;
   }
 
   .nav-link-inactive {
@@ -932,6 +937,7 @@
   .nav-link-inactive:hover {
     color: var(--nav-link-hover-color);
     background-color: var(--nav-link-hover-bg);
+    font-weight: var(--nav-link-hover-font-weight);
   }
 
   .nav-link-active {
@@ -940,15 +946,12 @@
     font-weight: var(--nav-link-active-font-weight);
   }
 
-  .nav-link:focus-visible {
-    outline: 2px solid var(--nav-link-focus-ring);
-    outline-offset: 2px;
-  }
-
   /* Mobile nav links */
   .mobile-nav-link {
     color: var(--nav-link-color);
     background-color: var(--nav-link-bg);
+    /* 手机端同步该动画质感 */
+    transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1), background-color 150ms, color 150ms !important;
   }
 
   .mobile-nav-link-inactive {
@@ -958,6 +961,7 @@
   .mobile-nav-link-inactive:hover {
     color: var(--nav-link-hover-color);
     background-color: var(--nav-link-hover-bg);
+    font-weight: var(--nav-link-hover-font-weight);
   }
 
   .mobile-nav-link-active {
@@ -965,6 +969,12 @@
     background-color: var(--nav-link-active-bg);
     font-weight: var(--nav-link-active-font-weight);
   }
+
+  .mobile-nav-link-active:hover {
+    font-weight: var(--nav-link-hover-font-weight);
+  }
+
+
 
   /* Prose */
   .prose {
