@@ -3,7 +3,7 @@ import { collectTags, getPublishedPosts, tagToSlug } from '@/lib/blog';
 import { renderOgSvg } from '@/lib/og';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getPublishedPosts();
+  const posts = await getPublishedPosts('zh-CN');
   const tags = collectTags(posts);
 
   return tags.map((tag) => {
