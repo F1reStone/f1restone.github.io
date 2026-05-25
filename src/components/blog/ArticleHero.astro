@@ -79,7 +79,9 @@ const readingTime = Math.max(1, Math.ceil(estimatedWords / wordsPerMinute));
       </h1>
 
       <!-- Description -->
-      <p slot="description" class="hero-description-text">{description}</p>
+      <p class="hero-description-text text-xl leading-relaxed max-w-2xl mb-[var(--space-stack-lg)]">
+        {description}
+      </p>
 
       <!-- Meta info -->
       <div class="flex flex-wrap items-center gap-[var(--space-stack-lg)] text-sm text-foreground-muted">
