@@ -55,8 +55,6 @@ interface Props extends HTMLAttributes<'header'> {
   variant?: 'default' | 'solid' | 'transparent';
   colorScheme?: 'default' | 'invert';
   shape?: 'bar' | 'floating';
-  // FireStone: [Added master switch for immersive header]
-  immersiveOnTop?: boolean; 
   nav?: NavItem[];
   extraNav?: NavItem[];
   showCta?: boolean;
@@ -83,12 +81,10 @@ interface Props extends HTMLAttributes<'header'> {
 
 const {
   layout = 'default',
-  // FireStone: [Set default to false, meaning safe standard layout by default]
-  immersiveOnTop = false,
   position = 'fixed',
   size = 'lg',
   variant = 'transparent',
-  colorScheme = 'invert',
+  colorScheme = 'default',
   shape = 'bar',
   nav,
   extraNav = [],
@@ -187,6 +183,7 @@ const buttonId = `${menuId}-button`;
   class={headerClasses}
   data-menu-id={menuId}
   data-button-id={buttonId}
+  data-header-position={position}
   data-header-shape={shape}
   data-header-variant={variant}
   data-header-color-scheme={colorScheme}

@@ -360,7 +360,27 @@
     );
   }
 
-/* =========================================================================
+  /* =========================================================================
+     FireStone: Immersive Header Variable Override
+     当 Header 设定为 fixed 且未发生滚动时，将内部颜色变量映射为亮色 (针对深色背景)。
+     一旦向下滚动，[data-scrolled] 出现，此规则失效，Header 将恢复到正常浅色/深色主题状态。
+     ========================================================================= */
+  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) {
+    /* 核心文字与背景映射到主题 invert 令牌 */
+    --color-foreground: var(--on-invert);
+    --color-foreground-muted: var(--on-invert-muted);
+    --color-foreground-secondary: var(--on-invert-secondary);
+    --color-border-strong: var(--border-invert-strong);
+    --color-secondary: var(--surface-invert-secondary);
+    --color-background: var(--surface-invert);
+    
+    /* 导航栏专属悬停交互映射 */
+    --nav-link-color: var(--on-invert-muted);
+    --nav-link-hover-color: var(--on-invert);
+    --nav-link-hover-bg: var(--surface-invert-secondary);
+  }
+
+  /* =========================================================================
      Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
      参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
      ========================================================================= */
@@ -1402,16 +1422,4 @@
   .group:hover [data-icon='arrow-left'] {
     transform: none;
   }
-}
-
-/* Custom black-and-white adaptive logo color logic */
-.bar-intop-color {
-  color: var(--color-foreground); /* Default text color: dark in light mode, light in dark mode */
-  transition: color 300ms ease;
-}
-
-/* When the header is bar and not scrolled or returned */
-[data-header-shape="bar"][data-header-variant="transparent"]:not([data-scrolled]) .bar-intop-color,
-[data-header-shape="bar"][data-header-color-scheme="invert"]:not([data-scrolled]) .bar-intop-color {
-  color: var(--color-on-invert); 
 }
