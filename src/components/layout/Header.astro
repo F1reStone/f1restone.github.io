@@ -55,6 +55,8 @@ interface Props extends HTMLAttributes<'header'> {
   variant?: 'default' | 'solid' | 'transparent';
   colorScheme?: 'default' | 'invert';
   shape?: 'bar' | 'floating';
+  // FireStone: [Added master switch for immersive header]
+  immersiveOnTop?: boolean; 
   nav?: NavItem[];
   extraNav?: NavItem[];
   showCta?: boolean;
@@ -81,6 +83,8 @@ interface Props extends HTMLAttributes<'header'> {
 
 const {
   layout = 'default',
+  // FireStone: [Set default to false, meaning safe standard layout by default]
+  immersiveOnTop = false,
   position = 'fixed',
   size = 'lg',
   variant = 'transparent',
