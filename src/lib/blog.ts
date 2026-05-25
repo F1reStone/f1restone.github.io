@@ -18,11 +18,9 @@ export const TAG_POSTS_PER_PAGE = 12;
  * (e.g. "web-performance"). Two-way deterministic — pair with `findTagBySlug`.
  */
 export function tagToSlug(tag: string): string {
-  return tag
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
+  const normalized = tag.trim().toLowerCase().normalize('NFKC');
+  return normalized
+    .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
     .replace(/^-+|-+$/g, '');
 }
 

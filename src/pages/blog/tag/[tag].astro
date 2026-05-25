@@ -19,11 +19,14 @@ export async function getStaticPaths() {
   // scope and can't see frontmatter-level consts.
   const TAG_CLOUD_LIMIT = 10;
 
-  const posts = await getPublishedPosts('zh-CN');
+  const posts = await getPublishedPosts();
   const tags = collectTags(posts);
   const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
 
-  return tags.map((tag) => {
+  return tags.flatMap((tag) => {
+    const slug = tagToSlug(tag);
+    if (!slug) return [];
+
     const postsForTag = posts.filter((p) => p.data.tags.includes(tag));
     // Make sure the active tag is always present in the cloud, even if
     // it's not popular enough to make the top N; otherwise the user
@@ -31,10 +34,11 @@ export async function getStaticPaths() {
     const visibleTags = topTags.includes(tag)
       ? topTags
       : [tag, ...topTags.slice(0, TAG_CLOUD_LIMIT - 1)];
-    return {
-      params: { tag: tagToSlug(tag) },
+
+    return [{
+      params: { tag: slug },
       props: { tag, posts: postsForTag, visibleTags },
-    };
+    }];
   });
 }
 
