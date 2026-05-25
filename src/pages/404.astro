@@ -13,26 +13,26 @@ const recoveryLinks = [
   {
     icon: 'layers',
     title: '项目',
-    description: 'Selected work and case studies.',
+    description: '一些由我制作的有趣（？）作品。',
     href: '/projects',
   },
   {
     icon: 'book',
     title: '博客',
-    description: 'Notes on design, code, and the craft.',
+    description: '有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。',
     href: '/blog',
   },
   {
-    icon: 'mail',
-    title: '联系',
-    description: 'Start a conversation about your project.',
-    href: '/contact',
+    icon: 'user',
+    title: '关于',
+    description: '一名兴趣使然的个人开发者 / 设计师 / 内容创作者。',
+    href: '/about',
   },
 ];
 ---
 
 <PageLayout
-  title="页面未找到"
+  title="404"
   description="此页面已移动、已删除或从未存在过。"
   noindex
   eagerReveal
@@ -52,7 +52,7 @@ const recoveryLinks = [
     <Fragment slot="actions">
       <Button size="lg" href="/">
         <Icon name="arrow-left" size="sm" />
-        回到首页
+        返回首页
       </Button>
       <Button size="lg" href="/blog" variant="outline">
         浏览博客

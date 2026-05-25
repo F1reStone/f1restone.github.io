@@ -8,7 +8,7 @@ function safeTagSlug(tag: string): string {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getPublishedPosts();
+  const posts = await getPublishedPosts('zh-CN');
   const tags = collectTags(posts);
 
   return tags.flatMap((tag) => {
