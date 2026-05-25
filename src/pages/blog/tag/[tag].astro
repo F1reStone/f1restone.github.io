@@ -46,8 +46,8 @@ const { tag, posts, visibleTags } = Astro.props;
 ---
 
 <PageLayout
-  title={`博客 | ${tag}`}
-  description={`带有 ${tag} 标签的文章。`}
+  title={`#${tag} 相关文章 | 博客`}
+  description={`带有 #${tag} 标签的文章。`}
   eagerReveal
 >
   <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
@@ -71,7 +71,7 @@ const { tag, posts, visibleTags } = Astro.props;
           class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
         >
           <Icon name="arrow-left" size="sm" />
-          全部文章
+          返回全部文章
         </a>
 
         {visibleTags.length > 0 && (

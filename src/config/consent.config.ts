@@ -13,29 +13,29 @@ const consentConfig: ConsentConfig = {
 
   categories: {
     necessary: {
-      label: 'Necessary',
-      description: 'Essential cookies required for the website to function. These cannot be disabled.',
+      label: '必要 Cookie',
+      description: '用于网站正常运行的必要 Cookie。这些 Cookie 无法被禁用。',
       required: true,
       defaultEnabled: true,
       gcmTypes: ['security_storage'],
     },
     analytics: {
-      label: 'Analytics',
-      description: 'Help us understand how visitors interact with the website by collecting anonymous usage data.',
+      label: '分析 Cookie',
+      description: '通过收集匿名使用数据，帮助我们了解访客如何使用本网站。',
       required: false,
       defaultEnabled: false,
       gcmTypes: ['analytics_storage'],
     },
     marketing: {
-      label: 'Marketing',
-      description: 'Used to deliver relevant ads and track ad campaign performance across websites.',
+      label: '营销 Cookie',
+      description: '用于提供更相关的内容与广告，并分析广告活动在不同网站上的表现。',
       required: false,
       defaultEnabled: false,
       gcmTypes: ['ad_storage', 'ad_user_data', 'ad_personalization'],
     },
     preferences: {
-      label: 'Preferences',
-      description: 'Allow the website to remember choices you make, such as language or region.',
+      label: '偏好 Cookie',
+      description: '允许网站记住您的个性化设置，例如语言或深浅模式选择。',
       required: false,
       defaultEnabled: false,
       gcmTypes: ['functionality_storage', 'personalization_storage'],
@@ -43,15 +43,15 @@ const consentConfig: ConsentConfig = {
   },
 
   ui: {
-    heading: 'Cookie Preferences',
-    description: 'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic.',
-    acceptAll: 'Accept All',
-    declineAll: 'Decline All',
-    customize: 'Customize',
-    savePreferences: 'Save Preferences',
-    settingsHeading: 'Privacy Settings',
-    alwaysOnLabel: 'Always on',
-    privacyPolicyLabel: 'Privacy Policy',
+    heading: 'Cookie 首选项',
+    description: '本网站使用 Cookie 以提供个性化内容、分析访问情况并改善使用体验。点击「接受全部」即表示您同意我们使用所有 Cookie。您也可以选择「仅必要 Cookie」或点击「自定义」来选择您希望启用的 Cookie 类型。\n访问《隐私政策》以进一步了解我们如何使用 Cookie。',
+    acceptAll: '接受全部',
+    declineAll: '仅必要 Cookie',
+    customize: '自定义',
+    savePreferences: '保存偏好设置',
+    settingsHeading: '隐私设置',
+    alwaysOnLabel: '始终开启',
+    privacyPolicyLabel: '隐私政策',
   },
 
   /** Milliseconds before banner slides in */

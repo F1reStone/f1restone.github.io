@@ -47,6 +47,7 @@ export const footerNavItems: NavItem[] = [
 
 export const legalLinks: LegalLink[] = [
   { label: '反馈网站 Bug', href: 'https://github.com/F1reStone/f1restone.github.io/issues' },
+  { label: '隐私政策', href: '/privacy-policy' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [
