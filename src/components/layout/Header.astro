@@ -219,14 +219,11 @@ const buttonId = `${menuId}-button`;
                 href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
                 class={cn(
                   'nav-link relative rounded-md px-3 py-2 text-sm',
+                  'transition-all duration-(--transition-fast)',
                   isFloating && 'hdr-invert-text',
                   isFloating
-                    ? (isActive(href)
-                        ? 'hdr-nav-active font-semibold'
-                        : 'font-medium')
-                    : (isActive(href)
-                        ? 'nav-link-active font-semibold text-foreground bg-secondary'
-                        : 'nav-link-inactive font-medium text-foreground-muted hover:text-foreground hover:bg-secondary/70')
+                    ? (isActive(href) ? 'hdr-nav-active' : '')
+                    : (isActive(href) ? 'nav-link-active' : 'nav-link-inactive')
                 )}
                 aria-current={isActive(href) ? 'page' : undefined}
               >
