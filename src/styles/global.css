@@ -516,6 +516,13 @@
     font-style: italic;
   }
 
+  /* 描述文本：保持纯白以确保在动态背景上的可读性 */
+  .hero-description-text {
+    --color-foreground: rgba(255, 255, 255, 0.95);
+    --color-foreground-secondary: rgba(255, 255, 255, 0.85);
+    --color-foreground-muted: rgba(255, 255, 255, 0.7);
+  }
+
   /* Primary CTA — near-white gradient pill. Targets .btn-primary, which is
      the homepage primary CTA marker (added by the primary button variant). */
   html:not(.dark) .hero-dark-gradient .btn-primary {

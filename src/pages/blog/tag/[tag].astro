@@ -60,7 +60,7 @@ const { tag, posts, visibleTags } = Astro.props;
       <span class="hero-title-text">#{tag}</span>
     </h1>
 
-    <p slot="description">{posts.length} 篇文章带有 #{tag} 标签。</p>
+    <p slot="description" class="hero-description-text">{posts.length} 篇文章带有 #{tag} 标签。</p>
   </Hero>
 
   <section class="bg-background-secondary py-[var(--space-section-md)] border-t border-border">

@@ -39,9 +39,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <span class="hero-title-text">Infinite Future</span>
     </h1>
 
-    <p slot="description">
-      前往无限未来
-    </p>
+    <p slot="description" class="hero-description-text">前往无限未来</p>
 
    <Fragment slot="actions">
       <Button size="lg" href="/about">
