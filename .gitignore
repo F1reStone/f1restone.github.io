@@ -10,7 +10,7 @@ dist/
 .astro/
 
 # Environment variables
-.env
+!.env
 .env.local
 .env.*.local
 
