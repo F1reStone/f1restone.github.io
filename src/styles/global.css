@@ -366,18 +366,36 @@
      一旦向下滚动，[data-scrolled] 出现，此规则失效，Header 将恢复到正常浅色/深色主题状态。
      ========================================================================= */
   header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) {
-    /* 核心文字与背景映射到主题 invert 令牌 */
-    --color-foreground: var(--on-invert);
-    --color-foreground-muted: var(--on-invert-muted);
-    --color-foreground-secondary: var(--on-invert-secondary);
-    --color-border-strong: var(--border-invert-strong);
-    --color-secondary: var(--surface-invert-secondary);
-    --color-background: var(--surface-invert);
+    /* 强制主导航栏元素为纯净的白色系，保证在极光背景上的绝对可读性 */
+    --color-foreground: #ffffff;
+    --color-foreground-secondary: rgba(255, 255, 255, 0.85);
+    --color-foreground-muted: rgba(255, 255, 255, 0.7);
+    --color-border-strong: rgba(255, 255, 255, 0.2);
+    --color-border: rgba(255, 255, 255, 0.1);
     
     /* 导航栏专属悬停交互映射 */
-    --nav-link-color: var(--on-invert-muted);
-    --nav-link-hover-color: var(--on-invert);
-    --nav-link-hover-bg: var(--surface-invert-secondary);
+    --nav-link-color: rgba(255, 255, 255, 0.75);
+    --nav-link-hover-color: #ffffff;
+    --nav-link-hover-bg: rgba(255, 255, 255, 0.1);
+  }
+
+  /* 重置所有弹出式面板（下拉菜单）的变量，使它们恢复跟随网站默认深浅模式的表现 */
+  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .ttg-panel,
+  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .lang-panel,
+  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .mobile-menu-body {
+    /* 恢复到全局 root 设定的标准颜色 */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-foreground-secondary: var(--foreground-secondary);
+    --color-foreground-muted: var(--foreground-muted);
+    --color-border-strong: var(--border-strong);
+    --color-border: var(--border);
+    --color-secondary: var(--secondary);
+    
+    /* 恢复面板内导航链接的标准交互 */
+    --nav-link-color: var(--foreground-muted);
+    --nav-link-hover-color: var(--foreground);
+    --nav-link-hover-bg: var(--secondary);
   }
 
   /* =========================================================================
