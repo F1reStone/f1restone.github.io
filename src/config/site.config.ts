@@ -180,7 +180,7 @@ const siteConfig: SiteConfig = {
   i18n: i18nConfig,
   branding: {
     logo: {
-      alt: 'Astro Rocket',
+      alt: 'FireStone',
       imageUrl: '/favicon.svg',
     },
     favicon: {
