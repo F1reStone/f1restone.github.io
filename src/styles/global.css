@@ -935,6 +935,21 @@
     background-color: var(--nav-link-bg);
     /* FireStone: 引入专属的可变字体动画。使用 !important 覆盖 HTML 上自带的 Tailwind transition-all，防止动画被截断！ */
     transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1), background-color 150ms, color 150ms !important;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-link::after {
+    content: attr(data-text);
+    content: attr(data-text) / "";
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    user-select: none;
+    pointer-events: none;
+    font-weight: 700;
   }
 
   .nav-link-inactive {

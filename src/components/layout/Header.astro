@@ -197,7 +197,7 @@ const buttonId = `${menuId}-button`;
         (hasLogoSlot ? (
           <slot name="logo" />
         ) : (
-          <a href="/" class="flex items-center">
+          <a href="/" class="flex items-center w-fit justify-self-start">
             <Logo
               size={size === 'sm' ? 'md' : 'lg'}
               class="text-foreground transition-colors duration-300" 
@@ -226,6 +226,7 @@ const buttonId = `${menuId}-button`;
                     : (isActive(href) ? 'nav-link-active' : 'nav-link-inactive')
                 )}
                 aria-current={isActive(href) ? 'page' : undefined}
+                data-text={label}
               >
                 {label}
               </a>
