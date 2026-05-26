@@ -6,8 +6,7 @@ import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
-import LighthouseScores from '@/components/landing/LighthouseScores.astro';
-import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
+import TypingEffect from '@/components/ui/TypingEffect.astro';
 import { getCollection } from 'astro:content';
 import siteConfig from '@/config/site.config';
 
@@ -54,95 +53,15 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </Fragment>
   </Hero>
 
-  <!-- Services Section -->
-  <section class="relative z-10 py-[var(--space-section-md)] bg-background-secondary border-t border-border">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-      <div class="flex flex-col items-center gap-4 text-center" data-reveal>
-        <div class="flex flex-col items-center gap-6">
-          <Badge variant="brand" pill>服务项目</Badge>
-          <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-            业务范围
-          </h2>
-        </div>
-        <p class="text-lg text-foreground-muted max-w-2xl mx-auto">
-          提供从概念构思到最终上线的一站式服务。
-        </p>
-      </div>
-
-      <div class="grid gap-6 lg:grid-cols-3">
-        <!-- Web Design -->
-        <Card hover href="/services" class="group flex flex-col" data-reveal>
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="layout" size="sm" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-foreground">网页设计</h3>
-              <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                精心打磨内容优先的页面布局。专注于清晰度与视觉平衡，完美贴合用户的现代网页阅读习惯。
-              </p>
-              <span class="inline-flex items-center gap-1 text-sm font-medium text-brand-500 mt-3 group-hover:gap-2 transition-all">
-                了解更多
-                <Icon name="arrow-right" size="sm" />
-              </span>
-            </div>
-          </div>
-        </Card>
-
-        <!-- Web Development -->
-        <Card hover href="/services" class="group flex flex-col" data-reveal data-reveal-delay="1">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="code" size="sm" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-foreground">前端开发</h3>
-              <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                使用 Astro 和 Tailwind CSS 构建现代网站。代码轻量、无障碍体验极佳，随业务自由扩展，拒绝捆绑死板模版。
-              </p>
-              <span class="inline-flex items-center gap-1 text-sm font-medium text-brand-500 mt-3 group-hover:gap-2 transition-all">
-                了解更多
-                <Icon name="arrow-right" size="sm" />
-              </span>
-            </div>
-          </div>
-        </Card>
-
-        <!-- SEO & Performance -->
-        <Card hover href="/services" class="group flex flex-col" data-reveal data-reveal-delay="2">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="zap" size="sm" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-foreground">SEO 与性能优化</h3>
-              <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                打造秒开级别的精炼网页，上线即具备优秀的搜索引擎排名潜力。标准落地 Core Web Vitals、元数据和结构化数据。
-              </p>
-              <span class="inline-flex items-center gap-1 text-sm font-medium text-brand-500 mt-3 group-hover:gap-2 transition-all">
-                了解更多
-                <Icon name="arrow-right" size="sm" />
-              </span>
-            </div>
-          </div>
-        </Card>
-      </div>
-    </div>
-  </section>
-
   <!-- Portfolio -->
   <section id="work" class="relative z-10 py-[var(--space-section-md)] bg-background border-t border-border">
     <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-4 text-center" data-reveal>
         <div class="flex flex-col items-center gap-6">
-          <Badge variant="brand" pill>精选作品</Badge>
           <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-            开源及实战项目
+            项目与作品
           </h2>
         </div>
-        <p class="text-lg text-foreground-muted max-w-2xl mx-auto">
-          近期完成的部分代表作展示。
-        </p>
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
@@ -183,84 +102,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
       <div class="text-center mt-4">
         <Button variant="outline" href="/projects">
-          查看所有项目
+          查看更多
           <Icon name="arrow-right" size="sm" />
         </Button>
       </div>
     </div>
   </section>
-
-  <!-- Testimonials -->
-  <section class="relative z-10 py-[var(--space-section-md)] bg-background-secondary border-t border-border">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-      <div class="flex flex-col items-center gap-4 text-center" data-reveal>
-        <div class="flex flex-col items-center gap-6">
-          <Badge variant="brand" pill>客户评价</Badge>
-          <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-            来自合作方的反馈
-          </h2>
-        </div>
-        <p class="text-lg text-foreground-muted">
-          此处可以替换为您真实的客户评价和寄语。
-        </p>
-      </div>
-
-      <div class="grid gap-6 md:grid-cols-2">
-        <!-- Testimonial 1 -->
-        <Card variant="elevated" padding="lg" hover data-reveal>
-          <div class="flex flex-col h-full gap-4">
-            <div class="flex gap-1 text-brand-500" role="img" aria-label="5 星满分评价">
-              {[...Array(5)].map(() => (
-                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <blockquote class="flex-1 text-foreground-muted leading-relaxed">
-              "新网站不仅按时上线，还圆满达成了我们设定的所有目标。整体性能有了质的飞跃——加载耗时大幅缩短，我们的核心客户群也给出了非常高的正面反馈。"
-            </blockquote>
-            <div class="flex items-center gap-3 pt-4 border-t border-border">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500/30 to-brand-500/10 flex items-center justify-center text-brand-500 font-bold text-sm shrink-0">
-                A
-              </div>
-              <div>
-                <p class="text-sm font-semibold text-foreground">Alex Morgan</p>
-                <p class="text-xs text-foreground-muted">创始人, Bright Studio</p>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <!-- Testimonial 2 -->
-        <Card variant="elevated" padding="lg" hover data-reveal data-reveal-delay="1">
-          <div class="flex flex-col h-full gap-4">
-            <div class="flex gap-1 text-brand-500" role="img" aria-label="5 星满分评价">
-              {[...Array(5)].map(() => (
-                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <blockquote class="flex-1 text-foreground-muted leading-relaxed">
-              "从初次洽谈到最终的交付和交接，整个过程非常爽快丝滑。沟通时总能切中要害，开发期间的进度同步也很到位，最终的产品效果甚至超出了我们的预期。非常推荐！"
-            </blockquote>
-            <div class="flex items-center gap-3 pt-4 border-t border-border">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500/30 to-brand-500/10 flex items-center justify-center text-brand-500 font-bold text-sm shrink-0">
-                S
-              </div>
-              <div>
-                <p class="text-sm font-semibold text-foreground">Sarah Chen</p>
-                <p class="text-xs text-foreground-muted">CEO, Luma Agency</p>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-    </div>
-  </section>
-
-  <!-- Lighthouse scores -->
-  <LighthouseScores />
 
   <!-- About Teaser -->
   <section class="relative z-10 py-[var(--space-section-md)] bg-background-secondary border-t border-border">
@@ -270,45 +117,15 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <div class="flex flex-col gap-6 mb-6">
             <Badge variant="brand" pill class="self-start">关于我</Badge>
             <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-              设计师、开发者、<br />
-              <span class="text-brand-500">以及技术博主。</span>
+              一位兴趣使然的<br />
+              <span class="text-brand-500"><TypingEffect words={["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "《THE FINALS》参赛选手", "奇袭者", "Sensei", "《战地风云 5》预购冤种", "（前）特勤干员", "《赛博朋克 2077》预购冤种", "《边境》首发冤种"]} /></span>
             </h2>
           </div>
-          <p class="text-lg text-foreground-muted leading-relaxed mb-4">
-            拥有 16 年的一线开发与设计经验{siteConfig.address?.city ? `，目前定居于${siteConfig.address.country ? `${siteConfig.address.country}` : ''}${siteConfig.address.city}` : ''}，承接全球范围内的远程业务。我选择 Astro 是因为它极度契合我对好网站的认知：轻量、克制，且具有长期维护的生命力。
-          </p>
-          <p class="text-lg text-foreground-muted leading-relaxed mb-8">
-            在技术博客中，我会经常分享构建项目过程中的想法、决策以及踩坑经验。
-          </p>
            <Button variant="outline" href="/about" class="self-start">
-            更多关于我
+            进一步了解
             <Icon name="arrow-right" size="sm" />
           </Button>
         </div>
-        <Card variant="elevated" padding="lg" class="h-full flex flex-col" data-reveal="left" data-reveal-delay="1" data-reveal-ease="smooth">
-          <p class="text-sm text-foreground mb-5 text-center">关于我的一些简要信息。</p>
-          <div class="grid grid-cols-2 gap-3 flex-1 auto-rows-fr">
-            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
-              <Icon name="history" class="w-10 h-10 text-brand-500" />
-              <p class="text-sm font-semibold text-foreground">16年 行业经验</p>
-            </div>
-            <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 h-full">
-              <svg class="w-10 h-10 text-brand-500" viewBox="0 0 1280 1280" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M815.039 94.6439C824.758 106.709 829.714 122.99 839.626 155.553L1056.17 866.901C976.107 825.368 889.072 795.413 797.281 779.252L656.29 302.798C653.983 295.002 646.822 289.654 638.693 289.654C630.542 289.654 623.368 295.03 621.08 302.853L481.795 779.011C389.579 795.1 302.146 825.109 221.741 866.793L439.347 155.388L439.348 155.388C449.291 122.882 454.262 106.629 463.982 94.5853C472.562 83.9531 483.723 75.6958 496.4 70.6002C510.76 64.8284 527.756 64.8284 561.749 64.8284H717.174C751.212 64.8284 768.23 64.8284 782.603 70.6123C795.292 75.7184 806.459 83.9923 815.039 94.6439Z" fill="currentColor"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M840.951 900.754C805.253 931.279 734.002 952.097 651.929 952.097C551.197 952.097 466.767 920.737 444.363 878.561C436.354 902.732 434.558 930.396 434.558 948.068C434.558 948.068 429.281 1034.84 489.636 1095.2C489.636 1063.86 515.042 1038.46 546.381 1038.46C600.097 1038.46 600.036 1085.32 599.987 1123.34C599.986 1124.48 599.984 1125.61 599.984 1126.73C599.984 1184.44 635.255 1233.91 685.416 1254.77C677.924 1239.36 673.721 1222.05 673.721 1203.77C673.721 1148.73 706.034 1128.23 743.588 1104.41L743.588 1104.41C773.469 1085.46 806.668 1064.41 829.548 1022.17C841.486 1000.13 848.265 974.893 848.265 948.068C848.265 931.573 845.702 915.676 840.951 900.754Z" fill="currentColor"/>
-              </svg>
-              <p class="text-sm font-semibold text-foreground">深耕 Astro 生态</p>
-            </a>
-            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
-              <Icon name="globe" class="w-10 h-10 text-brand-500" />
-              <p class="text-sm font-semibold text-foreground">支持全球远程</p>
-            </div>
-            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
-              <Icon name="map-pin" class="w-10 h-10 text-brand-500" />
-              <p class="text-sm font-semibold text-foreground">当前设立在 <br class="sm:hidden" />{siteConfig.address?.city ?? '未知城市'}{siteConfig.address?.country ? `，${siteConfig.address.country}` : ''}</p>
-            </div>
-          </div>
-        </Card>
       </div>
     </div>
   </section>
@@ -317,9 +134,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   <section class="relative z-10 py-[var(--space-section-md)] bg-background border-t border-border">
     <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-6 text-center" data-reveal>
-        <Badge variant="brand" pill>博客专栏</Badge>
         <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-          精选文章
+          推荐文章
         </h2>
       </div>
 
