@@ -347,50 +347,6 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
- <!-- CTA -->
-  <section class="relative z-10 py-[var(--space-section-md)] bg-background-secondary border-t border-border">
-    <!-- Mobile: flat section, no card -->
-    <div class="glitch:hidden mx-auto max-w-2xl px-6 text-center" data-reveal>
-      <Badge variant="brand" pill class="mb-6">聊聊合作</Badge>
-      <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
-        打算启动新项目吗？
-      </h2>
-      <p class="text-lg text-foreground-muted mb-8 text-balance">
-        我专注于从零阶段开始进行全新网站的设计与全栈编码工作——每一个项目自始至终皆由我本人独立闭环交付。欢迎把您的想法告诉我。
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button size="lg" href="/contact" class="cta-btn-brand">
-          开启您的项目
-          <Icon name="arrow-right" size="sm" />
-        </Button>
-        <Button size="lg" variant="outline" href="/about">
-          更多关于我
-          <Icon name="arrow-right" size="sm" />
-        </Button>
-      </div>
-    </div>
-
-    <!-- Desktop: contained LetterGlitch band with glass card -->
-    <LetterGlitchBand>
-      <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
-        打算启动新项目吗？
-      </h2>
-      <p class="text-lg text-foreground-muted mb-8 text-balance">
-        我专注于从零阶段开始进行全新网站的设计与全栈编码工作——每一个项目自始至终皆由我本人独立闭环交付。欢迎把您的想法告诉我。
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button size="lg" href="/contact" class="hero-btn-brand">
-          开启您的项目
-          <Icon name="arrow-right" size="sm" />
-        </Button>
-        <Button size="lg" variant="outline" href="/about">
-          更多关于我
-          <Icon name="arrow-right" size="sm" />
-        </Button>
-      </div>
-    </LetterGlitchBand>
-  </section>
-
 <script>
   function initCountup() {
     const counters = document.querySelectorAll<HTMLElement>('[data-countup]:not([data-countup-init])');
