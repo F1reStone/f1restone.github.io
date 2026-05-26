@@ -76,7 +76,7 @@ const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto
 // majority of visitors don't use. Posts that want the inline TOC visible
 // everywhere can set `toc.layout: 'inline'` in frontmatter.
 const inlineActive = showToc && tocLayout === 'inline';
-const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
 
 const breadcrumbs = [
   { label: '首页', href: '/' },

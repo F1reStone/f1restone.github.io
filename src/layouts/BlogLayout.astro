@@ -75,7 +75,7 @@ const showComments = !!commentsConfig?.enabled && commentsOverride !== false;
 const tocLayout = tocConfig?.layout ?? 'inline';
 const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
 const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
-const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
 
 // Prefer the post's own image; otherwise serve the per-post dynamic OG image
 // generated at build time (see src/pages/og/blog/[slug].svg.ts). Falls back to
@@ -222,7 +222,6 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <!-- Related Posts -->
   {tags.length > 0 && (
-    // FireStone: [Update related posts wrapper to 8xl]
     <div class="mx-auto max-w-8xl px-6" data-reveal>
       <RelatedPosts currentSlug={slug} tags={tags} locale={locale} maxPosts={3} />
     </div>

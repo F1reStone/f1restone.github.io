@@ -459,16 +459,26 @@ const configJson = JSON.stringify(consentConfig);
     right: 0;
     z-index: 50;
     transition: transform var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* FireStone: 增加全局背景与毛玻璃效果，使其横向占满整个屏幕 */
+    background: color-mix(in oklch, var(--color-background) 60%, transparent);
+    backdrop-filter: blur(24px);
   }
 
   .consent-banner--bottom {
     bottom: 0;
     transform: translateY(100%);
+    /* FireStone: 将边框和阴影从内层移至外层全屏容器 */
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
   }
 
   .consent-banner--top {
     top: 0;
     transform: translateY(-100%);
+    /* FireStone: 将边框和阴影从内层移至外层全屏容器 */
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   }
 
   .consent-banner--visible.consent-banner--bottom,
@@ -481,21 +491,13 @@ const configJson = JSON.stringify(consentConfig);
     flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
-    max-width: 100rem;
+    /* FireStone: 文本内容与外层背景分离，完美对齐我们之前设置的 8xl 响应式中心排版 */
+    max-width: max(70rem, 80vw); 
     margin: 0 auto;
     padding: 1.25rem 1.5rem;
-    background: var(--background-elevated);
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
   }
-
-  .consent-banner--bottom .consent-banner-inner {
-    border-top: 1px solid var(--border);
-  }
-
-  .consent-banner--top .consent-banner-inner {
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  }
+  
+  /* FireStone: 删除了原来作用于 .consent-banner--bottom .consent-banner-inner 等带有边框的代码，彻底解耦 */
 
   .consent-banner-content {
     flex: 1 1 0%;

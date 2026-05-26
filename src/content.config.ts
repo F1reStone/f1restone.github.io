@@ -40,6 +40,7 @@ const pages = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
+    titleEn: z.string().optional(),
     description: z.string(),
     updatedAt: z.coerce.date().optional(),
     locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),

@@ -1,0 +1,159 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import { Hero } from '@/components/hero';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import TableOfContents from '@/components/blog/TableOfContents.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import siteConfig from '@/config/site.config';
+
+interface Props {
+  title: string;
+  titleEn?: string;
+  description: string;
+  updatedAt?: Date;
+  headings?: MarkdownHeading[];
+  sectionLabel?: string;
+  backHref?: string;
+  backLabel?: string;
+}
+
+const {
+  title,
+  titleEn,
+  description,
+  updatedAt,
+  headings = [],
+  sectionLabel = '法律信息',
+  backHref = '/legal',
+  backLabel = '返回法律信息',
+} = Astro.props;
+
+const displayTitleEn = titleEn ?? title;
+
+const tocConfig = siteConfig.articleFeatures?.toc;
+const showToc = !!tocConfig?.enabled && headings.length >= (tocConfig?.minHeadings ?? 3);
+const tocLayout = tocConfig?.layout ?? 'inline';
+const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
+const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
+
+const breadcrumbs = [
+  { label: '首页', href: '/' },
+  { label: sectionLabel, href: '/legal' },
+  { label: title },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  article={undefined}
+>
+  <Header
+    slot="header"
+    position="fixed"
+    shape="bar"
+    variant="transparent"
+    size="lg"
+    showCta={false}
+    maxWidth="8xl"
+  />
+
+  <div class="min-h-screen">
+    <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
+      <Badge slot="badge" variant="brand" pill>
+        <Icon name="shield-check" size="sm" />
+        {title}
+      </Badge>
+
+      <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+        <span class="hero-title-text">{displayTitleEn}</span>
+      </h1>
+
+      <p slot="description" class="hero-description-text">{description}</p>
+
+      {updatedAt && (
+        <p class="mt-4 text-sm text-foreground-muted">
+          最后更新于 {updatedAt.toLocaleDateString('zh-CN')}
+        </p>
+      )}
+    </Hero>
+
+    <article class="pt-8 pb-[var(--space-section-md)]">
+      <div class:list={[
+        'mx-auto px-6 max-w-8xl',
+        sidebarActive && (sidebarOnLeft
+          ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
+          : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
+      ]}>
+        {sidebarActive && sidebarOnLeft && (
+          <aside class="hidden xl:block" aria-label="Table of contents">
+            <TableOfContents
+              headings={headings}
+              maxDepth={tocConfig?.maxDepth ?? 3}
+              minHeadings={tocConfig?.minHeadings ?? 3}
+              sticky
+            />
+          </aside>
+        )}
+
+        <div class:list={['min-w-0 max-w-4xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
+          <Breadcrumbs items={breadcrumbs} class="mb-8" />
+
+          {inlineActive && (
+            <div class:list={[
+              'mb-10 rounded-xl border border-border bg-background-secondary p-5',
+              tocLayout === 'auto' && 'xl:hidden',
+            ]}>
+              <TableOfContents
+                headings={headings}
+                maxDepth={tocConfig?.maxDepth ?? 3}
+                minHeadings={tocConfig?.minHeadings ?? 3}
+              />
+            </div>
+          )}
+
+          <div class="prose prose-lg max-w-none" data-reveal-content>
+            <slot />
+          </div>
+
+          <footer class="border-border mt-12 border-t pt-8" data-reveal>
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+              <Button href={backHref} variant="secondary" size="sm">
+                <Icon name="arrow-left" size="sm" />
+                {backLabel}
+              </Button>
+
+              <Button href={`mailto:${siteConfig.email}`} variant="outline" size="sm">
+                <Icon name="mail" size="sm" />
+                联系我们
+              </Button>
+            </div>
+          </footer>
+        </div>
+
+        {sidebarActive && !sidebarOnLeft && (
+          <aside class="hidden xl:block" aria-label="Table of contents">
+            <TableOfContents
+              headings={headings}
+              maxDepth={tocConfig?.maxDepth ?? 3}
+              minHeadings={tocConfig?.minHeadings ?? 3}
+              sticky
+            />
+          </aside>
+        )}
+      </div>
+    </article>
+  </div>
+
+  <Footer
+    slot="footer"
+    layout="columns"
+    background="secondary"
+  />
+</BaseLayout>

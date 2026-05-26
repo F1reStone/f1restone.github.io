@@ -122,7 +122,7 @@ export function Dialog({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-foreground/50 backdrop-blur-sm opacity-100 transition-opacity duration-200"
+        className="fixed inset-0 bg-background/50 backdrop-blur-sm opacity-100 transition-opacity duration-200"
         aria-hidden="true"
         onClick={onClose}
       />
