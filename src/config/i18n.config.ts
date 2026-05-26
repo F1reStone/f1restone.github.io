@@ -49,4 +49,27 @@ const i18nConfig: I18nConfig = {
   detectBrowserLocale: false,
 };
 
+export type ExpressiveCodeFrameTexts = {
+  terminalWindowFallbackTitle: string;
+  copyButtonTooltip: string;
+  copyButtonCopied: string;
+};
+
+export const expressiveCodeFrameTexts: Record<string, ExpressiveCodeFrameTexts> = {
+  'zh-CN': {
+    terminalWindowFallbackTitle: '终端窗口',
+    copyButtonTooltip: '复制到剪贴板',
+    copyButtonCopied: '已复制！',
+  },
+};
+
+export function getExpressiveCodeLocale(sourceFilePath?: string): string {
+  if (!sourceFilePath) return i18nConfig.defaultLocale;
+
+  const normalized = sourceFilePath.replace(/\\/g, '/');
+  const matched = i18nConfig.locales.find((locale) => normalized.includes(`/${locale}/`));
+
+  return matched ?? i18nConfig.defaultLocale;
+}
+
 export default i18nConfig;

@@ -44,13 +44,16 @@
     "@astrojs/react": "5.0.0",
     "@astrojs/sitemap": "^3.7.1",
     "@astrojs/vercel": "^10.0.0",
+    "@expressive-code/plugin-frames": "^0.42.0",
     "@iconify-json/lucide": "^1.2.98",
     "@iconify-json/simple-icons": "^1.2.74",
     "@iconify/react": "^6.0.2",
     "astro": "6.0.0",
+    "astro-expressive-code": "^0.42.0",
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "expressive-code": "^0.42.0",
     "lucide-react": "^0.563.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -80,12 +83,6 @@
     "typescript-eslint": "^8.18.0",
     "vitest": "^3.2.0",
     "zod": "^4.0.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
   },
   "engines": {
     "node": ">=22.12.0"

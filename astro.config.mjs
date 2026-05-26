@@ -6,7 +6,13 @@ import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
 //import vercel from '@astrojs/vercel';
 //import netlify from '@astrojs/netlify';
-import i18nConfig from './src/config/i18n.config.ts';
+import i18nConfig, {
+  expressiveCodeFrameTexts,
+  getExpressiveCodeLocale,
+} from './src/config/i18n.config.ts';
+
+import expressiveCode from 'astro-expressive-code';
+import { pluginFramesTexts } from '@expressive-code/plugin-frames';
 
 //const isNetlify = process.env.DEPLOY_TARGET === 'netlify';
 
@@ -27,6 +33,10 @@ const astroI18nOptions = i18nEnabled
       },
     }
   : undefined;
+
+for (const [locale, texts] of Object.entries(expressiveCodeFrameTexts)) {
+  pluginFramesTexts.addLocale(locale, texts);
+}
 
 export default defineConfig({
   output: 'static',
@@ -62,6 +72,14 @@ export default defineConfig({
 
   integrations: [
     react(),
+    expressiveCode({
+      defaultLocale: i18nConfig.defaultLocale,
+      getBlockLocale: ({ file }) => getExpressiveCodeLocale(file.path),
+      styleOverrides: {
+        codeFontFamily: 'var(--font-mono)',
+        uiFontFamily: 'var(--font-sans)',
+      },
+    }),
     mdx(),
     sitemap(),
     icon(),
