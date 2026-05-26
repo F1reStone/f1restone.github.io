@@ -43,6 +43,7 @@ const pages = defineCollection({
     titleEn: z.string().optional(),
     description: z.string(),
     updatedAt: z.coerce.date().optional(),
+    draft: z.boolean().optional(),
     locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
   }),
 });
