@@ -49,7 +49,9 @@ export interface FooterLinkGroup {
 
 export interface LegalLink {
   label: string;
-  href: string;
+  href?: string;
+  icon?: string;
+  action?: 'openConsentSettings';
 }
 
 interface Props extends HTMLAttributes<'footer'> {
@@ -127,6 +129,12 @@ const currentYear = new Date().getFullYear();
 const processedCopyright = copyright
   .replace('{year}', String(currentYear))
   .replace('{siteName}', siteConfig.name);
+
+// FireStone: Added class names for legal links and separators for better styling control
+const legalLinkClass =
+  'inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover:text-foreground';
+
+const legalSeparatorClass = 'mx-3 h-4 w-px bg-border/80';
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -294,14 +302,38 @@ const footerClasses = cn(footerVariants({ background }), className);
                   <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
                 )}
                 {resolvedLegalLinks.length > 0 && (
-                  <div class="flex items-center gap-[var(--space-inline-lg)]">
-                    {resolvedLegalLinks.map((link) => (
-                      <a
-                        href={link.href}
-                        class="text-sm transition-colors text-foreground-muted hover:text-foreground"
-                      >
-                        {link.label}
-                      </a>
+                  <div class="flex flex-wrap items-center">
+                    {resolvedLegalLinks.map((link, index) => (
+                      <div class="contents">
+                        {index > 0 && (
+                          <span aria-hidden="true" class={legalSeparatorClass} />
+                        )}
+
+                        {link.action === 'openConsentSettings' ? (
+                          <button
+                            type="button"
+                            class={legalLinkClass}
+                            data-consent-settings-trigger
+                          >
+                            {link.icon && (
+                              <Icon name={link.icon} size="sm" />
+                            )}
+                            <span>{link.label}</span>
+                          </button>
+                        ) : (
+                          <a
+                            href={link.href}
+                            class={legalLinkClass}
+                            target={link.href?.startsWith('http') ? '_blank' : undefined}
+                            rel={link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          >
+                            {link.icon && (
+                              <Icon name={link.icon} size="sm" />
+                            )}
+                            <span>{link.label}</span>
+                          </a>
+                        )}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -397,4 +429,21 @@ const footerClasses = cn(footerVariants({ background }), className);
 
   {/* Default slot for additional content */}
   <slot />
+  <script is:inline>
+    if (!window.__footerConsentSettingsBound) {
+      window.__footerConsentSettingsBound = true;
+
+      document.addEventListener('click', (event) => {
+        const target = event.target instanceof Element
+          ? event.target.closest('[data-consent-settings-trigger]')
+          : null;
+
+        if (!target) return;
+
+        event.preventDefault();
+        window.openConsentSettings?.();
+      });
+    }
+  </script>
+
 </footer>

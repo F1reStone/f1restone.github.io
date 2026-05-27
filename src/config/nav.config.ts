@@ -22,7 +22,9 @@ export interface NavItem {
 
 export interface LegalLink {
   label: string;
-  href: string;
+  href?: string;
+  icon?: string;
+  action?: 'openConsentSettings';
 }
 
 export interface FooterLinkGroup {
@@ -46,8 +48,9 @@ export const footerNavItems: NavItem[] = [
 ];
 
 export const legalLinks: LegalLink[] = [
-  { label: '问题反馈（GitHub）', href: 'https://github.com/F1reStone/f1restone.github.io/issues' },
-  { label: '隐私政策', href: '/legal/privacy-policy' },
+  { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues', icon: 'github' },
+  { label: 'Cookie 首选项', action: 'openConsentSettings', icon: 'cookie' },
+  { label: '隐私政策', href: '/legal/privacy-policy', icon: 'shield-check' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [

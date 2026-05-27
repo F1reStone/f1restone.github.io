@@ -49,7 +49,7 @@ const consentConfig: ConsentConfig = {
     declineAll: '仅必要',
     customize: '自定义',
     savePreferences: '保存偏好设置',
-    settingsHeading: 'Cookie 与隐私设置',
+    settingsHeading: 'Cookie 首选项',
     alwaysOnLabel: '始终开启',
     privacyPolicyLabel: '进一步了解',
   },
