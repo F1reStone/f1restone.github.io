@@ -90,15 +90,15 @@ html[data-theme="firestone-cyan"] {
   /* -------------------------------------------------------------------------
      FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
      ------------------------------------------------------------------------- */
-  --theme-font-sans: 'Wix Madefor Text', 'Montserrat', 'Outfit',
+  --theme-font-sans: 'Wix Madefor Text', 'Wix Madefor Text Local', 'Montserrat', 'Outfit',
     'SF Pro Text', 'Google Sans Flex', 'Inter', 'HarmonyOS Sans', 'Segoe UI Variable Text', 'Segoe UI', 'Noto Sans', 'Roboto', 'Helvetica Neue', 'Arial',
-    'Noto Sans SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+    'Noto Sans SC', 'Noto Sans SC Local', 'PingFang SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
     -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --theme-font-display: 'Neue Regrade', 'Inter', var(--theme-font-sans);
   --theme-font-mono: 'NKDuy Mono', 'JetBrains Mono',
     'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
-    'Noto Sans SC', 'HarmonyOS Sans SC', 'PingFang SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+    'Noto Sans SC', 'Noto Sans SC Local', 'PingFang SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
     ui-monospace, monospace,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --theme-heading-weight: 700;

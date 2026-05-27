@@ -70,13 +70,24 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <meta name="generator" content={Astro.generator} />
 
     <!-- Preload display + body fonts so they're ready for first paint -->
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/wix-madefor-text-variable.woff2" crossorigin="anonymous" />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/neue-regrade-variable.woff2" crossorigin="anonymous" />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/noto-sans-sc-variable.woff2" crossorigin="anonymous" />
 
     {siteConfig.articleFeatures?.comments?.enabled && (
       <link rel="preconnect" href="https://giscus.app" crossorigin />
     )}
+
+    <!-- FireStone: Preload Google Fonts，不阻塞国内用户的首屏渲染 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link 
+      rel="stylesheet" 
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Wix+Madefor+Text:ital,wght@0,400..800;1,400..800&display=swap" 
+      media="print" 
+      onload="this.media='all'"
+    >
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Wix+Madefor+Text:ital,wght@0,400..800;1,400..800&display=swap">
+    </noscript>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -103,7 +114,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <!-- Analytics (loads if PUBLIC_GA_MEASUREMENT_ID or PUBLIC_GTM_ID is set) -->
     <Analytics />
 
-    <!-- Dynamic favicon: syncs perfectly with system dark/light mode -->
+    <!-- FireStone: Dynamic favicon - syncs with system dark/light mode -->
     <script is:inline>
       (function () {
         function updateFavicon() {
