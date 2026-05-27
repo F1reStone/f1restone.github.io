@@ -103,12 +103,11 @@ export interface SiteConfig {
     logo: {
       alt: string;
       /** Path to logo image for structured data (e.g. '/logo.png'). Add a PNG to public/ and set this. */
-      imageUrl?: string;
+      imageUrl?: '/favicon.svg';
     };
     /** Favicon path (lives in public/) */
     favicon: {
-      alt: 'FireStone Logo',
-      svg: '/favicon.svg'
+      svg: '/favicon.svg';
     };
     /** Theme colors for manifest and browser UI */
     colors: {
