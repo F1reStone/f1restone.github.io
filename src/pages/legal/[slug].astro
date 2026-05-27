@@ -1,0 +1,33 @@
+---
+import { render } from 'astro:content';
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import { getLegalEntries } from '@/lib/legal';
+import { stripLocalePrefix } from '@/lib/blog';
+
+export async function getStaticPaths() {
+  const entries = await getLegalEntries('zh-CN');
+
+  return entries.map((entry) => ({
+    params: {
+      slug: stripLocalePrefix(entry.id).replace(/^legal\//, ''),
+    },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<LegalLayout
+  title={entry.data.title}
+  titleEn={entry.data.titleEn}
+  description={entry.data.description}
+  updatedAt={entry.data.updatedAt}
+  headings={headings}
+  sectionLabel="法律信息"
+  backHref="/legal"
+  backLabel="返回法律信息"
+>
+  <Content />
+</LegalLayout>
