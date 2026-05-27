@@ -362,18 +362,19 @@
 
   /* =========================================================================
      FireStone: Immersive Header Variable Override
-     当 Header 设定为 fixed 且未发生滚动时，将内部颜色变量映射为亮色 (针对深色背景)。
-     一旦向下滚动，[data-scrolled] 出现，此规则失效，Header 将恢复到正常浅色/深色主题状态。
+     当 Header 设定为 fixed 且未发生滚动或移动端菜单处于非展开状态时，将内部颜色变量映射为亮色 (针对深色背景)。
+     一旦向下滚动，或菜单打开[data-scrolled] 出现，此规则失效，Header 将恢复到正常浅色/深色主题状态。
      ========================================================================= */
-  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) {
-    /* 强制主导航栏元素为纯净的白色系，保证在极光背景上的绝对可读性 */
+  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]):not(:has(.hdr-hamburger[aria-expanded="true"])) {
+    /* 强制主导航栏元素为白色 */
     --color-foreground: #ffffff;
     --color-foreground-secondary: rgba(255, 255, 255, 0.85);
     --color-foreground-muted: rgba(255, 255, 255, 0.7);
     --color-border-strong: rgba(255, 255, 255, 0.2);
     --color-border: rgba(255, 255, 255, 0.1);
+    --color-secondary: rgba(255, 255, 255, 0.1);
     
-    /* 导航栏专属悬停交互映射 */
+    /* 导航栏悬停交互映射 */
     --nav-link-color: rgba(255, 255, 255, 0.75);
     --nav-link-hover-color: #ffffff;
     --nav-link-hover-bg: rgba(255, 255, 255, 0.1);
@@ -381,7 +382,7 @@
     --nav-link-active-bg: var(--surface-invert-secondary);
   }
 
-  /* 重置所有弹出式面板（下拉菜单）的变量，使它们恢复跟随网站默认深浅模式的表现 */
+  /* 重置所有弹出式面板（下拉菜单）的变量，恢复跟随网站默认深浅模式的表现 */
   header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .ttg-panel,
   header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .lang-panel,
   header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .mobile-menu-body {

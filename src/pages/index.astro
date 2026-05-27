@@ -8,6 +8,12 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import TypingEffect from '@/components/ui/TypingEffect.astro';
 import { getCollection } from 'astro:content';
+import {
+  BLOG_POSTS_PER_PAGE,
+  collectTopTags,
+  getPostUrl,
+  getPublishedPosts,
+} from '@/lib/blog';
 import siteConfig from '@/config/site.config';
 
 const projectItems = await getCollection('projects');
@@ -144,7 +150,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           <BlogCard
             title={post.data.title}
             description={post.data.description}
-            href={`/blog/${post.id.replace('zh-CN/', '')}`}
+            href={getPostUrl(post.id)}
             publishedAt={post.data.publishedAt}
             tags={post.data.tags}
             author={post.data.author}
