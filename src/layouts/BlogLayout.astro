@@ -89,6 +89,12 @@ const breadcrumbs = [
   { label: title },
 ];
 
+const localizedHeadings = headings.map((heading) =>
+  heading.slug === 'footnote-label'
+    ? { ...heading, text: '脚注' }
+    : heading
+);
+
 // Get full URL for sharing
 const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
@@ -155,7 +161,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
       {sidebarActive && sidebarOnLeft && (
         <aside class="hidden xl:block" aria-label="Table of contents">
           <TableOfContents
-            headings={headings}
+            headings={localizedHeadings}
             maxDepth={tocConfig?.maxDepth ?? 3}
             minHeadings={tocConfig?.minHeadings ?? 3}
             sticky
@@ -173,7 +179,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
           tocLayout === 'auto' && 'xl:hidden',
         ]}>
           <TableOfContents
-            headings={headings}
+            headings={localizedHeadings}
             maxDepth={tocConfig?.maxDepth ?? 3}
             minHeadings={tocConfig?.minHeadings ?? 3}
           />
@@ -206,7 +212,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
       {sidebarActive && !sidebarOnLeft && (
         <aside class="hidden xl:block" aria-label="Table of contents">
           <TableOfContents
-            headings={headings}
+            headings={localizedHeadings}
             maxDepth={tocConfig?.maxDepth ?? 3}
             minHeadings={tocConfig?.minHeadings ?? 3}
             sticky

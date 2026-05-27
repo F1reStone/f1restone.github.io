@@ -83,6 +83,12 @@ const breadcrumbs = [
   { label: '项目', href: '/projects' },
   { label: title },
 ];
+
+const localizedHeadings = headings.map((heading) =>
+  heading.slug === 'footnote-label'
+    ? { ...heading, text: '脚注' }
+    : heading
+);
 ---
 
 <BaseLayout
@@ -130,7 +136,7 @@ const breadcrumbs = [
         {sidebarActive && sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label="Table of contents">
             <TableOfContents
-              headings={headings}
+              headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
               minHeadings={tocConfig?.minHeadings ?? 3}
               sticky
@@ -144,7 +150,7 @@ const breadcrumbs = [
           {inlineActive && (
             <div class="mb-10 rounded-xl border border-border bg-background-secondary p-5">
               <TableOfContents
-                headings={headings}
+                headings={localizedHeadings}
                 maxDepth={tocConfig?.maxDepth ?? 3}
                 minHeadings={tocConfig?.minHeadings ?? 3}
               />
@@ -166,7 +172,7 @@ const breadcrumbs = [
         {sidebarActive && !sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label="Table of contents">
             <TableOfContents
-              headings={headings}
+              headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
               minHeadings={tocConfig?.minHeadings ?? 3}
               sticky
