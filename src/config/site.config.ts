@@ -107,7 +107,8 @@ export interface SiteConfig {
     };
     /** Favicon path (lives in public/) */
     favicon: {
-      svg: string;
+      alt: 'FireStone Logo',
+      svg: '/favicon.svg'
     };
     /** Theme colors for manifest and browser UI */
     colors: {

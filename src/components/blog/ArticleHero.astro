@@ -57,7 +57,7 @@ const readingTime = Math.max(1, Math.ceil(estimatedWords / wordsPerMinute));
   </div>
 
   <!-- Dimming & Blur Overlay (压低亮度并做毛玻璃处理，保证白字绝对清晰) -->
-  <div class="absolute inset-0 -z-10 bg-black/50 backdrop-blur-lg mix-blend-multiply"></div>
+    <div class="absolute inset-0 -z-10 bg-black/40 backdrop-blur-md"></div>
 
   <!-- Content Container -->
   <div class="relative z-10 mx-auto w-full max-w-8xl px-6 pt-24 pb-16">
@@ -73,13 +73,13 @@ const readingTime = Math.max(1, Math.ceil(estimatedWords / wordsPerMinute));
         </div>
       )}
 
-      <!-- Title (复用主页的 hero-title-text 实现金属高光和变粗交互) -->
+      <!-- Title (复用主页的 hero-title-text) -->
       <h1 class="hero-title-wrapper !text-[clamp(2.5rem,6vw,4.5rem)] sm:!text-5xl md:!text-6xl tracking-tight z-10 relative mb-6">
         <span class="hero-title-text">{title}</span>
       </h1>
 
       <!-- Description -->
-      <p class="hero-description-text text-xl leading-relaxed max-w-2xl mb-[var(--space-stack-lg)]">
+      <p class="hero-description-text text-lg leading-relaxed max-w-2xl mb-[var(--space-stack-lg)]">
         {description}
       </p>
 

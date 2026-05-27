@@ -509,15 +509,33 @@
     font-weight: 800;
   }
 
-  /* 专属 Serif Italic 混搭类 */
+  /* Serif Italic */
   .hero-title-serif {
+    background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
     font-family: 'Playfair Display', 'New York', 'Garamond', 'Roboto Serif', 'Noto Serif', 'Noto Serif CJK SC', ui-serif, serif; 
     letter-spacing: -0.03em;
-    font-weight: 600;
+    text-transform: none;
+    font-weight: 400;
     font-style: italic;
+    display: inline-block;
+
+    padding: 0.3em; 
+    margin: -0.3em;
+
+    transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1);
   }
 
-  /* 描述文本：保持纯白以确保在动态背景上的可读性 */
+  .hero-title-wrapper:hover .hero-title-serif,
+  .hero-title-wrapper:active .hero-title-serif {
+    font-weight: 600;
+  }
+
+  /* 描述文本 */
   .hero-description-text {
     --color-foreground: rgba(255, 255, 255, 0.95);
     --color-foreground-secondary: rgba(255, 255, 255, 0.85);
