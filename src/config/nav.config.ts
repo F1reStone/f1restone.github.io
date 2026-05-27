@@ -74,8 +74,9 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
       { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
       { label: 'GitHub Pages', href: 'https://docs.github.com/pages/', order: 4 },
-      { label: 'React', href: 'https://react.dev/', order: 5 },
-      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 6 },
+      { label: 'Google Fonts', href: 'https://fonts.google.com/', order: 5 },
+      { label: 'React', href: 'https://react.dev/', order: 6 },
+      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 7 },
     ],
   },
 ];
