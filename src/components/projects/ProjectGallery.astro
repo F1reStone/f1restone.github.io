@@ -73,8 +73,9 @@ const id = Math.random().toString(36).slice(2, 8);
           aria-label={`Go to slide ${i + 1}`}
           data-dot={i}
           data-dots-gallery={`gallery-${id}`}
-          class={`h-1.5 rounded-full transition-all duration-300 ${i === 0 ? 'w-5 bg-brand-500' : 'w-1.5 bg-border'}`}
-        />
+          data-active={i === 0 ? 'true' : 'false'}
+          class="h-1.5 w-1.5 rounded-full bg-border transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
+        ></button>
       ))}
     </div>
     <span id={`counter-${id}`} class="text-xs text-foreground-muted">
@@ -161,12 +162,10 @@ const id = Math.random().toString(36).slice(2, 8);
     counter.textContent = (index + 1) + ' / ' + total;
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === total - 1;
+    
+    // FireStone: 不再使用粗暴的 className 替换，而是优雅地修改 dataset，让 Tailwind 接管动画渲染
     dots.forEach((dot, i) => {
-      if (i === index) {
-        dot.className = 'h-1.5 rounded-full transition-all duration-300 w-5 bg-brand-500';
-      } else {
-        dot.className = 'h-1.5 rounded-full transition-all duration-300 w-1.5 bg-border';
-      }
+      dot.dataset.active = (i === index) ? 'true' : 'false';
     });
   }
 

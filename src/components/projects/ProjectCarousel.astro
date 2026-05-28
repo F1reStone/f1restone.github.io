@@ -87,7 +87,7 @@ const hasMultiple = slides.length > 1;
           {slides.map((_, i) => (
             <button
               type="button"
-              class="carousel-dot h-2 w-2 rounded-full bg-border transition-all hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[active=true]:w-6 data-[active=true]:bg-brand-500"
+              class="carousel-dot h-2 w-2 rounded-full bg-border transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[active=true]:w-8 data-[active=true]:rounded-[4px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_10px_var(--color-brand-500)]"
               data-carousel-dot
               data-index={i}
               role="tab"
@@ -149,14 +149,24 @@ const hasMultiple = slides.length > 1;
 
       if (!track || slides.length === 0) return;
 
+      // FireStone: [Eager UI Update] 抽离 UI 更新逻辑，实现点击瞬间即时响应，打破原有的滚动绑定延迟
+      const updateUI = (index: number) => {
+        dots.forEach((dot, j) => {
+          const active = index === j;
+          dot.dataset.active = active ? 'true' : 'false';
+          dot.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        if (counter) counter.textContent = String(index + 1);
+      };
+
       const scrollToIndex = (index: number) => {
         const slide = slides[index];
         if (!slide) return;
         track.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+        updateUI(index); // 瞬间触发动画，无需等待滑动完成！
       };
 
       const currentIndex = () => {
-        // Find the slide whose left edge is closest to the current scrollLeft.
         let closest = 0;
         let smallestDiff = Infinity;
         slides.forEach((slide, i) => {
@@ -170,13 +180,11 @@ const hasMultiple = slides.length > 1;
       };
 
       prevBtn?.addEventListener('click', () => {
-        const i = currentIndex();
-        scrollToIndex(Math.max(0, i - 1));
+        scrollToIndex(Math.max(0, currentIndex() - 1));
       });
 
       nextBtn?.addEventListener('click', () => {
-        const i = currentIndex();
-        scrollToIndex(Math.min(slides.length - 1, i + 1));
+        scrollToIndex(Math.min(slides.length - 1, currentIndex() + 1));
       });
 
       dots.forEach((dot) => {
@@ -186,7 +194,7 @@ const hasMultiple = slides.length > 1;
         });
       });
 
-      // Keyboard nav when the track is focused
+      // Keyboard nav
       track.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key === 'ArrowLeft') {
           e.preventDefault();
@@ -197,19 +205,13 @@ const hasMultiple = slides.length > 1;
         }
       });
 
-      // Track active slide on scroll to update dots + counter
+      // 仅保留给原生手指滑动的 UI 同步（降低延迟提高跟手度）
       let scrollTimeout: number | undefined;
       track.addEventListener('scroll', () => {
         if (scrollTimeout) window.clearTimeout(scrollTimeout);
         scrollTimeout = window.setTimeout(() => {
-          const i = currentIndex();
-          dots.forEach((dot, j) => {
-            const active = i === j;
-            dot.dataset.active = active ? 'true' : 'false';
-            dot.setAttribute('aria-selected', active ? 'true' : 'false');
-          });
-          if (counter) counter.textContent = String(i + 1);
-        }, 80);
+          updateUI(currentIndex());
+        }, 50);
       }, { passive: true });
     });
   }
