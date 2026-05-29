@@ -57,6 +57,7 @@ export interface ConsentUIText {
   customize: string;
   savePreferences: string;
   settingsHeading: string;
+  settingsDescription: string;
   /** Label shown on the "always on" badge for required categories */
   alwaysOnLabel?: string;
   /** Label for the privacy policy link */

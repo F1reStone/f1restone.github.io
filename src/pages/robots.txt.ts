@@ -4,14 +4,14 @@ export const GET: APIRoute = ({ site }) => {
   const siteUrl = site?.toString() || 'https://f1restone.github.io/';
 
   const robotsTxt = `
-User-agent: *
-Allow: /
+  User-agent: *
+  Allow: /
 
-# Block API routes
-Disallow: /api/
+  # Block API routes
+  Disallow: /api/
 
-Sitemap: ${siteUrl}sitemap-index.xml
-`.trim();
+  Sitemap: ${siteUrl}sitemap-index.xml
+  `.trim();
 
   return new Response(robotsTxt, {
     headers: {

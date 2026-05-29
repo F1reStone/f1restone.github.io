@@ -98,7 +98,7 @@ const configJson = JSON.stringify(consentConfig);
     </div>
 
     <!-- Settings Panel via Dialog -->
-    <Dialog id="consent-settings" title={ui.settingsHeading} size="md">
+    <Dialog id="consent-settings" title={ui.settingsHeading} description={ui.settingsDescription} size="md">
       <div class="consent-settings-body">
         {Object.entries(consentConfig.categories).map(([key, cat]) => (
           <div class="consent-category" data-category={key}>
