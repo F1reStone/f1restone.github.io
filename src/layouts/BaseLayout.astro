@@ -63,7 +63,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 ---
 
 <!doctype html>
-<html lang={locale} class="scroll-smooth dark" data-theme="firestone-cyan" data-theme-mode="system">
+<html lang={locale} class="scroll-smooth dark" data-theme="firestone" data-theme-mode="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -71,22 +71,24 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 
     <!-- Preload display + body fonts so they're ready for first paint -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/neue-regrade-variable.woff2" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/wix-madefor-text-variable.woff2" crossorigin="anonymous" />
 
+    <!-- Preload Giscus -->
     {siteConfig.articleFeatures?.comments?.enabled && (
       <link rel="preconnect" href="https://giscus.app" crossorigin />
     )}
 
-    <!-- FireStone: Preload Google Fonts，不阻塞国内用户的首屏渲染 -->
+    <!-- FireStone: Preload Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link 
       rel="stylesheet" 
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Wix+Madefor+Text:ital,wght@0,400..800;1,400..800&display=swap" 
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap" 
       media="print" 
       onload="this.media='all'"
     >
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Wix+Madefor+Text:ital,wght@0,400..800;1,400..800&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap">
     </noscript>
 
     <!-- Favicon -->
@@ -241,7 +243,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <script is:inline>
       (function () {
         //const COLOR_THEMES = ['orange', 'amber', 'lime', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'magenta'];
-        const COLOR_THEMES = ['firestone-cyan'];
+        const COLOR_THEMES = ['firestone'];
         const VALID_MODES = ['system', 'light', 'dark'];
 
         function getMode() {

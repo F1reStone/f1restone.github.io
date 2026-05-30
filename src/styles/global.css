@@ -12,7 +12,7 @@
 /* Self-hosted fonts */
 /* Wix Madefor Text (Local) */
 @font-face {
-  font-family: 'Wix Madefor Text Local';
+  font-family: 'Wix Madefor Text Variable';
   src: url('/fonts/wix-madefor-text-variable.woff2') format('woff2');
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
@@ -20,7 +20,7 @@
 
 /* Neue Regrade (Local) */
 @font-face {
-  font-family: 'Neue Regrade';
+  font-family: 'Neue Regrade Variable';
   src: url('/fonts/neue-regrade-variable.woff2') format('woff2');
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
@@ -29,7 +29,7 @@
 
 /* NKDuy Mono (Local) */
 @font-face {
-  font-family: 'NKDuy Mono';
+  font-family: 'NKDuy Mono Variable';
   src: url('/fonts/nkduy-mono-variable.woff2') format('woff2');
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
@@ -38,7 +38,7 @@
 
 /* Playfair Display (Local) */
 @font-face {
-  font-family: 'Playfair Display Local';
+  font-family: 'Playfair Display Variable';
   src: url('/fonts/playfair-display-variable.woff2') format('woff2');
   src: url('/fonts/playfair-display-variable-italic.woff2') format('woff2');
   font-display: swap;
@@ -46,10 +46,10 @@
   font-feature-settings: 'liga';
 }
 
-/* Noto Sans SC (Local) */
+/* Source Han Sans CN (Web) */
 @font-face {
-  font-family: 'Noto Sans SC Local';
-  src: url('/fonts/noto-sans-sc-variable.woff2') format('woff2');
+  font-family: 'Source Han Sans CN Variable';
+  src: url('/fonts/source-han-sans-cn-variable.woff2') format('woff2');
   font-display: swap;
   font-feature-settings: 'palt';
 }

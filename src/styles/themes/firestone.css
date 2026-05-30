@@ -1,0 +1,202 @@
+/* =============================================================================
+   Astro Rocket Theme - FireStone Cyan
+   =============================================================================
+   FireStone Cyan
+
+   Dark mode: near-black with a rich cyan tint and vivid glow.
+   Light mode: clean neutral whites with cyan as the single accent.
+   ============================================================================= */
+
+html[data-theme="firestone"] {
+  /* -------------------------------------------------------------------------
+     Brand Scale Override — Cyan (hue 180)
+     Inspired by Tailwind cyan-*. Fresh, modern, and versatile.
+     ------------------------------------------------------------------------- */
+  --brand-50:  oklch(97.5% 0.02  289.4473);
+  --brand-100: oklch(94.5% 0.05  289.4473);
+  --brand-200: oklch(86%   0.12  289.4473);
+  --brand-300: oklch(76%   0.20  289.4473);
+  --brand-400: oklch(68%   0.24  289.4473);
+  --brand-500: oklch(62.5% 0.26  289.4473);
+  --brand-600: oklch(53%   0.23  289.4473);
+  --brand-700: oklch(45%   0.19  289.4473);
+  --brand-800: oklch(36.5% 0.14  289.4473);
+  --brand-900: oklch(26%   0.09  289.4473);
+
+  /* -------------------------------------------------------------------------
+     Semantic Tokens - Light Mode
+     ------------------------------------------------------------------------- */
+  --background: var(--gray-0);
+  --background-secondary: oklch(97.5% 0.010 289.4473);
+  --background-tertiary: oklch(95% 0.018 289.4473);
+  --background-elevated: var(--gray-0);
+
+  --foreground: var(--gray-900);           /* 18.3:1 on white — WCAG AAA */
+  --foreground-secondary: var(--gray-700); /* 12.7:1 on white — WCAG AAA */
+  --foreground-muted: var(--gray-600);     /* 10.0:1 on white — WCAG AA  */
+  --foreground-subtle: var(--gray-500);    /*  5.5:1 on white — WCAG AA  */
+
+  --border: var(--gray-200);
+  --border-strong: var(--gray-300);
+  --border-subtle: var(--gray-100);
+
+  --primary: var(--gray-900);
+  --primary-hover: var(--gray-800);
+  --primary-foreground: var(--gray-0);
+
+  --secondary: var(--gray-100);
+  --secondary-hover: var(--gray-200);
+  --secondary-foreground: var(--gray-900);
+
+  --accent: var(--brand-500);
+  --accent-hover: var(--brand-600);
+  --accent-light: var(--brand-100);
+
+  --muted: var(--gray-100);
+  --muted-foreground: var(--gray-500);     /*  5.5:1 on white — WCAG AA  */
+
+  --card: var(--gray-0);
+  --card-border: var(--gray-200);
+
+  --input-bg: var(--gray-0);
+  --input-border: var(--gray-300);
+  --input-focus: var(--brand-500);
+
+  --ring: var(--brand-500);
+
+  --destructive: var(--error);
+  --destructive-foreground: var(--gray-0);
+
+  --gradient-start: oklch(96.5% 0 0);
+  --gradient-end: oklch(100% 0 0);
+
+  /* Status colors - light mode backgrounds */
+  --success-light: oklch(94% 0.05 145);
+  --warning-light: oklch(95% 0.05 85);
+  --error-light:   oklch(94% 0.05 25);
+
+  /* -------------------------------------------------------------------------
+     Inverted/Contrast Section — deep cyan-dark
+     ------------------------------------------------------------------------- */
+  --surface-invert: oklch(9.5% 0.018 289.4473);
+  --surface-invert-secondary: oklch(13.5% 0.014 289.4473);
+  --surface-invert-tertiary: oklch(17.5% 0.011 289.4473);
+  --on-invert: var(--gray-50);
+  --on-invert-secondary: var(--gray-200);
+  --on-invert-muted: var(--gray-300);
+  --border-invert: oklch(21% 0.014 289.4473);
+  --border-invert-strong: oklch(29% 0.011 289.4473);
+
+  /* -------------------------------------------------------------------------
+     FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
+     ------------------------------------------------------------------------- */
+  --theme-font-sans: 'Wix Madefor Text Variable', 'Wix Madefor Text', 'Montserrat', 'Outfit',
+    'SF Pro Text', 'Google Sans Flex', 'Inter', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
+    var(--theme-font-zh-cn), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
+
+  --theme-font-display: 'Neue Regrade Variable', 'Neue Regrade Variable', 'Inter',
+  'SF Pro Text', 'Google Sans Flex', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
+  var(--theme-font-zh-cn), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
+
+  --theme-font-mono: 'NKDuy Mono Variable', 'NKDuy Mono', 'JetBrains Mono',
+    'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
+    var(--theme-font-zh-cn), ui-monospace, monospace, var(--theme-font-emoji);
+
+  --theme-font-zh-cn: 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei';
+
+  --theme-font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --theme-heading-weight: 700;
+  --theme-heading-tracking: -0.10em;
+  --theme-body-leading: 1.6;
+
+  /* -------------------------------------------------------------------------
+     Shadows — cyan-tinted
+     ------------------------------------------------------------------------- */
+  --theme-shadow-sm: 0 1px 2px oklch(20% 0.03 289.4473 / 0.08);
+  --theme-shadow-md: 0 4px 8px oklch(20% 0.03 289.4473 / 0.10),
+    0 0 1px oklch(20% 0.03 289.4473 / 0.05);
+  --theme-shadow-lg: 0 8px 16px oklch(20% 0.03 289.4473 / 0.12),
+    0 0 1px oklch(20% 0.03 289.4473 / 0.05);
+  --theme-shadow-xl: 0 24px 48px oklch(20% 0.03 289.4473 / 0.18),
+    0 0 1px oklch(20% 0.03 289.4473 / 0.05);
+
+  /* -------------------------------------------------------------------------
+     Border Radii
+     ------------------------------------------------------------------------- */
+  --theme-radius-sm: 0.25rem;    /* 4px  */
+  --theme-radius-md: 0.375rem;   /* 6px  */
+  --theme-radius-lg: 0.5rem;     /* 8px  */
+  --theme-radius-xl: 0.625rem;   /* 10px */
+  --theme-radius-full: 9999px;
+}
+
+/* -------------------------------------------------------------------------
+   Dark Mode — deep near-black with cyan glow
+   ------------------------------------------------------------------------- */
+html.dark[data-theme="firestone"] {
+  --background: oklch(5% 0.0048 219.65);
+  --background-secondary: oklch(15% 0.014 289.4473);
+  --background-tertiary: oklch(20% 0.011 289.4473);
+  --background-elevated: oklch(15% 0.014 289.4473);
+
+  --foreground: oklch(95% 0.010 289.4473);
+  --foreground-secondary: oklch(83% 0.013 289.4473);
+  --foreground-muted: oklch(68% 0.010 289.4473);
+  --foreground-subtle: oklch(58% 0.008 289.4473);   /*  ~4.8:1 on bg — WCAG AA  */
+
+  --border: oklch(20% 0.014 289.4473);
+  --border-strong: oklch(27% 0.011 289.4473);
+  --border-subtle: oklch(13.5% 0.014 289.4473);
+
+  --primary: oklch(95% 0.010 289.4473);
+  --primary-hover: oklch(83% 0.013 289.4473);
+  --primary-foreground: oklch(9.5% 0.018 289.4473);
+
+  --secondary: oklch(20% 0.011 289.4473);
+  --secondary-hover: oklch(24% 0.011 289.4473);
+  --secondary-foreground: oklch(90% 0.010 289.4473);
+
+  --accent: var(--brand-400);
+  --accent-hover: var(--brand-500);
+  --accent-light: oklch(18% 0.08 289.4473);
+
+  --muted: oklch(20% 0.011 289.4473);
+  --muted-foreground: oklch(68% 0.010 289.4473);
+
+  --card: oklch(15% 0.014 289.4473);
+  --card-border: oklch(23% 0.014 289.4473);
+
+  --input-bg: oklch(15% 0.014 289.4473);
+  --input-border: oklch(27% 0.011 289.4473);
+  --input-focus: var(--brand-400);
+
+  --ring: var(--brand-400);
+
+  --destructive: oklch(65% 0.22 25);
+  --destructive-foreground: var(--gray-0);
+
+  --gradient-start: oklch(9.5% 0.018 289.4473);
+  --gradient-end: oklch(13% 0.014 289.4473);
+
+  --success-light: oklch(18% 0.06 155);
+  --warning-light: oklch(18% 0.05 85);
+  --error-light: oklch(18% 0.05 25);
+
+  --surface-invert: oklch(13% 0.014 289.4473);
+  --surface-invert-secondary: oklch(16.5% 0.011 289.4473);
+  --surface-invert-tertiary: oklch(21% 0.011 289.4473);
+  --on-invert: oklch(95% 0.010 289.4473);
+  --on-invert-secondary: oklch(72% 0.013 289.4473);
+  --on-invert-muted: oklch(68% 0.010 289.4473);
+  --border-invert: oklch(21% 0.011 289.4473);
+  --border-invert-strong: oklch(29% 0.009 289.4473);
+
+  --theme-shadow-sm: 0 1px 3px oklch(9% 0.04 289.4473 / 0.35);
+  --theme-shadow-md: 0 4px 12px oklch(9% 0.04 289.4473 / 0.4),
+    0 0 1px oklch(9% 0.04 289.4473 / 0.15);
+  --theme-shadow-lg: 0 8px 24px oklch(9% 0.04 289.4473 / 0.45),
+    0 1px 2px oklch(50% 0.20 289.4473 / 0.08);
+  --theme-shadow-xl: 0 24px 48px oklch(9% 0.04 289.4473 / 0.55),
+    0 2px 4px oklch(50% 0.20 289.4473 / 0.11);
+}
