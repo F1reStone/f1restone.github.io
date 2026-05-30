@@ -24,6 +24,7 @@ interface Props {
 const { slides, label = 'Project screenshots' } = Astro.props;
 const carouselId = `carousel-${Math.random().toString(36).slice(2, 9)}`;
 const hasMultiple = slides.length > 1;
+const dotsWidth = 12 * (slides.length - 1) + 24;
 ---
 
 <div
@@ -67,10 +68,11 @@ const hasMultiple = slides.length > 1;
     <div class="mt-4 flex items-center justify-between gap-3">
       <button
         type="button"
-        class="carousel-nav inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-background text-foreground shadow-sm transition-colors hover:border-brand-500 hover:bg-background-secondary hover:text-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="carousel-nav relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-background text-foreground shadow-sm transition-all hover:border-brand-500 hover:bg-background-secondary hover:text-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:pointer-events-none disabled:border-border disabled:text-foreground-muted"
         data-carousel-prev
         aria-label="Previous slide"
         aria-controls={carouselId}
+        disabled
       >
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -79,23 +81,28 @@ const hasMultiple = slides.length > 1;
 
       <div class="flex items-center gap-3">
         <div
-          class="flex items-center gap-2"
+          class="relative h-1.5"
           role="tablist"
           aria-label="Choose slide"
           data-carousel-dots
+          style={`width: ${dotsWidth}px;`}
         >
-          {slides.map((_, i) => (
-            <button
-              type="button"
-              class="carousel-dot h-2 w-2 rounded-full bg-border transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[active=true]:w-8 data-[active=true]:rounded-[4px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_10px_var(--color-brand-500)]"
-              data-carousel-dot
-              data-index={i}
-              role="tab"
-              aria-label={`Go to slide ${i + 1}`}
-              aria-selected={i === 0 ? 'true' : 'false'}
-              data-active={i === 0 ? 'true' : 'false'}
-            ></button>
-          ))}
+          {slides.map((_, i) => {
+            // 初始化首屏 X 坐标 (12px 跨度，排在激活点后加推 18px 差值)
+            const x = i === 0 ? 0 : i * 12 + 18;
+            return (
+              <button
+                type="button"
+                class="absolute left-0 top-0 h-1.5 rounded-full bg-border transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 w-1.5 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
+                data-carousel-dot
+                data-index={i}
+                role="tab"
+                aria-label={`Go to slide ${i + 1}`}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                data-active={i === 0 ? 'true' : 'false'}
+              ></button>
+            );
+          })}
         </div>
         <span
           class="text-xs font-medium font-mono text-foreground-muted tabular-nums"
@@ -108,7 +115,7 @@ const hasMultiple = slides.length > 1;
 
       <button
         type="button"
-        class="carousel-nav inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-background text-foreground shadow-sm transition-colors hover:border-brand-500 hover:bg-background-secondary hover:text-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="carousel-nav relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-background text-foreground shadow-sm transition-all hover:border-brand-500 hover:bg-background-secondary hover:text-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:pointer-events-none disabled:border-border disabled:text-foreground-muted"
         data-carousel-next
         aria-label="Next slide"
         aria-controls={carouselId}
@@ -149,21 +156,29 @@ const hasMultiple = slides.length > 1;
 
       if (!track || slides.length === 0) return;
 
-      // FireStone: [Eager UI Update] 抽离 UI 更新逻辑，实现点击瞬间即时响应，打破原有的滚动绑定延迟
+      // FireStone: [GPU Anti-Thrashing] 同步 6px 与 24px 差值的坐标系
       const updateUI = (index: number) => {
         dots.forEach((dot, j) => {
           const active = index === j;
           dot.dataset.active = active ? 'true' : 'false';
           dot.setAttribute('aria-selected', active ? 'true' : 'false');
+          
+          // 计算绝对位移：跨度为 12px，激活后的膨胀宽度差值为 18px
+          const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
+          dot.style.transform = `translate3d(${x}px, 0, 0)`;
         });
         if (counter) counter.textContent = String(index + 1);
+        
+        // 更新禁用状态
+        if (prevBtn) prevBtn.disabled = index === 0;
+        if (nextBtn) nextBtn.disabled = index === slides.length - 1;
       };
 
       const scrollToIndex = (index: number) => {
         const slide = slides[index];
         if (!slide) return;
         track.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
-        updateUI(index); // 瞬间触发动画，无需等待滑动完成！
+        updateUI(index);
       };
 
       const currentIndex = () => {
@@ -213,6 +228,8 @@ const hasMultiple = slides.length > 1;
           updateUI(currentIndex());
         }, 50);
       }, { passive: true });
+
+      updateUI(currentIndex());
     });
   }
 

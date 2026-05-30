@@ -31,6 +31,43 @@ gallery:
     alt: "Astro Rocket — screenshot 09."
 ---
 
-## 关于本项目
+# 关于此项目
 
-Placeholder
+**SparkForge 燧光**是 FireStone 基于**虚幻引擎**定制的技术分支，致力于在保留虚幻核心架构的同时，对其在实际开发中的性能问题进行深入的系统性优化，在虚幻中以开销更低的技术栈替代 Epic 技术方案。
+
+## 愿景
+随着虚幻 5 引入 **Nanite、Lumen、Chaos** 等新技术，画面表现力和易用性迎来了显著提升，但也带来了更高的性能开销与复杂度。在部分项目场景中，这种设计并不是最优解。燧光分支正是在这一背景下诞生，其核心目标是在旧版虚幻中通过对引擎进行现代化改进、依赖升级、整合 NVIDIA RTX 相关技术，实现一个**更可控、开销更低、更接近传统渲染管线**的体系，以替代 Lumen 光照方案。
+
+## 底层
+SparkForge-5.3Base 分支底层基于 **NVIDIA NvRTX-5.3** 分支，引擎版本 **5.3.2**。未来计划 merge 更多来自 5.0 - 5.7 版本的外围代码和插件更新以及 5.0 - 5.4 版本的核心代码。
+
+
+## 核心功能
+
+- 基于 **RTXGI / RTXDI / SSR / 传统 AO** 的光照 
+- 支持 **NVIDIA DLSS 4**[^*1]、**AMD FSR 4 “Redstone”**[^*2]、**Intel X<sup>e</sup>SS 3**[^*3]
+- 更高的性能可控性与调优空间
+- 针对旧版虚幻的 **Visual Studio 2026**[^*4]、JetBrains Rider[^*5] 编译适配  
+- **最新 Windows SDK** 适配[^*6] 
+- **最新 Microsoft Visual C++** 适配[^*7]
+
+## 应用场景
+
+该分支适用于：
+- 使用 RTX 技术进行开发的项目迁移  
+- 希望摆脱 Lumen 光照限制的团队  
+- 需要在虚幻中实现传统光追工作流的场景  
+
+---
+
+[^*1]: **¹：包括超分辨率、帧生成、光线重构。仅限 SparkForge-5.3Base，SparkForge-5.0Base 支持 NVIDIA DLSS 3.7 超分辨率和帧生成。*
+[^*2]: **²：仅限 SparkForge-5.3Base。SparkForge-5.0Base 的 AMD FSR 2 支持规划中。*
+[^*3]: **³：仅限 SparkForge-5.3Base，SparkForge-5.0Base 适配规划中。*
+[^*4]: **⁴：对 Visual Studio 2026 的支持仍在测试中，可能存在一些未知问题。*
+[^*5]: **⁵：对 JetBrains Rider 的支持仍在测试中，可能存在一些未知问题。*
+[^*6]: **⁶：指目前最新版本 Windows SDK 10.0.26100。*
+[^*7]: **⁷：指目前最新版本 Microsoft Visual C++ 14.51。*
+
+*本项目为实验性分支。不保证与官方虚幻引擎完全兼容。需要一定的引擎源码开发/编译经验。*
+
+*本文中的部分内容使用了生成式 AI 制作/翻译。*

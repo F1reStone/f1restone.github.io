@@ -205,15 +205,15 @@ const localizedHeadings = headings.map((heading) =>
                   <div class="mb-2 flex items-baseline gap-2">
                     <h3 class="font-display text-lg font-bold text-foreground">{project.data.title}</h3>
                     {project.data.year && (
-                      <span class="text-xs text-foreground-muted">{project.data.year}</span>
+                      <span class="text-xs font-mono text-foreground-muted">{project.data.year}</span>
                     )}
                   </div>
                   <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1 line-clamp-3">{project.data.description}</p>
                   {project.data.tags && project.data.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-1.5">
-                      {project.data.tags.map((tag, i) => (
+                    <div class="flex flex-wrap items-center gap-2">
+                      {project.data.tags.map((tag, index) => (
                         <>
-                          {i === 3 && <div class="basis-full" aria-hidden="true"></div>}
+                          {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
                           <Badge variant="brand">{tag}</Badge>
                         </>
                       ))}

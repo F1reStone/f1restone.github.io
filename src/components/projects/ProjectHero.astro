@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import ProjectCarousel from '@/components/projects/ProjectCarousel.astro';
 
 interface GallerySlide {
@@ -72,16 +73,17 @@ const hasMedia = slides.length > 0;
         </p>
 
         {meta.length > 0 && (
-          <p class="mb-[var(--space-stack-lg)] flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-foreground-muted">
-            {meta.map((item, i) => (
+          <div class="mb-[var(--space-stack-lg)] flex flex-wrap items-center gap-2">
+            {meta.map((item, index) => (
               <>
-                {i > 0 && (
-                  <span class="text-brand-500" aria-hidden="true">·</span>
-                )}
-                <span>{item}</span>
+                {/* FireStone: [Replace text character '·' with precise geometric dot separator] */}
+                {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                <Badge variant="brand">
+                  {item}
+                </Badge>
               </>
             ))}
-          </p>
+          </div>
         )}
 
         {(url || repo) && (

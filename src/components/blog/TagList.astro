@@ -1,16 +1,13 @@
 ---
 /**
  * Horizontal list of tag chips that link to permalink tag archive pages
- * (`/blog/tag/<slug>`). Pure HTML — no JS. Replaces nothing on its own;
- * coexists with the existing in-page dropdown filter.
  */
 import { tagToSlug } from '@/lib/blog';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 
 interface Props {
   tags: string[];
-  /** Highlight this tag (used on the tag archive page). */
   active?: string;
-  /** Optional class extension. */
   class?: string;
 }
 
@@ -18,24 +15,23 @@ const { tags, active, class: extraClass } = Astro.props;
 ---
 
 {tags.length > 0 && (
-  <ul class:list={['flex flex-wrap items-center gap-2', extraClass]} aria-label="Browse by tag">
-    {tags.map((tag) => {
+  <ul class:list={['flex flex-wrap items-center gap-1.5', extraClass]} aria-label="Browse by tag">
+    {tags.map((tag, index) => {
       const isActive = active === tag;
       return (
-        <li>
-          <a
-            href={`/blog/tag/${tagToSlug(tag)}`}
-            class:list={[
-              'inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition-colors',
-              isActive
-                ? 'border-brand-500 bg-brand-500 text-white'
-                : 'border-border bg-background text-foreground-muted hover:border-brand-500 hover:text-brand-500',
-            ]}
-            aria-current={isActive ? 'page' : undefined}
-          >
-            #{tag}
-          </a>
-        </li>
+        <>
+          {index > 0 && <li class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+          <li>
+            <Badge
+              href={`/blog/tag/${tagToSlug(tag)}`}
+              variant={isActive ? 'default' : 'brand'}
+              aria-current={isActive ? 'page' : undefined}
+              class={isActive ? 'drop-shadow-[0_0_12px_currentColor] text-foreground' : ''} 
+            >
+              #{tag}
+            </Badge>
+          </li>
+        </>
       );
     })}
   </ul>
