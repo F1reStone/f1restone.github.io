@@ -107,7 +107,7 @@ html[data-theme="firestone"] {
   --theme-font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --theme-heading-weight: 700;
-  --theme-heading-tracking: -0.10em;
+  --theme-heading-tracking: var(--tracking-tighter);
   --theme-body-leading: 1.6;
 
   /* -------------------------------------------------------------------------
