@@ -20,7 +20,7 @@ const { tags, active, class: extraClass } = Astro.props;
       const isActive = active === tag;
       return (
         <>
-          {index > 0 && <li class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+          {index > 0 && <li class="h-0.5 w-0.5 rounded-full bg-border-strong shrink-0" aria-hidden="true" />}
           <li>
             <Badge
               href={`/blog/tag/${tagToSlug(tag)}`}

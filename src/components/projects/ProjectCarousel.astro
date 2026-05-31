@@ -109,7 +109,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           data-carousel-counter
           aria-hidden="true"
         >
-          <span data-carousel-current>1</span> / {slides.length}
+          <span data-carousel-current>{String(1).padStart(String(slides.length).length, '0')}</span> / {slides.length}
         </span>
       </div>
 
@@ -156,8 +156,15 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
 
       if (!track || slides.length === 0) return;
 
-      // FireStone: [GPU Anti-Thrashing] 同步 6px 与 24px 差值的坐标系
-      const updateUI = (index: number) => {
+      const total = slides.length;
+      const padLen = String(total).length;
+
+      // FireStone: 加入 immediate 标记，用于首屏瞬移无动画同步
+      const updateUI = (index: number, immediate = false) => {
+        if (immediate) {
+          dots.forEach(dot => dot.style.transition = 'none');
+        }
+
         dots.forEach((dot, j) => {
           const active = index === j;
           dot.dataset.active = active ? 'true' : 'false';
@@ -167,11 +174,17 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
           dot.style.transform = `translate3d(${x}px, 0, 0)`;
         });
-        if (counter) counter.textContent = String(index + 1);
         
-        // 更新禁用状态
+        // 动态补零，保证宽度死锁，绝不跳变
+        if (counter) counter.textContent = String(index + 1).padStart(padLen, '0');
+        
         if (prevBtn) prevBtn.disabled = index === 0;
-        if (nextBtn) nextBtn.disabled = index === slides.length - 1;
+        if (nextBtn) nextBtn.disabled = index === total - 1;
+
+        if (immediate) {
+          void track.offsetHeight; // 强制浏览器立即执行渲染管线 (Reflow)，消除动画差
+          dots.forEach(dot => dot.style.transition = ''); // 恢复平滑动画
+        }
       };
 
       const scrollToIndex = (index: number) => {
@@ -229,7 +242,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
         }, 50);
       }, { passive: true });
 
-      updateUI(currentIndex());
+      updateUI(currentIndex(), true);
     });
   }
 

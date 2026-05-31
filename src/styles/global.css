@@ -537,7 +537,7 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
 
-    font-family: 'Playfair Display Variable', 'Playfair Display', 'New York', 'Garamond', 'Roboto Serif', 'Noto Serif', 'Source Han Serif SC', 'Source Han Serif CN', 'Noto Serif CJK SC', 'Noto Serif SC', ui-serif, serif; 
+    font-family: 'Playfair Display Variable', 'Playfair Display', 'New York', 'Garamond', 'Roboto Serif', 'Noto Serif', 'Source Han Serif SC', 'Source Han Serif CN', 'Noto Serif CJK SC', 'Noto Serif SC', 'Times Ten', 'Times New Roman', ui-serif, serif; 
     letter-spacing: -0.03em;
     text-transform: none;
     font-weight: 400;

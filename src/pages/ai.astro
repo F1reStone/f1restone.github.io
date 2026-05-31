@@ -1,7 +1,7 @@
 ---
 /**
- * 404 page
- * URL: /404
+ * FireStone AI Page
+ * URL: /ai
  */
 import PageLayout from '@/layouts/PageLayout.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
@@ -9,6 +9,8 @@ import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
+import TypingEffect from '@/components/ui/TypingEffect.astro';
+import TechStack from '@/components/landing/TechStack.astro';
 
 const recoveryLinks = [
   {
@@ -31,35 +33,21 @@ const recoveryLinks = [
   },
 ];
 ---
-
 <PageLayout
-  title="404"
-  description="此页面已移动、已删除或从未存在过。"
-  noindex
-  eagerReveal
+  title="FireStone AI"
+  description="此页面仍在积极开发中 // 敬请期待"
 >
   <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
-      <Icon name="compass" size="sm" />
-      页面未找到
+      <Icon name="triangle-alert" size="sm" />
+      Work in Progress
     </Badge>
     
     <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
-      <span class="hero-title-text">Error 404</span>
+      <span class="hero-title-text">Coming Soon</span>
     </h1>
 
-    <p slot="description" class="hero-description-text">此页面可能已移动、已删除或从未存在过。</p>
-
-    <Fragment slot="actions">
-      <Button size="lg" href="/">
-        <Icon name="arrow-left" size="sm" />
-        返回首页
-      </Button>
-      <Button size="lg" href="/blog" variant="outline">
-        浏览博客
-        <Icon name="arrow-right" size="sm" />
-      </Button>
-    </Fragment>
+    <p slot="description" class="hero-description-text">此页面仍在积极开发中 // 敬请期待</p>
   </Hero>
 
   <!-- Recovery Section -->

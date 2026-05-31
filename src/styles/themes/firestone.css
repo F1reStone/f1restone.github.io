@@ -94,7 +94,7 @@ html[data-theme="firestone"] {
     'SF Pro Text', 'Google Sans Flex', 'Inter', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
     var(--theme-font-zh-cn), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
 
-  --theme-font-display: 'Neue Regrade Variable', 'Neue Regrade Variable', 'Inter',
+  --theme-font-display: 'Neue Regrade Variable', 'Neue Regrade', 'Inter',
   'SF Pro Text', 'Google Sans Flex', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
   var(--theme-font-zh-cn), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
 

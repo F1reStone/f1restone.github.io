@@ -4,8 +4,8 @@
 export function formatDate(date: Date, locale = 'zh-CN'): string {
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
+    month: 'numeric',
+    day: 'numeric',
   }).format(date);
 }
 
@@ -40,7 +40,9 @@ const SOCIAL_PLATFORMS = [
   { key: 'github',    match: /github\.com/i,                  label: 'GitHub',      icon: 'github'    },
   { key: 'twitter',   match: /x\.com|twitter\.com/i,          label: 'X', icon: 'x-twitter' },
   { key: 'bilibili',  match: /bilibili\.com/i,                label: '哔哩哔哩',    icon: 'bilibili'  },
+  { key: 'zhihu',     match: /zhihu\.com/i,                   label: '知乎',        icon: 'zhihu'     },
   { key: 'neteasecloudmusic', match: /music\.163\.com/i,      label: '网易云音乐',    icon: 'neteasecloudmusic' },
+  { key: 'weibo',     match: /weibo\.com/i,                   label: '微博',        icon: 'weibo'     },
   { key: 'youtube',   match: /youtube\.com/i,                 label: 'YouTube',     icon: 'youtube'   },
 ] as const;
 

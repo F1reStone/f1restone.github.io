@@ -78,8 +78,9 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
       { label: 'GitHub Pages', href: 'https://docs.github.com/pages/', order: 4 },
       { label: 'Google Fonts', href: 'https://fonts.google.com/', order: 5 },
-      { label: 'React', href: 'https://react.dev/', order: 6 },
-      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 7 },
+      { label: 'Lucide', href: 'https://lucide.dev/', order: 6 },
+      { label: 'React', href: 'https://react.dev/', order: 7 },
+      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 8 },
     ],
   },
 ];
