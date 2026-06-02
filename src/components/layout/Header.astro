@@ -221,7 +221,7 @@ const buttonId = `${menuId}-button`;
                 href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
                 class={cn(
                   'nav-link relative rounded-md px-3 py-2 text-sm',
-                  'transition-all duration-(--transition-fast)',
+                  'transition-all',
                   isFloating && 'hdr-invert-text',
                   isFloating
                     ? (isActive(href) ? 'hdr-nav-active' : '')

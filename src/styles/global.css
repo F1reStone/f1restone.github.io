@@ -186,6 +186,10 @@
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
+  /* FireStone: Additional transitions */
+  --ease-bouncy: cubic-bezier(0.22, 1.6, 0.36, 1); /* 用于字重 */
+  --ease-fluid: cubic-bezier(0.25, 1, 0.5, 1);     /* 用于颜色渐变和发光 */
+
   /* Container */
   --container-max: 1200px;
 }
@@ -394,12 +398,12 @@
     --color-border: rgba(255, 255, 255, 0.1);
     --color-secondary: rgba(255, 255, 255, 0.1);
     
-    /* 导航栏悬停交互映射 */
+    /* 导航栏悬停/激活映射 */
     --nav-link-color: rgba(255, 255, 255, 0.75);
     --nav-link-hover-color: #ffffff;
-    --nav-link-hover-bg: rgba(255, 255, 255, 0.1);
-    --nav-link-active-color: var(--on-invert);
-    --nav-link-active-bg: var(--surface-invert-secondary);
+    --nav-link-hover-bg: transparent;
+    --nav-link-active-color: #ffffff;
+    --nav-link-active-bg: transparent;
   }
 
   /* 重置所有弹出式面板（下拉菜单）的变量，恢复跟随网站默认深浅模式的表现 */
@@ -418,7 +422,7 @@
     /* 恢复面板内导航链接的标准交互 */
     --nav-link-color: var(--foreground-muted);
     --nav-link-hover-color: var(--foreground);
-    --nav-link-hover-bg: var(--secondary);
+    --nav-link-hover-bg: transparent; /* 去除实心背景 */
   }
 
   /* =========================================================================
@@ -951,16 +955,20 @@
     --nav-link-color: var(--color-foreground-muted);
     --nav-link-bg: transparent;
     --nav-link-font-weight: 500;
+    --nav-link-text-shadow: none; /* 默认无发光 */
 
     /* Nav link - hover state */
     --nav-link-hover-color: var(--color-foreground);
-    --nav-link-hover-bg: var(--color-secondary);
-    --nav-link-hover-font-weight: 700; /* FireStone: 定义悬停字重目标 */
+    --nav-link-hover-bg: transparent; /* FireStone: 废弃实心背景 */
+    --nav-link-hover-font-weight: 800;
+    /* 采用 currentColor 智能继承发光色，与徽章效果保持极高一致性 */
+    --nav-link-hover-text-shadow: 0 0 10px currentColor; 
 
     /* Nav link - active state (current page) */
     --nav-link-active-color: var(--color-foreground);
-    --nav-link-active-bg: var(--color-secondary);
-    --nav-link-active-font-weight: 700;
+    --nav-link-active-bg: transparent; /* FireStone: 废弃实心背景 */
+    --nav-link-active-font-weight: 800;
+    --nav-link-active-text-shadow: 0 0 10px currentColor; /* 激活时永久发光 */
 
     /* Nav link - focus state */
     --nav-link-focus-ring: var(--color-ring);
@@ -969,8 +977,12 @@
   .nav-link {
     color: var(--nav-link-color);
     background-color: var(--nav-link-bg);
-    /* FireStone: 引入专属的可变字体动画。使用 !important 覆盖 HTML 上自带的 Tailwind transition-all，防止动画被截断！ */
-    transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1), background-color 150ms, color 150ms !important;
+    text-shadow: var(--nav-link-text-shadow);
+    /* FireStone: 将动画参数拆分，字重采用带弹性的 Bouncy 曲线，发光和颜色采用流体 Fluid 曲线 */
+    transition: font-weight 1s var(--ease-bouncy), 
+                text-shadow 400ms var(--ease-fluid),
+                background-color 150ms, 
+                color 150ms !important;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
@@ -983,53 +995,70 @@
     height: 0;
     visibility: hidden;
     overflow: hidden;
+    -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
-    font-weight: 700;
+    font-weight: 800; /* 防抖占位符 */
   }
 
+  /* 状态绑定 */
   .nav-link-inactive {
     font-weight: var(--nav-link-font-weight);
+    text-shadow: var(--nav-link-text-shadow);
   }
 
   .nav-link-inactive:hover {
     color: var(--nav-link-hover-color);
     background-color: var(--nav-link-hover-bg);
     font-weight: var(--nav-link-hover-font-weight);
+    text-shadow: var(--nav-link-hover-text-shadow);
   }
 
   .nav-link-active {
     color: var(--nav-link-active-color);
     background-color: var(--nav-link-active-bg);
     font-weight: var(--nav-link-active-font-weight);
+    text-shadow: var(--nav-link-active-text-shadow);
+  }
+
+  .nav-link-active:hover {
+    font-weight: var(--nav-link-hover-font-weight);
+    text-shadow: var(--nav-link-hover-text-shadow);
   }
 
   /* Mobile nav links */
   .mobile-nav-link {
     color: var(--nav-link-color);
     background-color: var(--nav-link-bg);
-    /* 手机端同步该动画质感 */
-    transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1), background-color 150ms, color 150ms !important;
+    text-shadow: var(--nav-link-text-shadow);
+    transition: font-weight 1s var(--ease-bouncy), 
+                text-shadow 400ms var(--ease-fluid),
+                background-color 150ms, 
+                color 150ms !important;
   }
 
   .mobile-nav-link-inactive {
     font-weight: var(--nav-link-font-weight);
+    text-shadow: var(--nav-link-text-shadow);
   }
 
   .mobile-nav-link-inactive:hover {
     color: var(--nav-link-hover-color);
     background-color: var(--nav-link-hover-bg);
     font-weight: var(--nav-link-hover-font-weight);
+    text-shadow: var(--nav-link-hover-text-shadow);
   }
 
   .mobile-nav-link-active {
     color: var(--nav-link-active-color);
     background-color: var(--nav-link-active-bg);
     font-weight: var(--nav-link-active-font-weight);
+    text-shadow: var(--nav-link-active-text-shadow);
   }
 
   .mobile-nav-link-active:hover {
     font-weight: var(--nav-link-hover-font-weight);
+    text-shadow: var(--nav-link-hover-text-shadow);
   }
 
 
