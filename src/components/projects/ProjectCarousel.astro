@@ -80,29 +80,31 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
       </button>
 
       <div class="flex items-center gap-3">
-        <div
-          class="relative h-1.5"
-          role="tablist"
-          aria-label="Choose slide"
-          data-carousel-dots
-          style={`width: ${dotsWidth}px;`}
-        >
-          {slides.map((_, i) => {
-            // 初始化首屏 X 坐标 (12px 跨度，排在激活点后加推 18px 差值)
-            const x = i === 0 ? 0 : i * 12 + 18;
-            return (
-              <button
-                type="button"
-                class="absolute left-0 top-0 h-1.5 rounded-full bg-border transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 w-1.5 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
-                data-carousel-dot
-                data-index={i}
-                role="tab"
-                aria-label={`Go to slide ${i + 1}`}
-                aria-selected={i === 0 ? 'true' : 'false'}
-                data-active={i === 0 ? 'true' : 'false'}
-              ></button>
-            );
-          })}
+        <div class="flex items-center justify-center rounded-full bg-secondary/50 px-1.5 py-1.5 backdrop-blur-md ring-1 ring-inset ring-border/50 shadow-sm">
+          <div
+            class="relative h-1.5"
+            role="tablist"
+            aria-label="Choose slide"
+            data-carousel-dots
+            style={`width: ${dotsWidth}px;`}
+          >
+            {slides.map((_, i) => {
+              // 初始化首屏 X 坐标 (12px 跨度，排在激活点后加推 18px 差值)
+              const x = i === 0 ? 0 : i * 12 + 18;
+              return (
+                <button
+                  type="button"
+                  class="absolute left-0 top-0 h-1.5 rounded-full bg-border-strong transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 w-1.5 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
+                  data-carousel-dot
+                  data-index={i}
+                  role="tab"
+                  aria-label={`Go to slide ${i + 1}`}
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  data-active={i === 0 ? 'true' : 'false'}
+                ></button>
+              );
+            })}
+          </div>
         </div>
         <span
           class="text-xs font-medium font-mono text-foreground-muted tabular-nums"

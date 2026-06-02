@@ -14,6 +14,9 @@ interface Props {
 
 const { images } = Astro.props;
 const id = Math.random().toString(36).slice(2, 8);
+
+// FireStone: 画廊精确防抖计算
+const dotsWidth = 12 * (images.length - 1) + 24;
 ---
 
 <div class="not-prose my-12" id={`gallery-${id}`}>
@@ -66,20 +69,26 @@ const id = Math.random().toString(36).slice(2, 8);
 
   <!-- Dots + counter -->
   <div class="mt-4 flex flex-col items-center gap-2">
-    <div id={`dots-${id}`} class="flex items-center gap-1.5" role="tablist">
-      {images.map((_, i) => (
-        <button
-          role="tab"
-          aria-label={`Go to slide ${i + 1}`}
-          data-dot={i}
-          data-dots-gallery={`gallery-${id}`}
-          data-active={i === 0 ? 'true' : 'false'}
-          class="h-1.5 w-1.5 rounded-full bg-border transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
-        ></button>
-      ))}
+    <div class="flex items-center justify-center rounded-full bg-secondary/50 px-1.5 py-1.5 backdrop-blur-md ring-1 ring-inset ring-border/50 shadow-sm"></div>
+      <div id={`dots-${id}`} class="relative h-1.5" role="tablist" style={`width: ${dotsWidth}px;`}>
+        {images.map((_, i) => {
+          const x = i === 0 ? 0 : i * 12 + 18;
+          return (
+            <button
+              role="tab"
+              aria-label={`Go to slide ${i + 1}`}
+              data-dot={i}
+              data-dots-gallery={`gallery-${id}`}
+              data-active={i === 0 ? 'true' : 'false'}
+              style={`transform: translate3d(${x}px, 0, 0);`}
+              class="h-1.5 w-1.5 rounded-full bg-foreground-subtle/50 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
+            ></button>
+        );
+        })}
+      </div>
     </div>
     <span id={`counter-${id}`} class="text-xs font-mono text-foreground-muted">
-      1 / {images.length}
+      {String(1).padStart(String(images.length).length, '0')} / {images.length}
     </span>
   </div>
 </div>
@@ -157,16 +166,30 @@ const id = Math.random().toString(36).slice(2, 8);
     sync(current);
   }
 
-  function sync(index) {
+  const padLen = String(total).length;
+
+  function sync(index, immediate = false) {
     current = index;
-    counter.textContent = (index + 1) + ' / ' + total;
+    // 动态补零
+    counter.textContent = String(index + 1).padStart(padLen, '0') + ' / ' + total;
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === total - 1;
     
-    // FireStone: 不再使用 className 替换，而是修改 dataset，让 Tailwind 接管动画渲染
-    dots.forEach((dot, i) => {
-      dot.dataset.active = (i === index) ? 'true' : 'false';
+    // FireStone: 阻断首屏弹射
+    if (immediate) {
+      dots.forEach(dot => dot.style.transition = 'none');
+    }
+
+    dots.forEach((dot, j) => {
+      dot.dataset.active = (j === index) ? 'true' : 'false';
+      const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
+      dot.style.transform = `translate3d(${x}px, 0, 0)`;
     });
+
+    if (immediate) {
+      void dotsContainer.offsetHeight; // 强制重绘
+      dots.forEach(dot => dot.style.transition = '');
+    }
   }
 
   // Scroll spy
@@ -238,6 +261,9 @@ const id = Math.random().toString(36).slice(2, 8);
     if (e.key === 'ArrowRight' && lbCurrent < total - 1) lbSync(lbCurrent + 1);
   });
 
-  sync(0);
+  const initialWidth = track.clientWidth || 1;
+  const initialIdx = Math.round(track.scrollLeft / initialWidth);
+  // FireStone: 首屏瞬移归位
+  sync(initialIdx || 0, true);
 })();
 </script>

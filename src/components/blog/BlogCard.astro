@@ -89,7 +89,7 @@ const readingTime = Math.max(1, Math.ceil(estimatedWords / wordsPerMinute));
       <div class="mt-4 flex flex-wrap items-center gap-1.5">
         {tags.map((tag, index) => (
           <>
-            {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-border-strong shrink-0" aria-hidden="true" />}
+            {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
             <Badge variant="brand">
               #{tag}
             </Badge>
