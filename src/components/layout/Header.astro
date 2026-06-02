@@ -350,7 +350,7 @@ const buttonId = `${menuId}-button`;
   {effectiveShowScrollProgress && (
     isFloating ? (
       <div
-        class={`absolute inset-x-3 h-[2px] overflow-hidden rounded-full ${scrollProgressPosition === 'top' ? 'top-[2px]' : 'bottom-[2px]'}`}
+        class={`absolute inset-x-3 h-0.5 overflow-hidden rounded-full ${scrollProgressPosition === 'top' ? 'top-0.5' : 'bottom-0.5'}`}
         aria-hidden="true"
       >
         <div
@@ -361,7 +361,7 @@ const buttonId = `${menuId}-button`;
     ) : (
       <div
         id="scroll-progress-bar"
-        class={`absolute left-0 h-[2px] w-0 bg-brand-500 transition-none ${scrollProgressPosition === 'top' ? 'top-0' : 'bottom-0'}`}
+        class={`absolute left-0 h-0.5 w-0 bg-brand-500 transition-none ${scrollProgressPosition === 'top' ? 'top-0' : 'bottom-0'}`}
         aria-hidden="true"
       />
     )
