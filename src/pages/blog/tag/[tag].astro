@@ -70,8 +70,8 @@ const { tag, posts, visibleTags } = Astro.props;
           href="/blog"
           class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
         >
-          <Icon name="arrow-left" size="sm" />
-          返回全部文章
+          <Icon name="chevron-left" size="sm" />
+          返回「全部文章」
         </a>
 
         {visibleTags.length > 0 && (
@@ -102,8 +102,8 @@ const { tag, posts, visibleTags } = Astro.props;
           <p class="text-foreground-muted text-lg">未找到带有此标签的文章。</p>
           <div class="mt-6">
             <Button href="/blog" variant="outline" size="sm">
-              <Icon name="arrow-left" size="sm" />
-              返回「所有文章」
+              <Icon name="chevron-left" size="sm" />
+              返回「全部文章」
             </Button>
           </div>
         </div>

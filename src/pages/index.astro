@@ -32,7 +32,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
 <LandingLayout
   title="首页"
-  description="兴趣使然的个人开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。"
+  description="兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。"
   image="/og-default.svg"
   includePersonSchema={true}
   includeProfessionalServiceSchema={true}
@@ -48,12 +48,14 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
    <Fragment slot="actions">
       <Button size="lg" href="/about">
+        <Icon name="user" size="sm" />
         关于我
-        <Icon name="arrow-right" size="sm" />
+        <Icon name="chevron-right" size="sm" />
       </Button>
       <Button size="lg" variant="outline" href="/projects">
+        <Icon name="telescope" size="sm" />
         探索我的项目
-        <Icon name="arrow-right" size="sm" />
+        <Icon name="chevron-right" size="sm" />
       </Button>
     </Fragment>
   </Hero>
@@ -111,7 +113,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <div class="text-center mt-4">
         <Button variant="outline" href="/projects">
           查看更多项目
-          <Icon name="arrow-right" size="sm" />
+          <Icon name="chevron-right" size="sm" />
         </Button>
       </div>
     </div>
@@ -131,7 +133,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
           </div>
            <Button variant="outline" href="/about" class="self-start">
             进一步了解
-            <Icon name="arrow-right" size="sm" />
+            <Icon name="chevron-right" size="sm" />
           </Button>
         </div>
       </div>
@@ -165,7 +167,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       <div class="flex justify-center">
         <Button variant="outline" href="/blog">
           阅读所有文章
-          <Icon name="arrow-right" size="sm" />
+          <Icon name="chevron-right" size="sm" />
         </Button>
       </div>
     </div>

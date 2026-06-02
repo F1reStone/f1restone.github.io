@@ -31,7 +31,7 @@ const {
   headings = [],
   sectionLabel = '法律信息',
   backHref = '/legal',
-  backLabel = '返回法律信息',
+  backLabel = '返回「法律信息」',
 } = Astro.props;
 
 const displayTitleEn = titleEn ?? title;
@@ -139,7 +139,7 @@ const localizedHeadings = headings.map((heading) =>
           <footer class="border-border mt-12 border-t pt-8" data-reveal>
             <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <Button href={backHref} variant="secondary" size="sm">
-                <Icon name="arrow-left" size="sm" />
+                <Icon name="chevron-left" size="sm" />
                 {backLabel}
               </Button>
 
