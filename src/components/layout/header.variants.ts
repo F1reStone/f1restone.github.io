@@ -8,9 +8,11 @@ export const headerVariants = cva('z-50', {
       static: 'relative',
     },
     variant: {
+      // FireStone: [Replace standard hard-edge glass with our custom Progressive Blur class]
       default: 'bg-background/80 backdrop-blur-lg border-b border-border/50',
       solid: 'bg-background border-b border-border-strong',
       transparent: 'bg-transparent',
+      progressive: 'hdr-progressive-glass',
     },
     shape: {
       bar: 'w-full transition-[background,border-color,box-shadow,backdrop-filter] duration-300',
@@ -44,9 +46,11 @@ export const headerInnerVariants = cva(
   {
     variants: {
       size: {
-        sm: 'h-12',
-        md: 'h-14',
-        lg: 'h-16',
+        'sm': 'h-12',
+        'md': 'h-14',
+        'lg': 'h-16',
+        'xl': 'h-18',
+        '2xl': 'h-20',
       },
       shape: {
         bar: 'mx-auto max-w-8xl px-6',

@@ -7,7 +7,7 @@
  * - layout: 'default' | 'centered' | 'minimal'
  * - position: 'fixed' | 'sticky' | 'static'
  * - size: 'sm' | 'md' | 'lg'
- * - variant: 'default' | 'solid' | 'transparent'
+ * - variant: 'default' | 'solid' | 'transparent' | 'progressive'
  * - colorScheme: 'default' | 'invert' (use 'invert' for dark backgrounds)
  * - shape: 'bar' | 'floating' (use 'floating' for capsule header)
  *
@@ -51,8 +51,8 @@ export interface HeaderAction {
 interface Props extends HTMLAttributes<'header'> {
   layout?: 'default' | 'centered' | 'minimal';
   position?: 'fixed' | 'sticky' | 'static';
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'solid' | 'transparent';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  variant?: 'default' | 'solid' | 'transparent' | 'progressive';
   colorScheme?: 'default' | 'invert';
   shape?: 'bar' | 'floating';
   nav?: NavItem[];
@@ -82,9 +82,9 @@ interface Props extends HTMLAttributes<'header'> {
 const {
   layout = 'default',
   position = 'fixed',
-  size = 'lg',
-  variant = 'transparent',
-  colorScheme = 'default',
+  size = '2xl',
+  variant = 'progressive',
+  colorScheme = 'invert',
   shape = 'bar',
   nav,
   extraNav = [],
@@ -221,7 +221,7 @@ const buttonId = `${menuId}-button`;
                 href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
                 class={cn(
                   'nav-link relative rounded-md px-3 py-2 text-sm',
-                  'transition-all',
+                  'transition-all duration-(--transition-fast)',
                   isFloating && 'hdr-invert-text',
                   isFloating
                     ? (isActive(href) ? 'hdr-nav-active' : '')

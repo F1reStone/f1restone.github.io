@@ -947,38 +947,27 @@
    ------------------------------------------------------------------------- */
 @layer components {
 /* -------------------------------------------------------------------------
-     Navigation Component Tokens
-     Customize header navigation via these CSS custom properties
+     Navigation Component Tokens & Progressive Blur Shape
      ------------------------------------------------------------------------- */
-  :root {
-    /* Nav link - inactive state */
+  .nav-link, .mobile-nav-link {
     --nav-link-color: var(--color-foreground-muted);
     --nav-link-bg: transparent;
     --nav-link-font-weight: 500;
-    --nav-link-text-shadow: none; /* 默认无发光 */
+    --nav-link-text-shadow: none;
 
-    /* Nav link - hover state */
     --nav-link-hover-color: var(--color-foreground);
-    --nav-link-hover-bg: transparent; /* FireStone: 废弃实心背景 */
-    --nav-link-hover-font-weight: 800;
-    /* 采用 currentColor 智能继承发光色，与徽章效果保持极高一致性 */
-    --nav-link-hover-text-shadow: 0 0 10px currentColor; 
+    --nav-link-hover-bg: transparent;
+    --nav-link-hover-font-weight: 700;
+    --nav-link-hover-text-shadow: 0 0 10px currentColor;
 
-    /* Nav link - active state (current page) */
     --nav-link-active-color: var(--color-foreground);
-    --nav-link-active-bg: transparent; /* FireStone: 废弃实心背景 */
-    --nav-link-active-font-weight: 800;
-    --nav-link-active-text-shadow: 0 0 10px currentColor; /* 激活时永久发光 */
+    --nav-link-active-bg: transparent;
+    --nav-link-active-font-weight: 700;
+    --nav-link-active-text-shadow: 0 0 10px currentColor;
 
-    /* Nav link - focus state */
-    --nav-link-focus-ring: var(--color-ring);
-  }
-
-  .nav-link {
     color: var(--nav-link-color);
     background-color: var(--nav-link-bg);
     text-shadow: var(--nav-link-text-shadow);
-    /* FireStone: 将动画参数拆分，字重采用带弹性的 Bouncy 曲线，发光和颜色采用流体 Fluid 曲线 */
     transition: font-weight 1s var(--ease-bouncy), 
                 text-shadow 400ms var(--ease-fluid),
                 background-color 150ms, 
@@ -998,67 +987,78 @@
     -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
-    font-weight: 800; /* 防抖占位符 */
+    font-weight: 700;
   }
 
-  /* 状态绑定 */
-  .nav-link-inactive {
+  .nav-link-inactive, .mobile-nav-link-inactive {
     font-weight: var(--nav-link-font-weight);
     text-shadow: var(--nav-link-text-shadow);
   }
 
-  .nav-link-inactive:hover {
+  .nav-link-inactive:hover, .mobile-nav-link-inactive:hover {
     color: var(--nav-link-hover-color);
     background-color: var(--nav-link-hover-bg);
     font-weight: var(--nav-link-hover-font-weight);
     text-shadow: var(--nav-link-hover-text-shadow);
   }
 
-  .nav-link-active {
+  .nav-link-active, .mobile-nav-link-active {
     color: var(--nav-link-active-color);
     background-color: var(--nav-link-active-bg);
     font-weight: var(--nav-link-active-font-weight);
     text-shadow: var(--nav-link-active-text-shadow);
   }
 
-  .nav-link-active:hover {
+  .nav-link-active:hover, .mobile-nav-link-active:hover {
     font-weight: var(--nav-link-hover-font-weight);
     text-shadow: var(--nav-link-hover-text-shadow);
   }
 
-  /* Mobile nav links */
-  .mobile-nav-link {
-    color: var(--nav-link-color);
-    background-color: var(--nav-link-bg);
-    text-shadow: var(--nav-link-text-shadow);
-    transition: font-weight 1s var(--ease-bouncy), 
-                text-shadow 400ms var(--ease-fluid),
-                background-color 150ms, 
-                color 150ms !important;
+  /* =========================================================================
+     FireStone: Progressive Background Blur (渐进式毛玻璃)
+     ========================================================================= */
+  .hdr-progressive-glass {
+    background-color: transparent !important;
+    border: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
   }
 
-  .mobile-nav-link-inactive {
-    font-weight: var(--nav-link-font-weight);
-    text-shadow: var(--nav-link-text-shadow);
+  .hdr-progressive-glass::before {
+    content: '';
+    position: absolute;
+    /* 容器向下物理延伸 50%，实际总高度已经达到原 Header 的 150% */
+    inset: -10px 0 -100% 0; 
+    z-index: -1;
+    pointer-events: none;
+    
+    /* FireStone: 完美优化的背景透明度平滑过渡曲线。
+       (这里的 100% 即代表延伸后容器的最底端，也就是视觉上的 150% 处) */
+    background: linear-gradient(
+      to bottom, 
+      color-mix(in oklch, var(--color-background) 55%, transparent) 0%, 
+      color-mix(in oklch, var(--color-background) 45%, transparent) 25%,
+      color-mix(in oklch, var(--color-background) 25%, transparent) 60%,
+      color-mix(in oklch, var(--color-background) 5%, transparent) 85%,
+      transparent 100%
+    );
+    
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    
+    /* 遮罩的非线性 Ease-out 淡出曲线，确保毛玻璃模糊度与背景颜色同步完美消散 */
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 55%, rgba(0, 0, 0, 0.35) 90%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 55%, rgba(0, 0, 0, 0.35) 90%, transparent 100%);
+
+    /* 核心机制：首屏未滚动时完全透明，隐藏背景，保持沉浸 */
+    opacity: 0;
+    transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
   }
 
-  .mobile-nav-link-inactive:hover {
-    color: var(--nav-link-hover-color);
-    background-color: var(--nav-link-hover-bg);
-    font-weight: var(--nav-link-hover-font-weight);
-    text-shadow: var(--nav-link-hover-text-shadow);
-  }
-
-  .mobile-nav-link-active {
-    color: var(--nav-link-active-color);
-    background-color: var(--nav-link-active-bg);
-    font-weight: var(--nav-link-active-font-weight);
-    text-shadow: var(--nav-link-active-text-shadow);
-  }
-
-  .mobile-nav-link-active:hover {
-    font-weight: var(--nav-link-hover-font-weight);
-    text-shadow: var(--nav-link-hover-text-shadow);
+  /* 当页面发生滚动时，渐进式模糊平滑显现！ */
+  header[data-scrolled].hdr-progressive-glass::before {
+    opacity: 1;
   }
 
 

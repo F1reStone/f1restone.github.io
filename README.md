@@ -792,12 +792,6 @@ Please ensure your code passes linting (`pnpm lint`) and type checking (`pnpm ch
 
 ---
 
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
 ## Links
 
 - [Astro Rocket on GitHub](https://github.com/hansmartensdev/astro-rocket)
