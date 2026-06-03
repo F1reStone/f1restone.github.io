@@ -202,7 +202,7 @@ const buttonId = `${menuId}-button`;
           <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
             <Logo
               size={size === 'sm' ? 'md' : 'lg'}
-              class="text-foreground transition-colors duration-300" 
+              class="text-foreground hdr-logo-glow" 
             />
           </a>
         ))
@@ -272,7 +272,8 @@ const buttonId = `${menuId}-button`;
                       rel="noopener noreferrer"
                       aria-label={label}
                       class={cn(
-                        'rounded-md p-2 transition-colors duration-(--transition-fast)',
+                        'rounded-md p-2',
+                        'hdr-social-link', /* FireStone: 接入纯净辉光，删掉原有的变灰和底色填充 */
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                         isFloating
                           ? 'hdr-invert-text'
@@ -326,8 +327,7 @@ const buttonId = `${menuId}-button`;
             id={buttonId}
             class={cn(
               'hdr-hamburger inline-flex items-center justify-center rounded-md p-2 lg:hidden',
-              'text-foreground',
-              'transition-colors',
+              'hdr-social-link', /* FireStone: Hamburger 菜单应用 SparkFlow UI */
               'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
               isFloating ? 'hover:bg-secondary/40' : 'hover:bg-secondary'
             )}

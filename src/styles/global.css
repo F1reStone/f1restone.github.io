@@ -425,6 +425,84 @@
     --nav-link-hover-bg: transparent; /* 去除实心背景 */
   }
 
+
+
+  /* -------------------------------------------------------------------------
+     FireStone: Header Controls
+     ------------------------------------------------------------------------- */
+  /* 下拉菜单药丸按钮 (语言、深浅模式、主题) */
+  .hdr-glass-pill {
+    /* 从 foreground-muted 升级为 foreground，大大提升基础可读性 */
+    color: var(--color-foreground-muted);
+    /* Liquid Glass: 用极低不透明度的前景色做底，配合强力毛玻璃 */
+    background-color: color-mix(in oklch, var(--color-foreground) 6%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-foreground) 15%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* 极浅的基础阴影，塑造立体层级，不干扰发光 */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 400ms var(--ease-fluid) !important;
+  }
+
+  .hdr-glass-pill:hover,
+  .hdr-glass-pill[aria-expanded="true"] {
+    /* 悬停/激活时：瞬间注满纯白，文字转黑防隐身，爆发出纯净耀眼的白光 */
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #080C13 !important; 
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.85) !important; 
+    transform: scale(1.02); /* 微扩充增强果冻按压互动感 */
+  }
+
+  /* 纯图标按钮 (社交媒体、汉堡菜单) */
+  .hdr-social-link {
+    color: var(--color-foreground-muted);
+    background-color: transparent !important;
+    /* 使用 filter: drop-shadow 给异形 SVG 提供极其贴合的浅轮廓阴影 */
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+    transition: all 400ms var(--ease-fluid) !important;
+  }
+
+  .hdr-social-link:hover {
+    color: var(--color-foreground);
+    background-color: transparent !important;
+    /* 悬停时去掉普通阴影，替换为高级的同色发光辉光 */
+    filter: drop-shadow(0 0 10px currentColor);
+    transform: scale(1.1); /* 放大反馈 */
+  }
+
+
+
+  /* -------------------------------------------------------------------------
+     FireStone: Exclusive Logo Glow
+     仅供特定位置（如 Header）调用的 Logo 光影交互。
+     修复浏览器 filter 无法插值的 Bug，采用同构双阴影 (Isomorphic Shadow) 
+     配合确定的 CSS 变量，确保动画丝滑。
+     ------------------------------------------------------------------------- */
+  .hdr-logo-glow {
+    /* 核心防抖与防跳变：定义一前一后两个 drop-shadow 占位，保证动画数学对齐 */
+    filter: 
+      drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15)) /* 基础阴影 */
+      drop-shadow(0 0 0px transparent);          /* 隐藏的辉光阴影 */
+      
+    /* 明确指定 filter 和 transform 进行过渡，避免 all 带来的性能损耗 */
+    transition: filter 0.5s var(--ease-fluid), transform 0.5s var(--ease-fluid) !important;
+  }
+
+  .hdr-logo-glow:hover {
+    /* 基础阴影平滑隐去，辉光阴影平滑浮现。
+       使用 var(--color-foreground) 替代无法插值的 currentColor。
+       使用 in srgb 混合 transparent，防止 oklch 色域在降低透明度时发生发灰/偏色偏移。 */
+    filter: 
+      drop-shadow(0 1px 2px transparent) 
+      drop-shadow(0 0 12px color-mix(in srgb, var(--color-foreground) 50%, transparent));
+      
+    transform: scale(1.04);
+  }
+
+
+
   /* =========================================================================
      Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
      参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
@@ -953,7 +1031,9 @@
     --nav-link-color: var(--color-foreground-muted);
     --nav-link-bg: transparent;
     --nav-link-font-weight: 500;
-    --nav-link-text-shadow: none;
+    
+    /* FireStone: 为未激活的导航文本加上与社交图标同款的极浅阴影，提升层次感 */
+    --nav-link-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 
     --nav-link-hover-color: var(--color-foreground);
     --nav-link-hover-bg: transparent;
@@ -1048,8 +1128,8 @@
     backdrop-filter: blur(24px);
     
     /* 遮罩的非线性 Ease-out 淡出曲线，确保毛玻璃模糊度与背景颜色同步完美消散 */
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 55%, rgba(0, 0, 0, 0.35) 90%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 55%, rgba(0, 0, 0, 0.35) 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.35) 75%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.35) 75%, transparent 100%);
 
     /* 核心机制：首屏未滚动时完全透明，隐藏背景，保持沉浸 */
     opacity: 0;
