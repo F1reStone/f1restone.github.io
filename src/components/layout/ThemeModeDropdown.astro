@@ -13,6 +13,7 @@
  * instances (header pill + mobile-menu pill) and view-transition re-mounts.
  */
 import { cn } from '@/lib/cn';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
 interface Props {
   class?: string;
@@ -34,33 +35,25 @@ const { class: className } = Astro.props;
     aria-expanded="false"
     aria-label="Theme: system. Click to change."
   >
-    <!-- Monitor — shown when data-theme-mode="system" (also pre-bootstrap fallback) -->
-    <svg class="ttg-icon ttg-icon-system h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <rect x="2.75" y="3.75" width="18.5" height="13" rx="2" />
-      <path stroke-linecap="round" d="M8 20.25h8M12 16.75v3.5" />
-    </svg>
+    <!-- Sun-Moon — shown when data-theme-mode="system" (also pre-bootstrap fallback) -->
+    <span class="ttg-icon ttg-icon-system h-4 w-4" aria-hidden="true">
+      <Icon name="sun-moon" size="sm" />
+    </span>
     <!-- Sun -->
-    <svg class="ttg-icon ttg-icon-light h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-    </svg>
+    <span class="ttg-icon ttg-icon-light h-4 w-4" aria-hidden="true">
+      <Icon name="sun" size="sm" />
+    </span>
     <!-- Moon -->
-    <svg class="ttg-icon ttg-icon-dark h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-    </svg>
+    <span class="ttg-icon ttg-icon-dark h-4 w-4" aria-hidden="true">
+      <Icon name="moon" size="sm" />
+    </span>
     <!-- Chevron — rotates 180° when panel is open -->
-    <svg
+    <span
       class="ttg-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
       aria-hidden="true"
     >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
+      <Icon name="chevron-down" size="xs" />
+    </span>
   </button>
 
   <!-- Dropdown panel -->
@@ -75,10 +68,7 @@ const { class: className } = Astro.props;
   >
     <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="system">
       <span class="ttg-row-icon">
-        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <rect x="2.75" y="3.75" width="18.5" height="13" rx="2" />
-          <path stroke-linecap="round" d="M8 20.25h8M12 16.75v3.5" />
-        </svg>
+        <Icon name="sun-moon" size="sm" />
       </span>
       <span class="ttg-row-label">
         <span class="ttg-row-title">跟随系统</span>
@@ -91,9 +81,7 @@ const { class: className } = Astro.props;
 
     <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="light">
       <span class="ttg-row-icon">
-        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-        </svg>
+        <Icon name="sun" size="sm" />
       </span>
       <span class="ttg-row-label">
         <span class="ttg-row-title">浅色模式</span>
@@ -105,9 +93,7 @@ const { class: className } = Astro.props;
 
     <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="dark">
       <span class="ttg-row-icon">
-        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-        </svg>
+        <Icon name="moon" size="sm" />
       </span>
       <span class="ttg-row-label">
         <span class="ttg-row-title">深色模式</span>

@@ -477,28 +477,28 @@
   /* -------------------------------------------------------------------------
      FireStone: Exclusive Logo Glow
      仅供特定位置（如 Header）调用的 Logo 光影交互。
-     修复浏览器 filter 无法插值的 Bug，采用同构双阴影 (Isomorphic Shadow) 
-     配合确定的 CSS 变量，确保动画丝滑。
+     修复浏览器 filter 无法插值的 Bug，双阴影配合确定的 CSS 变量，确保动画丝滑。
      ------------------------------------------------------------------------- */
   .hdr-logo-glow {
-    /* 核心防抖与防跳变：定义一前一后两个 drop-shadow 占位，保证动画数学对齐 */
+    /* 提权至独立的 GPU 合成器图层 */
+    will-change: filter, transform;
+    transform: translateZ(0) scale(1);
+    
+    /* 核心防跳变：前后状态颜色必须【一模一样】，仅通过控制 blur 半径 (0px) 来隐藏辉光 */
     filter: 
-      drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15)) /* 基础阴影 */
-      drop-shadow(0 0 0px transparent);          /* 隐藏的辉光阴影 */
+      drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15)) 
+      drop-shadow(0 0 0px color-mix(in srgb, var(--color-foreground) 30%, transparent));
       
-    /* 明确指定 filter 和 transform 进行过渡，避免 all 带来的性能损耗 */
-    transition: filter 0.5s var(--ease-fluid), transform 0.5s var(--ease-fluid) !important;
+    transition: filter 400ms var(--ease-fluid), transform 400ms var(--ease-fluid) !important;
   }
 
   .hdr-logo-glow:hover {
-    /* 基础阴影平滑隐去，辉光阴影平滑浮现。
-       使用 var(--color-foreground) 替代无法插值的 currentColor。
-       使用 in srgb 混合 transparent，防止 oklch 色域在降低透明度时发生发灰/偏色偏移。 */
+    /* 基础阴影的 alpha 降为 0，辉光阴影半径展开为 12px。数学插值完美对齐 */
     filter: 
-      drop-shadow(0 1px 2px transparent) 
-      drop-shadow(0 0 12px color-mix(in srgb, var(--color-foreground) 50%, transparent));
+      drop-shadow(0 1px 2px rgba(0, 0, 0, 0)) 
+      drop-shadow(0 0 12px color-mix(in srgb, var(--color-foreground) 30%, transparent));
       
-    transform: scale(1.04);
+    transform: translateZ(0) scale(1.04);
   }
 
 

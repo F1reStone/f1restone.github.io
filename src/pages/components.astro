@@ -1,5 +1,5 @@
 ---
-import PageLayout from '@/layouts/PageLayout.astro';
+import ComponentLayout from '@/layouts/ComponentLayout.astro';
 // Form Components
 import Button from '@/components/ui/form/Button/Button.astro';
 import Input from '@/components/ui/form/Input/Input.astro';
@@ -44,33 +44,32 @@ import StatCard from '@/components/patterns/StatCard.astro';
 import EmptyState from '@/components/patterns/EmptyState.astro';
 ---
 
-<PageLayout
-  title="Component Showcase"
-  description="Explore Astro Rocket's comprehensive UI component library. Production-ready, accessible, and beautifully designed."
+<ComponentLayout
+  title="组件库"
+  description="探索 FireStone Design 的 SparkFlow UI 组件库。生产就绪、可访问且设计精美。"
   noindex={true}
 >
 
   <!-- Hero Section -->
   <Hero layout="split" size="lg">
-    <Badge slot="badge" variant="brand" pill>50+ production components</Badge>
+    <Badge slot="badge" variant="brand" pill>50+ 生产就绪的组件</Badge>
 
     <h1 slot="title">
-      Component <span class="text-brand-500">Library</span>
+      <span class="text-brand-500">组件</span>库
     </h1>
 
     <p slot="description">
-      Production-ready UI primitives built with accessibility and performance in mind.
-      Copy, paste, and customize to match your brand.
+      SparkFlow UI 基本组件，兼顾易用性和性能。可复制、粘贴并自定义。
     </p>
 
     <Fragment slot="actions">
       <Button href="#hero" class="hero-btn-brand">
-        Browse Components
+        浏览组件
         <Icon name="chevron-right" size="sm" />
       </Button>
       <Button href="https://github.com/hansmartensdev/Astro-Rocket" target="_blank" class="hero-btn-learn">
         <Icon name="github" size="sm" />
-        View Source
+        访问源代码
       </Button>
     </Fragment>
   </Hero>
@@ -515,7 +514,7 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               showCopyright={false}
               socialLinks={[
                 { key: 'github', href: '#', label: 'GitHub', icon: 'github' },
-                { key: 'twitter', href: '#', label: 'X', icon: 'x-twitter' },
+                { key: 'x-twitter', href: '#', label: 'X', icon: 'x-twitter' },
               ]}
             />
           </div>
@@ -547,7 +546,7 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               tagline="Build faster, ship with confidence"
               socialLinks={[
                 { key: 'github', href: '#', label: 'GitHub', icon: 'github' },
-                { key: 'twitter', href: '#', label: 'X', icon: 'x-twitter' },
+                { key: 'x-twitter', href: '#', label: 'X', icon: 'x-twitter' },
               ]}
               legalLinks={[
                 { label: 'Privacy', href: '#' },
@@ -570,7 +569,7 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               tagline="Modern starter kit for production websites"
               socialLinks={[
                 { key: 'github', href: '#', label: 'GitHub', icon: 'github' },
-                { key: 'twitter', href: '#', label: 'X', icon: 'x-twitter' },
+                { key: 'x-twitter', href: '#', label: 'X', icon: 'x-twitter' },
               ]}
               linkGroups={[
                 {
@@ -1200,15 +1199,15 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
                 <div class="grid gap-4 sm:grid-cols-3">
                   <Card variant="solid" padding="sm">
                     <p class="text-xs text-foreground-subtle uppercase tracking-wider">Total Views</p>
-                    <p class="text-2xl font-bold text-foreground mt-1">24,521</p>
+                    <p class="text-2xl font-bold font-mono text-foreground mt-1">24,521</p>
                   </Card>
                   <Card variant="solid" padding="sm">
                     <p class="text-xs text-foreground-subtle uppercase tracking-wider">Avg. Time</p>
-                    <p class="text-2xl font-bold text-foreground mt-1">3m 42s</p>
+                    <p class="text-2xl font-bold font-mono text-foreground mt-1">3m 42s</p>
                   </Card>
                   <Card variant="solid" padding="sm">
                     <p class="text-xs text-foreground-subtle uppercase tracking-wider">Bounce Rate</p>
-                    <p class="text-2xl font-bold text-foreground mt-1">32.4%</p>
+                    <p class="text-2xl font-bold font-mono text-foreground mt-1">32.4%</p>
                   </Card>
                 </div>
               </div>
@@ -1483,7 +1482,7 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
               <Card>
                 <div class="text-center">
                   <p class="text-xs font-medium text-foreground-subtle uppercase tracking-wider">Total Revenue</p>
-                  <p class="text-3xl font-bold text-foreground mt-1">$45,231</p>
+                  <p class="text-3xl font-bold font-mono text-foreground mt-1">$11,451</p>
                   <p class="text-xs text-success mt-2 flex items-center justify-center gap-1">
                     <Icon name="arrow-right" size="xs" class="rotate-[-45deg]" />
                     +12.5% from last month
@@ -2001,22 +2000,6 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
 
   </div>
 
-  <!-- CTA Section -->
-  <CTA variant="invert" size="md" maxWidth="md">
-    <h2 slot="heading">Ready to build?</h2>
-    <p slot="description">
-      These components are just the beginning. Clone Astro Rocket and start shipping faster.
-    </p>
-    <Fragment slot="actions">
-      <Button href="https://github.com/hansmartensdev/Astro-Rocket" target="_blank" class="hero-btn-brand">
-        <Icon name="github" size="sm" />
-        Clone Repository
-      </Button>
-      <Button variant="outline" href="/blog">
-        Read Documentation
-      </Button>
-    </Fragment>
-  </CTA>
 
 </PageLayout>
 
