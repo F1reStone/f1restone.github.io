@@ -34,7 +34,7 @@ const schema = createBreadcrumbSchema(schemaItems);
         <li class="flex items-center gap-2">
           {index > 0 && (
             <svg
-              class="h-4 w-4 text-muted-foreground"
+              class="h-4 w-4 text-foreground-muted opacity-50"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -44,7 +44,7 @@ const schema = createBreadcrumbSchema(schemaItems);
             </svg>
           )}
           {item.href && index !== items.length - 1 ? (
-            <a href={item.href} class="text-muted-foreground hover:text-foreground transition-colors">
+            <a href={item.href} class="text-foreground-muted hover:text-foreground transition-colors duration-200">
               {item.label}
             </a>
           ) : (

@@ -102,7 +102,7 @@ html[data-theme="firestone"] {
     'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
     var(--theme-font-zh-cn), ui-monospace, monospace, var(--theme-font-emoji);
 
-  --theme-font-zh-cn: 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei';
+  --theme-font-zh-cn: 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei';
 
   --theme-font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 

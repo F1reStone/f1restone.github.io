@@ -19,16 +19,18 @@
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
 import {
+  getNavItems,
   getFooterNavItems,
   getLegalLinks,
-  getFooterLinkGroups, // FireStone: [Import the new global getter]
+  getFooterLinkGroups, // FireStone: Import the new global getter
   type NavItem as NavConfigItem,
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
-import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: [Import the central resolver]
+import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
 
 export interface NavItem {
   label: string;
@@ -58,7 +60,7 @@ interface Props extends HTMLAttributes<'footer'> {
   /** Layout style */
   layout?: 'simple' | 'columns' | 'minimal' | 'stacked';
   /** Number of columns (only for columns layout) */
-  columns?: 2 | 3 | 4;
+  columns?: 2 | 3 | 4 | 5 | 6;
   /** Background variant */
   background?: 'default' | 'secondary' | 'invert';
   /** Override default navigation */
@@ -81,14 +83,19 @@ interface Props extends HTMLAttributes<'footer'> {
   tagline?: string;
   // FireStone: [Add '8xl' and '9xl' to the props interface]
   maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl' | 'full';
+  // FireStone: Added explicit props for the Smart Breadcrumb Engine
+  /** 如果传入，将覆盖自动生成的面包屑 */
+  breadcrumbs?: { label: string; href?: string }[];
+  /** 强制隐藏面包屑（如首页默认隐藏） */
+  hideBreadcrumbs?: boolean;
 }
 
 const {
   layout = 'columns',
-  columns = 4,
-  background = 'default',
+  columns = 5,
+  background = 'secondary',
   nav,
-  linkGroups = getFooterLinkGroups(),// FireStone: [Fallback to global link groups instead of an empty array]
+  linkGroups = getFooterLinkGroups(),// FireStone: Fallback to global link groups instead of an empty array
   socialLinks = resolveSocialLinks(siteConfig.socialLinks),
   showSocial = true,
   showCopyright = true,
@@ -97,6 +104,8 @@ const {
   hideLogo = false,
   tagline = '兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。',
   maxWidth = '8xl',// FireStone: Change max width to 8xl to adapt out designs.
+  breadcrumbs: explicitBreadcrumbs, // 接收手动传入的面包屑
+  hideBreadcrumbs = false,          // 接收强制隐藏指令
   class: className,
   ...attrs
 } = Astro.props;
@@ -143,6 +152,60 @@ const hasColumnsSlot = Astro.slots.has('columns');
 const hasSocialSlot = Astro.slots.has('social');
 const hasBottomSlot = Astro.slots.has('bottom');
 
+// =========================================================================
+// Auto-Routing Breadcrumb
+// =========================================================================
+const currentPath = Astro.url.pathname;
+const isHomePage = currentPath === '/' || currentPath === '/en-US' || currentPath === '/en-US/';
+
+let resolvedBreadcrumbs = explicitBreadcrumbs;
+
+// 如果没有手动传入，且不是首页，且没有被强制隐藏，则开启自动生成
+if (!resolvedBreadcrumbs && !hideBreadcrumbs && !isHomePage) {
+  // 1. 构建全局路由字典 (合并头部导航和底部导航)
+  const dict: Record<string, string> = { '/': '首页', '/en-US': 'Home', '/en-US/': 'Home' };
+  const allNavs = [...getNavItems(), ...getFooterLinkGroups().flatMap(g => g.links)];
+  allNavs.forEach(item => {
+    const normalized = item.href.replace(/\/$/, ''); // 去除末尾斜杠以统配
+    dict[normalized] = item.label;
+  });
+
+  // 2. 切分当前路径
+  const segments = currentPath.replace(/\/$/, '').split('/').filter(Boolean);
+  
+  // 3. 处理多语言前缀基准
+  let basePath = '';
+  let startIndex = 0;
+  if (segments[0] === 'en-US') {
+    basePath = '/en-US';
+    startIndex = 1;
+    resolvedBreadcrumbs = [{ label: 'Home', href: '/en-US' }];
+  } else {
+    resolvedBreadcrumbs = [{ label: '首页', href: '/' }];
+  }
+
+  // 4. 逐级生成层级
+  let pathAcc = basePath;
+  for (let i = startIndex; i < segments.length; i++) {
+    const seg = segments[i];
+    pathAcc += '/' + seg;
+    
+    // 查字典，如果字典里没有（比如动态页面的最后一级），则首字母大写作为 fallback
+    let label = dict[pathAcc];
+    if (!label) {
+      label = seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ');
+    }
+    
+    resolvedBreadcrumbs.push({
+      label,
+      href: i === segments.length - 1 ? undefined : pathAcc // 最后一级没有链接
+    });
+  }
+}
+
+// 最终判定是否渲染：有数据且至少有两级（排除只有"首页"的情况）
+const showBreadcrumbs = resolvedBreadcrumbs && resolvedBreadcrumbs.length > 1 && !hideBreadcrumbs;
+
 // Compute footer classes
 const footerClasses = cn(footerVariants({ background }), className);
 
@@ -162,6 +225,13 @@ const footerClasses = cn(footerVariants({ background }), className);
 
 <footer class={footerClasses} {...attrs}>
   <div class={cn('mx-auto px-6', maxWidthClass)}>
+
+    {showBreadcrumbs && (
+      <div class="pb-6 mb-6 md:mb-8 border-b border-border/50">
+        <Breadcrumbs items={resolvedBreadcrumbs || []} />
+      </div>
+    )}
+
     {layout === 'simple' && (
       <>
       <div class="flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-lg)]">

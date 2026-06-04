@@ -60,7 +60,6 @@ export const footerLinkGroups: FooterLinkGroup[] = [
       { label: '项目', href: '/projects', order: 1 },
       { label: '博客', href: '/blog', order: 2 },
       { label: 'FireStone AI', href: '/ai', order: 3 },
-      { label: '关于 FireStone', href: '/about', order: 4 },
     ],
   },
   {
@@ -71,7 +70,14 @@ export const footerLinkGroups: FooterLinkGroup[] = [
     ],
   },
   {
-    title: '技术支持',
+    title: '关于',
+    links: [
+      { label: '关于 FireStone', href: '/about', order: 1 },
+      { label: '关于 FireStone AI', href: '/ai/about', order: 2 },
+    ],
+  },
+  {
+    title: 'Powered by',
     links: [
       { label: 'Astro', href: 'https://astro.build/', order: 1 },
       { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
