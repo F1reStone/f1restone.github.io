@@ -135,7 +135,7 @@ html[data-theme="firestone"] {
    Dark Mode — deep near-black with cyan glow
    ------------------------------------------------------------------------- */
 html.dark[data-theme="firestone"] {
-  --background: oklch(5% 0.0048 219.65);
+  --background: oklch(5% 0.0048 289.4473);
   --background-secondary: oklch(15% 0.014 289.4473);
   --background-tertiary: oklch(20% 0.011 289.4473);
   --background-elevated: oklch(15% 0.014 289.4473);

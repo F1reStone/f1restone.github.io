@@ -406,11 +406,16 @@
     --nav-link-active-bg: transparent;
   }
 
-  /* 重置所有弹出式面板（下拉菜单）的变量，恢复跟随网站默认深浅模式的表现 */
-  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .ttg-panel,
-  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .lang-panel,
-  header[data-header-shape="bar"][data-header-position="fixed"]:not([data-scrolled]) .mobile-menu-body {
-    /* 恢复到全局 root 设定的标准颜色 */
+  /* =========================================================================
+     FireStone: Dropdown Panels Theme Protection
+     无论顶栏处于 invert 模式，还是未滚动的浅色模式，
+     所有的下拉面板和手机菜单读取网站当前的全局深浅状态。
+     ========================================================================= */
+  header .ttg-panel,
+  header .lang-panel,
+  header #theme-dropdown-panel,
+  header .mobile-menu-body {
+    /* 阻断父级 .invert-section 的变量继承，恢复到全局 root 设定的标准颜色 */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-foreground-secondary: var(--foreground-secondary);
@@ -419,10 +424,13 @@
     --color-border: var(--border);
     --color-secondary: var(--secondary);
     
-    /* 恢复面板内导航链接的标准交互 */
+    /* 恢复面板内导航链接的标准交互（去除发光特效，恢复实心背景） */
     --nav-link-color: var(--foreground-muted);
     --nav-link-hover-color: var(--foreground);
-    --nav-link-hover-bg: transparent; /* 去除实心背景 */
+    --nav-link-hover-bg: var(--secondary);
+    --nav-link-active-bg: var(--secondary);
+    --nav-link-hover-text-shadow: none;
+    --nav-link-active-text-shadow: none;
   }
 
 
