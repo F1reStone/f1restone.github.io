@@ -316,18 +316,21 @@ const footerClasses = cn(footerVariants({ background }), className);
               )}
               {/* Social Links in columns layout */}
               {showSocial && socialLinks.length > 0 && (
-                <div class="flex items-center gap-[var(--space-stack-md)] pt-2">
-                  {socialLinks.map((social) => (
-                    <a
-                      href={social.href}
-                      class="transition-colors text-foreground-muted hover:text-foreground"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.label || `Follow us on ${social.key}`}
-                    >
-                      <Icon name={social.icon} size="md" />
-                    </a>
-                  ))}
+                <div class="flex flex-col gap-2.5 pt-2">
+                  <p class="footer-social-link-intro">社交媒体</p>
+                  <div class="flex items-center gap-[var(--space-stack-md)]">
+                    {socialLinks.map((social) => (
+                      <a
+                        href={social.href}
+                        class="transition-colors text-foreground-muted hover:text-foreground"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.label || `Follow us on ${social.key}`}
+                      >
+                        <Icon name={social.icon} size="md" />
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -515,5 +518,17 @@ const footerClasses = cn(footerVariants({ background }), className);
       });
     }
   </script>
+  
+  <style is:global>
+    /* FireStone: Social links follow text*/
+    .footer-social-link-intro {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-foreground-subtle);
+    }
+
+  </style>
 
 </footer>

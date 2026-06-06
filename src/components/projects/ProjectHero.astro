@@ -90,7 +90,7 @@ const hasMedia = slides.length > 0;
           <div class="flex flex-wrap gap-3 mb-[var(--space-stack-lg)]">
             {url && (
               <Button href={url} target="_blank" rel="noopener noreferrer" size="md">
-                <Icon name="external-link" size="sm" />
+                <Icon name="globe" size="sm" />
                 访问网站
               </Button>
             )}
@@ -98,6 +98,7 @@ const hasMedia = slides.length > 0;
               <Button href={repo} target="_blank" rel="noopener noreferrer" variant="outline" size="md">
                 <Icon name="github" size="sm" />
                 访问源代码
+                <Icon name="external-link" size="xs" />
               </Button>
             )}
           </div>

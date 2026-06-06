@@ -14,14 +14,25 @@
 @font-face {
   font-family: 'Wix Madefor Text Variable';
   src: url('/fonts/wix-madefor-text-variable.woff2') format('woff2');
+  /*font-style: normal;*/
+  font-weight: 400 800;
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
+/*@font-face {
+  font-family: 'Wix Madefor Text Variable';
+  src: url('/fonts/wix-madefor-text-variable-italic.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}*/
 
 /* Neue Regrade (Local) */
 @font-face {
   font-family: 'Neue Regrade Variable';
   src: url('/fonts/neue-regrade-variable.woff2') format('woff2');
+  font-weight: 300 800;
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
   font-feature-settings: 'dlig', 'liga';
@@ -31,25 +42,47 @@
 @font-face {
   font-family: 'NKDuy Mono Variable';
   src: url('/fonts/nkduy-mono-variable.woff2') format('woff2');
+  /*font-style: normal;*/
+  font-weight: 100 800;
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
   font-feature-settings: 'liga', 'zero';
 }
+/*@font-face {
+  font-family: 'NKDuy Mono Variable';
+  src: url('/fonts/nkduy-mono-variable-italic.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 100 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-feature-settings: 'liga', 'zero';
+}*/
 
 /* Playfair Display (Local) */
 @font-face {
   font-family: 'Playfair Display Variable';
   src: url('/fonts/playfair-display-variable.woff2') format('woff2');
-  src: url('/fonts/playfair-display-variable-italic.woff2') format('woff2');
+  /*font-style: normal;*/
+  font-weight: 400 900;
   font-display: swap;
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
   font-feature-settings: 'liga';
 }
+/*@font-face {
+  font-family: 'Playfair Display Variable';
+  src: url('/fonts/playfair-display-variable-italic.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-feature-settings: 'liga';
+}*/
 
 /* Source Han Sans CN (Web) */
 @font-face {
   font-family: 'Source Han Sans CN Variable';
   src: url('/fonts/source-han-sans-cn-variable.woff2') format('woff2');
+  font-weight: 250 900;
   font-display: swap;
   font-feature-settings: 'palt';
 }
@@ -237,7 +270,7 @@
      gradient text effects from showing between heading characters */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    line-height: 0.9;
+    line-height: 0.75;
     letter-spacing: var(--theme-heading-tracking);
     text-transform: uppercase;
     font-feature-settings: 'dlig', 'liga', 'palt';
@@ -444,10 +477,10 @@
     /* 从 foreground-muted 升级为 foreground，大大提升基础可读性 */
     color: var(--color-foreground-muted);
     /* Liquid Glass: 用极低不透明度的前景色做底，配合强力毛玻璃 */
-    background-color: color-mix(in oklch, var(--color-foreground) 6%, transparent);
-    border: 1px solid color-mix(in oklch, var(--color-foreground) 15%, transparent);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    background-color: color-mix(in oklch, var(--color-background) 6%, transparent);
+    border: 1.25px solid color-mix(in oklch, var(--color-foreground) 12%, transparent);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     
     /* 极浅的基础阴影，塑造立体层级，不干扰发光 */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -596,7 +629,7 @@
     cursor: default;
   }
 
-  /* 晶态金属文字基础样式 & 可变字体动画 */
+  /* 文字基础样式 & 可变字体动画 */
   .hero-title-text {
     background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
     -webkit-background-clip: text;

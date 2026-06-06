@@ -48,7 +48,7 @@ const schema = createBreadcrumbSchema(schemaItems);
               {item.label}
             </a>
           ) : (
-            <span class="text-foreground font-medium" aria-current={index === items.length - 1 ? 'page' : undefined}>
+            <span class="text-foreground font-semibold" aria-current={index === items.length - 1 ? 'page' : undefined}>
               {item.label}
             </span>
           )}

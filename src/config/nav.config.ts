@@ -66,7 +66,7 @@ export const footerLinkGroups: FooterLinkGroup[] = [
     title: '项目',
     links: [
       { label: 'FireStone 网站', href: '/projects/firestone-website', order: 1 },
-      { label: 'SparkForge', href: '/projects/sparkforge', order: 2 },
+      { label: 'SparkForge 燧光', href: '/projects/sparkforge', order: 2 },
     ],
   },
   {
