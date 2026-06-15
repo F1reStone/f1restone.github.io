@@ -81,7 +81,7 @@ const { tag, posts, visibleTags } = Astro.props;
 
       {posts.length > 0 ? (
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <BlogCard
               title={post.data.title}
               description={post.data.description}
@@ -91,6 +91,8 @@ const { tag, posts, visibleTags } = Astro.props;
               author={post.data.author}
               image={post.data.image}
               svgSlug={post.data.svgSlug}
+              revealDelay={index % 3}
+              eager={index === 0}
             />
           ))}
         </div>

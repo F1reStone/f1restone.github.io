@@ -28,6 +28,7 @@ import { headerVariants, headerInnerVariants } from './header.variants';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
+import SearchModal from '@/components/layout/SearchModal.astro';
 import ThemeModeDropdown from '@/components/layout/ThemeModeDropdown.astro';
 import ThemeSelector from '@/components/layout/ThemeSelector.astro';
 import ThemeSelectorDropdown from '@/components/layout/ThemeSelectorDropdown.astro';
@@ -60,6 +61,7 @@ interface Props extends HTMLAttributes<'header'> {
   showCta?: boolean;
   cta?: { label?: string; href?: string; icon?: string; trailingIcon?: string };
   actions?: HeaderAction[];
+  showSearch?: boolean;
   showThemeToggle?: boolean;
   showThemeSelector?: boolean;
   showMobileMenu?: boolean;
@@ -91,6 +93,7 @@ const {
   showCta = false,
   cta = { label: '探索我的项目', href: '/projects' },
   actions = [],
+  showSearch = true,
   showThemeToggle = true,
   showThemeSelector = false,
   showMobileMenu = true,
@@ -134,6 +137,21 @@ const hasLogoSlot = Astro.slots.has('logo');
 const hasNavSlot = Astro.slots.has('nav');
 const hasActionsSlot = Astro.slots.has('actions');
 const hasMobileMenuSlot = Astro.slots.has('mobile-menu');
+
+// Dev-time guard: Header renders only its named slots (logo, nav, actions,
+// mobile-menu) — it has no default <slot/>. So any default-slot content is
+// silently dropped. The usual culprit is a misplaced </Header> that swallows
+// the layout's page <slot /> and <Footer>, leaving the page blank below the
+// navbar with no error. Warn loudly in dev so this fails fast instead of
+// silently. No-op in production.
+if (import.meta.env.DEV && Astro.slots.has('default')) {
+  console.warn(
+    '[Header] Received content in the default slot, which Header does not render — ' +
+    'it only outputs the named slots (logo, nav, actions, mobile-menu), so this content is dropped. ' +
+    'A common cause is a misplaced </Header> wrapping the page <slot /> or <Footer>: ' +
+    'make sure those sit OUTSIDE <Header> and that only slotted children (e.g. <img slot="logo" />) sit inside it.'
+  );
+}
 
 const headerClasses = cn(
   headerVariants({ position, variant, shape }),
@@ -183,6 +201,7 @@ const buttonId = `${menuId}-button`;
 
 <header
   class={headerClasses}
+  data-pagefind-ignore
   data-menu-id={menuId}
   data-button-id={buttonId}
   data-header-position={position}
@@ -243,6 +262,12 @@ const buttonId = `${menuId}-button`;
           <slot name="actions" />
         ) : (
           <>
+            {showSearch && (
+              <div class="flex">
+                <SearchModal class={isFloating ? 'hdr-invert-text' : undefined} />
+              </div>
+            )}
+
             {showThemeToggle && (
               <div class="flex">
                 <ThemeModeDropdown class={isFloating ? 'hdr-invert-text' : undefined} />
@@ -928,13 +953,15 @@ const buttonId = `${menuId}-button`;
   }
 
   html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .ttg-wrapper > .ttg-trigger,
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .theme-dropdown-wrapper > button {
+  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .theme-dropdown-wrapper > button,
+  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .search-wrapper > .search-trigger {
     border-color: oklch(58% 0.008 250 / 0.6);
     color: oklch(68% 0.01 250);
     box-shadow: none;
   }
   html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .ttg-wrapper > .ttg-trigger:hover,
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .theme-dropdown-wrapper > button:hover {
+  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .theme-dropdown-wrapper > button:hover,
+  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .search-wrapper > .search-trigger:hover {
     border-color: oklch(58% 0.008 250 / 0.85);
     background-color: rgb(255 255 255 / 0.06);
     color: oklch(91% 0.008 250);
@@ -951,7 +978,8 @@ const buttonId = `${menuId}-button`;
   }
 
   .dark [data-header-shape="floating"] .theme-dropdown-wrapper button,
-  .dark [data-header-shape="floating"] .ttg-wrapper .ttg-trigger {
+  .dark [data-header-shape="floating"] .ttg-wrapper .ttg-trigger,
+  .dark [data-header-shape="floating"] .search-wrapper .search-trigger {
     border-color: var(--color-foreground-subtle);
   }
 
@@ -1007,7 +1035,8 @@ const buttonId = `${menuId}-button`;
     color: var(--color-brand-700);
   }
   .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .theme-dropdown-wrapper button,
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .ttg-wrapper .ttg-trigger {
+  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .ttg-wrapper .ttg-trigger,
+  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .search-wrapper .search-trigger {
     border-color: rgba(0, 0, 0, 0.15);
   }
 
@@ -1028,7 +1057,8 @@ const buttonId = `${menuId}-button`;
     color: var(--color-brand-500);
   }
   html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .theme-dropdown-wrapper button,
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .ttg-wrapper .ttg-trigger {
+  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .ttg-wrapper .ttg-trigger,
+  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .search-wrapper .search-trigger {
     border-color: rgba(255, 255, 255, 0.2);
   }
 

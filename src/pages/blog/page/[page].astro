@@ -51,6 +51,7 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
   title={`博客 | 第 ${page} 页`}
   description={`第 ${page} 页，共 ${totalPages} 页 - 有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。`}
   eagerReveal
+  footerBackground="secondary"
 >
   <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
@@ -82,7 +83,7 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {pagePosts.map((post) => (
+        {pagePosts.map((post, index) => (
           <BlogCard
             title={post.data.title}
             description={post.data.description}
@@ -92,6 +93,8 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
             author={post.data.author}
             image={post.data.image}
             svgSlug={post.data.svgSlug}
+            revealDelay={index % 3}
+            eager={index === 0}
           />
         ))}
       </div>

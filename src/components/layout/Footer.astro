@@ -93,7 +93,7 @@ interface Props extends HTMLAttributes<'footer'> {
 const {
   layout = 'columns',
   columns = 5,
-  background = 'secondary',
+  background = 'default',
   nav,
   linkGroups = getFooterLinkGroups(),// FireStone: Fallback to global link groups instead of an empty array
   socialLinks = resolveSocialLinks(siteConfig.socialLinks),
@@ -223,7 +223,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 }*/
 ---
 
-<footer class={footerClasses} {...attrs}>
+<footer class={footerClasses} data-pagefind-ignore {...attrs}>
   <div class={cn('mx-auto px-6', maxWidthClass)}>
 
     {showBreadcrumbs && (

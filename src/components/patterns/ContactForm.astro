@@ -64,7 +64,7 @@ const {
   <div id="form-message" class="hidden text-sm"></div>
 
   <div class="flex justify-center">
-    <Button type="submit" id="submit-button" class="gap-2">
+    <Button type="submit" id="submit-button" class="gap-2 cta-btn-brand">
       Send message
       <Icon name="chevron-right" size="sm" />
     </Button>
@@ -80,6 +80,7 @@ const {
     if (!form || !button || !message) return;
 
     const successMessage = form.dataset.successMessage || 'Message sent successfully!';
+    const originalButtonHTML = button.innerHTML;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -113,7 +114,7 @@ const {
         message.className = 'text-sm text-destructive';
       } finally {
         button.disabled = false;
-        button.textContent = 'Send message';
+        button.innerHTML = originalButtonHTML;
         message.classList.remove('hidden');
       }
     });

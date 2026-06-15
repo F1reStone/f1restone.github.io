@@ -68,7 +68,7 @@ The following changes were made to the free Velocity theme to create Astro Rocke
 | **Scroll Progress Bar** | A thin 2px brand-coloured bar on the header edge that fills as you scroll. Enabled on the homepage (above the floating header), blog index, and post pages (below the solid header). Controlled via `showScrollProgress` and `scrollProgressPosition` props on the Header component. |
 | **Design Tokens** | Three-tier token architecture (reference → semantic → component) |
 | **57 Components** | 33 UI, 7 patterns, 1 hero, 4 layout, 4 blog, 7 landing, 3 SEO — all accessible with TypeScript |
-| **Auto Logo & Favicon** | First letter of your site name on brand color — generated automatically from `site.config.ts`, no design tools needed |
+| **Auto Logo & Favicon** | First letter of your site name on brand color — generated automatically from `site.config.ts`, no design tools needed. Prefer your own logo? Set `branding.logo.image` to a file in `public/`. |
 | **Icon System** | Unified `Icon` component (Astro + React) — 350+ [Lucide](https://lucide.dev) UI icons and 3000+ [Simple Icons](https://simpleicons.org) brand icons via Iconify |
 | **Typing Effect** | Animated typing effect in the hero section |
 | **Page Animations** | Smooth page transitions via Astro View Transitions, scroll-triggered counter and score animations, scroll-reactive header, card hover effects, and a full suite of UI micro-animations — all with reduced-motion support |
@@ -79,7 +79,11 @@ The following changes were made to the free Velocity theme to create Astro Rocke
 | **API Routes** | Contact form and newsletter endpoints with validation |
 | **Table of Contents** | Optional table of contents on blog posts, auto-generated from MDX headings, with three layouts: inline card, sticky desktop sidebar, or `auto` (sidebar on `xl+`, inline card below). Includes `IntersectionObserver` scroll-spy. Off by default; per-post `toc: false` in frontmatter hides on a single post |
 | **Blog Comments (Giscus)** | Optional comments at the bottom of blog posts, powered by [Giscus](https://giscus.app) and GitHub Discussions. **Lazy-loaded** so readers who don't scroll to comments pay zero network cost; reserved `min-height` prevents CLS. Off by default; per-post `comments: false` in frontmatter hides on a single post |
+| **Durable Internal Links** | Link between posts by a stable canonical id with `<PostLink uid="…">` instead of a slug, so renaming a post never breaks inbound links. Ids resolve to the correct locale-aware URL at build time, and a broken reference **fails the build** rather than shipping a 404. Add an optional `uid` to a post's frontmatter to make it linkable |
+| **Build-Time Content Validation** | The build fails with a clear error if two pieces of content resolve to the same URL within a locale (duplicate slugs across posts and pages), or if two posts claim the same canonical id — catching silent content mistakes before they ship |
 | **Independent Footer Menu** | Header and footer navigation configured separately in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`) — add a Privacy or Imprint link to the footer without cluttering the main nav |
+| **Static Search (Pagefind)** | Site-wide search in the header — a ⌘K / Ctrl+K modal powered by a [Pagefind](https://pagefind.app) index generated at build time. Zero JS until the modal opens; works on every deploy target. Hide it with `showSearch={false}` on the Header |
+| **Project Galleries** | Multiple images per project: a `gallery` array in frontmatter swaps the hero image for a swipeable carousel, and the `<ProjectGallery>` MDX component renders an in-body carousel with a click-to-zoom lightbox. See [Project Galleries](#project-galleries) |
 | **React Islands** | Optional client-side interactivity where needed |
 
 ### Internationalization (i18n)
@@ -272,6 +276,21 @@ const siteConfig = {
   },
 };
 ```
+
+### Custom Logo
+
+By default the logo is an auto-generated monogram — the first letter of `name` on the active brand color, no logo file required. To use your own logo image instead, drop a file in `public/` and set `branding.logo.image`:
+
+```typescript
+branding: {
+  logo: {
+    alt: 'Your Brand',
+    image: '/logo.svg', // any file in public/ — replaces the monogram everywhere
+  },
+},
+```
+
+That single field swaps the monogram for your image in the header, footer, and anywhere `<Logo>` is rendered — **no layout edits needed**. Leave `image` unset to keep the monogram. Square marks and wide wordmarks both render correctly, and blog author avatars keep their initials.
 
 ### Environment Variables
 
@@ -495,7 +514,7 @@ Astro Rocket includes 57 components across 7 categories. All UI components use [
 
 | Component | Description |
 |-----------|-------------|
-| Logo | Auto-generated monogram badge — renders the first letter of `siteConfig.name` on the active brand color. Five sizes: `sm`, `md`, `lg`, `xl`, `2xl`. No logo file required. |
+| Logo | Auto-generated monogram badge — renders the first letter of `siteConfig.name` on the active brand color. Five sizes: `sm`, `md`, `lg`, `xl`, `2xl`. No logo file required — or set `branding.logo.image` in `site.config.ts` to use a custom image instead. |
 | CTA | Call-to-action sections with slot-based composition |
 | NpmCopyButton | NPM install command with copy-to-clipboard |
 | SocialProof | Testimonial and trust indicator cards |
@@ -576,11 +595,64 @@ description: "Brief description for SEO"
 publishedAt: 2026-01-30
 author: "Author Name"
 tags: ["astro", "tutorial"]
+uid: "your-post-id"        # optional — stable id used by <PostLink> for internal links
 locale: en
 ---
 
 Your content here...
 ```
+
+To link from one post to another, use `<PostLink uid="target-post-id">link text</PostLink>` in your MDX instead of a hard-coded `/blog/...` URL. The id resolves to the right URL at build time, and a broken reference fails the build — so renaming a post never leaves a dead internal link. Give a post an optional `uid` (above) to make it a link target. The [configuration guide](/blog/astro-rocket-configuration-guide) post has the full walkthrough.
+
+### Project Galleries
+
+Projects live in `src/content/projects/` as one MDX file per project, and there are two ways to show more than one image.
+
+**1. Hero carousel (frontmatter).** Add a `gallery` array and the project hero swaps the single `image` for a swipeable carousel (touch swipe, prev/next arrows, dot indicators, keyboard navigation). The first slide is the lead image:
+
+```yaml
+---
+title: "My Product"
+description: "..."
+gallery:
+  - src: "../../assets/projects/shot-1.jpg"
+    alt: "Dashboard view"
+  - src: "../../assets/projects/shot-2.jpg"
+    alt: "Settings page"
+---
+```
+
+Keep the single `image` field set as well — project cards on the index and homepage still use it.
+
+**2. In-body carousel with lightbox (MDX).** For an e-commerce-style gallery inside the project body, import the `ProjectGallery` component. Clicking a slide opens a full-screen lightbox, and each image takes an optional caption:
+
+```mdx
+import ProjectGallery from '@/components/projects/ProjectGallery.astro';
+import shot1 from '@/assets/projects/shot-1.jpg';
+import shot2 from '@/assets/projects/shot-2.jpg';
+
+<ProjectGallery
+  images={[
+    { src: shot1, alt: 'Dashboard', caption: 'The main dashboard' },
+    { src: shot2, alt: 'Settings' },
+  ]}
+/>
+```
+
+**3. Video slides.** Both carousels also accept self-hosted video slides — drop an `.mp4` (or `.webm`) in `public/`, reference it by root-relative path, and give it a **required poster image**:
+
+```yaml
+gallery:
+  - video: "/videos/demo.mp4"
+    poster: "../../assets/projects/demo-poster.jpg"
+    alt: "30-second product demo"
+  - src: "../../assets/projects/shot-1.jpg"
+    alt: "Dashboard view"
+```
+
+The same shape works in `<ProjectGallery>` (`{ video, poster, alt, caption? }`). Video slides render the poster with `preload="none"`, so **zero video bytes are downloaded until the visitor presses play** — the poster goes through the regular image pipeline and the Lighthouse scores stay intact. Swiping away from a playing video pauses it. YouTube/Vimeo embeds are deliberately not supported: third-party iframes drag in scripts, cookies, and consent requirements that this theme avoids.
+
+Both carousels are dependency-free (native scroll-snap plus a small vanilla script) and lazy-load every slide after the first, so they don't cost you the Lighthouse score. `src/content/projects/ecommerce-store.mdx` demonstrates both in one file.
 
 ### Querying Content
 
@@ -626,6 +698,34 @@ import SEO from '@/components/seo/SEO.astro';
 ### OG Image
 
 A static default OG image (`public/og-default.svg`) serves as the social preview for all pages. The path is set via `ogImage` in `src/config/site.config.ts`. To use a custom image for a specific page, pass it as the `image` prop to the layout component.
+
+---
+
+## Search
+
+Site-wide static search is powered by [Pagefind](https://pagefind.app) and surfaced as a search button in the header that opens a command-palette style modal (also bound to <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd>).
+
+**How it works**
+
+- The index is generated automatically at the end of every `astro build` by the `pagefind()` hook in `astro.config.mjs`. It indexes the real output directory on every deploy target (Vercel, Netlify, Cloudflare) — no extra build command needed.
+- The header and footer carry `data-pagefind-ignore`, so navigation chrome never pollutes results.
+- The modal lazy-loads the Pagefind bundle on first open, so search adds **zero JavaScript** to the initial page load and doesn't touch the Lighthouse score.
+
+**Trying it locally**
+
+The index only exists after a production build, so search has no results under `astro dev` (the modal tells you this instead of failing):
+
+```bash
+pnpm build && pnpm preview
+```
+
+**Turning it off**
+
+The search button shows by default. Hide it per header instance:
+
+```astro
+<Header showSearch={false} />
+```
 
 ---
 

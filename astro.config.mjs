@@ -1,3 +1,5 @@
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig, envField } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -15,6 +17,34 @@ import expressiveCode from 'astro-expressive-code';
 import { pluginFramesTexts } from '@expressive-code/plugin-frames';
 
 //const isNetlify = process.env.DEPLOY_TARGET === 'netlify';
+
+/**
+ * Pagefind static search index, generated after every `astro build`.
+ *
+ * Runs in the `astro:build:done` hook so it indexes the *actual* output
+ * directory — the Vercel adapter writes to `.vercel/output/static`, Netlify
+ * and plain static builds to `dist/` — without the build command needing to
+ * know which. The index is served from `/pagefind/` and loaded lazily by
+ * `src/components/layout/SearchModal.astro`; `astro dev` has no index, and
+ * the search modal explains that instead of erroring.
+ */
+function pagefind() {
+  return {
+    name: 'pagefind',
+    hooks: {
+      'astro:build:done': async ({ dir, logger }) => {
+        const sitePath = fileURLToPath(dir);
+        const outputPath = join(sitePath, 'pagefind');
+        const { createIndex, close } = await import('pagefind');
+        const { index } = await createIndex();
+        const { page_count } = await index.addDirectory({ path: sitePath });
+        await index.writeFiles({ outputPath });
+        await close();
+        logger.info(`indexed ${page_count} pages into ${outputPath}`);
+      },
+    },
+  };
+}
 
 /**
  * Native Astro i18n is only wired up when the user opts in *and* has
@@ -83,6 +113,7 @@ export default defineConfig({
     mdx(),
     sitemap(),
     icon(),
+    pagefind(),
   ],
 
   vite: {

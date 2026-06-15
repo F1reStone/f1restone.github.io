@@ -16,6 +16,18 @@ const blog = defineCollection({
       imageAlt: z.string().optional(),
       tags: z.array(z.string()).default([]),
       svgSlug: z.string().optional(),
+      /**
+       * Optional stable canonical id, decoupled from the slug. Used by
+       * <PostLink> for durable internal links that survive slug renames.
+       * Lowercase kebab-case.
+       */
+      uid: z
+        .string()
+        .regex(
+          /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+          'uid must be lowercase kebab-case, e.g. "getting-started"'
+        )
+        .optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
       locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
@@ -89,13 +101,31 @@ const projects = defineCollection({
       repo: z.string().url().optional(),
       image: image().optional(),
       imageAlt: z.string().optional(),
-      /** Optional gallery — when provided, renders a swipeable carousel in the hero in place of the single `image`. */
+      /**
+       * Optional gallery — when provided, renders a swipeable carousel in the
+       * hero in place of the single `image`. A slide is either an image
+       * (`src` + `alt`) or a self-hosted video (`video` + `poster` + `alt`).
+       * Video files live in `public/` and are referenced by root-relative
+       * path; the poster is required so the slide costs nothing until played.
+       */
       gallery: z
         .array(
-          z.object({
-            src: image(),
-            alt: z.string(),
-          })
+          z.union([
+            z.object({
+              src: image(),
+              alt: z.string(),
+            }),
+            z.object({
+              video: z
+                .string()
+                .regex(
+                  /^\/.+/,
+                  'video must be a root-relative path to a file in public/, e.g. "/videos/demo.mp4"'
+                ),
+              poster: image(),
+              alt: z.string(),
+            }),
+          ])
         )
         .default([]),
       tags: z.array(z.string()).default([]),

@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Video slides in project galleries** — a gallery slide can now be a self-hosted video (`video: "/videos/demo.mp4"` + required `poster` image + `alt`) alongside image slides, in both the frontmatter hero carousel (`ProjectCarousel.astro`) and the in-body `<ProjectGallery>` component (where videos also play inside the lightbox). Built to be Lighthouse-neutral: `preload="none"` means zero video bytes until the visitor presses play, the poster goes through the `astro:assets` pipeline like any other slide, there is no autoplay, and swiping away from a playing video pauses it. The slide union is validated in `src/content.config.ts`, the shared `GallerySlide` type lives in the new `src/lib/gallery.ts`, and YouTube/Vimeo embeds are deliberately out of scope. Documented in the README and in a new blog post (`src/content/blog/en/project-gallery-video-slides.mdx`). (#396)
+
+- **Header search powered by Pagefind** — a search button in the header (next to the colour-mode pill, on by default, `showSearch={false}` to hide) opens a ⌘K / Ctrl+K command-palette modal (`src/components/layout/SearchModal.astro`). The static index is generated automatically at the end of every `astro build` by a new `pagefind()` hook in `astro.config.mjs`, which indexes the actual output directory on every deploy target (Vercel, Netlify, Cloudflare). The Pagefind bundle is lazy-loaded on first open, so initial page loads ship zero extra JavaScript; under `astro dev` (where no index exists) the modal explains how to build one instead of failing. Header and Footer now carry `data-pagefind-ignore` so navigation chrome stays out of results. The `pagefind` and `@pagefind/default-ui` packages were already dependencies — this wires the long-advertised feature up for real. (#395)
+- **Project gallery documentation + living example** — the multi-image project features were undocumented: the README now covers both the `gallery: [{ src, alt }]` frontmatter array (hero carousel, added in 1.4.0) and the in-body `<ProjectGallery>` MDX component with its click-to-zoom lightbox. `src/content/projects/ecommerce-store.mdx` demonstrates both in one file, with three placeholder storefront wireframes in `src/assets/projects/`. (#396)
+
+### Changed
+
+- **Removed `@pagefind/default-ui` dependency** — the search modal is a theme-native UI on the Pagefind JS API, so the prebuilt widget package is no longer needed.
+
+---
+
+## [1.6.0] — 2026-06-07
+
+### Added
+
+- **Durable internal links via `<PostLink>` (canonical ids)** — blog posts can declare an optional, stable `uid` in frontmatter (lowercase kebab-case, format-validated in `src/content.config.ts`) and reference one another by that id with the new `<PostLink>` component (`src/components/blog/PostLink.astro`), available globally in blog MDX — e.g. `<PostLink uid="configuration-guide">…</PostLink>` (a `post:` prefix is also accepted). The id resolves to the correct locale-aware URL at build time and **a broken reference fails the build** instead of shipping a silent 404, so renaming a post (and its slug) never breaks inbound links. Index/resolution helpers and an `assertValidPostUids()` guard — which also rejects duplicate canonical ids within a locale — live in `src/lib/post-links.ts`, with unit tests in `src/__tests__/post-links.test.ts`. When no link text is given, the target post's title is used. All resolution is build-time only — no client JS and no change to the shipped payload. (#377, point #5)
+- **Build-time duplicate-slug validation** — `astro build` now fails with an actionable error if any two pieces of content resolve to the same URL within a locale (checked across blog posts and pages), catching a silent content bug where one entry quietly shadows another. The pure, unit-tested helpers (`findSlugCollisions`, `formatSlugCollisions`) and the `assertNoSlugCollisions()` build guard live in `src/lib/content-validation.ts` (tests in `src/__tests__/content-validation.test.ts`), wired into the blog route's `getStaticPaths`. (#377, point #4)
+
+---
+
+## [1.5.0] — 2026-06-06
+
+### Changed
+
+- **Upgraded to Astro 6.4.4** — bumped `astro` from `6.0.0` to the latest `6.4.4`, picking up the new pluggable Markdown pipeline, resilient island hydration, finer-grained image-optimization controls, and the bug fixes and security/performance work shipped across the 6.1–6.4 minor releases. These minor releases contain no breaking changes, so the upgrade is drop-in for this theme and required no code changes.
+- **Astro integrations updated to latest** — `@astrojs/mdx` `5.0.0` → `6.0.2`, `@astrojs/react` `5.0.0` → `5.0.7`, `@astrojs/sitemap` `^3.7.1` → `^3.7.3`, `@astrojs/vercel` `^10.0.0` → `^10.0.8`, `@astrojs/netlify` `^7.0.2` → `^7.0.12`, and `@astrojs/check` `0.9.7` → `0.9.9`. Both the Vercel (default) and Netlify (`DEPLOY_TARGET=netlify`) build paths were verified.
+- **`@astrojs/mdx` v6 note** — v6 adds an *optional* Rust-based Markdown processor (`@astrojs/markdown-satteri`) and deprecates the top-level `markdown.remarkPlugins` / `markdown.rehypePlugins` config. This theme uses neither, so the optional Rust engine is not installed, the default `unified()` processor stays in use, and rendered output is unchanged.
+
+---
+
 ## [1.4.1] — 2026-05-20
 
 ### Fixed

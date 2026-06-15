@@ -27,7 +27,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
     return b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
   })
-  .slice(0, 3);
+  .slice(0, 4);
 ---
 
 <LandingLayout
@@ -37,7 +37,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   includePersonSchema={true}
   includeProfessionalServiceSchema={true}
 >
-<!-- Hero -->
+  <!-- Hero -->
   <Hero layout="split" size="xl" class="hero-dark-gradient invert-section min-h-[100svh] grid items-center [&>div]:w-full" showScrollIndicator>
     <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,14vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
       <span class="hero-title-text whitespace-nowrap text-[0.6em]">To the</span><br />
@@ -70,7 +70,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
-        {featuredProjects.map((project) => (
+        {featuredProjects.map((project, i) => (
           <Card
             variant="elevated"
             hover
@@ -78,6 +78,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             href={project.data.placeholder ? undefined : `/projects/${project.id.replace(/\.mdx?$/, '')}`}
             class="group flex flex-col"
             data-reveal
+            data-reveal-delay={i || undefined}
           >
             <div class="flex flex-1 flex-col p-6">
               <div class="mb-3 flex items-start justify-between gap-4">
@@ -147,8 +148,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
         </h2>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-3">
-        {posts.map((post) => (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post, index) => (
           <BlogCard
             title={post.data.title}
             description={post.data.description}
@@ -158,6 +159,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             author={post.data.author}
             image={post.data.image}
             svgSlug={post.data.svgSlug}
+            revealDelay={index}
+            class={index === 3 ? 'hidden sm:block lg:hidden' : undefined}
           />
         ))}
       </div>

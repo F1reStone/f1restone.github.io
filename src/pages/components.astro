@@ -42,12 +42,15 @@ import SearchInput from '@/components/patterns/SearchInput.astro';
 import PasswordInput from '@/components/patterns/PasswordInput.astro';
 import StatCard from '@/components/patterns/StatCard.astro';
 import EmptyState from '@/components/patterns/EmptyState.astro';
+// Landing Components
+import StackMarquee from '@/components/landing/StackMarquee.astro';
 ---
 
 <ComponentLayout
   title="组件库"
   description="探索 FireStone Design 的 SparkFlow UI 组件库。生产就绪、可访问且设计精美。"
   noindex={true}
+  footerBackground="secondary"
 >
 
   <!-- Hero Section -->
@@ -157,6 +160,19 @@ import EmptyState from '@/components/patterns/EmptyState.astro';
                 <Button size="sm" variant="ghost">Our Story</Button>
               </Fragment>
             </Hero>
+          </div>
+        </div>
+
+        <!-- Stack Marquee (double row) -->
+        <div class="component-showcase">
+          <div class="showcase-header">
+            <span class="showcase-label">Stack Marquee</span>
+            <span class="showcase-hint">Two rows of stack cards scrolling opposite ways — driven by src/content/stack, themed for light &amp; dark</span>
+          </div>
+          <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
+            <div class="w-full py-[var(--space-stack-lg)]">
+              <StackMarquee />
+            </div>
           </div>
         </div>
 
