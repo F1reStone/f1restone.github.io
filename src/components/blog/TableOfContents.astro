@@ -166,15 +166,13 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     let active = '';
 
     /** Reposition the shared brand indicator to the active link.
-     *  Uses getBoundingClientRect so positions stay correct even
-     *  when the sticky TOC container has been scrolled. */
+     *  Uses offsetTop (relative to the <ul> offsetParent) so the
+     *  position is stable — it only changes when the active link
+     *  changes, never during normal page scroll. */
     const moveIndicator = (link: HTMLAnchorElement) => {
       if (!indicator) return;
-      const tocRect = toc.getBoundingClientRect();
-      const linkRect = link.getBoundingClientRect();
-      const top = linkRect.top - tocRect.top + toc.scrollTop;
-      indicator.style.transform = `translateY(${top}px)`;
-      indicator.style.height = `${linkRect.height}px`;
+      indicator.style.transform = `translateY(${link.offsetTop}px)`;
+      indicator.style.height = `${link.offsetHeight}px`;
     };
 
     const setActive = (slug: string) => {
