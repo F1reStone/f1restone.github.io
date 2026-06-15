@@ -206,6 +206,17 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
       }
     };
 
+    // Clicking a TOC link immediately activates it so the brand indicator
+    // snaps to the right position. This avoids a race with the
+    // IntersectionObserver whose -80px top rootMargin (header clearance)
+    // can exclude the jumped-to heading when the browser positions it at
+    // the very top of the viewport.
+    for (const a of links) {
+      a.addEventListener('click', () => {
+        setActive(a.getAttribute('data-toc-link')!);
+      });
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         const visible = entries
