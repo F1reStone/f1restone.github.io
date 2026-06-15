@@ -30,6 +30,8 @@ interface Props {
   image?: ImageMetadata;
   imageAlt?: string;
   gallery?: GallerySlide[];
+  /** Optional project logo — rendered in place of the text title. */
+  logo?: ImageMetadata;
   /** Project slug, used to resolve the per-project dynamic OG image. */
   slug?: string;
   related?: CollectionEntry<'projects'>[];
@@ -56,6 +58,7 @@ const {
   related = [],
   headings = [],
   toc: tocOverride,
+  logo,
 } = Astro.props;
 
 // Prefer the project's own image; otherwise serve the per-project dynamic OG
@@ -118,6 +121,7 @@ const localizedHeadings = headings.map((heading) =>
       image={image}
       imageAlt={imageAlt}
       gallery={gallery}
+      logo={logo}
     />
 
     <article class="pt-8 pb-[var(--space-section-md)]">

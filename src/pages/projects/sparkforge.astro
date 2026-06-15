@@ -1,0 +1,190 @@
+---
+/**
+ * SparkForge 燧光 — solo project page.
+ *
+ * When `soloPage: true` is set in the MDX frontmatter, the generic
+ * [slug].astro route skips this project.  Astro's file-based router
+ * then serves this file directly at /projects/sparkforge, giving you
+ * full control over the page chrome.
+ *
+ * Use `getEntry()` to pull in the project data, and `render()` to
+ * render the MDX body.  From here you can build any layout you need.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import ProjectCarousel from '@/components/projects/ProjectCarousel.astro';
+import TableOfContents from '@/components/blog/TableOfContents.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import siteConfig from '@/config/site.config';
+import { getEntry, render } from 'astro:content';
+import type { GallerySlide } from '@/lib/gallery';
+
+const project = await getEntry('projects', 'sparkforge');
+if (!project) {
+  throw new Error('Project "sparkforge" not found. Is the MDX file present?');
+}
+
+const { Content, headings } = await render(project);
+const { title, description, repo, tags, year, role, services, meta, image, imageAlt, gallery, logo } = project.data;
+
+// Build carousel slides (same logic as the generic ProjectHero)
+const slides: GallerySlide[] =
+  (gallery as GallerySlide[] | undefined)?.length
+    ? (gallery as GallerySlide[])
+    : image
+      ? [{ src: image, alt: imageAlt || title } as GallerySlide]
+      : [];
+
+// Mirror the blog TOC wiring — projects use the same site-wide config.
+const tocConfig = siteConfig.articleFeatures?.toc;
+const showToc = !!tocConfig?.enabled;
+
+const ogImage = image?.src;
+
+const localizedHeadings = headings.map((heading) =>
+  heading.slug === 'footnote-label'
+    ? { ...heading, text: '尾注' }
+    : heading
+);
+---
+
+<BaseLayout
+  title={`${title} | 项目`}
+  description={description}
+  image={ogImage}
+  imageAlt={imageAlt || title}
+>
+  <Header
+    slot="header"
+    position="sticky"
+    colorScheme="default"
+    shape="bar"
+    secondaryLogo={logo}
+    secondaryLogoHref="/projects/sparkforge/"
+    showCta={false}
+    maxWidth="8xl"
+  />
+
+  <main class="min-h-screen">
+    <!-- Hero section -->
+    <header class="relative isolate overflow-hidden pt-[var(--space-page-top-sm)] pb-[var(--space-section-md)]">
+      <div class="relative z-10 mx-auto max-w-8xl px-6">
+        <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
+          <!-- Text column -->
+          <div class="animate-hero-stagger min-w-0">
+            {logo ? (
+              <>
+                <h1 class="sr-only">{title}</h1>
+                <img
+                  src={logo.src}
+                  alt={title}
+                  width={logo.width}
+                  height={logo.height}
+                  class="project-logo block h-auto w-auto max-w-full object-contain object-left max-h-14 md:max-h-16 lg:max-h-[4.5rem] mb-[var(--space-heading-gap)]"
+                  decoding="async"
+                />
+              </>
+            ) : (
+              <h1 class="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl mb-[var(--space-heading-gap)] text-balance">
+                {title}
+              </h1>
+            )}
+
+            <p class="text-lg md:text-xl text-foreground-muted leading-relaxed mb-[var(--space-stack-lg)]">
+              {description}
+            </p>
+
+            {meta && meta.length > 0 && (
+              <div class="mb-[var(--space-stack-lg)] flex flex-wrap items-center gap-2">
+                {meta.map((item, index) => (
+                  <>
+                    {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                    <Badge variant="brand">{item}</Badge>
+                  </>
+                ))}
+              </div>
+            )}
+
+            {repo && (
+              <div class="flex flex-wrap gap-3 mb-[var(--space-stack-lg)]">
+                <Button href={repo} target="_blank" rel="noopener noreferrer" variant="outline" size="md">
+                  <Icon name="github" size="sm" />
+                  访问源代码
+                  <Icon name="external-link" size="xs" />
+                </Button>
+              </div>
+            )}
+          </div>
+
+          <!-- Media column -->
+          <div class="animate-hero-slide-up [animation-delay:300ms]">
+            {slides.length > 0 ? (
+              <ProjectCarousel slides={slides} label={`${title} screenshots`} />
+            ) : (
+              <div
+                class="aspect-video w-full rounded-xl border border-border bg-gradient-to-br from-brand-500/20 via-brand-500/5 to-transparent flex items-center justify-center shadow-lg"
+                aria-hidden="true"
+              >
+                <Icon name="layers" size="lg" class="text-brand-500/60" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MDX content + optional TOC sidebar -->
+    <article class="pt-8 pb-[var(--space-section-md)]">
+      <div
+        class:list={[
+          'mx-auto px-6 max-w-8xl',
+          showToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10',
+        ]}
+      >
+        <div class="min-w-0 max-w-8xl w-full mx-auto xl:mx-0">
+          <div class="prose prose-lg max-w-none" data-reveal-content>
+            <Content />
+          </div>
+        </div>
+
+        {showToc && (
+          <aside class="hidden xl:block" aria-label="Table of contents">
+            <TableOfContents
+              headings={localizedHeadings}
+              maxDepth={tocConfig?.maxDepth ?? 3}
+              minHeadings={tocConfig?.minHeadings ?? 3}
+              sticky
+            />
+          </aside>
+        )}
+      </div>
+    </article>
+
+    <!-- Back link -->
+    <div class="mx-auto max-w-8xl px-6 pb-[var(--space-section-md)]">
+      <footer class="border-border border-t pt-8" data-reveal>
+        <Button href="/projects" variant="secondary" size="sm">
+          <Icon name="chevron-left" size="sm" />
+          返回「项目」
+        </Button>
+      </footer>
+    </div>
+  </main>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<style>
+  /* Light-mode logo inversion: the site defaults to dark mode, so SVGs are
+     authored with light fills.  In light mode we invert+hue-rotate to
+     produce dark fills while approximately preserving brand hues.
+     For pixel-perfect results, add a <style> block with
+     @media (prefers-color-scheme: light) inside your SVG — that beats the
+     filter every time. */
+  html:not(.dark) .project-logo {
+    filter: invert(1) hue-rotate(180deg);
+  }
+</style>

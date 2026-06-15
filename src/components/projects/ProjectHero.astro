@@ -4,9 +4,6 @@ import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import ProjectCarousel from '@/components/projects/ProjectCarousel.astro';
-import ProjectTagList from '@/components/projects/ProjectTagList.astro';
-import HeroGrid from '@/components/effects/HeroGrid.astro';
-import HeroBeam from '@/components/effects/HeroBeam.astro';
 import type { GallerySlide } from '@/lib/gallery';
 
 interface Props {
@@ -23,6 +20,15 @@ interface Props {
   imageAlt?: string;
   gallery?: GallerySlide[];
   tags?: string[];
+  /**
+   * Optional project logo — when provided, it replaces the text title.
+   * Multi-colour and gradient SVGs are fully supported.  Design your SVG
+   * for the dark theme (the site default); a CSS filter auto-adapts it
+   * for light-mode visitors.  For pixel-perfect results, embed a
+   * `<style>` block with `@media (prefers-color-scheme: light)` inside
+   * the SVG file itself.
+   */
+  logo?: ImageMetadata;
 }
 
 const {
@@ -39,6 +45,7 @@ const {
   imageAlt,
   gallery = [],
   tags = [],
+  logo,
 } = Astro.props;
 
 // Prefer gallery when provided; fall back to the single hero image; build a
@@ -53,8 +60,6 @@ const hasMedia = slides.length > 0;
 ---
 
 <header class="relative isolate overflow-hidden pt-[var(--space-page-top-sm)] pb-[var(--space-section-md)]">
-  <HeroGrid />
-  <HeroBeam />
 
   <div class="relative z-10 mx-auto max-w-8xl px-6">
     <div
@@ -65,9 +70,30 @@ const hasMedia = slides.length > 0;
     >
       <!-- Text column -->
       <div class="animate-hero-stagger min-w-0">
-        <h1 class="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl mb-[var(--space-heading-gap)] text-balance">
-          {title}
-        </h1>
+        <!-- Project logo — rendered as <img> so multi-colour and gradient SVGs
+             work without forced monochrome.
+             Dark/light adaptation: CSS `filter` inverts the logo in light mode
+             (html:not(.dark)).  Design your SVG for the *dark* theme (the site
+             default); the filter handles light-mode visitors automatically.
+             Sizing: control via CSS max-height; the aspect-ratio from the
+             source SVG keeps proportions correct. -->
+        {logo ? (
+          <>
+            <h1 class="sr-only">{title}</h1>
+            <img
+              src={logo.src}
+              alt={title}
+              width={logo.width}
+              height={logo.height}
+              class="project-logo block h-auto w-auto max-w-full object-contain object-left max-h-14 md:max-h-16 lg:max-h-[4.5rem] mb-[var(--space-heading-gap)]"
+              decoding="async"
+            />
+          </>
+        ) : (
+          <h1 class="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl mb-[var(--space-heading-gap)] text-balance">
+            {title}
+          </h1>
+        )}
 
         <p class="text-lg md:text-xl text-foreground-muted leading-relaxed mb-[var(--space-stack-lg)]">
           {description}
@@ -85,10 +111,6 @@ const hasMedia = slides.length > 0;
               </>
             ))}
           </div>
-        )}
-
-        {tags.length > 0 && (
-          <ProjectTagList tags={tags} class="mb-[var(--space-stack-lg)]" />
         )}
 
         {(url || repo) && (
@@ -126,3 +148,15 @@ const hasMedia = slides.length > 0;
     </div>
   </div>
 </header>
+
+<style>
+  /* Light-mode logo inversion: the site defaults to dark mode, so SVGs are
+     authored with light fills.  In light mode we invert+hue-rotate to
+     produce dark fills while approximately preserving brand hues.
+     For pixel-perfect results, add a <style> block with
+     @media (prefers-color-scheme: light) inside your SVG — that beats the
+     filter every time. */
+  html:not(.dark) .project-logo {
+    filter: invert(1) hue-rotate(180deg);
+  }
+</style>

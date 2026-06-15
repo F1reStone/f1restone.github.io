@@ -141,6 +141,19 @@ const projects = defineCollection({
       placeholder: z.boolean().default(false),
       /** Per-project override: hide table of contents on this project */
       toc: z.boolean().optional(),
+      /**
+       * When true, the project uses a dedicated page file
+       * (src/pages/projects/<slug>.astro) instead of the generic
+       * ProjectLayout.  The .astro file receives full control over the
+       * page chrome — useful for heavily customised project pages.
+       */
+      soloPage: z.boolean().default(false),
+      /**
+       * Optional project logo rendered in place of the text title in the
+       * hero.  Use a monochrome SVG with fill="currentColor" for automatic
+       * light/dark mode adaptation (same approach as the main site Logo).
+       */
+      logo: image().optional(),
     }),
 });
 

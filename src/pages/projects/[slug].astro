@@ -8,7 +8,13 @@ export async function getStaticPaths() {
     return import.meta.env.PROD ? data.draft !== true : true;
   });
 
-  const routableProjects = visibleProjects.filter((p) => !p.data.placeholder);
+  // Filter out placeholder entries and solo-page projects.
+  // Solo-page projects have their own dedicated .astro file (e.g.
+  // sparkforge.astro) — Astro's file-based router gives static routes
+  // priority over [slug], so we exclude them here to avoid collisions.
+  const routableProjects = visibleProjects.filter(
+    (p) => !p.data.placeholder && !p.data.soloPage,
+  );
 
   return routableProjects.map((project) => ({
     params: { slug: project.id.replace(/\.mdx?$/, '') },
@@ -40,6 +46,7 @@ const { Content, headings } = await render(project);
   related={related}
   headings={headings}
   toc={project.data.toc}
+  logo={project.data.logo}
 >
   <Content />
 </ProjectLayout>

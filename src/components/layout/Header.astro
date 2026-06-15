@@ -22,6 +22,7 @@
  * - Floating capsule shape with scroll-reactive bg + color flip
  */
 import type { HTMLAttributes } from 'astro/types';
+import type { ImageMetadata } from 'astro';
 import { cn } from '@/lib/cn';
 import { getNavItems, type NavItem as NavConfigItem } from '@/config/nav.config';
 import { headerVariants, headerInnerVariants } from './header.variants';
@@ -67,6 +68,15 @@ interface Props extends HTMLAttributes<'header'> {
   showMobileMenu?: boolean;
   showActiveState?: boolean;
   hideLogo?: boolean;
+  /**
+   * Optional secondary logo rendered to the right of the main site logo.
+   * The two logos are separated by a subtle vertical divider.
+   * Use an SVG with light fills (the site defaults to dark mode); a CSS
+   * filter auto-adapts it for light-mode visitors — same as project logos.
+   */
+  secondaryLogo?: ImageMetadata;
+  /** Optional link for the secondary logo. Defaults to no link (plain image). */
+  secondaryLogoHref?: string;
   showLanguageSwitcher?: boolean;
   showSocialLinks?: boolean;
   showScrollProgress?: boolean;
@@ -105,6 +115,8 @@ const {
   autoHide = true,
   invertOnReturn = true,
   hideLogo = false,
+  secondaryLogo,
+  secondaryLogoHref,
   maxWidth = '8xl',// FireStone: Change max width to full to adapt out designs.
   class: className,
   ...attrs
@@ -214,17 +226,58 @@ const buttonId = `${menuId}-button`;
 >
   <div class={cn(innerClasses, 'hdr-inner')}>
     {
-      !hideLogo &&
-        (hasLogoSlot ? (
-          <slot name="logo" />
-        ) : (
-          <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
-            <Logo
-              size={size === 'sm' ? 'md' : 'lg'}
-              class="text-foreground hdr-logo-glow" 
-            />
-          </a>
-        ))
+      !hideLogo && (
+        <div class="flex items-center justify-self-start">
+          {hasLogoSlot ? (
+            <slot name="logo" />
+          ) : (
+            <a href="/" class="flex items-center w-fit" aria-label="FireStone Logo">
+              <Logo
+                size={size === 'sm' ? 'md' : 'lg'}
+                class="text-foreground hdr-logo-glow"
+              />
+            </a>
+          )}
+
+          {/* Secondary logo — rendered to the right of the main site logo with a
+              vertical divider.  Same glow + scale hover as the main logo.
+              Set `secondaryLogo` on <Header> to show it; `secondaryLogoHref` to
+              make it a clickable link. */}
+          {secondaryLogo && (
+            <>
+              <span
+                class="mx-3 h-6 w-px bg-border-strong"
+                aria-hidden="true"
+              ></span>
+              {secondaryLogoHref ? (
+                <a
+                  href={secondaryLogoHref}
+                  class="flex items-center shrink-0"
+                  aria-label={secondaryLogoHref.replace(/^\//, '')}
+                >
+                  <img
+                    src={secondaryLogo.src}
+                    alt=""
+                    width={secondaryLogo.width}
+                    height={secondaryLogo.height}
+                    class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
+                    decoding="async"
+                  />
+                </a>
+              ) : (
+                <img
+                  src={secondaryLogo.src}
+                  alt=""
+                  width={secondaryLogo.width}
+                  height={secondaryLogo.height}
+                  class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
+                  decoding="async"
+                />
+              )}
+            </>
+          )}
+        </div>
+      )
     }
 
     {
@@ -1211,5 +1264,16 @@ const buttonId = `${menuId}-button`;
   .mobile-menu-stagger:has(.ttg-panel:not(.hidden)) {
     position: relative;
     z-index: 60;
+  }
+
+  /* -----------------------------------------------------------------------
+     Secondary logo (Header) — complex rules only; sizing lives in Tailwind
+     ----------------------------------------------------------------------- */
+
+  /* Light-mode logo inversion: the site defaults to dark mode, so SVGs are
+     authored with light fills.  In light mode we invert+hue-rotate to
+     produce dark fills while approximately preserving brand hues. */
+  html:not(.dark) .hdr-secondary-logo {
+    filter: invert(1) hue-rotate(180deg);
   }
 </style>
