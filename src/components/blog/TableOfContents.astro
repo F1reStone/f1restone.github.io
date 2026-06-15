@@ -7,6 +7,7 @@
  *
  * - Server-rendered HTML (no JS by default)
  * - Optional scroll-spy highlights the active section while scrolling
+ * - Sliding brand indicator animates between active links (like carousel dots)
  * - Heading IDs are added automatically by Astro's MDX integration
  */
 import type { MarkdownHeading } from 'astro';
@@ -52,7 +53,15 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     >
       {title}
     </p>
-    <ul class="space-y-1.5 text-sm border-l border-border">
+    <ul class="space-y-1.5 text-sm border-l border-border relative">
+      <!-- Shared sliding brand indicator — animates between active links
+           vertically, like the carousel dot bar. Positioned absolutely
+           relative to the <ul> so it stays independent of scroll. -->
+      <div
+        class="toc-indicator absolute left-[-1px] w-[2px] rounded-full bg-brand-500"
+        data-toc-indicator
+        aria-hidden="true"
+      ></div>
       {items.map((h) => (
         <li
           class="toc-item"
@@ -63,7 +72,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
             href={`#${h.slug}`}
             data-toc-link={h.slug}
             data-text={h.text}
-            class="toc-link block py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted hover:text-foreground hover:border-brand-500"
+            class="toc-link block py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted"
           >
             {h.text}
           </a>
@@ -87,7 +96,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
   .toc-link {
     position: relative;
     font-weight: 400;
-    /* 复用 Header 导航同款动画缓动和属性，确保效果一致 */
+    /* Same animation easing as Header nav-links for visual consistency */
     transition:
       font-weight 1s var(--ease-bouncy),
       text-shadow 400ms var(--ease-fluid),
@@ -95,9 +104,9 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
       border-color 200ms;
   }
 
-  /* 布局稳定的字重过渡：用不可见的粗体 ::after 预占空间，
-     避免 active 时字重变化导致文字宽度跳动。
-     与 Header .nav-link::after 原理相同。 */
+  /* Layout-stable font-weight transition: invisible bold ::after reserves
+     space for the heaviest weight, preventing text reflow when active.
+     Shares the same principle as Header .nav-link::after. */
   .toc-link::after {
     content: attr(data-text);
     height: 0;
@@ -105,27 +114,31 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     overflow: hidden;
     user-select: none;
     pointer-events: none;
-    font-weight: 600;
+    font-weight: 700;
+  }
+
+  /* Hover: half-intensity glow + mid-weight bump (variable font,
+     so fractional weights render correctly). */
+  .toc-link:hover {
+    color: var(--color-foreground);
+    font-weight: 550;
+    text-shadow: 0 0 5px currentColor;
   }
 
   .toc-link[data-active='true'] {
     color: var(--color-foreground);
-    font-weight: 600;
-    /* 与 Header 导航链接同款的 currentColor 发光 */
+    font-weight: 700;
+    /* Full glow, same as Header nav-link-active */
     text-shadow: 0 0 10px currentColor;
   }
 
-  /* 品牌色指示线 — 使用 ::before 伪元素确保渲染在 <ul> 的浅色
-     描边竖线之上，不被遮挡。2px 宽比 1px 的边框更加醒目。 */
-  .toc-link[data-active='true']::before {
-    content: '';
-    position: absolute;
-    left: -1px;
-    top: 0.2rem;
-    bottom: 0.2rem;
-    width: 2px;
-    background: var(--color-brand-500);
-    border-radius: 1px;
+  /* Shared sliding brand indicator — uses the same fluid easing as the
+     carousel dot bar so the motion feels familiar. Height and vertical
+     position are driven by JS via transform + height. */
+  .toc-indicator {
+    transition:
+      transform 400ms var(--ease-fluid),
+      height   400ms var(--ease-fluid);
   }
 </style>
 
@@ -142,6 +155,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     const links = Array.from(
       toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'),
     );
+    const indicator = toc.querySelector<HTMLElement>('[data-toc-indicator]');
     const slugs = links.map((a) => a.getAttribute('data-toc-link')!);
     const headings = slugs
       .map((s) => document.getElementById(s))
@@ -150,6 +164,19 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     if (headings.length === 0) continue;
 
     let active = '';
+
+    /** Reposition the shared brand indicator to the active link.
+     *  Uses getBoundingClientRect so positions stay correct even
+     *  when the sticky TOC container has been scrolled. */
+    const moveIndicator = (link: HTMLAnchorElement) => {
+      if (!indicator) return;
+      const tocRect = toc.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const top = linkRect.top - tocRect.top + toc.scrollTop;
+      indicator.style.transform = `translateY(${top}px)`;
+      indicator.style.height = `${linkRect.height}px`;
+    };
+
     const setActive = (slug: string) => {
       if (slug === active) return;
       active = slug;
@@ -160,35 +187,29 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
         if (isActive) activeLink = a;
       }
 
-      // Auto-scroll the TOC container so the active link stays visible.
-      // Only does work when the TOC is itself scrollable (the sticky
-      // sidebar variant has max-height + overflow-y: auto); on the
-      // inline TOC scrollHeight === clientHeight, so the branch is a
-      // no-op.
-      if (activeLink && toc.scrollHeight > toc.clientHeight) {
-        const linkRect = activeLink.getBoundingClientRect();
-        const tocRect = toc.getBoundingClientRect();
-        const padding = 12;
-        let delta = 0;
-        if (linkRect.top < tocRect.top + padding) {
-          delta = linkRect.top - tocRect.top - padding;
-        } else if (linkRect.bottom > tocRect.bottom - padding) {
-          delta = linkRect.bottom - tocRect.bottom + padding;
-        }
-        if (delta !== 0) {
-          toc.scrollBy({ top: delta, behavior: 'smooth' });
+      if (activeLink) {
+        moveIndicator(activeLink);
+
+        // Auto-scroll the TOC container so the active link stays visible.
+        if (toc.scrollHeight > toc.clientHeight) {
+          const linkRect = activeLink.getBoundingClientRect();
+          const tocRect = toc.getBoundingClientRect();
+          const padding = 12;
+          let delta = 0;
+          if (linkRect.top < tocRect.top + padding) {
+            delta = linkRect.top - tocRect.top - padding;
+          } else if (linkRect.bottom > tocRect.bottom - padding) {
+            delta = linkRect.bottom - tocRect.bottom + padding;
+          }
+          if (delta !== 0) {
+            toc.scrollBy({ top: delta, behavior: 'smooth' });
+          }
         }
       }
     };
 
     const io = new IntersectionObserver(
       (entries) => {
-        // Pick the topmost heading currently intersecting the upper part
-        // of the viewport. We use entry.boundingClientRect (already cached
-        // on the entry by the browser) instead of calling
-        // getBoundingClientRect() on the target — the latter forces a
-        // synchronous layout recompute, which Lighthouse flagged as a
-        // ~200ms forced-reflow source on mobile.
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
