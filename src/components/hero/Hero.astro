@@ -2,6 +2,8 @@
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
 import { heroSectionVariants } from './hero.variants';
+import HeroGrid from '@/components/effects/HeroGrid.astro';
+import HeroBeam from '@/components/effects/HeroBeam.astro';
 
 interface Props extends HTMLAttributes<'section'> {
   /** Layout mode: centered single column or split two-column */
@@ -14,12 +16,16 @@ interface Props extends HTMLAttributes<'section'> {
   showGlow?: boolean;
   /** Show decorative gradient blob */
   showBlob?: boolean;
+  /** Render the light-mode architectural grid + dark-mode halo behind the hero */
+  showHeroHalo?: boolean;
   /** Blob position (only applies when showBlob is true) */
   blobPosition?: 'left' | 'right' | 'center';
   /** Fade the bottom of the section into the next section's background */
   bottomFade?: boolean;
   /** Show an animated scroll indicator at the bottom (desktop only, hides on scroll) */
   showScrollIndicator?: boolean;
+  /** Stretch the section to fill at least the full viewport height (min-h-[100dvh]) */
+  fullHeight?: boolean;
 }
 
 const {
@@ -29,8 +35,10 @@ const {
   showBlob = false,
   blobPosition: _blobPosition = 'center',
   showGlow = false,
+  showHeroHalo = false,
   bottomFade = false,
   showScrollIndicator = false,
+  fullHeight = false,
   class: className,
   ...attrs
 } = Astro.props;
@@ -46,7 +54,7 @@ const hasAsideSlot = Astro.slots.has('aside');
 const alignment = layout === 'centered' ? 'text-center items-center' : 'text-left items-start';
 
 // Compute classes
-const sectionClasses = cn(heroSectionVariants({ size }), className);
+const sectionClasses = cn(heroSectionVariants({ size }), fullHeight && 'min-h-[100dvh]', className);
 
 const contentClasses = cn(
   'z-10 flex flex-col',
@@ -60,6 +68,9 @@ const gridClasses = cn(
 ---
 
 <section class={sectionClasses} {...attrs}>
+  {showHeroHalo && <HeroGrid />}
+  {showHeroHalo && <HeroBeam />}
+
   {showGrid && (
     <div
       class="bg-grid-pattern pointer-events-none absolute inset-x-0 -inset-y-[20%] opacity-30 hidden md:dark:block"

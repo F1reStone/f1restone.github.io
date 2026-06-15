@@ -8,15 +8,10 @@
  * - First slide loads eagerly, the rest lazy — Lighthouse-friendly on mobile
  */
 import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
-
-interface Slide {
-  src: ImageMetadata;
-  alt: string;
-}
+import { isVideoSlide, type GallerySlide } from '@/lib/gallery';
 
 interface Props {
-  slides: Slide[];
+  slides: GallerySlide[];
   /** Optional aria-label for the carousel region. */
   label?: string;
 }
@@ -51,14 +46,26 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           data-carousel-slide
           data-index={i}
         >
-          <Image
-            src={slide.src}
-            alt={slide.alt}
-            widths={[640, 960, 1280]}
-            sizes="(max-width: 1024px) 100vw, 640px"
-            class="aspect-video w-full object-cover"
-            loading={i === 0 ? 'eager' : 'lazy'}
-          />
+          {isVideoSlide(slide) ? (
+            <video
+              class="aspect-video w-full object-cover"
+              src={slide.video}
+              poster={typeof slide.poster === 'object' && 'src' in slide.poster ? (slide.poster as unknown as { src: string }).src : undefined}
+              controls
+              playsinline
+              preload="none"
+              aria-label={slide.alt}
+            />
+          ) : (
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              widths={[640, 960, 1280]}
+              sizes="(max-width: 1024px) 100vw, 640px"
+              class="aspect-video w-full object-cover"
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+          )}
         </div>
       ))}
     </div>

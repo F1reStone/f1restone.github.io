@@ -13,6 +13,10 @@ interface Props {
   title: string;
   description: string;
   meta?: string[];
+  year?: number;
+  client?: string;
+  role?: string;
+  services?: string[];
   url?: string;
   repo?: string;
   image?: ImageMetadata;
@@ -25,6 +29,10 @@ const {
   title,
   description,
   meta = [],
+  year: _year,
+  client: _client,
+  role: _role,
+  services: _services = [],
   url,
   repo,
   image,

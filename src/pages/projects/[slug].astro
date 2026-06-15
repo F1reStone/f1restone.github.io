@@ -1,5 +1,6 @@
 ---
 import ProjectLayout from '@/layouts/ProjectLayout.astro';
+import type { GallerySlide } from '@/lib/gallery';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -33,7 +34,7 @@ const { Content, headings } = await render(project);
   repo={project.data.repo}
   image={project.data.image}
   imageAlt={project.data.imageAlt}
-  gallery={project.data.gallery}
+  gallery={project.data.gallery as GallerySlide[]}
   tags={project.data.tags}
   slug={project.id.replace(/\.mdx?$/, '')}
   related={related}
