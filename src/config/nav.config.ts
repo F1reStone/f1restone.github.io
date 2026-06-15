@@ -34,46 +34,46 @@ export interface FooterLinkGroup {
 // FireStone: [Added FooterLinkGroup interface and footerLinkGroups array to manage column-based footer globally]
 
 export const navItems: NavItem[] = [
-  { label: '项目', href: '/projects', order: 1 },
-  { label: '博客', href: '/blog', order: 2 },
-  { label: 'FireStone AI', href: '/ai', order: 3 },
-  { label: '关于', href: '/about', order: 4 },
+  { label: '项目', href: '/projects/', order: 1 },
+  { label: '博客', href: '/blog/', order: 2 },
+  { label: 'FireStone AI', href: '/ai/', order: 3 },
+  { label: '关于', href: '/about/', order: 4 },
 ];
 
 export const footerNavItems: NavItem[] = [
-  { label: '项目', href: '/projects', order: 1 },
-  { label: '博客', href: '/blog', order: 2 },
-  { label: 'FireStone AI', href: '/ai', order: 3 },
-  { label: '关于', href: '/about', order: 4 },
+  { label: '项目', href: '/projects/', order: 1 },
+  { label: '博客', href: '/blog/', order: 2 },
+  { label: 'FireStone AI', href: '/ai/', order: 3 },
+  { label: '关于', href: '/about/', order: 4 },
 ];
 
 export const legalLinks: LegalLink[] = [
-  { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues', icon: 'github' },
+  { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues/', icon: 'github' },
   { label: 'Cookie 首选项', action: 'openConsentSettings', icon: 'cookie' },
-  { label: '隐私政策', href: '/legal/privacy-policy', icon: 'shield-check' },
+  { label: '隐私政策', href: '/legal/privacy-policy/', icon: 'shield-check' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [
   {
     title: '探索',
     links: [
-      { label: '项目', href: '/projects', order: 1 },
-      { label: '博客', href: '/blog', order: 2 },
-      { label: 'FireStone AI', href: '/ai', order: 3 },
+      { label: '项目', href: '/projects/', order: 1 },
+      { label: '博客', href: '/blog/', order: 2 },
+      { label: 'FireStone AI', href: '/ai/', order: 3 },
     ],
   },
   {
-    title: '项目',
+    title: '推荐项目',
     links: [
-      { label: 'FireStone 网站', href: '/projects/firestone-website', order: 1 },
-      { label: 'SparkForge 燧光', href: '/projects/sparkforge', order: 2 },
+      { label: 'FireStone 网站', href: '/projects/firestone-website/', order: 1 },
+      { label: 'SparkForge 燧光', href: '/projects/sparkforge/', order: 2 },
     ],
   },
   {
     title: '关于',
     links: [
-      { label: '关于 FireStone', href: '/about', order: 1 },
-      { label: '关于 FireStone AI', href: '/ai/about', order: 2 },
+      { label: '关于 FireStone', href: '/about/', order: 1 },
+      { label: '关于 FireStone AI', href: '/ai/about/', order: 2 },
     ],
   },
   {

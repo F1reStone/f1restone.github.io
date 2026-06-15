@@ -13,6 +13,7 @@
  * - Keyboard: Cmd/Ctrl+K opens, Escape closes, ↑/↓ move through results.
  */
 import { cn } from '@/lib/cn';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
 interface Props {
   class?: string;
@@ -24,26 +25,20 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
 <div class={cn('search-wrapper', className)} data-search-modal-id={modalId}>
-  <!-- Trigger — a round icon button. Equal padding around the square icon
-       makes it a true circle at the same 30px height as the pills beside it;
-       the header's floating/returned state CSS targets the wrapper > trigger
-       pair, so it recolours with the other pills in every mode. -->
+  <!-- Trigger — round icon button matching the hdr-glass-pill treatment used by
+       ThemeModeDropdown, ThemeSelectorDropdown and LanguageSwitcher. -->
   <button
     type="button"
     class={cn(
       'search-trigger inline-flex items-center justify-center rounded-full border border-border-strong p-1.5',
-      'text-foreground-muted hover:text-foreground hover:bg-secondary',
-      'transition-colors duration-(--transition-fast)',
+      'hdr-glass-pill', /* FireStone: 接入 SparkFlow UI，删掉硬编码 */
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
     )}
     aria-haspopup="dialog"
     aria-controls={modalId}
     aria-label="Search"
   >
-    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <circle cx="11" cy="11" r="7" />
-      <path stroke-linecap="round" d="m20 20-3.5-3.5" />
-    </svg>
+    <Icon name="search" size="sm" />
   </button>
 
   <!-- Modal (moved to <body> by the init script) -->
@@ -197,7 +192,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         if (input.value.trim() !== query) return;
 
         if (search.results.length === 0) {
-          renderMessage(`没有找到关于「${escapeHtml(query)}」的结果`);
+          renderMessage(`没有找到关于「${escapeHtml(query)}」的结果。`);
           return;
         }
 
