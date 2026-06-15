@@ -62,7 +62,8 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
           <a
             href={`#${h.slug}`}
             data-toc-link={h.slug}
-            class="toc-link block py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted hover:text-foreground hover:border-brand-500 transition-colors"
+            data-text={h.text}
+            class="toc-link block py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted hover:text-foreground hover:border-brand-500"
           >
             {h.text}
           </a>
@@ -83,10 +84,48 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     overflow-y: auto;
   }
 
+  .toc-link {
+    position: relative;
+    font-weight: 400;
+    /* 复用 Header 导航同款动画缓动和属性，确保效果一致 */
+    transition:
+      font-weight 1s var(--ease-bouncy),
+      text-shadow 400ms var(--ease-fluid),
+      color 150ms,
+      border-color 200ms;
+  }
+
+  /* 布局稳定的字重过渡：用不可见的粗体 ::after 预占空间，
+     避免 active 时字重变化导致文字宽度跳动。
+     与 Header .nav-link::after 原理相同。 */
+  .toc-link::after {
+    content: attr(data-text);
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    user-select: none;
+    pointer-events: none;
+    font-weight: 600;
+  }
+
   .toc-link[data-active='true'] {
     color: var(--color-foreground);
-    border-left-color: var(--color-brand-500);
-    font-weight: 500;
+    font-weight: 600;
+    /* 与 Header 导航链接同款的 currentColor 发光 */
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  /* 品牌色指示线 — 使用 ::before 伪元素确保渲染在 <ul> 的浅色
+     描边竖线之上，不被遮挡。2px 宽比 1px 的边框更加醒目。 */
+  .toc-link[data-active='true']::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 2px;
+    background: var(--color-brand-500);
+    border-radius: 1px;
   }
 </style>
 
