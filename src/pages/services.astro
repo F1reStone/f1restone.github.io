@@ -433,11 +433,8 @@ import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
     .services-hero .hero-jump-arrow { animation: none; }
   }
 
-  /* Page-local override: anchor links on /services should land the
-     section's coloured edge flush against the fixed header. */
-  html { scroll-padding-top: 4rem; }
-  @media (max-height: 600px) { html { scroll-padding-top: 4rem; } }
-  @media (min-width: 1024px) { html { scroll-padding-top: 4rem; } }
+  /* scroll-padding-top is now set globally in global.css (5rem + 1px)
+     to match the fixed header height across all pages. */
 
   /* In-page anchor jumps (the hero section buttons) tag their destination —
      and everything above it — with .reveal-instant so the content is already

@@ -255,6 +255,10 @@
     font-family: var(--font-sans);
     font-feature-settings: 'palt';
     scroll-behavior: smooth;
+    /* Offset all hash-link scroll targets by the fixed header height (h-20 = 5rem).
+       Without this, headings land at the very top of the viewport, hidden behind
+       the header *and* outside the TOC IntersectionObserver's observable zone. */
+    scroll-padding-top: calc(5rem + 1px);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
