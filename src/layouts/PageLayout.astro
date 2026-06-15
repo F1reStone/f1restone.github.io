@@ -22,9 +22,13 @@ interface Props {
    * the zebra pattern (bg-background ↔ bg-background-secondary) stays intact.
    */
   footerBackground?: 'default' | 'secondary' | 'invert';
+  /** Raw SVG string for a secondary logo in the Header (Chameleon pattern). */
+  secondaryLogoSvg?: string;
+  /** Optional link for the secondary logo. */
+  secondaryLogoHref?: string;
 }
 
-const { title, description, image, imageAlt, noindex, nofollow, showScrollProgress = false, eagerReveal = false, footerBackground = 'default' } = Astro.props;
+const { title, description, image, imageAlt, noindex, nofollow, showScrollProgress = false, eagerReveal = false, footerBackground = 'default', secondaryLogoSvg, secondaryLogoHref } = Astro.props;
 
 ---
 
@@ -44,6 +48,8 @@ const { title, description, image, imageAlt, noindex, nofollow, showScrollProgre
     showActiveState
     showCta={false}
     showScrollProgress={showScrollProgress}
+    secondaryLogoSvg={secondaryLogoSvg}
+    secondaryLogoHref={secondaryLogoHref}
   />
 
   <main class="min-h-screen">

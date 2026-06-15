@@ -11,6 +11,12 @@ import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
 import TypingEffect from '@/components/ui/TypingEffect.astro';
 import TechStack from '@/components/landing/TechStack.astro';
+import logoRaw from '@/assets/ai/logo/firestone-ai-logo.svg?raw';
+
+// Strip width/height, inject Header sizing + glow (Chameleon pattern — Logo.astro).
+const logoSvg = logoRaw
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-14 md:h-16 lg:h-[5.5rem] w-auto max-w-full"');
 
 const recoveryLinks = [
   {
@@ -36,6 +42,8 @@ const recoveryLinks = [
 <PageLayout
   title="FireStone AI"
   description="此页面仍在积极开发中 // 敬请期待"
+  secondaryLogoSvg={logoSvg}
+  secondaryLogoHref="/ai/"
 >
   <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>

@@ -21,6 +21,19 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { getEntry, render } from 'astro:content';
 import type { GallerySlide } from '@/lib/gallery';
+import fullLogoRaw from '@/assets/projects/sparkforge/logo/sparkforge-logo-full.svg?raw';
+import logoRaw from '@/assets/projects/sparkforge/logo/sparkforge-logo.svg?raw';
+
+// Strip width/height so CSS controls sizing, then inject Tailwind sizing
+// classes onto the <svg> element — exactly like Logo.astro (classes must be
+// on the SVG root, not on a wrapper <span>, for height/width to work).
+const logoSvg = logoRaw
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-7 w-auto shrink-0 hdr-logo-glow"');
+
+const fullLogoSvg = fullLogoRaw
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-14 md:h-16 lg:h-[5.5rem] w-auto max-w-full"');
 
 const project = await getEntry('projects', 'sparkforge');
 if (!project) {
@@ -62,7 +75,7 @@ const localizedHeadings = headings.map((heading) =>
     position="sticky"
     colorScheme="default"
     shape="bar"
-    secondaryLogo={logo}
+    secondaryLogoSvg={logoSvg}
     secondaryLogoHref="/projects/sparkforge/"
     showCta={false}
     maxWidth="8xl"
@@ -78,13 +91,9 @@ const localizedHeadings = headings.map((heading) =>
             {logo ? (
               <>
                 <h1 class="sr-only">{title}</h1>
-                <img
-                  src={logo.src}
-                  alt={title}
-                  width={logo.width}
-                  height={logo.height}
-                  class="project-logo block h-auto w-auto max-w-full object-contain object-left max-h-14 md:max-h-16 lg:max-h-[4.5rem] mb-[var(--space-heading-gap)]"
-                  decoding="async"
+                <span
+                  class="inline-block text-foreground mb-[var(--space-heading-gap)]"
+                  set:html={fullLogoSvg}
                 />
               </>
             ) : (
@@ -110,13 +119,17 @@ const localizedHeadings = headings.map((heading) =>
 
             {repo && (
               <div class="flex flex-wrap gap-3 mb-[var(--space-stack-lg)]">
-                <Button href={repo} target="_blank" rel="noopener noreferrer" variant="outline" size="md">
+                <Button href={repo} target="_blank" rel="noopener noreferrer" size="md">
                   <Icon name="github" size="sm" />
                   访问源代码
                   <Icon name="external-link" size="xs" />
                 </Button>
               </div>
             )}
+            <p class="text-sm md:text-xs text-foreground-subtle leading-relaxed mb-[var(--space-stack-lg)]">
+              需要 GitHub 账号、Epic Games 账号并加入 Epic Games GitHub 组织。访问<a href="https://www.unrealengine.com/ue-on-github" class="text-primary hover:text-primary-hover underline underline-offset-2 transition-colors" rel="noopener noreferrer">《GitHub 上的虚幻引擎》</a>以了解如何加入组织。Unreal Engine © {year} Epic Games, Inc. 保留所有权利。Unreal、Unreal Engine、虚幻、虚幻引擎及其各自标志是 Epic Games, Inc. 在美国专利商标局及其他地区的商标或注册商标。
+            </p>
+
           </div>
 
           <!-- Media column -->
@@ -176,15 +189,3 @@ const localizedHeadings = headings.map((heading) =>
 
   <Footer slot="footer" />
 </BaseLayout>
-
-<style>
-  /* Light-mode logo inversion: the site defaults to dark mode, so SVGs are
-     authored with light fills.  In light mode we invert+hue-rotate to
-     produce dark fills while approximately preserving brand hues.
-     For pixel-perfect results, add a <style> block with
-     @media (prefers-color-scheme: light) inside your SVG — that beats the
-     filter every time. */
-  html:not(.dark) .project-logo {
-    filter: invert(1) hue-rotate(180deg);
-  }
-</style>

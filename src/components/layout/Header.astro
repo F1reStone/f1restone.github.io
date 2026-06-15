@@ -71,10 +71,22 @@ interface Props extends HTMLAttributes<'header'> {
   /**
    * Optional secondary logo rendered to the right of the main site logo.
    * The two logos are separated by a subtle vertical divider.
-   * Use an SVG with light fills (the site defaults to dark mode); a CSS
-   * filter auto-adapts it for light-mode visitors — same as project logos.
+   *
+   * **Chameleon pattern (preferred):** Pass `secondaryLogoSvg` with the raw
+   * SVG content.  The SVG MUST use `fill="currentColor"` — it inherits the
+   * Header's text colour and auto-adapts to light/dark mode, exactly like
+   * the main Logo.astro.  Import with `?raw`:
+   * ```astro
+   * import logoRaw from '@/assets/…/logo.svg?raw';
+   * ```
+   *
+   * **Legacy fallback:** Pass `secondaryLogo` as `ImageMetadata`.  Rendered
+   * via `<img>` with a CSS filter for dark/light adaptation (cruder, kept
+   * for backward compat).
    */
   secondaryLogo?: ImageMetadata;
+  /** Raw SVG string for inline rendering (Chameleon pattern — preferred). */
+  secondaryLogoSvg?: string;
   /** Optional link for the secondary logo. Defaults to no link (plain image). */
   secondaryLogoHref?: string;
   showLanguageSwitcher?: boolean;
@@ -116,11 +128,20 @@ const {
   invertOnReturn = true,
   hideLogo = false,
   secondaryLogo,
+  secondaryLogoSvg,
   secondaryLogoHref,
   maxWidth = '8xl',// FireStone: Change max width to full to adapt out designs.
   class: className,
   ...attrs
 } = Astro.props;
+
+// Strip width/height from raw SVG so CSS controls sizing, and inject Tailwind
+// sizing + glow classes onto the <svg> element itself — exactly like Logo.astro.
+// (CSS on a wrapper <span> doesn't constrain an inline SVG; the classes must be
+// on the SVG root for height/width to work.)
+const cleanSecondaryLogoSvg = secondaryLogoSvg
+  ?.replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-6 w-auto shrink-0 hdr-logo-glow"');
 
 const isFloating = shape === 'floating';
 const maxWidthClass = {
@@ -241,12 +262,17 @@ const buttonId = `${menuId}-button`;
 
           {/* Secondary logo — rendered to the right of the main site logo with a
               vertical divider.  Same glow + scale hover as the main logo.
-              Set `secondaryLogo` on <Header> to show it; `secondaryLogoHref` to
-              make it a clickable link. */}
-          {secondaryLogo && (
+
+              **Chameleon pattern (preferred):** Pass `secondaryLogoSvg` (raw SVG
+              with `fill="currentColor"`).  The inline SVG inherits the Header's
+              text colour and auto-adapts to light/dark mode — no filter needed.
+
+              **Legacy fallback:** Pass `secondaryLogo` (ImageMetadata) for <img>
+              rendering with a CSS filter. */}
+          {(cleanSecondaryLogoSvg || secondaryLogo) && (
             <>
               <span
-                class="mx-3 h-6 w-px bg-border-strong"
+                class="mx-3.5 h-6 w-px bg-foreground-subtle/50"
                 aria-hidden="true"
               ></span>
               {secondaryLogoHref ? (
@@ -255,24 +281,38 @@ const buttonId = `${menuId}-button`;
                   class="flex items-center shrink-0"
                   aria-label={secondaryLogoHref.replace(/^\//, '')}
                 >
+                  {cleanSecondaryLogoSvg ? (
+                    <span
+                      class="inline-block text-foreground shrink-0"
+                      set:html={cleanSecondaryLogoSvg}
+                    />
+                  ) : secondaryLogo ? (
+                    <img
+                      src={secondaryLogo.src}
+                      alt=""
+                      width={secondaryLogo.width}
+                      height={secondaryLogo.height}
+                      class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
+                      decoding="async"
+                    />
+                  ) : null}
+                </a>
+              ) : (
+                cleanSecondaryLogoSvg ? (
+                  <span
+                    class="inline-block text-foreground shrink-0"
+                    set:html={cleanSecondaryLogoSvg}
+                  />
+                ) : secondaryLogo ? (
                   <img
                     src={secondaryLogo.src}
                     alt=""
                     width={secondaryLogo.width}
                     height={secondaryLogo.height}
-                    class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
+                    class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
                     decoding="async"
                   />
-                </a>
-              ) : (
-                <img
-                  src={secondaryLogo.src}
-                  alt=""
-                  width={secondaryLogo.width}
-                  height={secondaryLogo.height}
-                  class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
-                  decoding="async"
-                />
+                ) : null
               )}
             </>
           )}
@@ -1267,12 +1307,13 @@ const buttonId = `${menuId}-button`;
   }
 
   /* -----------------------------------------------------------------------
-     Secondary logo (Header) — complex rules only; sizing lives in Tailwind
+     Secondary logo (Header)
      ----------------------------------------------------------------------- */
 
-  /* Light-mode logo inversion: the site defaults to dark mode, so SVGs are
-     authored with light fills.  In light mode we invert+hue-rotate to
-     produce dark fills while approximately preserving brand hues. */
+  /* Light-mode adaptation for legacy <img>-based secondary logos.
+     Chameleon-pattern SVGs (secondaryLogoSvg + fill="currentColor") don't
+     need this — they inherit text-foreground directly.
+     Keep this rule for backward compat with `secondaryLogo` (ImageMetadata). */
   html:not(.dark) .hdr-secondary-logo {
     filter: invert(1) hue-rotate(180deg);
   }

@@ -22,13 +22,18 @@ interface Props {
   tags?: string[];
   /**
    * Optional project logo — when provided, it replaces the text title.
-   * Multi-colour and gradient SVGs are fully supported.  Design your SVG
-   * for the dark theme (the site default); a CSS filter auto-adapts it
-   * for light-mode visitors.  For pixel-perfect results, embed a
-   * `<style>` block with `@media (prefers-color-scheme: light)` inside
-   * the SVG file itself.
+   * Multi-colour and gradient SVGs are fully supported.
+   *
+   * **Chameleon pattern (preferred):** Pass `logoSvg` with raw SVG content
+   * using `fill="currentColor"`.  The logo inherits `text-foreground` and
+   * auto-adapts to light/dark mode — no filter needed.
+   *
+   * **Legacy fallback:** Pass `logo` as `ImageMetadata`.  Rendered via
+   * `<img>` with a CSS filter for dark/light adaptation.
    */
   logo?: ImageMetadata;
+  /** Raw SVG string for inline rendering (Chameleon pattern — preferred). */
+  logoSvg?: string;
 }
 
 const {
@@ -46,7 +51,14 @@ const {
   gallery = [],
   tags = [],
   logo,
+  logoSvg,
 } = Astro.props;
+
+// Strip width/height so CSS controls sizing, then inject Tailwind sizing
+// classes onto the <svg> element — exactly like Logo.astro.
+const cleanLogoSvg = logoSvg
+  ?.replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-14 md:h-16 lg:h-[4.5rem] w-auto max-w-full"');
 
 // Prefer gallery when provided; fall back to the single hero image; build a
 // 1-slide carousel out of the image so the visual frame stays consistent.
@@ -70,14 +82,20 @@ const hasMedia = slides.length > 0;
     >
       <!-- Text column -->
       <div class="animate-hero-stagger min-w-0">
-        <!-- Project logo — rendered as <img> so multi-colour and gradient SVGs
-             work without forced monochrome.
-             Dark/light adaptation: CSS `filter` inverts the logo in light mode
-             (html:not(.dark)).  Design your SVG for the *dark* theme (the site
-             default); the filter handles light-mode visitors automatically.
+        {/* Project logo — Chameleon pattern: inline SVG with `fill="currentColor"`
+             inherits text-foreground and auto-adapts to light/dark mode.
+             Legacy fallback: <img> with CSS filter.
              Sizing: control via CSS max-height; the aspect-ratio from the
-             source SVG keeps proportions correct. -->
-        {logo ? (
+             source SVG keeps proportions correct. */}
+        {cleanLogoSvg ? (
+          <>
+            <h1 class="sr-only">{title}</h1>
+            <span
+              class="inline-block text-foreground mb-[var(--space-heading-gap)]"
+              set:html={cleanLogoSvg}
+            />
+          </>
+        ) : logo ? (
           <>
             <h1 class="sr-only">{title}</h1>
             <img
@@ -150,12 +168,10 @@ const hasMedia = slides.length > 0;
 </header>
 
 <style>
-  /* Light-mode logo inversion: the site defaults to dark mode, so SVGs are
-     authored with light fills.  In light mode we invert+hue-rotate to
-     produce dark fills while approximately preserving brand hues.
-     For pixel-perfect results, add a <style> block with
-     @media (prefers-color-scheme: light) inside your SVG — that beats the
-     filter every time. */
+  /* Light-mode adaptation for legacy <img>-based project logos.
+     Chameleon-pattern SVGs (logoSvg + fill="currentColor") don't need
+     this — they inherit text-foreground directly.
+     Keep this rule for backward compat with `logo` (ImageMetadata). */
   html:not(.dark) .project-logo {
     filter: invert(1) hue-rotate(180deg);
   }
