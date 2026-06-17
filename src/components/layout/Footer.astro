@@ -366,14 +366,11 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
               <>
-                {showCopyright && (
-                  <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
-                )}
                 {resolvedLegalLinks.length > 0 && (
                   <div class="flex flex-wrap items-center">
                     {resolvedLegalLinks.map((link, index) => (
@@ -409,6 +406,9 @@ const footerClasses = cn(footerVariants({ background }), className);
                       </div>
                     ))}
                   </div>
+                )}
+                {showCopyright && (
+                  <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
                 )}
               </>
             )}
