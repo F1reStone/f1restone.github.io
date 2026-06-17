@@ -253,7 +253,11 @@ const buttonId = `${menuId}-button`;
           <div class="mobile-logo-wrapper grid items-center lg:flex lg:flex-row">
             
             {/* Main Logo Container */}
-            <div class="col-start-1 row-start-1 flex items-center animate-logo-main lg:!animate-none">
+            {/* FireStone: [Conditionally apply the crossfade animation ONLY if a secondary logo exists] */}
+            <div class={cn(
+              "col-start-1 row-start-1 flex items-center",
+              (cleanSecondaryLogoSvg || secondaryLogo) && "animate-logo-main lg:!animate-none"
+            )}>
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
@@ -504,6 +508,7 @@ const buttonId = `${menuId}-button`;
         <div
           id={menuId}
           class={cn(
+            'mobile-menu-panel', // FireStone: Target class for theme protection
             'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
             isFloating
               ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
@@ -518,6 +523,7 @@ const buttonId = `${menuId}-button`;
         <div
           id={menuId}
           class={cn(
+            'mobile-menu-panel', // FireStone: Target class for theme protection
             'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
             isFloating
               ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
@@ -1328,6 +1334,40 @@ const buttonId = `${menuId}-button`;
      Keep this rule for backward compat with `secondaryLogo` (ImageMetadata). */
   html:not(.dark) .hdr-secondary-logo {
     filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* =========================================================================
+     FireStone: Dropdown Panels Theme Protection
+     防止下拉菜单、搜索框和手机端菜单继承顶栏的 Invert (反色) 状态。
+     强行阻断 CSS 变量继承，确保所有面板永远读取真实的全局深浅模式。
+     ========================================================================= */
+  header .ttg-panel,
+  header .lang-panel,
+  header [id*="theme-dropdown"],
+  header dialog,
+  header .mobile-menu-panel {
+    /* 洗掉 .invert-section 带来的污染，恢复到 :root 全局变量 */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-foreground-secondary: var(--foreground-secondary);
+    --color-foreground-muted: var(--foreground-muted);
+    --color-foreground-subtle: var(--foreground-subtle);
+    --color-border: var(--border);
+    --color-border-strong: var(--border-strong);
+    --color-secondary: var(--secondary);
+    --color-secondary-hover: var(--secondary-hover);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-card: var(--card);
+    --color-card-border: var(--card-border);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-ring: var(--ring);
+    
+    /* 修正面板内部基准字体颜色 */
+    color: var(--color-foreground);
   }
 
   /* =======================================================================

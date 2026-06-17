@@ -27,13 +27,13 @@ const { class: className } = Astro.props;
   <button
     type="button"
     class={cn(
-      'ttg-trigger inline-flex items-center gap-1.5 rounded-full border border-border-strong px-2.5 py-1.5',
+      'ttg-trigger inline-flex items-center gap-1.5 rounded-full border border-border-strong p-1.5',
       'hdr-glass-pill', /* FireStone: 接入 SparkFlow UI，删掉硬编码 */
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
     )}
     aria-haspopup="menu"
     aria-expanded="false"
-    aria-label="Theme: system. Click to change."
+    aria-label="深浅模式：跟随系统。单击以切换。"
   >
     <!-- Sun-Moon — shown when data-theme-mode="system" (also pre-bootstrap fallback) -->
     <span class="ttg-icon ttg-icon-system h-4 w-4" aria-hidden="true">
@@ -46,13 +46,6 @@ const { class: className } = Astro.props;
     <!-- Moon -->
     <span class="ttg-icon ttg-icon-dark h-4 w-4" aria-hidden="true">
       <Icon name="moon" size="sm" />
-    </span>
-    <!-- Chevron — rotates 180° when panel is open -->
-    <span
-      class="ttg-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200"
-      aria-hidden="true"
-    >
-      <Icon name="chevron-down" size="xs" />
     </span>
   </button>
 
@@ -219,7 +212,7 @@ const { class: className } = Astro.props;
 
   function syncAllTriggerLabels(mode: Mode): void {
     document.querySelectorAll<HTMLButtonElement>('.ttg-trigger').forEach((btn) => {
-      btn.setAttribute('aria-label', `Theme: ${mode}. Click to change.`);
+      btn.setAttribute('aria-label', `深浅模式：${mode}。单击以切换。`);
     });
   }
 

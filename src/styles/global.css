@@ -446,36 +446,6 @@
     --nav-link-active-bg: transparent;
   }
 
-  /* =========================================================================
-     FireStone: Dropdown Panels Theme Protection
-     无论顶栏处于 invert 模式，还是未滚动的浅色模式，
-     所有的下拉面板和手机菜单读取网站当前的全局深浅状态。
-     ========================================================================= */
-  header .ttg-panel,
-  header .lang-panel,
-  header #theme-dropdown-panel,
-  header .mobile-menu-body {
-    /* 阻断父级 .invert-section 的变量继承，恢复到全局 root 设定的标准颜色 */
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --color-foreground-secondary: var(--foreground-secondary);
-    --color-foreground-muted: var(--foreground-muted);
-    --color-foreground-subtle: var(--foreground-subtle);
-    --color-border-strong: var(--border-strong);
-    --color-border: var(--border);
-    --color-secondary: var(--secondary);
-    
-    /* 恢复面板内导航链接的标准交互（去除发光特效，恢复实心背景） */
-    --nav-link-color: var(--foreground-muted);
-    --nav-link-hover-color: var(--foreground);
-    --nav-link-hover-bg: var(--secondary);
-    --nav-link-active-bg: var(--secondary);
-    --nav-link-hover-text-shadow: none;
-    --nav-link-active-text-shadow: none;
-  }
-
-
-
   /* -------------------------------------------------------------------------
      FireStone: Header Controls
      ------------------------------------------------------------------------- */
@@ -485,8 +455,8 @@
     /* Liquid Glass: 极低不透明度的背景色 + 强力毛玻璃 + 轻微饱和度提升 */
     background-color: color-mix(in oklch, var(--color-background) 8%, transparent);
     border: 1.25px solid color-mix(in oklch, var(--color-foreground) 12%, transparent);
-    -webkit-backdrop-filter: blur(8px) saturate(1.15);
-    backdrop-filter: blur(8px) saturate(1.15);
+    -webkit-backdrop-filter: blur(6px) saturate(1.15);
+    backdrop-filter: blur(6px) saturate(1.15);
 
     /* 多层阴影：顶部镜面高光 (Liquid Glass 标志特征) + 基础深度阴影 */
     box-shadow:
