@@ -1120,7 +1120,8 @@
   /* =========================================================================
      FireStone: Progressive Background Blur (渐进式毛玻璃)
      ========================================================================= */
-  .hdr-progressive-glass {
+  /* FireStone: [Only apply transparent overrides when the mobile menu is NOT open to prevent layout conflicts] */
+  header:not([data-menu-open]).hdr-progressive-glass {
     background-color: transparent !important;
     border: none !important;
     -webkit-backdrop-filter: none !important;

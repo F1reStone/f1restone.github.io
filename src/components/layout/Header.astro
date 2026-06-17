@@ -675,6 +675,9 @@ const buttonId = `${menuId}-button`;
         menuIcon!.classList.add('hidden');
         closeIcon!.classList.remove('hidden');
 
+        // FireStone: [Explicitly set state attribute on header when menu opens to bypass CSS :has() compiler bugs]
+        header.setAttribute('data-menu-open', 'true');
+
         if (isFloating) {
           header.setAttribute('data-scrolled', '');
           header.classList.remove('rounded-2xl');
@@ -705,6 +708,9 @@ const buttonId = `${menuId}-button`;
         button!.setAttribute('aria-expanded', 'false');
         menuIcon!.classList.remove('hidden');
         closeIcon!.classList.add('hidden');
+
+        // FireStone: [Remove state attribute on header when menu closes]
+        header.removeAttribute('data-menu-open');
 
         menu!.classList.remove('animate-menu-down');
         menu!.classList.add('animate-menu-up');
@@ -1368,6 +1374,56 @@ const buttonId = `${menuId}-button`;
     
     /* 修正面板内部基准字体颜色 */
     color: var(--color-foreground);
+  }
+
+/* =========================================================================
+     FireStone: Mobile Menu Open State Theme Protection & Progressive Glass Override
+     当移动端菜单展开时，Header 自动执行以下顶级动效：
+     1. 从 progressive 渐进透明无缝过渡到 solid 纯色背景 (防止与下方菜单割裂)
+     2. 自动临时关闭整个 Header 的 invert (反色) 模式，以保证对比度与可读性
+     ========================================================================= */
+
+  /* 1. 菜单激活时：重置 Header 的所有局部 CSS 变量，关闭反色逻辑 (de-invert) */
+  header.invert-section[data-menu-open] {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-foreground-secondary: var(--foreground-secondary);
+    --color-foreground-muted: var(--foreground-muted);
+    --color-foreground-subtle: var(--foreground-subtle);
+    --color-border: var(--border);
+    --color-border-strong: var(--border-strong);
+    --color-secondary: var(--secondary);
+    --color-secondary-hover: var(--secondary-hover);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-card: var(--card);
+    --color-card-border: var(--card-border);
+    --color-primary: var(--primary);
+    --color-primary-hover: var(--primary-hover);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-ring: var(--ring);
+
+    color: var(--color-foreground) !important;
+  }
+
+  /* 2. 菜单激活时：强行让 Header 整体呈现带有毛玻璃的实色背景，并以 var(--ease-fluid) 速度丝滑过渡 */
+  header[data-menu-open] {
+    background-color: var(--color-background) !important;
+    border-bottom: 1.25px solid var(--color-border) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    backdrop-filter: blur(24px) !important;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+    transition: 
+      background-color 400ms var(--ease-fluid), 
+      border-color 400ms var(--ease-fluid),
+      color 400ms var(--ease-fluid) !important;
+  }
+
+  /* 3. 菜单激活时：强制隐藏 Progressive 渐进式模糊的伪元素，避免双重背景层叠 */
+  header[data-menu-open]::before {
+    opacity: 0 !important;
+    transition: opacity 400ms var(--ease-fluid) !important;
   }
 
   /* =======================================================================
