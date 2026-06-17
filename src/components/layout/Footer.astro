@@ -371,6 +371,9 @@ const footerClasses = cn(footerVariants({ background }), className);
               <slot name="bottom" />
             ) : (
               <>
+                {showCopyright && (
+                  <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
+                )}
                 {resolvedLegalLinks.length > 0 && (
                   <div class="flex flex-wrap items-center">
                     {resolvedLegalLinks.map((link, index) => (
@@ -406,9 +409,6 @@ const footerClasses = cn(footerVariants({ background }), className);
                       </div>
                     ))}
                   </div>
-                )}
-                {showCopyright && (
-                  <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
                 )}
               </>
             )}

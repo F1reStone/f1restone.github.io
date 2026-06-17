@@ -87,7 +87,8 @@ const localizedHeadings = headings.map((heading) =>
       <div class="relative z-10 mx-auto max-w-8xl px-6">
         <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
           <!-- Text column -->
-          <div class="animate-hero-stagger min-w-0">
+          <!-- FireStone: [Explicitly set self-center to align text vertically with the media carousel, and removed the heavy bottom disclaimer] -->
+          <div class="animate-hero-stagger min-w-0 self-center">
             {logo ? (
               <>
                 <h1 class="sr-only">{title}</h1>
@@ -118,18 +119,24 @@ const localizedHeadings = headings.map((heading) =>
             )}
 
             {repo && (
-              <div class="flex flex-wrap gap-3 mb-[var(--space-stack-lg)]">
-                <Button href={repo} target="_blank" rel="noopener noreferrer" size="md">
-                  <Icon name="github" size="sm" />
-                  访问源代码
-                  <Icon name="external-link" size="xs" />
-                </Button>
-              </div>
-            )}
-            <p class="text-sm md:text-xs text-foreground-subtle leading-relaxed mb-[var(--space-stack-lg)]">
-              *需要 GitHub 账号、Epic Games 账号并加入 Epic Games GitHub 组织。访问 <a href="https://www.unrealengine.com/ue-on-github" class="text-primary hover:text-primary-hover underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">GitHub 上的虚幻引擎</a> 以了解如何加入组织。下载或访问项目源代码即代表您同意<a href="https://www.unrealengine.com/eula/unreal" class="text-primary hover:text-primary-hover underline underline-offset-2 transition-colors" target="_blank" rel="noopener noreferrer">《虚幻引擎终端用户许可协议》</a>以及<a href="/legal/sparkforge-amla" class="text-primary hover:text-primary-hover underline underline-offset-2 transition-colors" rel="noopener noreferrer">《SparkForge 附加修改内容许可协议》</a>。
-            </p>
-
+                  // FireStone: [Structured the CTA button into a column layout to place a subtle, high-priority helper text right below it]
+                  <div class="flex flex-col gap-2.5">
+                    <div class="flex flex-wrap gap-3">
+                      <Button href={repo} target="_blank" rel="noopener noreferrer" size="md">
+                        <Icon name="github" size="sm" />
+                        访问源代码
+                        <Icon name="external-link" size="xs" />
+                      </Button>
+                    </div>
+                    {/* Subtle micro-tip to guide users on joining Epic Games GitHub organization, critical for resolving potential 404s */}
+                    <p class="text-[11px] text-foreground-subtle leading-normal flex items-center gap-1.5 pl-0.5 animate-hero-slide-up [animation-delay:150ms]">
+                      <Icon name="info" size="xs" class="shrink-0" />
+                      <span>
+                        访问源代码需先加入 Epic Games GitHub 组织。<a href="https://www.unrealengine.com/ue-on-github" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 underline underline-offset-2 decoration-brand-500/30 transition-colors font-semibold">了解如何加入</a>。
+                      </span>
+                    </p>
+                  </div>
+                )}
           </div>
 
           <!-- Media column -->
@@ -157,10 +164,19 @@ const localizedHeadings = headings.map((heading) =>
           showToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10',
         ]}
       >
+        {/* FireStone: [Main Content Column - Wraps Content, Disclaimer Card, and Local Back Footer to match ProjectLayout.astro's neat column structure] */}
         <div class="min-w-0 max-w-8xl w-full mx-auto xl:mx-0">
           <div class="prose prose-lg max-w-none" data-reveal-content>
             <Content />
           </div>
+
+          <!-- FireStone: [Moved local back-button footer inside the content column, matching ProjectLayout.astro's inner-grid alignment] -->
+          <footer class="border-border border-t pt-8" data-reveal>
+            <Button href="/projects" variant="secondary" size="sm">
+              <Icon name="chevron-left" size="sm" />
+              返回「项目」
+            </Button>
+          </footer>
         </div>
 
         {showToc && (
@@ -176,16 +192,13 @@ const localizedHeadings = headings.map((heading) =>
       </div>
     </article>
 
-    <!-- Back link -->
-    <div class="mx-auto max-w-8xl px-6 pb-[var(--space-section-md)]">
-      <footer class="border-border border-t pt-8" data-reveal>
-        <Button href="/projects" variant="secondary" size="sm">
-          <Icon name="chevron-left" size="sm" />
-          返回「项目」
-        </Button>
-      </footer>
-    </div>
+    <!-- Back link and footnotes -->
+    <section class="border-t border-border/40 py-8 bg-background" data-reveal>
+      <div class="mx-auto max-w-8xl px-6 text-[11px] leading-relaxed text-foreground-subtle space-y-3">
+        <p>访问或下载项目源代码需拥有 GitHub 账号与 Epic Games 账号，且必须已加入 Epic Games 官方 GitHub 组织。详情请参阅 <a href="https://www.unrealengine.com/ue-on-github" class="text-brand-500 hover:text-brand-600 underline underline-offset-4 decoration-brand-500/30 hover:decoration-brand-600 transition-colors" target="_blank" rel="noopener noreferrer">虚幻引擎 GitHub 绑定指南</a>。下载、安装或使用本项目源代码，即代表您已阅读并同意 <a href="https://www.unrealengine.com/eula/unreal" class="text-brand-500 hover:text-brand-600 underline underline-offset-4 decoration-brand-500/30 hover:decoration-brand-600 transition-colors" target="_blank" rel="noopener noreferrer">《虚幻引擎 (Unreal® Engine) 终端用户许可协议》</a> 以及 <a href="/legal/sparkforge-amla" class="text-brand-500 hover:text-brand-600 underline underline-offset-4 decoration-brand-500/30 hover:decoration-brand-600 transition-colors" rel="noopener noreferrer">《SparkForge 附加修改内容许可协议》</a>。</p>
+        <p>本项目与 Epic Games, Inc. 无任何商业关联。访问、下载及使用本项目源码须遵守适用的许可协议。Unreal Engine © {year} Epic Games, Inc. 保留所有权利。Unreal、Unreal Engine、虚幻、虚幻引擎及其各自标志是 Epic Games, Inc. 在美国专利商标局及其他地区的商标或注册商标。NVIDIA 及 NVIDIA 标志是 NVIDIA Corporation 在美国及其他国家的商标和/或注册商标。所有其他商标均为其各自所有者的财产。</p>
+      </div>
+    </section>
   </main>
-
   <Footer slot="footer" />
 </BaseLayout>
