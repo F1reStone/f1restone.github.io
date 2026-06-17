@@ -249,18 +249,24 @@ const buttonId = `${menuId}-button`;
     {
       !hideLogo && (
         <div class="flex items-center justify-self-start">
-          {hasLogoSlot ? (
-            <slot name="logo" />
-          ) : (
-            <a href="/" class="flex items-center w-fit" aria-label="FireStone Logo">
-              <Logo
-                size={size === 'sm' ? 'md' : 'lg'}
-                class="text-foreground hdr-logo-glow"
-              />
-            </a>
-          )}
+          {/* FireStone: Use CSS Grid on mobile to stack logos for crossfade, and Flexbox on desktop to put them side-by-side */}
+          <div class="mobile-logo-wrapper grid items-center lg:flex lg:flex-row">
+            
+            {/* Main Logo Container */}
+            <div class="col-start-1 row-start-1 flex items-center animate-logo-main lg:!animate-none">
+              {hasLogoSlot ? (
+                <slot name="logo" />
+              ) : (
+                <a href="/" class="flex items-center w-fit" aria-label="FireStone Logo">
+                  <Logo
+                    size={size === 'sm' ? 'md' : 'lg'}
+                    class="text-foreground hdr-logo-glow"
+                  />
+                </a>
+              )}
+            </div>
 
-          {/* Secondary logo — rendered to the right of the main site logo with a
+            {/* Secondary logo — rendered to the right of the main site logo with a
               vertical divider.  Same glow + scale hover as the main logo.
 
               **Chameleon pattern (preferred):** Pass `secondaryLogoSvg` (raw SVG
@@ -269,53 +275,59 @@ const buttonId = `${menuId}-button`;
 
               **Legacy fallback:** Pass `secondaryLogo` (ImageMetadata) for <img>
               rendering with a CSS filter. */}
-          {(cleanSecondaryLogoSvg || secondaryLogo) && (
-            <>
-              <span
-                class="mx-3.5 h-6 w-px bg-foreground-subtle/50"
-                aria-hidden="true"
-              ></span>
-              {secondaryLogoHref ? (
-                <a
-                  href={secondaryLogoHref}
-                  class="flex items-center shrink-0"
-                  aria-label={secondaryLogoHref.replace(/^\//, '')}
-                >
-                  {cleanSecondaryLogoSvg ? (
-                    <span
-                      class="inline-block text-foreground shrink-0"
-                      set:html={cleanSecondaryLogoSvg}
-                    />
-                  ) : secondaryLogo ? (
-                    <img
-                      src={secondaryLogo.src}
-                      alt=""
-                      width={secondaryLogo.width}
-                      height={secondaryLogo.height}
-                      class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
-                      decoding="async"
-                    />
-                  ) : null}
-                </a>
-              ) : (
-                cleanSecondaryLogoSvg ? (
-                  <span
-                    class="inline-block text-foreground shrink-0"
-                    set:html={cleanSecondaryLogoSvg}
-                  />
-                ) : secondaryLogo ? (
-                  <img
-                    src={secondaryLogo.src}
-                    alt=""
-                    width={secondaryLogo.width}
-                    height={secondaryLogo.height}
-                    class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
-                    decoding="async"
-                  />
-                ) : null
-              )}
-            </>
-          )}
+            {(cleanSecondaryLogoSvg || secondaryLogo) && (
+              <>
+                {/* Divider (Hidden on mobile) */}
+                <span
+                  class="hidden lg:block mx-3.5 h-6 w-px bg-foreground-subtle/50 shrink-0"
+                  aria-hidden="true"
+                ></span>
+
+                {/* Secondary Logo Container */}
+                <div class="col-start-1 row-start-1 flex items-center opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto animate-logo-secondary lg:!animate-none">
+                  {secondaryLogoHref ? (
+                    <a
+                      href={secondaryLogoHref}
+                      class="flex items-center shrink-0"
+                      aria-label={secondaryLogoHref.replace(/^\//, '')}
+                    >
+                      {cleanSecondaryLogoSvg ? (
+                        <span
+                          class="inline-block text-foreground shrink-0"
+                          set:html={cleanSecondaryLogoSvg}
+                        />
+                      ) : secondaryLogo ? (
+                        <img
+                          src={secondaryLogo.src}
+                          alt=""
+                          width={secondaryLogo.width}
+                          height={secondaryLogo.height}
+                          class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
+                          decoding="async"
+                        />
+                      ) : null}
+                    </a>
+                  ) : (
+                    cleanSecondaryLogoSvg ? (
+                      <span
+                        class="inline-block text-foreground shrink-0"
+                        set:html={cleanSecondaryLogoSvg}
+                      />
+                    ) : secondaryLogo ? (
+                      <img
+                        src={secondaryLogo.src}
+                        alt=""
+                        width={secondaryLogo.width}
+                        height={secondaryLogo.height}
+                        class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
+                        decoding="async"
+                      />
+                    ) : null
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )
     }
@@ -1316,5 +1328,61 @@ const buttonId = `${menuId}-button`;
      Keep this rule for backward compat with `secondaryLogo` (ImageMetadata). */
   html:not(.dark) .hdr-secondary-logo {
     filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* =======================================================================
+     FireStone: Mobile Logo Sequential Crossfade Animation
+     ======================================================================= */
+  @media (max-width: 1023px) {
+    .animate-logo-main {
+      /* 总时长为 8s（每个 Logo 4s 周期） */
+      animation: logo-fade-main 8s var(--ease-default) infinite;
+    }
+    .animate-logo-secondary {
+      animation: logo-fade-secondary 8s var(--ease-default) infinite;
+    }
+
+    /* 交互优化：当用户鼠标悬停、长按触摸、或焦点在内部链接时，暂停播放，防误触 */
+    .mobile-logo-wrapper:hover .animate-logo-main,
+    .mobile-logo-wrapper:hover .animate-logo-secondary,
+    .mobile-logo-wrapper:active .animate-logo-main,
+    .mobile-logo-wrapper:active .animate-logo-secondary,
+    .mobile-logo-wrapper:focus-within .animate-logo-main,
+    .mobile-logo-wrapper:focus-within .animate-logo-secondary {
+      animation-play-state: paused;
+    }
+  }
+
+  /* 
+     10秒无缝循环设计 (一个完全淡出后，另一个立刻淡入，无多余留白):
+     0% - 40% (0s-4.0s): 主Logo停留显示
+     40% - 45% (4.0s-4.5s): 主Logo平滑淡出
+     45% - 50% (4.5s-5.0s): 副Logo马上平滑淡入
+     50% - 90% (5.0s-9.0s): 副Logo停留显示
+     90% - 95% (9.0s-9.5s): 副Logo平滑淡出
+     95% - 100% (9.5s-10s): 主Logo马上平滑淡入 (周期无缝闭环)
+  */
+  @keyframes logo-fade-main {
+    0%, 40%   { opacity: 1; pointer-events: auto; }
+    45%, 95%  { opacity: 0; pointer-events: none; }
+    100%      { opacity: 1; pointer-events: auto; }
+  }
+
+  @keyframes logo-fade-secondary {
+    0%, 45%   { opacity: 0; pointer-events: none; }
+    50%, 90%  { opacity: 1; pointer-events: auto; }
+    95%, 100% { opacity: 0; pointer-events: none; }
+  }
+
+  /* 优雅降级：遵循系统的减弱动态效果 (Reduced Motion) 设置 */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-logo-main, .animate-logo-secondary {
+      animation: none !important;
+    }
+    @media (max-width: 1023px) {
+      .animate-logo-secondary {
+        display: none !important;
+      }
+    }
   }
 </style>
