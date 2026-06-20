@@ -1,35 +1,111 @@
 /*! FireStone Cyan Dark Theme for Giscus */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap');
+
+/* Wix Madefor Text (Local) */
+@font-face {
+  font-family: 'Wix Madefor Text Variable';
+  src: url('https://f1restone.github.io/fonts/wix-madefor-text-variable.woff2') format('woff2');
+  /*font-style: normal;*/
+  font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+/* Neue Regrade (Local) */
+@font-face {
+  font-family: 'Neue Regrade Variable';
+  src: url('https://f1restone.github.io/fonts/neue-regrade-variable.woff2') format('woff2');
+  font-weight: 300 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-feature-settings: 'dlig', 'liga';
+}
+
+/* NKDuy Mono (Local) */
+@font-face {
+  font-family: 'NKDuy Mono Variable';
+  src: url('https://f1restone.github.io/fonts/nkduy-mono-variable.woff2') format('woff2');
+  /*font-style: normal;*/
+  font-weight: 100 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-feature-settings: 'liga', 'zero';
+}
+
+/* Source Han Sans CN (Local) */
+@font-face {
+  font-family: 'Source Han Sans CN Variable';
+  src: url('https://f1restone.github.io/fonts/source-han-sans-cn-variable.woff2') format('woff2');
+  font-weight: 250 900;
+  font-display: swap;
+  font-feature-settings: 'palt';
+}
+
 main {
-  /* 透明背景：让 Giscus 完美继承你网站父容器的背景色和过渡动画 */
+/* Color | Dark */
   --color-canvas-default: transparent; 
   --color-canvas-overlay: oklch(15% 0.014 289.45);
   --color-canvas-inset: oklch(20% 0.011 289.45);
-  
   --color-fg-default: oklch(95% 0.010 289.45);
   --color-fg-muted: oklch(68% 0.010 289.45); 
   --color-fg-subtle: oklch(58% 0.008 289.45); 
-  
   --color-border-default: oklch(20% 0.014 289.45); 
   --color-border-muted: oklch(13.5% 0.014 289.45); 
-  
-  /* 品牌色青色 #00C3FF 映射 */
   --color-accent-fg: oklch(68% 0.24 289.45); 
   --color-accent-emphasis: oklch(62.5% 0.26 289.45); 
   --color-accent-muted: oklch(68% 0.24 289.45 / 0.4);
   --color-accent-subtle: oklch(18% 0.08 289.45); 
-  
   --color-success-fg: oklch(68% 0.24 289.45);
   --color-danger-fg: oklch(65% 0.22 25);
   
-  /* 按钮定制 */
   --color-btn-text: oklch(95% 0.010 289.45);
   --color-btn-bg: transparent;
   --color-btn-border: oklch(20% 0.014 289.45);
   --color-btn-hover-bg: oklch(20% 0.011 289.45);
   --color-btn-active-bg: oklch(27% 0.011 289.45);
-  
   --color-btn-primary-text: oklch(9.5% 0.018 289.45);
   --color-btn-primary-bg: oklch(68% 0.24 289.45); 
   --color-btn-primary-border: oklch(62.5% 0.26 289.45);
   --color-btn-primary-hover-bg: oklch(62.5% 0.26 289.45); 
+
+  /* Sans */
+  font-feature-settings: 'liga', 'palt' !important;
+  font-family: 'Wix Madefor Text Variable', 'Wix Madefor Text', 'Montserrat', 'Outfit',
+    'SF Pro Text', 'Google Sans Flex', 'Inter', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
+    'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+    -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important;
+}
+
+/* Mono */
+code, pre, .gsc-comment-box-textarea, .gsc-comment-box-textarea-extras {
+  font-feature-settings: 'liga', 'zero' !important;
+  font-family: 'NKDuy Mono Variable', 'NKDuy Mono', 'JetBrains Mono',
+    'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
+    'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important;
+}
+
+/* Display */
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6,
+.gsc-comments-count, .gsc-header h2, .gsc-comment-box-tabs button {
+  font-feature-settings: 'dlig', 'liga', 'palt' !important;
+  font-family: 'Neue Regrade Variable', 'Neue Regrade', 'Inter',
+  'SF Pro Text', 'Google Sans Flex', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
+  'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei',
+  -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol' !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.1em !important;
+}
+
+/* Buttons and Tabs */
+.btn, 
+.gsc-comment-box-tabs button, 
+.gsc-toolbar-item {
+  border-radius: calc(infinity * 1px) !important;
+}
+
+/* Fine-tune the margins of the input/preview tab buttons to make them closer to a circle. */
+.gsc-comment-box-tabs button {
+  margin-bottom: 4px !important;
+  border-bottom-width: 1px !important; 
 }
