@@ -124,15 +124,15 @@ const siteConfig: SiteConfig = {
   description:
     '兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。',
   url: SITE_URL || 'https://f1restone.github.io',
-  ogImage: '/og-default.svg',
+  ogImage: '/og-firestone.png',
   author: 'FireStone',
-  email: 'fstfirestone@gmail.com',
+  email: 'fsfirestone@outlook.com',
   address: {
     street: '',
     city: '',
-    state: '',
+    state: '湖南',
     zip: '',
-    country: 'China',
+    country: '中国',
   },
   socialLinks: [
     'https://github.com/f1restone',
@@ -168,7 +168,7 @@ const siteConfig: SiteConfig = {
         repoId: REPOSITORY_ID,
         category: 'Announcements',
         categoryId: CATEGORY_ID,
-        mapping: 'pathname',
+        mapping: 'og:title',
         strict: true,
         reactionsEnabled: true,
         emitMetadata: false,

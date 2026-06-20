@@ -551,6 +551,7 @@
     height: 0;
     visibility: hidden;
     overflow: hidden;
+    -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
     font-weight: 900; /* 预留出最高字重 900 的物理空间，绝不裁切且不推挤布局 */
