@@ -1,35 +1,35 @@
-/*! FireStone Cyan Light Theme for Giscus */
+/*! FireStone Cyan Dark Theme for Giscus */
 main {
   /* 透明背景：让 Giscus 完美继承你网站父容器的背景色和过渡动画 */
   --color-canvas-default: transparent; 
-  --color-canvas-overlay: oklch(97.5% 0.010 289.45);
-  --color-canvas-inset: oklch(95% 0.018 289.45);
+  --color-canvas-overlay: oklch(15% 0.014 289.45);
+  --color-canvas-inset: oklch(20% 0.011 289.45);
   
-  --color-fg-default: #111827; 
-  --color-fg-muted: #4b5563; 
-  --color-fg-subtle: #6b7280; 
+  --color-fg-default: oklch(95% 0.010 289.45);
+  --color-fg-muted: oklch(68% 0.010 289.45); 
+  --color-fg-subtle: oklch(58% 0.008 289.45); 
   
-  --color-border-default: #e5e7eb;
-  --color-border-muted: #f3f4f6; 
+  --color-border-default: oklch(20% 0.014 289.45); 
+  --color-border-muted: oklch(13.5% 0.014 289.45); 
   
   /* 品牌色青色 #00C3FF 映射 */
-  --color-accent-fg: oklch(62.5% 0.26 289.45); 
-  --color-accent-emphasis: oklch(53% 0.23 289.45); 
-  --color-accent-muted: oklch(62.5% 0.26 289.45 / 0.4);
-  --color-accent-subtle: oklch(94.5% 0.05 289.45); 
+  --color-accent-fg: oklch(68% 0.24 289.45); 
+  --color-accent-emphasis: oklch(62.5% 0.26 289.45); 
+  --color-accent-muted: oklch(68% 0.24 289.45 / 0.4);
+  --color-accent-subtle: oklch(18% 0.08 289.45); 
   
-  --color-success-fg: oklch(62.5% 0.26 289.45);
-  --color-danger-fg: oklch(53% 0.2 25);
+  --color-success-fg: oklch(68% 0.24 289.45);
+  --color-danger-fg: oklch(65% 0.22 25);
   
   /* 按钮定制 */
-  --color-btn-text: #111827;
+  --color-btn-text: oklch(95% 0.010 289.45);
   --color-btn-bg: transparent;
-  --color-btn-border: #e5e7eb;
-  --color-btn-hover-bg: #f3f4f6;
-  --color-btn-active-bg: #e5e7eb;
+  --color-btn-border: oklch(20% 0.014 289.45);
+  --color-btn-hover-bg: oklch(20% 0.011 289.45);
+  --color-btn-active-bg: oklch(27% 0.011 289.45);
   
-  --color-btn-primary-text: #ffffff;
-  --color-btn-primary-bg: oklch(62.5% 0.26 289.45);
-  --color-btn-primary-border: oklch(53% 0.23 289.45);
-  --color-btn-primary-hover-bg: oklch(53% 0.23 289.45);
+  --color-btn-primary-text: oklch(9.5% 0.018 289.45);
+  --color-btn-primary-bg: oklch(68% 0.24 289.45); 
+  --color-btn-primary-border: oklch(62.5% 0.26 289.45);
+  --color-btn-primary-hover-bg: oklch(62.5% 0.26 289.45); 
 }
