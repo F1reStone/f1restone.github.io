@@ -4,7 +4,7 @@ export const buttonVariants = cva(
   [
     'group',
     'inline-flex items-center justify-center gap-2',
-    'font-medium rounded-md',
+    'font-medium rounded-full',
     'transition-all duration-150 ease-out',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',

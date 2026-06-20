@@ -11,7 +11,7 @@ export const progressTrackVariants = cva(
       },
     },
     defaultVariants: {
-      size: 'md',
+      size: 'sm',
     },
   }
 );

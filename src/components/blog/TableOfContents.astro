@@ -4,23 +4,14 @@
  *
  * Auto-generates a TOC from MDX headings. Renders nothing when there are
  * fewer than `minHeadings` headings — keeps short posts uncluttered.
- *
- * - Server-rendered HTML (no JS by default)
- * - Optional scroll-spy highlights the active section while scrolling
- * - Sliding brand indicator animates between active links (like carousel dots)
- * - Heading IDs are added automatically by Astro's MDX integration
  */
 import type { MarkdownHeading } from 'astro';
 
 interface Props {
   headings: MarkdownHeading[];
-  /** Deepest level to include (2 = H2 only, 3 = H2+H3, 4 = H2+H3+H4) */
   maxDepth?: 2 | 3 | 4;
-  /** Minimum headings required before TOC renders */
   minHeadings?: number;
-  /** Title shown above the list */
   title?: string;
-  /** When true, the TOC card sticks to the top of its scrolling container */
   sticky?: boolean;
 }
 
@@ -34,10 +25,6 @@ const {
 
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= maxDepth);
 const shouldRender = items.length >= minHeadings;
-// Unique heading id per instance — multiple TOCs can mount on the same
-// page (e.g. layout: 'auto' renders both inline + sidebar variants and
-// CSS swaps which is visible). Duplicate `id` attributes would be invalid
-// HTML and break aria-labelledby.
 const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
@@ -49,19 +36,15 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
   >
     <p
       id={headingId}
-      class="text-xs font-semibold uppercase tracking-[0.25em] text-foreground-muted mb-3"
+      class="text-xs font-semibold uppercase tracking-[0.15em] text-foreground-muted mb-3"
     >
       {title}
     </p>
     <ul class="space-y-1.5 text-sm border-l border-border relative">
-      <!-- Shared sliding brand indicator — animates between active links
-           vertically, like the carousel dot bar. Positioned absolutely
-           relative to the <ul> so it stays independent of scroll. -->
-      <div
-        class="toc-indicator absolute left-[-1px] w-[2px] rounded-full bg-brand-500"
-        data-toc-indicator
-        aria-hidden="true"
-      ></div>
+      <!-- FireStone: 永久常驻的双节点设计，解决 appendChild 导致的滚动锚定 Bug，支持硬件加速 -->
+      <div class="toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-ghost aria-hidden="true"></div>
+      <div class="toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-main aria-hidden="true"></div>
+      
       {items.map((h) => (
         <li
           class="toc-item"
@@ -72,7 +55,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
             href={`#${h.slug}`}
             data-toc-link={h.slug}
             data-text={h.text}
-            class="toc-link block py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted"
+            class="interactive-glow-left toc-link py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted"
           >
             {h.text}
           </a>
@@ -83,9 +66,6 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 )}
 
 <style>
-  /* Sticky positioning is opt-in (sidebar layout). The 6rem offset clears
-     the fixed header so the TOC scrolls into a comfortable reading band
-     and stays there as the article scrolls past. */
   .toc-sticky {
     position: sticky;
     top: 6rem;
@@ -94,31 +74,9 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
   }
 
   .toc-link {
-    position: relative;
     font-weight: 400;
-    /* Same animation easing as Header nav-links for visual consistency */
-    transition:
-      font-weight 1s var(--ease-bouncy),
-      text-shadow 400ms var(--ease-fluid),
-      color 150ms,
-      border-color 200ms;
   }
 
-  /* Layout-stable font-weight transition: invisible bold ::after reserves
-     space for the heaviest weight, preventing text reflow when active.
-     Shares the same principle as Header .nav-link::after. */
-  .toc-link::after {
-    content: attr(data-text);
-    height: 0;
-    visibility: hidden;
-    overflow: hidden;
-    user-select: none;
-    pointer-events: none;
-    font-weight: 700;
-  }
-
-  /* Hover: half-intensity glow + mid-weight bump (variable font,
-     so fractional weights render correctly). */
   .toc-link:hover {
     color: var(--color-foreground);
     font-weight: 550;
@@ -128,34 +86,43 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
   .toc-link[data-active='true'] {
     color: var(--color-foreground);
     font-weight: 700;
-    /* Full glow, same as Header nav-link-active */
     text-shadow: 0 0 10px currentColor;
   }
 
-  /* Shared sliding brand indicator — uses the same fluid easing as the
-     carousel dot bar so the motion feels familiar. Height and vertical
-     position are driven by JS via transform + height. */
+  /* 仅保留对 GPU 友好的 transform 属性 */
   .toc-indicator {
-    transition:
-      transform 400ms var(--ease-fluid),
-      height   400ms var(--ease-fluid);
+    will-change: transform;
   }
 </style>
 
 <script>
-  // Scroll-spy: highlight the link whose heading is currently in view.
-  // Tiny, no dependencies — uses IntersectionObserver.
-  // Multiple TOC instances can be on the same page (e.g. layout: 'auto'
-  // renders an inline TOC for narrow viewports and a sidebar TOC for
-  // xl+, with CSS hiding whichever isn't appropriate). Each instance
-  // gets its own setup so highlighting works regardless of which is
-  // currently visible.
+  // =========================================================================
+  // FireStone: The Ultimate WinUI 3 TOC Engine
+  // - Click Lock & Debounce (恢复！解决跨章节跳转和快滑的动效队列堵塞)
+  // - Zero DOM insertion (保留！解决滚动条闪烁和 Layout Thrashing)
+  // - Pure Scale Morphing (恢复！去除错误的 opacity 渐隐，找回实打实的物理坍缩)
+  // =========================================================================
+  
+  let isJumping = false;
+  let scrollStopTimer: ReturnType<typeof setTimeout>;
+
+  // 监听页面滚动：识别“点击跳转”何时结束，恢复 IO 监听
+  window.addEventListener('scroll', () => {
+    if (isJumping) {
+      clearTimeout(scrollStopTimer);
+      scrollStopTimer = setTimeout(() => {
+        isJumping = false;
+      }, 150);
+    }
+  }, { passive: true });
+
   const tocs = document.querySelectorAll<HTMLElement>('[data-toc]');
   for (const toc of tocs) {
     const links = Array.from(
       toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'),
     );
-    const indicator = toc.querySelector<HTMLElement>('[data-toc-indicator]');
+    const mainInd = toc.querySelector<HTMLElement>('[data-toc-main]');
+    const ghostInd = toc.querySelector<HTMLElement>('[data-toc-ghost]');
     const slugs = links.map((a) => a.getAttribute('data-toc-link')!);
     const headings = slugs
       .map((s) => document.getElementById(s))
@@ -163,34 +130,77 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 
     if (headings.length === 0) continue;
 
-    let active = '';
-
-    /** Reposition the shared brand indicator to the active link.
-     *  Uses offsetTop (relative to the <ul> offsetParent) so the
-     *  position is stable — it only changes when the active link
-     *  changes, never during normal page scroll. */
-    const moveIndicator = (link: HTMLAnchorElement) => {
-      if (!indicator) return;
-      indicator.style.transform = `translateY(${link.offsetTop}px)`;
-      indicator.style.height = `${link.offsetHeight}px`;
-    };
+    let activeSlug = '';
+    let currentLink: HTMLAnchorElement | null = null;
+    let ioTimeout: ReturnType<typeof setTimeout>;
 
     const setActive = (slug: string) => {
-      if (slug === active) return;
-      active = slug;
-      let activeLink: HTMLAnchorElement | null = null;
+      if (slug === activeSlug) return;
+      activeSlug = slug;
+      let newLink: HTMLAnchorElement | null = null;
+      
       for (const a of links) {
         const isActive = a.getAttribute('data-toc-link') === slug;
         a.setAttribute('data-active', isActive ? 'true' : 'false');
-        if (isActive) activeLink = a;
+        if (isActive) newLink = a;
       }
 
-      if (activeLink) {
-        moveIndicator(activeLink);
+      if (newLink && mainInd && ghostInd) {
+        if (!currentLink) {
+          // 首次初始化
+          mainInd.style.transition = 'none';
+          mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
+          mainInd.style.height = `${newLink.offsetHeight}px`;
+          mainInd.style.opacity = '1';
+        } else {
+          const oldDepth = currentLink.parentElement!.dataset.depth;
+          const newDepth = newLink.parentElement!.dataset.depth;
+          const isMovingDown = newLink.offsetTop > currentLink.offsetTop;
 
-        // Auto-scroll the TOC container so the active link stays visible.
-        if (toc.scrollHeight > toc.clientHeight) {
-          const linkRect = activeLink.getBoundingClientRect();
+          if (oldDepth !== newDepth) {
+            /* === WinUI 3 Morphing Animation === */
+            // 1. 设置残影(Ghost)的初始状态（替代克隆节点），确保不透明度为 1
+            ghostInd.style.transition = 'none';
+            ghostInd.style.height = `${currentLink.offsetHeight}px`;
+            ghostInd.style.transformOrigin = isMovingDown ? 'center bottom' : 'center top';
+            ghostInd.style.transform = `translate3d(${currentLink.offsetLeft}px, ${currentLink.offsetTop}px, 0) scaleY(1)`;
+            ghostInd.style.opacity = '1';
+
+            // 2. 设置本体(Main)的初始状态
+            mainInd.style.transition = 'none';
+            mainInd.style.height = `${newLink.offsetHeight}px`;
+            mainInd.style.transformOrigin = isMovingDown ? 'center top' : 'center bottom';
+            mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(0)`;
+            mainInd.style.opacity = '1';
+
+            // 强制浏览器应用上述初始帧 (避免动画不生效)
+            void ghostInd.offsetWidth;
+            void mainInd.offsetWidth;
+
+            // 3. 执行物理动效 (恢复纯 scaleY 缩放，去除 opacity 渐隐，找回 WinUI 质感)
+            ghostInd.style.transition = 'transform 400ms var(--ease-fluid)';
+            ghostInd.style.transform = `translate3d(${currentLink.offsetLeft}px, ${currentLink.offsetTop}px, 0) scaleY(0)`;
+
+            mainInd.style.transition = 'transform 400ms var(--ease-fluid)';
+            mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
+
+          } else {
+            /* === Standard Slide === */
+            ghostInd.style.opacity = '0'; // 同层级滑动时立刻隐藏残影
+            ghostInd.style.transition = 'none';
+            
+            mainInd.style.transformOrigin = 'center';
+            mainInd.style.transition = 'transform 400ms var(--ease-fluid), height 400ms var(--ease-fluid)';
+            mainInd.style.height = `${newLink.offsetHeight}px`;
+            mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
+          }
+        }
+        
+        currentLink = newLink;
+
+        // Auto-scroll 仅在目录本身有滚动条时生效 (完美解决手机端乱滚导致卡死的 Bug)
+        if (toc.classList.contains('toc-sticky') && toc.scrollHeight > toc.clientHeight) {
+          const linkRect = newLink.getBoundingClientRect();
           const tocRect = toc.getBoundingClientRect();
           const padding = 12;
           let delta = 0;
@@ -206,13 +216,31 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
       }
     };
 
+    // 点击锁定逻辑 (恢复！)
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        isJumping = true; // 锁定滚动嗅探
+        const slug = link.getAttribute('data-toc-link');
+        if (slug) setActive(slug); // 瞬间触发目标动画，安静等待页面滚到位
+      });
+    });
+
     const io = new IntersectionObserver(
       (entries) => {
+        if (isJumping) return; // 锁定状态无视嗅探
+
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          
         if (visible.length > 0 && visible[0].target.id) {
-          setActive(visible[0].target.id);
+          const targetId = visible[0].target.id;
+          
+          // 防抖逻辑 (恢复！) 降低快速滚动时的性能开销
+          clearTimeout(ioTimeout);
+          ioTimeout = setTimeout(() => {
+            setActive(targetId);
+          }, 50);
         }
       },
       { rootMargin: '-80px 0px -70% 0px', threshold: 0 },

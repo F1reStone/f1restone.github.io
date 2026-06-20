@@ -1,4 +1,4 @@
-import { SITE_URL, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION } from 'astro:env/server';
+import { SITE_URL, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, REPOSITORY_ID, CATEGORY_ID } from 'astro:env/server';
 import i18nConfig, { type I18nConfig } from './i18n.config';
 
 export { i18nConfig };
@@ -161,20 +161,20 @@ const siteConfig: SiteConfig = {
       maxDepth: 3,
     },
     comments: {
-      enabled: false,
+      enabled: true,
       provider: 'giscus',
       giscus: {
-        repo: 'owner/repo',
-        repoId: '',
-        category: 'General',
-        categoryId: '',
+        repo: 'f1restone/f1restone.github.io',
+        repoId: REPOSITORY_ID,
+        category: 'Announcements',
+        categoryId: CATEGORY_ID,
         mapping: 'pathname',
-        strict: false,
+        strict: true,
         reactionsEnabled: true,
         emitMetadata: false,
-        inputPosition: 'bottom',
+        inputPosition: 'top',
         theme: 'preferred_color_scheme',
-        lang: 'en',
+        lang: 'zh-CN',
       },
     },
   },

@@ -527,6 +527,38 @@
 
 
   /* =========================================================================
+     FireStone: Standardized Text Glow & Weight Shift
+     字重悬停与发光动效
+     分为居中 (center) 和左对齐 (left) 两种，使用 inline-flex 包裹文本
+     利用隐形 900 字重占位，防止排版异常变宽和文字裁切
+     ========================================================================= */
+  .interactive-glow-center,
+  .interactive-glow-left {
+    display: inline-flex;
+    flex-direction: column;
+    transition: font-weight 1s var(--ease-bouncy), 
+                text-shadow 400ms var(--ease-fluid),
+                color 200ms;
+  }
+
+  .interactive-glow-center { align-items: center; }
+  .interactive-glow-left   { align-items: flex-start; }
+
+  .interactive-glow-center::after,
+  .interactive-glow-left::after {
+    content: attr(data-text);
+    content: attr(data-text) / "";
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    user-select: none;
+    pointer-events: none;
+    font-weight: 900; /* 预留出最高字重 900 的物理空间，绝不裁切且不推挤布局 */
+  }
+
+
+
+  /* =========================================================================
      Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
      参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
      ========================================================================= */
@@ -1692,6 +1724,28 @@
   }
   .group:hover [data-icon='arrow-right'],
   .group:hover [data-icon='arrow-left'] {
+    transform: none;
+  }
+}
+
+[data-icon='chevron-right'],
+[data-icon='chevron-left'] {
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.group:hover [data-icon='chevron-right'] {
+  transform: translateX(0.25rem);
+}
+.group:hover [data-icon='chevron-left'] {
+  transform: translateX(-0.25rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-icon='chevron-right'],
+  [data-icon='chevron-left'] {
+    transition: none;
+  }
+  .group:hover [data-icon='chevron-right'],
+  .group:hover [data-icon='chevron-left'] {
     transform: none;
   }
 }

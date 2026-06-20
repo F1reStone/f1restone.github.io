@@ -22,6 +22,8 @@ jobs:
       PUBLIC_GTM_ID: ${{ secrets.PUBLIC_GTM_ID }}
       GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
       BING_SITE_VERIFICATION: ${{ secrets.BING_SITE_VERIFICATION }}
+      REPOSITORY_ID: ${{ secrets.REPOSITORY_ID }}
+      CATEGORY_ID: ${{ secrets.CATEGORY_ID }}
 
     steps:
       - name: Checkout

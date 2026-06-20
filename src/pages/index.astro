@@ -46,12 +46,10 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
    <Fragment slot="actions">
       <Button size="lg" href="/about">
-        <Icon name="user" size="sm" />
         关于我
         <Icon name="chevron-right" size="sm" />
       </Button>
-      <Button size="lg" variant="outline" href="/projects">
-        <Icon name="layers" size="sm" />
+      <Button size="lg" variant="link" href="/projects">
         探索我的项目
         <Icon name="chevron-right" size="sm" />
       </Button>
