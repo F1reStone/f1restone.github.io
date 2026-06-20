@@ -1,0 +1,35 @@
+/*! FireStone Cyan Light Theme for Giscus */
+main {
+  /* 透明背景：让 Giscus 完美继承你网站父容器的背景色和过渡动画 */
+  --color-canvas-default: transparent; 
+  --color-canvas-overlay: oklch(97.5% 0.010 289.45);
+  --color-canvas-inset: oklch(95% 0.018 289.45);
+  
+  --color-fg-default: #111827; 
+  --color-fg-muted: #4b5563; 
+  --color-fg-subtle: #6b7280; 
+  
+  --color-border-default: #e5e7eb;
+  --color-border-muted: #f3f4f6; 
+  
+  /* 品牌色青色 #00C3FF 映射 */
+  --color-accent-fg: oklch(62.5% 0.26 289.45); 
+  --color-accent-emphasis: oklch(53% 0.23 289.45); 
+  --color-accent-muted: oklch(62.5% 0.26 289.45 / 0.4);
+  --color-accent-subtle: oklch(94.5% 0.05 289.45); 
+  
+  --color-success-fg: oklch(62.5% 0.26 289.45);
+  --color-danger-fg: oklch(53% 0.2 25);
+  
+  /* 按钮定制 */
+  --color-btn-text: #111827;
+  --color-btn-bg: transparent;
+  --color-btn-border: #e5e7eb;
+  --color-btn-hover-bg: #f3f4f6;
+  --color-btn-active-bg: #e5e7eb;
+  
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: oklch(62.5% 0.26 289.45);
+  --color-btn-primary-border: oklch(53% 0.23 289.45);
+  --color-btn-primary-hover-bg: oklch(53% 0.23 289.45);
+}

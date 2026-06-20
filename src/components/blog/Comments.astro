@@ -34,7 +34,7 @@ const dataAttrs = isConfigured
       emitMetadata: giscus!.emitMetadata ? '1' : '0',
       inputPosition: giscus!.inputPosition ?? 'bottom',
       theme: giscus!.theme ?? 'preferred_color_scheme',
-      lang: giscus!.lang ?? 'en',
+      lang: giscus!.lang ?? 'zh-CN',
     }
   : null;
 ---
@@ -42,10 +42,10 @@ const dataAttrs = isConfigured
 {isConfigured && dataAttrs && (
   <section
     id="comments"
-    class="mx-auto max-w-4xl px-6 mt-12"
-    aria-label="Comments"
+    class="mx-auto max-w-8xl px-6 mt-12"
+    aria-label="评论"
   >
-    <h2 class="text-xl font-semibold mb-4 text-foreground">Comments</h2>
+    <h2 class="text-xl font-semibold mb-4 text-foreground">评论</h2>
     <div
       class="giscus-mount"
       data-giscus
@@ -61,7 +61,7 @@ const dataAttrs = isConfigured
       data-theme={dataAttrs.theme}
       data-lang={dataAttrs.lang}
     >
-      <noscript>Comments require JavaScript to load.</noscript>
+      <noscript>评论需要启用 JavaScript 以加载。</noscript>
     </div>
   </section>
 )}
@@ -74,6 +74,24 @@ const dataAttrs = isConfigured
 </style>
 
 <script>
+  // FireStone: Dynamic Giscus Theme Management
+  function getGiscusTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const baseUrl = window.location.origin;
+    // 使用我们在 public 目录下自定义的独立主题文件
+    return isDark ? `${baseUrl}/giscus-dark.css` : `${baseUrl}/giscus-light.css`;
+  }
+
+  function updateGiscusTheme() {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    if (!iframe || !iframe.contentWindow) return;
+    // 跨域 postMessage 通知 iframe 无缝切换 CSS
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: getGiscusTheme() } } },
+      'https://giscus.app'
+    );
+  }
+
   // Lazy-load Giscus only when the comments area scrolls into view.
   // Until then, zero network requests are made — keeps article pages fast
   // for readers who don't scroll all the way to the bottom.
@@ -96,8 +114,11 @@ const dataAttrs = isConfigured
       s.setAttribute('data-reactions-enabled', mount.dataset.reactionsEnabled!);
       s.setAttribute('data-emit-metadata', mount.dataset.emitMetadata!);
       s.setAttribute('data-input-position', mount.dataset.inputPosition!);
-      s.setAttribute('data-theme', mount.dataset.theme!);
       s.setAttribute('data-lang', mount.dataset.lang!);
+      
+      // FireStone: 注入实时计算的动态主题 URL，取代写死配置
+      s.setAttribute('data-theme', getGiscusTheme());
+      
       mount.appendChild(s);
     };
 
@@ -116,5 +137,21 @@ const dataAttrs = isConfigured
       // Old browsers — just load it.
       load();
     }
+  }
+
+  // 挂载 MutationObserver 监听 <html> 上 .dark 类名的改变
+  if (!(window as any).__giscusThemeObserverInit) {
+    (window as any).__giscusThemeObserverInit = true;
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          updateGiscusTheme();
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    
+    // 兼容 Astro 的 View Transitions 无刷新路由
+    document.addEventListener('astro:after-swap', updateGiscusTheme);
   }
 </script>
