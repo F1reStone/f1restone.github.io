@@ -35,7 +35,7 @@ const iconNameMap: Record<string, string> = {
   download: 'download',
   upload: 'upload',
   settings: 'settings',
-  view: 'external-link',
+  view: 'arrow-up-right',
 };
 
 export function Dropdown({ items, align = 'start', trigger, className }: DropdownProps) {
