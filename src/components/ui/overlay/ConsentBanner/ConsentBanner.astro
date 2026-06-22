@@ -11,6 +11,7 @@ import consentConfig from '@/config/consent.config';
 import Dialog from '@/components/ui/overlay/Dialog';
 import Button from '@/components/ui/form/Button';
 import Switch from '@/components/ui/form/Switch';
+import Icon from '@/components/ui/primitives/Icon';
 import type { ConsentUIText } from '@/lib/consent.types';
 
 interface Props {
@@ -36,8 +37,8 @@ const privacyPolicyUrl = PUBLIC_PRIVACY_POLICY_URL;
 
 // Merge UI text: props override config defaults
 const ui = { ...consentConfig.ui, ...uiOverrides };
-const alwaysOnLabel = alwaysOnLabelProp ?? ui.alwaysOnLabel ?? 'Always on';
-const privacyPolicyLabel = ui.privacyPolicyLabel ?? 'Privacy Policy';
+const alwaysOnLabel = alwaysOnLabelProp ?? ui.alwaysOnLabel ?? '始终开启';
+const privacyPolicyLabel = ui.privacyPolicyLabel ?? '隐私政策';
 
 const isTop = position === 'top';
 
@@ -50,47 +51,64 @@ const categoryGcmMapJson = JSON.stringify(categoryGcmMap);
 
 // Serialize config for client-side use
 const configJson = JSON.stringify(consentConfig);
+
+// FireStone: 智能替换 {privacyPolicy} 占位符机制
+// 将 consent.config.ts 中写好的文本转换为带有 Tailwind 样式的超链接。
+const privacyLinkHtml = privacyPolicyUrl
+  ? `<a href="${privacyPolicyUrl}" class="text-primary underline underline-offset-4 hover:text-brand-500 font-medium transition-colors">${privacyPolicyLabel}</a>`
+  : '';
+
+function injectPrivacyLink(text: string | undefined) {
+  if (!text) return '';
+  if (text.includes('{privacyPolicy}')) {
+    return text.replace('{privacyPolicy}', privacyLinkHtml);
+  }
+  return privacyLinkHtml ? `${text} ${privacyLinkHtml}` : text;
+}
+
+const bannerDescHtml = injectPrivacyLink(ui.description);
+const dialogDescHtml = injectPrivacyLink(ui.settingsDescription);
 ---
 
 {consentEnabled && (
   <>
-    <!-- Bottom/Top Bar Banner -->
+    <!-- FireStone: Bottom/Top Floating Liquid Glass Banner -->
     <div
       id="consent-banner"
       class:list={[
-        'consent-banner',
-        isTop ? 'consent-banner--top' : 'consent-banner--bottom',
+        'consent-banner-anim fixed inset-x-0 z-50 px-4 md:px-6 flex justify-center pointer-events-none',
+        /* FireStone: 将悬浮间距交还给 Tailwind 控制，解决贴边问题 */
+        isTop ? 'top-4 md:top-6' : 'bottom-6 md:bottom-8', 
         className,
       ]}
       role="dialog"
       aria-modal="false"
-      aria-label="Cookie consent"
+      aria-label="Cookie 首选项"
+      data-position={position}
     >
-      <div class="consent-banner-inner">
-        <div class="consent-banner-content">
-          <p class="consent-banner-heading" id="consent-banner-heading">
+      <!-- FireStone: 增大内边距 p-5 md:p-6 lg:p-7 -->
+      <div class="pointer-events-auto w-full max-w-8xl rounded-2xl md:rounded-[2rem] border border-border/50 bg-background/80 p-5 md:p-6 lg:p-7 shadow-2xl backdrop-blur-lg flex flex-col lg:flex-row items-left justify-between gap-5 md:gap-6">
+        
+        <!-- 左侧文案区 -->
+        <div class="flex-1 min-w-0 text-left">
+          <p class="text-md font-semibold text-foreground mb-0.5" id="consent-banner-heading">
             {ui.heading}
           </p>
-          <p class="consent-banner-description">
-            {ui.description}
-            {privacyPolicyUrl && (
-              <>
-                {' '}
-                <a href={privacyPolicyUrl} class="consent-privacy-link">
-                  {privacyPolicyLabel}
-                </a>
-              </>
-            )}
-          </p>
+          <p class="text-xs text-foreground-muted leading-relaxed" set:html={bannerDescHtml} />
         </div>
-        <div class="consent-banner-actions">
+        
+        <!-- 右侧动作按钮区 -->
+        <div class="flex flex-wrap items-center justify-start lg:justify-end gap-2.5 shrink-0">
           <Button variant="primary" size="sm" id="consent-accept-all">
+            <Icon name="check-check" size="sm" />
             {ui.acceptAll}
           </Button>
           <Button variant="secondary" size="sm" id="consent-decline-all">
+            <Icon name="ban" size="sm" />
             {ui.declineAll}
           </Button>
           <Button variant="link" size="sm" id="consent-customize">
+            <Icon name="settings" size="sm" />
             {ui.customize}
           </Button>
         </div>
@@ -98,7 +116,7 @@ const configJson = JSON.stringify(consentConfig);
     </div>
 
     <!-- Settings Panel via Dialog -->
-    <Dialog id="consent-settings" title={ui.settingsHeading} description={ui.settingsDescription} size="md">
+    <Dialog id="consent-settings" title={ui.settingsHeading} description={dialogDescHtml} size="md">
       <div class="consent-settings-body">
         {Object.entries(consentConfig.categories).map(([key, cat]) => (
           <div class="consent-category" data-category={key}>
@@ -136,7 +154,7 @@ const configJson = JSON.stringify(consentConfig);
           'consent-reopener',
           isTop ? 'consent-reopener--top' : 'consent-reopener--bottom',
         ]}
-        aria-label="Open cookie settings"
+        aria-label="打开 Cookie 首选项"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -271,7 +289,12 @@ const configJson = JSON.stringify(consentConfig);
           }
           const banner = document.getElementById('consent-banner');
           if (!banner) return;
+          
           banner.removeAttribute('hidden');
+          
+          // 强制触发浏览器重排
+          void banner.offsetWidth; 
+          
           banner.classList.add('consent-banner--visible');
         }
 
@@ -458,90 +481,27 @@ const configJson = JSON.stringify(consentConfig);
 )}
 
 <style>
-  /* ─── Banner ─── */
-  .consent-banner {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 50;
-    transition: transform var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
-    
-    /* FireStone: 增加全局背景与毛玻璃效果，使其横向占满整个屏幕 */
-    background: color-mix(in oklch, var(--color-background) 60%, transparent);
-    backdrop-filter: blur(24px);
+  /* ─── Banner State ─── */
+  /* FireStone: 网站自带曲线滑入 */
+  .consent-banner-anim {
+    opacity: 0;
+    transition: opacity var(--transition-slow) var(--ease-default),
+                transform var(--transition-slow) var(--ease-default);
   }
 
-  .consent-banner--bottom {
-    bottom: 0;
-    transform: translateY(100%);
-    /* FireStone: 将边框和阴影从内层移至外层全屏容器 */
-    border-top: 1px solid var(--color-border);
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  .consent-banner--top {
-    top: 0;
-    transform: translateY(-100%);
-    /* FireStone: 将边框和阴影从内层移至外层全屏容器 */
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  .consent-banner--visible.consent-banner--bottom,
-  .consent-banner--visible.consent-banner--top {
-    transform: translateY(0);
-  }
-
-  .consent-banner-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem;
-    /* FireStone: 文本内容与外层背景分离，完美对齐我们之前设置的 8xl 响应式中心排版 */
-    max-width: max(70rem, 80vw); 
-    margin: 0 auto;
-    padding: 1.25rem 1.5rem;
+  /* 入场前的初始偏移量：使用 2rem 偏移配合淡入 */
+  .consent-banner-anim[data-position="bottom"] {
+    transform: translateY(2rem); 
   }
   
-  /* FireStone: 删除了原来作用于 .consent-banner--bottom .consent-banner-inner 等带有边框的代码，彻底解耦 */
-
-  .consent-banner-content {
-    flex: 1 1 0%;
-    min-width: 280px;
+  .consent-banner-anim[data-position="top"] {
+    transform: translateY(-2rem);
   }
 
-  .consent-banner-heading {
-    font-weight: 600;
-    font-size: 0.9375rem;
-    line-height: 1.4;
-    color: var(--foreground);
-    margin: 0 0 0.25rem 0;
-  }
-
-  .consent-banner-description {
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--foreground-muted);
-    margin: 0;
-  }
-
-  .consent-privacy-link {
-    color: var(--primary);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    font-weight: 500;
-    transition: color var(--transition-fast);
-  }
-
-  .consent-privacy-link:hover {
-    color: var(--primary-hover);
-  }
-
-  .consent-banner-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    flex-shrink: 0;
+  /* 动画触发态 */
+  .consent-banner-anim.consent-banner--visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* ─── Settings (inside Dialog) ─── */

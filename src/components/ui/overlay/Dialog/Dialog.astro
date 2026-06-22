@@ -78,13 +78,13 @@ const sizes = {
               {title}
             </h2>
           )}
+          {/* FireStone: [Changed to set:html to parse inline privacy policy links injected by ConsentBanner] */}
           {description && (
             <p
               id={`${id}-description`}
-              class="mt-1 text-sm text-foreground-muted"
-            >
-              {description}
-            </p>
+              class="mt-1 text-xs text-foreground-muted"
+              set:html={description}
+            />
           )}
         </div>
       )}

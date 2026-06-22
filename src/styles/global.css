@@ -9,6 +9,22 @@
 @import './tokens/typography.css';
 @import './tokens/spacing.css';
 
+/* =============================================================================
+   Base Interactive Element Styles
+   =============================================================================
+   Tailwind CSS v4 removed `cursor: pointer` from buttons in its base reset
+   (unlike v3 Preflight).  Restore it globally so every <button> and element
+   with role="button" shows the pointer cursor — mirroring how <a href>
+   elements get it from the browser's user-agent stylesheet. */
+
+button,
+[role='button'],
+input[type='submit'],
+input[type='button'],
+input[type='reset'] {
+  cursor: pointer;
+}
+
 /* Self-hosted fonts */
 /* Wix Madefor Text (Local) */
 @font-face {

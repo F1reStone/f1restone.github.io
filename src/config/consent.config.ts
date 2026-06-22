@@ -44,15 +44,15 @@ const consentConfig: ConsentConfig = {
 
   ui: {
     heading: 'Cookie 首选项',
-    description: '我们使用 Cookie 以提供个性化内容、分析访问情况并改善您的使用体验，继续使用本网站，即表示您同意我们使用 Cookie。访问我们的《隐私政策》，了解我们如何使用 Cookie 以及如何控制 Cookie。',
+    description: '我们使用 Cookie 以提供个性化内容、分析访问情况并改善您的使用体验，继续使用本网站，即表示您同意我们使用 Cookie。访问我们的{privacyPolicy}，进一步了解我们如何使用 Cookie。',
     acceptAll: '接受全部',
     declineAll: '仅必要',
     customize: '自定义',
     savePreferences: '保存偏好设置',
     settingsHeading: 'Cookie 首选项',
-    settingsDescription: '选择您允许的 Cookie 类型。请注意，禁用某些 Cookie 可能会影响网站的功能和体验。',
+    settingsDescription: '选择您允许的 Cookie 类型。请注意，禁用 Cookie 可能会影响网站的功能和体验。访问我们的{privacyPolicy}，进一步了解我们如何使用 Cookie。',
     alwaysOnLabel: '始终开启',
-    privacyPolicyLabel: '进一步了解',
+    privacyPolicyLabel: '《隐私政策》',
   },
 
   /** Milliseconds before banner slides in */

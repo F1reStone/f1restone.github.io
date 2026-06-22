@@ -37,10 +37,10 @@ const {
   mode = 'place',
   mapType = 'roadmap',
   consentCategory = 'marketing',
-  ariaLabel = 'Google Maps',
-  placeholderTitle = 'Map',
-  placeholderDescription = 'Accept cookies to load the interactive map.',
-  externalLinkText = 'View on Google Maps',
+  ariaLabel = 'Google 地图',
+  placeholderTitle = 'Google 地图',
+  placeholderDescription = '同意 Cookie 以加载交互式地图。',
+  externalLinkText = '在 Google 地图上查看',
   class: className,
   ...rest
 } = Astro.props;
@@ -127,7 +127,7 @@ const id = `google-map-${Math.random().toString(36).slice(2, 9)}`;
         <p class="google-map-placeholder__desc">{placeholderDescription}</p>
 
         <button class="google-map-placeholder__btn" data-map-load={id} type="button">
-          Load Map
+          加载地图
         </button>
 
         <a
