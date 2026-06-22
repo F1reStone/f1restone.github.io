@@ -52,50 +52,55 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
     aria-label="搜索"
     data-pagefind-ignore
   >
-    <!-- Backdrop — matches Dialog.astro: bg-background/50 backdrop-blur-sm,
-         animated with opacity transition. -->
+    <!-- FireStone: 统一步调的高级毛玻璃遮罩 -->
     <div
-      class="search-backdrop fixed inset-0 bg-background/50 backdrop-blur-sm opacity-0 transition-opacity duration-200"
+      class="search-backdrop fixed inset-0 bg-background/40 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-[var(--ease-default)]"
       data-search-close
       aria-hidden="true"
     ></div>
 
     <!-- Panel — command-palette positioned (top, not center), but shadow +
          animation mechanics mirror Dialog.astro (shadow-xl, scale-95→100). -->
-    <div class="fixed inset-0 flex justify-center items-start overflow-y-auto p-4 pt-[12vh]">
+    <!-- FireStone: 移动端防软键盘遮挡 (pt-16)，桌面端黄金下沉比例 (12vh) -->
+    <div class="fixed inset-0 flex justify-center items-start overflow-y-auto p-4 pt-16 sm:pt-[12vh]">
+      <!-- FireStone: 融合 V1 的大尺寸毛玻璃与 V2 的 transition-all (复活缩放) -->
       <div
-        class="search-panel relative w-full max-w-xl overflow-hidden rounded-xl border border-border bg-background shadow-xl scale-95 opacity-0 transition-all duration-200"
+        class="search-panel relative w-full max-w-2xl overflow-hidden rounded-2xl border border-border/50 bg-background/80 shadow-2xl backdrop-blur-lg scale-95 opacity-0 transition-all duration-300 ease-[var(--ease-default)]"
       >
         <!-- Input row -->
-        <div class="flex items-center gap-3 border-b border-border px-4">
-          <Icon name="search" size="md" class="text-foreground-muted shrink-0" />
+        <div class="flex items-center gap-3 border-b border-border/50 px-5">
+          <!-- FireStone: 为 Search 图标添加 Tag 专属同款辉光 (drop-shadow) -->
+          <Icon name="search" size="md" class="text-brand-500 shrink-0 drop-shadow-[0_0_10px_currentColor] opacity-95" />
           <input
             type="search"
-            class="search-input w-full bg-transparent py-4 text-base text-foreground placeholder:text-foreground-subtle focus:outline-none"
-            placeholder="搜索博客、项目或页面…"
+            class="search-input w-full bg-transparent py-5 text-base font-medium text-foreground placeholder:text-foreground-subtle focus:outline-none"
+            placeholder="搜索文章、项目或关键字..."
             autocomplete="off"
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
+            role="searchbox"
             aria-label="搜索查询"
           />
           <button
             type="button"
-            class="shrink-0 rounded-md border border-border-strong px-1.5 py-0.5 text-[10px] font-mono font-medium text-foreground-muted hover:bg-secondary hover:text-foreground transition-colors"
+            class="shrink-0 rounded-lg border border-border/50 bg-transparent px-2 py-1 text-[10px] font-mono font-bold uppercase text-foreground-muted hover:text-foreground hover:border-foreground hover:drop-shadow-[0_0_8px_currentColor] transition-all duration-300"
             data-search-close
+            aria-label="关闭搜索"
           >
-            ESC
+            Esc
           </button>
         </div>
 
-        <!-- Results -->
+        <!-- Results (V1的大边距) -->
         <div
-          class="search-results max-h-[55vh] overflow-y-auto overscroll-contain p-2"
+          class="search-results max-h-[60vh] overflow-y-auto overscroll-contain p-3"
           role="listbox"
           aria-label="搜索结果"
         >
-          <p class="search-hint px-3 py-8 text-center text-sm text-foreground-muted">
-            开始输入并在网站上搜索。
+          <!-- 规范化提示字号 -->
+          <p class="search-hint px-3 py-10 text-center text-sm text-foreground-muted">
+            输入关键字以开始在网站上搜索。
           </p>
         </div>
       </div>
@@ -104,13 +109,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
 </div>
 
 <style>
-  /* Highlighted terms in Pagefind excerpts (injected at runtime) */
-  :global(.search-results mark) {
-    background: transparent;
-    color: var(--color-brand-500);
-    font-weight: 600;
-  }
-  /* Hide the native WebKit clear button — the ESC affordance covers it */
+  /* 屏蔽 WebKit 原生清除按钮以防止视觉冲突 */
   .search-input::-webkit-search-cancel-button {
     display: none;
   }
@@ -178,7 +177,42 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       let previousActiveElement: HTMLElement | null = null;
       let isAnimating = false;
 
-      // ── Open / Close with Dialog-aligned animation ────────────────────
+      // ── FireStone: 终极平滑高度重算 (Smooth Height Resizing with Safety Guard) ──
+      const updateHtmlSmoothly = (html: string) => {
+        // 1. 冻结当前高度
+        const startHeight = panel.offsetHeight;
+        panel.style.height = `${startHeight}px`;
+
+        // 2. 注入新内容
+        results.innerHTML = html;
+
+        // 3. 计算注入后应有的自然高度
+        panel.style.height = 'auto';
+        const targetHeight = panel.offsetHeight;
+
+        // 安全锁：如果高度没有变化，直接返回，防止 transitionend 死锁
+        if (startHeight === targetHeight) {
+          return;
+        }
+
+        // 4. 退回起始高度，强制浏览器渲染帧 (Reflow)
+        panel.style.height = `${startHeight}px`;
+        void panel.offsetHeight;
+
+        // 5. 应用目标高度，触发 transition-all 统一动画
+        panel.style.height = `${targetHeight}px`;
+
+        // 6. 动画结束后清理行内样式，保证窗口 Resize 的响应式弹性
+        const cleanup = (e: TransitionEvent) => {
+          if (e.target === panel && e.propertyName === 'height') {
+            panel.style.height = 'auto';
+            panel.removeEventListener('transitionend', cleanup);
+          }
+        };
+        panel.addEventListener('transitionend', cleanup);
+      };
+
+      // ── Open / Close ──────────────────────────────────────────────────
 
       const open = () => {
         if (isAnimating) return;
@@ -207,6 +241,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         panel.classList.add('scale-95', 'opacity-0');
         panel.classList.remove('scale-100', 'opacity-100');
 
+        // FireStone: 严格匹配 duration-300，防止抽帧
         setTimeout(() => {
           modal.classList.add('hidden');
           document.body.style.overflow = '';
@@ -216,7 +251,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           previousActiveElement?.focus({ preventScroll: true });
 
           isAnimating = false;
-        }, 200);
+        }, 300);
       };
 
       // ── Focus trap (mirrors Dialog.astro) ────────────────────────────
@@ -254,14 +289,14 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       // ── Search logic ─────────────────────────────────────────────────
 
       const renderMessage = (html: string) => {
-        results.innerHTML = `<p class="px-3 py-8 text-center text-sm text-foreground-muted">${html}</p>`;
+        updateHtmlSmoothly(`<p class="px-3 py-10 text-center text-sm text-foreground-muted">${html}</p>`);
       };
 
       const renderResults = async (query: string) => {
         const pf = await loadPagefind();
         if (!pf) {
           renderMessage(
-            '搜索索引是在构建时生成的，在 <code class="rounded bg-secondary px-1.5 py-0.5 text-xs">astro dev</code> 中不可用。<br />运行 <code class="rounded bg-secondary px-1.5 py-0.5 text-xs">pnpm build &amp;&amp; pnpm preview</code> 以在本地尝试。'
+            '搜索索引是在构建时生成的，在 <code class="rounded-md border border-border/50 bg-secondary px-1.5 py-0.5 text-xs">astro dev</code> 中不可用。<br />运行 <code class="rounded-md border border-border/50 bg-secondary px-1.5 py-0.5 text-xs mt-2 inline-block">pnpm build &amp;&amp; pnpm preview</code> 以在本地尝试。'
           );
           return;
         }
@@ -271,7 +306,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         if (input.value.trim() !== query) return;
 
         if (search.results.length === 0) {
-          renderMessage(`没有找到关于「${escapeHtml(query)}」的结果。`);
+          renderMessage(`没有找到关于「<span class="text-foreground font-semibold">${escapeHtml(query)}</span>」的结果。`);
           return;
         }
 
@@ -279,19 +314,22 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           search.results.slice(0, MAX_RESULTS).map((r) => r.data())
         );
 
-        results.innerHTML = items
+        // FireStone: V1的舒适间距 + V2的标准字号规范 (text-sm, text-xs)
+        const resultsHtml = items
           .map(
             (item) => `
               <a
                 href="${item.url}"
-                class="search-result block rounded-lg px-3 py-2.5 hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                class="search-result block rounded-xl px-4 py-3 mb-1 hover:bg-secondary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
                 role="option"
               >
-                <span class="block text-sm font-semibold text-foreground">${escapeHtml(item.meta.title ?? item.url)}</span>
-                <span class="mt-0.5 block text-xs leading-relaxed text-foreground-muted [&_mark]:bg-transparent">${item.excerpt}</span>
+                <span class="block text-sm font-bold text-foreground">${escapeHtml(item.meta.title ?? item.url)}</span>
+                <span class="mt-1 block text-xs leading-relaxed text-foreground-muted [&_mark]:bg-transparent [&_mark]:text-brand-500 [&_mark]:font-bold">${item.excerpt}</span>
               </a>`
           )
           .join('');
+
+        updateHtmlSmoothly(resultsHtml);
       };
 
       let debounce: number | undefined;
@@ -299,7 +337,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         if (debounce) window.clearTimeout(debounce);
         const query = input.value.trim();
         if (!query) {
-          renderMessage('开始输入并在网站上搜索。');
+          renderMessage('输入关键字以开始在网站上搜索。');
           return;
         }
         debounce = window.setTimeout(() => renderResults(query), 150);
@@ -377,7 +415,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           setTimeout(() => {
             modal.classList.add('hidden');
             document.body.style.overflow = '';
-          }, 200);
+          }, 300);
         }
       });
     }

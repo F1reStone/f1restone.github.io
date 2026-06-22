@@ -484,9 +484,9 @@ input[type='reset'] {
   .hdr-glass-pill:hover,
   .hdr-glass-pill[aria-expanded="true"] {
     /* 悬停/激活时：注满纯白，爆发出纯净耀眼的白光 + 多层光晕扩散 */
-    background-color: #ffffff !important;
-    border-color: #ffffff !important;
-    color: #080C13 !important;
+    background-color: var(--color-white) !important;
+    border-color: var(--color-white) !important;
+    color: var(--color-background) !important;
     box-shadow:
       inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
       0 0 14px rgba(255, 255, 255, 0.85),
