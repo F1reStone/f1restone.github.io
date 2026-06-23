@@ -69,7 +69,8 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
 
   <section class="bg-background-secondary py-[var(--space-section-md)] border-t border-border">
     <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-      <Button variant="outline" href="/blog/" data-reveal>
+      <div class="flex flex-col items-center gap-4" data-reveal>
+        <Button variant="outline" href="/blog/" data-reveal>
           <Icon name="chevron-left" size="sm" />
           返回「全部文章」
         </Button>
