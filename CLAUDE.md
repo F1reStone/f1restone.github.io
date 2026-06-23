@@ -117,5 +117,15 @@ Tags are shared across blog and projects. `lib/tags.ts` provides `tagToSlug()` a
 ### Project system
 Projects are MDX files in `src/content/projects/`. Each has `order` (sorting), `featured` (homepage visibility), `gallery` (carousel), `soloPage` (custom page), and `tags`. The listing at `/projects` mirrors the blog pagination pattern.
 
-### Upstream merges
-This repo receives periodic merges from the upstream [Astro Rocket](https://github.com/hansmartensdev/astro-rocket) theme. Check `git log --oneline` for the merge pattern. When updating deps or patterns, prefer alignment with upstream to ease future merges — only diverge when the customization is intentional and documented.
+### Upstream merges / 主题升级
+
+This repo receives periodic merges from the upstream [Astro Rocket](https://github.com/hansmartensdev/astro-rocket) theme. When a user asks to merge/upgrade from upstream:
+
+1. **READ `UPGRADE.md` FIRST** — it contains the complete merge playbook: file classification rules (A/B/C/D/E), conflict resolution strategies, i18n merge patterns, build verification checklist, common pitfalls with specific fixes, FireStone code style conventions, and quick-reference commands.
+2. Create a backup branch before starting.
+3. Run `npx @astrojs/upgrade` then `pnpm up` (no major version bumps for eslint/typescript unless upstream did).
+4. Classify every changed file per the A/B/C/D/E system in UPGRADE.md — never blindly accept one side.
+5. After resolving conflicts, audit auto-merged files with `git diff backup-before-astroX-upgrade HEAD -- <file>` to catch silent overwrites.
+6. Run the full build verification checklist before committing.
+
+When updating deps or patterns, prefer alignment with upstream to ease future merges — only diverge when the customization is intentional and documented.
