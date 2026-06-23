@@ -17,7 +17,9 @@ import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
 import { resolveSocialLinks } from '@/lib/utils';
 import { createBlogPostSchema, createFAQSchema } from '@/lib/schema';
 import { getBlogOgPath } from '@/lib/og';
-import { getLocaleFromPath } from '@/i18n';
+import { getLocaleFromPath, localizedPath, getLocales } from '@/i18n';
+import { getPostSlug, getBlogBaseUrl } from '@/lib/blog';
+import { getPostTranslations } from '@/lib/post-links';
 
 const locale = getLocaleFromPath(Astro.url.pathname);
 
@@ -34,6 +36,8 @@ interface Props {
   svgSlug?: string;
   tags?: string[];
   slug?: string;
+  /** Canonical id of the post, used to resolve its translations across locales. */
+  uid?: string;
   /** Optional FAQs — when provided, an FAQ JSON-LD schema is emitted alongside the BlogPosting schema. */
   faqs?: Array<{ question: string; answer: string }>;
   /** MDX headings — used by the optional table of contents */
@@ -55,6 +59,7 @@ const {
   svgSlug,
   tags = [],
   slug = '',
+  uid,
   faqs,
   headings = [],
   toc: tocOverride,
@@ -70,22 +75,25 @@ const showToc = !!tocConfig?.enabled && tocOverride !== false;
 const showComments = !!commentsConfig?.enabled && commentsOverride !== false;
 
 // TOC layout: 'inline' (top-of-article card), 'sidebar' (xl+ sticky aside,
-// hidden below xl), or 'auto' (sidebar on xl+, inline card below xl).
+// hidden below xl), or 'auto' (sidebar on xl+; inline opt-in elsewhere).
 // `sidebarActive` controls whether we render the wider grid wrapper.
-const tocLayout = tocConfig?.layout ?? 'inline';
+const tocLayout = tocConfig?.layout ?? 'auto';
 const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
-const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
-const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
+// Inline TOC is now opt-in: 'auto' shows only the desktop sidebar so the
+// mobile/landscape/tablet experience isn't dominated by a TOC card the
+// majority of visitors don't use. Posts that want the inline TOC visible
+// everywhere can set `toc.layout: 'inline'` in frontmatter.
+const inlineActive = showToc && tocLayout === 'inline';
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 
 // Prefer the post's own image; otherwise serve the per-post dynamic OG image
 // generated at build time (see src/pages/og/blog/[slug].svg.ts). Falls back to
 // the site-wide default only when slug is missing.
-const ogSlug = slug ? slug.split('/').pop() : '';
-const ogImage = image?.src || (ogSlug ? getBlogOgPath(ogSlug) : siteConfig.ogImage);
+const ogImage = image?.src || (slug ? getBlogOgPath(getPostSlug(slug, locale)) : siteConfig.ogImage);
 
 const breadcrumbs = [
-  { label: '首页', href: '/' },
-  { label: '博客', href: '/blog' },
+  { label: '首页', href: localizedPath('/', locale) },
+  { label: '博客', href: getBlogBaseUrl(locale) },
   { label: title },
 ];
 
@@ -110,10 +118,22 @@ const blogPostingSchema = createBlogPostSchema({
 
 const faqSchema = faqs && faqs.length > 0 ? createFAQSchema(faqs) : null;
 const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema];
+
+// Resolve this post's real per-locale URLs so the hreflang tags and the
+// LanguageSwitcher point at the correct translation — which may live at a
+// different slug — instead of blindly swapping the locale segment of the URL.
+// hreflang lists only verified translations; the switcher shows every locale,
+// falling back to a locale's blog index when this post has no translation
+// there, so switching language never lands on a 404.
+const postTranslations = await getPostTranslations(slug, locale, uid);
+const translationByLocale = new Map(postTranslations.map((tr) => [tr.locale, tr.url]));
+const languageAlternates = Object.fromEntries(
+  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? getBlogBaseUrl(loc)])
+);
 ---
 
 <BaseLayout
-  title={`${title} | 博客`}
+  title={title}
   description={description}
   image={ogImage}
   imageAlt={imageAlt || title}
@@ -124,17 +144,21 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
     tags,
   }}
   extraSchemas={schemas}
+  localeAlternates={postTranslations}
 >
   <Header
     slot="header"
     position="fixed"
     shape="bar"
+    variant="solid"
+    size="lg"
     showCta={false}
-    maxWidth="8xl"
+    showScrollProgress
+    maxWidth="7xl"
+    languageAlternates={languageAlternates}
   />
-  <!-- FireStone: [Update Header maxWidth] -->
 
-  <div class="min-h-screen">
+  <div class="min-h-screen pt-16">
   <!-- Article Hero -->
   <ArticleHero
     title={title}
@@ -150,8 +174,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <article class="pt-8 pb-[var(--space-section-md)]">
     <div class:list={[
-      // FireStone: [Update main article wrapper to 8xl]
-      'mx-auto px-6 max-w-8xl',
+      'mx-auto px-6 max-w-7xl',
       sidebarActive && (sidebarOnLeft
         ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
         : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
@@ -167,13 +190,12 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
         </aside>
       )}
 
-      <div class:list={['min-w-0 max-w-8xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
+      <div class:list={['min-w-0 max-w-4xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
+      <!-- Breadcrumbs -->
+      <Breadcrumbs items={breadcrumbs} class="mb-8" />
 
       {inlineActive && (
-        <div class:list={[
-          'mb-10 rounded-xl border border-border bg-background-secondary p-5',
-          tocLayout === 'auto' && 'xl:hidden',
-        ]}>
+        <div class="mb-10 rounded-xl border border-border bg-background-secondary p-5">
           <TableOfContents
             headings={localizedHeadings}
             maxDepth={tocConfig?.maxDepth ?? 3}
@@ -190,18 +212,17 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
         <slot />
       </div>
 
-      <!-- Article Footer -->
-      <footer class="border-border mt-12 border-t pt-8" data-reveal>
-        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <!-- Back link -->
-          <Button href="/blog" variant="secondary" size="sm">
-            <Icon name="chevron-left" size="sm" />
-            返回「博客」
-          </Button>
+      <!-- Share buttons (centered, above the divider) -->
+      <div class="mt-12 flex justify-center" data-reveal>
+        <ShareButtons title={title} url={fullUrl} />
+      </div>
 
-          <!-- Share buttons -->
-          <ShareButtons title={title} url={fullUrl} />
-        </div>
+      <!-- Article Footer -->
+      <footer class="border-border mt-12 border-t pt-8 flex justify-center" data-reveal>
+        <Button href="/blog" variant="secondary" size="sm">
+          <Icon name="arrow-left" size="sm" />
+          Back to Blog
+        </Button>
       </footer>
       </div>
 
@@ -224,13 +245,82 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <!-- Related Posts -->
   {tags.length > 0 && (
-    <div class="mx-auto max-w-8xl px-6" data-reveal>
+    <div class="mx-auto max-w-7xl px-6" data-reveal>
       <RelatedPosts currentSlug={slug} tags={tags} locale={locale} maxPosts={3} />
     </div>
   )}
 
-  <Footer 
-    slot="footer" 
-    breadcrumbs={breadcrumbs} 
-  />
+  <!-- Follow Along -->
+  <!-- Mobile: standard CTA, no LetterGlitch -->
+  <CTA variant="default" size="md" maxWidth="lg" glow={false} data-reveal class="glitch:hidden bg-background-secondary">
+    <h2 slot="heading" class="!text-4xl">Follow along</h2>
+    <p slot="description" class="!text-lg text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/rss.xml"
+        class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
+      >
+        <Icon name="rss" size="sm" />
+        RSS Feed
+      </a>
+      {socialLinks.map((link) => (
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
+        >
+          <Icon name={link.icon} size="sm" />
+          {link.label}
+        </a>
+      ))}
+      <a
+        href={`mailto:${siteConfig.email}`}
+        class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
+      >
+        <Icon name="mail" size="sm" />
+        Email
+      </a>
+    </div>
+  </CTA>
+
+  <!-- Desktop: contained LetterGlitch band with glass card -->
+  <section class="hidden glitch:block relative z-10 py-[var(--space-section-md)] bg-background-secondary">
+    <LetterGlitchBand maxWidth="7xl">
+      <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">Follow along</h2>
+      <p class="text-lg text-foreground-muted mb-8 text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/rss.xml"
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
+        >
+          <Icon name="rss" size="sm" />
+          RSS Feed
+        </a>
+        {socialLinks.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
+          >
+            <Icon name={link.icon} size="sm" />
+            {link.label}
+          </a>
+        ))}
+        <a
+          href={`mailto:${siteConfig.email}`}
+          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
+        >
+          <Icon name="mail" size="sm" />
+          Email
+        </a>
+      </div>
+    </LetterGlitchBand>
+  </section>
+  </div>
+
+  <Footer slot="footer" layout="simple" background="default" maxWidth="7xl" />
 </BaseLayout>

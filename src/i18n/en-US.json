@@ -4,7 +4,14 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "selectLanguage": "Select language",
-    "currentLanguage": "Current language"
+    "currentLanguage": "Current language",
+    "items": {
+      "services": "Services",
+      "projects": "Projects",
+      "blog": "Blog",
+      "about": "About",
+      "contact": "Contact"
+    }
   },
   "common": {
     "readMore": "Read more",
@@ -28,7 +35,14 @@
     "draft": "Draft",
     "noPostsFound": "No posts found.",
     "tableOfContents": "Table of contents",
-    "shareThisPost": "Share this post"
+    "shareThisPost": "Share this post",
+    "relatedPosts": "Related Posts",
+    "share": "Share:",
+    "shareOn": "Share on {platform}",
+    "copyLink": "Copy link"
+  },
+  "comments": {
+    "title": "Comments"
   },
   "projects": {
     "title": "Projects",
@@ -39,22 +53,35 @@
   },
   "pagination": {
     "page": "Page {current} of {total}",
+    "label": "Pagination",
     "previousPage": "Previous page",
     "nextPage": "Next page"
   },
   "errors": {
     "pageNotFound": "Page not found",
     "pageNotFoundMessage": "The page you're looking for doesn't exist or has moved.",
-    "goHome": "Go to homepage"
+    "goHome": "Go to homepage",
+    "badge": "404 — page not found",
+    "titleLead": "Page not",
+    "titleHighlight": "found.",
+    "description": "This page has moved, been removed, or never existed in the first place. Let's get you back on track.",
+    "backHome": "Back to home",
+    "browseBlog": "Browse the blog",
+    "tryInstead": "Try one of these instead",
+    "projectsDesc": "Selected work and case studies.",
+    "blogDesc": "Notes on design, code, and the craft.",
+    "contactTitle": "Contact",
+    "contactDesc": "Start a conversation about your project."
   },
   "newsletter": {
     "heading": "Subscribe to the newsletter",
     "description": "Get the latest posts in your inbox.",
-    "emailPlaceholder": "your@email.com",
+    "emailPlaceholder": "Enter your email",
     "subscribe": "Subscribe",
     "subscribing": "Subscribing…",
-    "success": "Thanks! Please check your inbox to confirm.",
-    "error": "Something went wrong. Please try again."
+    "success": "Thanks for subscribing!",
+    "genericError": "Something went wrong",
+    "error": "Subscription failed. Please try again."
   },
   "contact": {
     "heading": "Get in touch",
@@ -64,8 +91,9 @@
     "message": "Message",
     "send": "Send message",
     "sending": "Sending…",
-    "success": "Thanks! Your message has been sent.",
-    "error": "Something went wrong. Please try again."
+    "success": "Message sent successfully!",
+    "genericError": "Something went wrong",
+    "error": "Failed to send message. Please try again."
   },
   "theme": {
     "selectTheme": "Select theme",
@@ -75,7 +103,8 @@
     "toggleTheme": "Toggle theme"
   },
   "footer": {
-    "copyright": "© {year} {name}. All rights reserved.",
-    "builtWith": "Built with Astro Rocket"
+    "copyright": "© {year} {siteName}. All rights reserved.",
+    "builtWith": "Built with Astro Rocket",
+    "followOn": "Follow us on {platform}"
   }
 }

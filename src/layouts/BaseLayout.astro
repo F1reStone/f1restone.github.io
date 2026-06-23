@@ -8,7 +8,7 @@ import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
 import { createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
 import type { Thing, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
-import { getLocaleFromPath, getLocales, defaultLocale } from '@/i18n';
+import { t, getLocaleFromPath, getLocales, defaultLocale } from '@/i18n';
 
 interface Props {
   title?: string;
@@ -28,6 +28,8 @@ interface Props {
   includeProfessionalServiceSchema?: boolean;
   extraSchemas?: WithContext<Thing>[];
   eagerReveal?: boolean;
+  /** Verified locale alternates for this page, forwarded to SEO for hreflang. */
+  localeAlternates?: { locale: string; url: string }[];
 }
 
 const {
@@ -43,6 +45,7 @@ const {
   includeProfessionalServiceSchema = false,
   extraSchemas = [],
   eagerReveal = false,
+  localeAlternates,
 } = Astro.props;
 
 // Build JSON-LD schemas
@@ -75,7 +78,16 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 
     <!-- Preload Giscus -->
     {siteConfig.articleFeatures?.comments?.enabled && (
-      <link rel="preconnect" href="https://giscus.app" crossorigin />
+      <link
+        rel="preconnect"
+        href={
+          siteConfig.articleFeatures?.comments?.provider === 'cusdis'
+            ? (siteConfig.articleFeatures?.comments?.cusdis?.host ??
+              'https://cusdis.com')
+            : 'https://giscus.app'
+        }
+        crossorigin
+      />
     )}
 
     <!-- FireStone: Preload Google Fonts -->
@@ -105,6 +117,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
       article={article}
       noindex={noindex}
       nofollow={nofollow}
+      localeAlternates={localeAlternates}
     />
 
     <!-- RSS Feed -->
@@ -310,7 +323,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
       href="#main-content"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
     >
-      Skip to content
+      {t('nav.skipToContent', locale)}
     </a>
 
     <slot name="header" />
@@ -328,7 +341,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <!-- Back to top button -->
     <button
       id="back-to-top"
-      aria-label="Back to top"
+      aria-label={t('common.backToTop', locale)}
       class="fixed bottom-6 right-6 z-50 h-12 w-12"
       style="opacity:0;translate:0 2rem;pointer-events:none"
     >

@@ -3,11 +3,11 @@
 </p>
 
 <p align="center">
-  <strong>Astro Rocket</strong> — A production-ready Astro 6 starter theme. Change the text, launch your site.
+  <strong>Astro Rocket</strong> — A production-ready Astro 7 starter theme. Change the text, launch your site.
 </p>
 
 <p align="center">
-  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-6.0-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.0-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
   <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.0-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e" alt="License" /></a>
@@ -30,7 +30,7 @@
 
 Astro Rocket is a **launch-ready starter theme** for web designers, developers, bloggers, and anyone who needs a portfolio website. Every page is already built and styled — you change the text and content, and your site is ready to go live.
 
-It ships with a full blog, a complete component library, a built-in SEO layer, dark mode, a contact form, and 12 colour themes you can switch with one click. It's built on Astro 6 and Tailwind CSS v4.
+It ships with a full blog, a complete component library, a built-in SEO layer, dark mode, a contact form, and 12 colour themes you can switch with one click. It's built on Astro 7 and Tailwind CSS v4.
 
 **[Live demo → astrorocket.dev](https://astrorocket.dev)** · **[Built by Hans Martens → hansmartens.dev](https://hansmartens.dev)**
 
@@ -62,7 +62,7 @@ The following changes were made to the free Velocity theme to create Astro Rocke
 
 | Feature | Description |
 |---------|-------------|
-| **Astro 6** | Latest version with Content Layer API, security features, and performance optimizations |
+| **Astro 7** | Latest version with the Rust compiler, Vite 8, Content Layer API, and performance optimizations |
 | **Tailwind CSS v4** | CSS-first configuration with OKLCH color system and fluid typography |
 | **12 Colour Themes** | All 12 colour swatches are shown in the header dropdown — click one and the logo badge, blog image gradients, and every brand color update live instantly. No file edits, no rebuilds. The selector can be removed from the header once you've settled on a color. |
 | **Scroll Progress Bar** | A thin 2px brand-coloured bar on the header edge that fills as you scroll. Enabled on the homepage (above the floating header), blog index, and post pages (below the solid header). Controlled via `showScrollProgress` and `scrollProgressPosition` props on the Header component. |
@@ -78,9 +78,9 @@ The following changes were made to the free Velocity theme to create Astro Rocke
 | **Content Collections** | Type-safe blog, pages, authors, and FAQs with Zod validation |
 | **API Routes** | Contact form and newsletter endpoints with validation |
 | **Table of Contents** | Optional table of contents on blog posts, auto-generated from MDX headings, with three layouts: inline card, sticky desktop sidebar, or `auto` (sidebar on `xl+`, inline card below). Includes `IntersectionObserver` scroll-spy. Off by default; per-post `toc: false` in frontmatter hides on a single post |
-| **Blog Comments (Giscus)** | Optional comments at the bottom of blog posts, powered by [Giscus](https://giscus.app) and GitHub Discussions. **Lazy-loaded** so readers who don't scroll to comments pay zero network cost; reserved `min-height` prevents CLS. Off by default; per-post `comments: false` in frontmatter hides on a single post |
+| **Blog Comments (Giscus / Cusdis)** | Optional comments at the bottom of blog posts via a pluggable provider — [Giscus](https://giscus.app) (GitHub Discussions) or the privacy-friendly [Cusdis](https://cusdis.com) (hosted or self-hosted). Choose with `comments.provider`. **Lazy-loaded** so readers who don't scroll to comments pay zero network cost; reserved `min-height` prevents CLS. Theme follows the site's light/dark mode. Off by default; per-post `comments: false` in frontmatter hides on a single post |
 | **Durable Internal Links** | Link between posts by a stable canonical id with `<PostLink uid="…">` instead of a slug, so renaming a post never breaks inbound links. Ids resolve to the correct locale-aware URL at build time, and a broken reference **fails the build** rather than shipping a 404. Add an optional `uid` to a post's frontmatter to make it linkable |
-| **Build-Time Content Validation** | The build fails with a clear error if two pieces of content resolve to the same URL within a locale (duplicate slugs across posts and pages), or if two posts claim the same canonical id — catching silent content mistakes before they ship |
+| **Build-Time Content Validation** | The build fails with a clear error if two pieces of content resolve to the same URL within a locale (duplicate slugs across posts, projects, and pages), or if two posts claim the same canonical id — catching silent content mistakes before they ship |
 | **Independent Footer Menu** | Header and footer navigation configured separately in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`) — add a Privacy or Imprint link to the footer without cluttering the main nav |
 | **Static Search (Pagefind)** | Site-wide search in the header — a ⌘K / Ctrl+K modal powered by a [Pagefind](https://pagefind.app) index generated at build time. Zero JS until the modal opens; works on every deploy target. Hide it with `showSearch={false}` on the Header |
 | **Project Galleries** | Multiple images per project: a `gallery` array in frontmatter swaps the hero image for a swipeable carousel, and the `<ProjectGallery>` MDX component renders an in-body carousel with a click-to-zoom lightbox. See [Project Galleries](#project-galleries) |
@@ -145,18 +145,42 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 <a href="/blog">{t('common.readMore', locale)}</a>
 ```
 
-To add another language, drop a new `src/i18n/<code>.json` mirroring the structure of `en.json` and import it in `src/i18n/index.ts`. Missing keys fall back to the default locale's value, then to the key itself — so partial translations are safe.
+To add another language, drop a new `src/i18n/<code>.json` mirroring the structure of `en.json` — it's loaded automatically, with no edits to `src/i18n/index.ts`. Just add the locale code to `locales` in `src/config/i18n.config.ts` so it gets served. Missing keys fall back to the default locale's value, then to the key itself — so partial translations are safe.
+
+#### Navigation, legal links & the logo
+
+You write each navigation entry once in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`); the Header and Footer localize it for the active locale automatically, so the nav and logo keep visitors inside their locale:
+
+- **Paths** are locale-prefixed via `localizedPath` — `/blog` stays `/blog` on the default locale and becomes `/<locale>/blog` elsewhere. External, `mailto:`/`tel:`, and `#anchor` hrefs are left untouched, and the logo points at the locale's home (`/` or `/<locale>`).
+- **Labels** are translated when an item carries a `labelKey` pointing at a string in `src/i18n/<locale>.json` (the bundled items use `nav.items.*`). Without a `labelKey`, the literal `label` is used as-is.
+
+For the rare case where a locale needs a structurally different label or path (e.g. a localized slug like `/over-ons`), add a per-locale `locales` override to the item:
+
+```ts
+{ label: 'About', href: '/about', order: 4, labelKey: 'nav.items.about',
+  locales: { nl: { href: '/over-ons' } } },
+```
+
+With i18n off, none of this runs and the nav renders exactly as written.
 
 #### Content collections
 
-Blog posts and pages already carry a `locale` field on their schema (`src/content.config.ts`). Organize translated content by locale folder:
+Blog posts, projects, and pages already carry a `locale` field on their schema (`src/content.config.ts`), validated against the `locales` you list in `src/config/i18n.config.ts` — register a locale there and the content schema accepts it automatically, with no enum to edit. Organize translated content by locale folder:
 
 ```
 src/content/blog/en/hello-world.mdx
 src/content/blog/nl/hallo-wereld.mdx
+src/content/projects/en/studio-portfolio.mdx
+src/content/projects/nl/studio-portfolio.mdx
 ```
 
 > **Switching the default locale.** Changing `defaultLocale` in `i18n.config.ts` is a routing label — it controls which locale serves at the site root, not which content folder gets read. To make a different language the default, also rename the matching content folder (e.g. `src/content/blog/en/` → `src/content/blog/zh-CN/`) so the root URL resolves to the right posts. The locale code in `i18n.config.ts` and the folder name under `src/content/blog/` must match.
+
+> **Localized blog routing is automatic.** Enable a locale in `i18n.config.ts`, drop posts under its folder (e.g. `src/content/blog/nl/`), and the whole blog is served at that locale's prefix with no extra wiring: the index (`/nl/blog`), individual posts (`/nl/blog/<slug>`), pagination (`/nl/blog/page/N`) and tag archives (`/nl/blog/tag/<tag>`) are all generated, and every in-locale link — cards, tag chips, pagination, breadcrumbs, related posts — stays inside that locale. The `defaultLocale` keeps its prefix-free URLs (`/blog`). A locale with no posts yet still gets a `/<locale>/blog` index that shows the empty state, so the `LanguageSwitcher` never lands on a 404. You do **not** create `src/pages/<locale>/blog*` files yourself — remove any you added previously, as they would collide with the generated routes. (Static pages like `/nl/about` are still yours to create, as shown above.)
+>
+> On blog posts, the `LanguageSwitcher` and the `hreflang` tags link to each translation's **real** URL — paired by canonical `uid` when the posts declare one (so a translation can live at a different slug, `/blog/hello` ↔ `/nl/blog/hallo`), otherwise by an identical slug. A locale with no translation of the current post is dropped from `hreflang`, and the switcher falls back to that locale's blog index instead of a dead URL. (Other page types resolve alternates by swapping the locale segment, which is correct when slugs match across locales.)
+>
+> **Projects are localized the same way.** Drop translations under `src/content/projects/<locale>/` and the whole projects section is served at that locale's prefix — index (`/nl/projects`), each project (`/nl/projects/<slug>`), pagination (`/nl/projects/page/N`), and tag archives (`/nl/projects/tag/<tag>`), with every in-locale link, `hreflang`, and the `LanguageSwitcher` resolving inside that locale. Projects share one slug across locales: keep the same filename in each locale folder (e.g. `en/studio-portfolio.mdx` ↔ `nl/studio-portfolio.mdx`) and the theme pairs them automatically. As with the blog, you do **not** create `src/pages/<locale>/projects*` files yourself.
 
 #### Performance
 
@@ -172,7 +196,7 @@ The whole system is build-time. No client-side routing, no framework hydration f
 
 ### Prerequisites
 
-- **Node.js 22.12.0+** (required for Astro 6)
+- **Node.js 22.12.0+** (required for Astro 7)
 - **pnpm 9.x** (recommended) or npm/yarn
 
 ### Installation
@@ -606,7 +630,7 @@ To link from one post to another, use `<PostLink uid="target-post-id">link text<
 
 ### Project Galleries
 
-Projects live in `src/content/projects/` as one MDX file per project, and there are two ways to show more than one image.
+Projects live in `src/content/projects/<locale>/` (the bundled ones in `src/content/projects/en/`) as one MDX file per project, and there are two ways to show more than one image.
 
 **1. Hero carousel (frontmatter).** Add a `gallery` array and the project hero swaps the single `image` for a swipeable carousel (touch swipe, prev/next arrows, dot indicators, keyboard navigation). The first slide is the lead image:
 
@@ -889,6 +913,12 @@ Contributions are welcome!
 5. Open a Pull Request
 
 Please ensure your code passes linting (`pnpm lint`) and type checking (`pnpm check`) before submitting.
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 

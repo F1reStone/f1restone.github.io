@@ -1,7 +1,7 @@
 {
   "name": "astro-rocket",
-  "version": "1.6.0",
-  "description": "Astro Rocket — A production-ready Astro 6 theme built on Tailwind CSS v4",
+  "version": "2.0.0",
+  "description": "Astro Rocket — A production-ready Astro 7 theme built on Tailwind CSS v4",
   "type": "module",
   "author": "Hans Martens",
   "license": "MIT",
@@ -45,6 +45,9 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^11.0.0",
     "@expressive-code/plugin-frames": "^0.43.1",
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
+    "@fontsource-variable/manrope": "^5.2.8",
+    "@fontsource-variable/outfit": "^5.2.8",
     "@iconify-json/lucide": "^1.2.114",
     "@iconify-json/simple-icons": "^1.2.87",
     "@iconify/react": "^6.0.2",
@@ -54,7 +57,9 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expressive-code": "^0.43.1",
+    "fontkit": "^2.0.4",
     "lucide-react": "^1.21.0",
+    "png-to-ico": "^3.0.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "resend": "^6.14.0",
@@ -83,6 +88,12 @@
     "typescript-eslint": "^8.62.0",
     "vitest": "^3.2.6",
     "zod": "^4.4.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   },
   "engines": {
     "node": ">=22.12.0"

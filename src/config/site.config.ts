@@ -20,6 +20,15 @@ export interface SiteConfig {
     country: string;
   };
   socialLinks: string[];
+  /**
+   * Header options. Set `showSocialLinks: true` to render an icon link in the
+   * top-right for each entry in `socialLinks` (GitHub, X, etc. — the icon is
+   * inferred from the URL). Off by default; an explicit `<Header
+   * showSocialLinks>` prop still overrides this per-usage.
+   */
+  header?: {
+    showSocialLinks?: boolean;
+  };
   twitter?: {
     site: string;
     creator: string;
@@ -35,6 +44,20 @@ export interface SiteConfig {
    * and you don't want the brand color overlay applied on top of them.
    */
   blogImageOverlay?: boolean;
+  /**
+   * Global, decorative visual effects (purely additive — the site works
+   * fully without them).
+   */
+  effects?: {
+    /**
+     * Cursor trail on desktop (pointer dot + lagging ring + comet particles).
+     * `true` by default; set to `false` to turn it off site-wide as a
+     * visual-comfort / accessibility preference. The trail is already skipped
+     * automatically under `prefers-reduced-motion` and on coarse/touch
+     * pointers, regardless of this flag.
+     */
+    cursorTrail?: boolean;
+  };
   /**
    * Article features — opt-in modules for blog posts.
    * Each is OFF by default so the theme stays as light as it is today
@@ -65,12 +88,12 @@ export interface SiteConfig {
       /** Deepest heading level to include (2 = H2 only, 3 = H2+H3, etc.) */
       maxDepth?: 2 | 3 | 4;
     };
-    /** Comments at the bottom of blog posts (powered by Giscus) */
+    /** Comments at the bottom of blog posts (powered by Giscus or Cusdis) */
     comments?: {
       /** Master switch — set to true to enable site-wide */
       enabled: boolean;
-      /** Comments provider. Currently only 'giscus' is supported. */
-      provider?: 'giscus';
+      /** Comments provider — 'giscus' (GitHub Discussions) or 'cusdis'. */
+      provider?: 'giscus' | 'cusdis';
       /** Giscus configuration. Get values from https://giscus.app */
       giscus?: {
         repo: `${string}/${string}`;
@@ -82,10 +105,64 @@ export interface SiteConfig {
         reactionsEnabled?: boolean;
         emitMetadata?: boolean;
         inputPosition?: 'top' | 'bottom';
+        /**
+         * Giscus theme. Leave empty (the default) to follow the site's own
+         * light/dark mode — resolved on the client and kept in sync as the
+         * visitor toggles. Set a specific Giscus theme name (e.g.
+         * 'dark_dimmed', 'preferred_color_scheme') to override.
+         */
         theme?: string;
+        /**
+         * Giscus language. Leave empty (the default) to follow the site's
+         * current locale. Set a specific Giscus lang code (e.g. 'en', 'nl')
+         * to override.
+         */
+        lang?: string;
+      };
+      /** Cusdis configuration. Get your App ID from your Cusdis dashboard. */
+      cusdis?: {
+        /** Cusdis App ID (from the Cusdis dashboard's "Embed Code"). */
+        appId: string;
+        /**
+         * Cusdis instance host. Defaults to the hosted service
+         * 'https://cusdis.com'; set this to your own URL when self-hosting.
+         */
+        host?: string;
+        /**
+         * Theme. Leave empty (the default) to follow the site's own light/dark
+         * mode — resolved on the client and re-rendered when the visitor
+         * toggles (Cusdis has no live theme API, so the thread briefly reloads
+         * on toggle). Use 'auto' to follow the OS preference instead, or
+         * 'light' / 'dark' for a fixed theme.
+         */
+        theme?: '' | 'light' | 'dark' | 'auto';
+        /**
+         * Language. Leave empty (the default) to follow the site's current
+         * locale. Set a Cusdis language code to override. Availability depends
+         * on Cusdis's language packs; an unknown code falls back to English.
+         */
         lang?: string;
       };
     };
+  };
+  /**
+   * Blog listing configuration. Counts that were previously hard-coded across
+   * `lib/blog.ts` and the route files live here so they're tunable in one
+   * place. (The existing `blogImageOverlay` / `articleFeatures` keys are left
+   * where they are for backwards compatibility and may fold in at a major.)
+   */
+  blog?: {
+    /** Regular (non-featured) posts shown per blog index page. Default 12. */
+    postsPerPage?: number;
+    /** How many of the most-used tags to surface in the blog tag cloud. Default 10. */
+    tagCloudLimit?: number;
+  };
+  /** Projects listing configuration. */
+  projects?: {
+    /** Projects shown per page on the projects listing. Default 12. */
+    perPage?: number;
+    /** How many of the most-used tags to surface in the projects tag cloud. Default 10. */
+    tagCloudLimit?: number;
   };
   /**
    * Internationalization (i18n) — see `src/config/i18n.config.ts`.
@@ -142,6 +219,10 @@ const siteConfig: SiteConfig = {
     'https://www.youtube.com/@FSFireStone',
     'https://x.com/FSFireStone',
   ],
+  header: {
+    // Flip to `true` to show the social icons (incl. GitHub) in the header.
+    showSocialLinks: false,
+  },
   twitter: {
     site: 'https://x.com/FSFireStone',
     creator: '@FSFireStone',
@@ -152,6 +233,9 @@ const siteConfig: SiteConfig = {
   },
   authorImage: '/avatar.svg',
   blogImageOverlay: true,
+  effects: {
+    cursorTrail: true,
+  },
   articleFeatures: {
     toc: {
       enabled: true,
@@ -176,7 +260,25 @@ const siteConfig: SiteConfig = {
         theme: 'preferred_color_scheme',
         lang: 'zh-CN',
       },
+      // Used when provider is 'cusdis'. Get your App ID from the Cusdis
+      // dashboard (Embed Code); `host` defaults to the hosted service.
+      cusdis: {
+        appId: '',
+        host: 'https://cusdis.com',
+        // Empty → follow the site's light/dark mode and current locale.
+        theme: '',
+        lang: '',
+      },
+      },
     },
+  },
+  blog: {
+    postsPerPage: 12,
+    tagCloudLimit: 10,
+  },
+  projects: {
+    perPage: 12,
+    tagCloudLimit: 10,
   },
   i18n: i18nConfig,
   branding: {

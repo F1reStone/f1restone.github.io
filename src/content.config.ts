@@ -1,6 +1,18 @@
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
+import i18nConfig from './config/i18n.config';
+
+// Locale field shared across content collections. Derived from your i18n
+// config (src/config/i18n.config.ts) rather than a hard-coded list, so adding
+// a locale there is all it takes — every collection schema accepts it with no
+// further edits.
+const localeSchema = z
+  .string()
+  .refine((value) => i18nConfig.locales.includes(value), {
+    message: `locale must be one of the configured i18n locales: ${i18nConfig.locales.join(', ')}`,
+  })
+  .default(i18nConfig.defaultLocale);
 
 // Blog collection with Content Layer API
 const blog = defineCollection({
@@ -30,7 +42,7 @@ const blog = defineCollection({
         .optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
-      locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
+      locale: localeSchema,
       /** Optional FAQs — when set, emit FAQ JSON-LD alongside the BlogPosting schema. */
       faqs: z
         .array(
@@ -56,7 +68,7 @@ const pages = defineCollection({
     description: z.string(),
     updatedAt: z.coerce.date().optional(),
     draft: z.boolean().optional(),
-    locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
+    locale: localeSchema,
   }),
 });
 
@@ -86,7 +98,7 @@ const faqs = defineCollection({
     answer: z.string(),
     category: z.string().optional(),
     order: z.number().default(0),
-    locale: z.enum(['zh-CN', 'zh-TW', 'en-US']).default('zh-CN'),
+    locale: localeSchema,
   }),
 });
 
@@ -154,6 +166,7 @@ const projects = defineCollection({
        * light/dark mode adaptation (same approach as the main site Logo).
        */
       logo: image().optional(),
+      locale: localeSchema,
     }),
 });
 

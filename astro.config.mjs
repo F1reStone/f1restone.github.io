@@ -76,6 +76,11 @@ export default defineConfig({
   base: '/',// FireStone: Adapt for GitHub Pages deployment.
   ...(astroI18nOptions ? { i18n: astroI18nOptions } : {}),
 
+  // Astro 7 changed the default to 'jsx', which strips whitespace between
+  // inline elements (React-style). Pin to `true` to keep this theme's v6
+  // rendering — significant whitespace between inline tags is preserved.
+  compressHTML: true,
+
   build: {
     inlineStylesheets: 'always',
   },

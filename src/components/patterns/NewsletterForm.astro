@@ -2,6 +2,7 @@
 import Input from '@/components/ui/form/Input/Input.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { cn } from '@/lib/cn';
+import { t, getLocaleFromPath } from '@/i18n';
 
 interface Props {
   action?: string;
@@ -11,11 +12,13 @@ interface Props {
   class?: string;
 }
 
+const locale = getLocaleFromPath(Astro.url.pathname);
+
 const {
   action = '/api/newsletter',
-  placeholder = 'Enter your email',
-  buttonText = 'Subscribe',
-  successMessage = 'Thanks for subscribing!',
+  placeholder = t('newsletter.emailPlaceholder', locale),
+  buttonText = t('newsletter.subscribe', locale),
+  successMessage = t('newsletter.success', locale),
   class: className,
 } = Astro.props;
 ---
@@ -25,6 +28,9 @@ const {
   action={action}
   method="POST"
   data-success-message={successMessage}
+  data-subscribing={t('newsletter.subscribing', locale)}
+  data-generic-error={t('newsletter.genericError', locale)}
+  data-error-message={t('newsletter.error', locale)}
 >
   <div class="flex flex-col sm:flex-row gap-3">
     <div class="flex-1">
@@ -61,7 +67,7 @@ const {
         e.preventDefault();
 
         button.disabled = true;
-        button.textContent = 'Subscribing...';
+        button.textContent = form.dataset.subscribing || 'Subscribing…';
         message.classList.add('hidden');
 
         try {
@@ -78,11 +84,11 @@ const {
             message.className = 'newsletter-message mt-3 text-sm text-success';
             form.reset();
           } else {
-            message.textContent = data.error || 'Something went wrong';
+            message.textContent = data.error || form.dataset.genericError || 'Something went wrong';
             message.className = 'newsletter-message mt-3 text-sm text-destructive';
           }
         } catch {
-          message.textContent = 'Subscription failed. Please try again.';
+          message.textContent = form.dataset.errorMessage || 'Subscription failed. Please try again.';
           message.className = 'newsletter-message mt-3 text-sm text-destructive';
         } finally {
           button.disabled = false;

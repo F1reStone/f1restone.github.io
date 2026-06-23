@@ -1,5 +1,3 @@
-import enUS from './en-US.json';
-import zhCN from './zh-CN.json';
 import i18nConfig from '../config/i18n.config';
 
 export { i18nConfig };
@@ -7,12 +5,22 @@ export type { I18nConfig } from '../config/i18n.config';
 
 export type Locale = string;
 
-export type Dictionary = typeof enUS;
+// Auto-load every locale dictionary in this folder. Adding a new language is
+// just dropping a `src/i18n/<code>.json` file — no import or registration
+// needed here. (The locale must still be listed in `i18n.config.ts` to be
+// served.) The key is derived from the filename: `./zh-CN.json` → `zh-CN`.
+const modules = import.meta.glob<{ default: Record<string, unknown> }>('./*.json', { eager: true });
 
-const dictionaries: Record<string, Dictionary> = {
-  'en-US': enUS as Dictionary,
-  'zh-CN': zhCN as Dictionary,
-};
+const dictionaries: Record<string, Record<string, unknown>> = Object.fromEntries(
+  Object.entries(modules).map(([filePath, mod]) => {
+    const locale = filePath.slice(filePath.lastIndexOf('/') + 1).replace(/\.json$/, '');
+    return [locale, mod.default];
+  }),
+);
+
+// `en-US.json` is the canonical dictionary every other locale mirrors, so it
+// doubles as the type anchor for all dictionaries.
+export type Dictionary = typeof import('./en-US.json');
 
 export const defaultLocale: Locale = i18nConfig.defaultLocale;
 
