@@ -24,7 +24,7 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { ImageMetadata } from 'astro';
 import { cn } from '@/lib/cn';
-import { getNavItems, type NavItem as NavConfigItem } from '@/config/nav.config';
+import { getNavItems, type ResolvedNavItem } from '@/config/nav.config';
 import { headerVariants, headerInnerVariants } from './header.variants';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
@@ -90,6 +90,8 @@ interface Props extends HTMLAttributes<'header'> {
   /** Optional link for the secondary logo. Defaults to no link (plain image). */
   secondaryLogoHref?: string;
   showLanguageSwitcher?: boolean;
+  /** Optional map of `locale -> URL` for "same page, other language" links. Passed to LanguageSwitcher. */
+  languageAlternates?: Record<string, string>;
   showSocialLinks?: boolean;
   showScrollProgress?: boolean;
   scrollProgressPosition?: 'top' | 'bottom';
@@ -121,6 +123,7 @@ const {
   showMobileMenu = true,
   showSocialLinks = true,
   showLanguageSwitcher = i18nIsEnabled(),
+  languageAlternates,
   showActiveState = true,
   showScrollProgress = false,
   scrollProgressPosition = 'bottom',
@@ -156,7 +159,7 @@ const maxWidthClass = {
 const effectiveShowScrollProgress = showScrollProgress || (isFloating && !autoHide);
 const isInvert = colorScheme === 'invert';
 
-const defaultNav = getNavItems().map((item: NavConfigItem) => ({
+const defaultNav = getNavItems().map((item: ResolvedNavItem) => ({
   label: item.label,
   href: item.href,
 }));
@@ -391,7 +394,7 @@ const buttonId = `${menuId}-button`;
 
             {showLanguageSwitcher && (
               <div class="hidden lg:flex">
-                <LanguageSwitcher class={isFloating ? 'hdr-invert-text' : undefined} />
+                <LanguageSwitcher class={isFloating ? 'hdr-invert-text' : undefined} alternates={languageAlternates} />
               </div>
             )}
 
@@ -588,7 +591,7 @@ const buttonId = `${menuId}-button`;
                   style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0)}`}
                 >
                   <span class="text-sm text-foreground-muted">语言</span>
-                  <LanguageSwitcher />
+                  <LanguageSwitcher alternates={languageAlternates} />
                 </div>
               </section>
             )}

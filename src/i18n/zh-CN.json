@@ -28,7 +28,11 @@
     "draft": "草稿",
     "noPostsFound": "未找到相关文章。",
     "tableOfContents": "本页目录",
-    "shareThisPost": "分享此文章"
+    "shareThisPost": "分享此文章",
+    "share": "分享到：",
+    "shareOn": "分享到 {platform}",
+    "copyLink": "复制链接",
+    "relatedPosts": "相关文章"
   },
   "projects": {
     "title": "项目",
@@ -76,6 +80,7 @@
   },
   "footer": {
     "copyright": "© {year} {name}. 保留所有权利。",
-    "builtWith": "基于 Astro Rocket 构建"
+    "builtWith": "基于 Astro Rocket 构建",
+    "followOn": "在以下平台关注"
   }
 }

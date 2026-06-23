@@ -33,7 +33,7 @@ export function stripLocalePrefix(id: string): string {
 }
 
 export function getPostSlug(postId: string, locale: string = defaultLocale): string {
-  return postId.replace(new RegExp(`^${locale}/`), '');
+  return postId.replace(new RegExp(`^${locale}/`, 'i'), '');
 }
 
 /**
@@ -73,7 +73,6 @@ export function getTagUrl(tag: string, locale: string = defaultLocale): string {
 export function getSecondaryLocales(): string[] {
   if (!isEnabled()) return [];
   return getLocales().filter((locale) => locale !== defaultLocale);
-}
 }
 
 /**

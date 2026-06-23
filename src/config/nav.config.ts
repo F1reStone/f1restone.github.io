@@ -89,7 +89,6 @@ export const footerNavItems: NavItem[] = [
   { label: 'FireStone AI', href: '/ai/', order: 3 },
   { label: '关于', href: '/about/', order: 4, labelKey: 'nav.items.about' },
 ];
-];
 
 export const legalLinks: LegalLink[] = [
   { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues/', icon: 'github' },
@@ -160,8 +159,9 @@ export function resolveNavItem(item: NavItem | LegalLink, locale: Locale): Resol
   const override = item.locales?.[locale];
   const label = override?.label ?? (item.labelKey ? t(item.labelKey, locale) : item.label);
   const rawHref = override?.href ?? item.href;
-  const href =
-    item.external || isExternalOrAnchorHref(rawHref) ? rawHref : localizedPath(rawHref, locale);
+  const href = rawHref
+    ? (item.external || isExternalOrAnchorHref(rawHref) ? rawHref : localizedPath(rawHref, locale))
+    : '#';
   return { label, href, external: item.external };
 }
 

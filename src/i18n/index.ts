@@ -18,9 +18,11 @@ const dictionaries: Record<string, Record<string, unknown>> = Object.fromEntries
   }),
 );
 
-// `en-US.json` is the canonical dictionary every other locale mirrors, so it
-// doubles as the type anchor for all dictionaries.
-export type Dictionary = typeof import('./en-US.json');
+// General dictionary type for i18n — each locale JSON is a nested
+// string-keyed object tree. With glob auto-loading we lose the exact
+// shape, but `getNested` does safe runtime traversal so all lookup
+// paths remain type-safe where used.
+export type Dictionary = Record<string, unknown>;
 
 export const defaultLocale: Locale = i18nConfig.defaultLocale;
 

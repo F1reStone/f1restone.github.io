@@ -24,6 +24,7 @@ import {
   getLegalLinks,
   getFooterLinkGroups, // FireStone: Import the new global getter
   type NavItem as NavConfigItem,
+  type ResolvedNavItem,
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
@@ -122,7 +123,7 @@ const maxWidthClass = {
 
 // Get navigation items — footer nav is configured independently from the
 // header in `nav.config.ts` (see `footerNavItems`).
-const defaultNav: NavItem[] = getFooterNavItems().map((item: NavConfigItem) => ({
+const defaultNav: NavItem[] = getFooterNavItems().map((item: ResolvedNavItem) => ({
   label: item.label,
   href: item.href,
   external: item.external,

@@ -1,8 +1,5 @@
 import { SITE_URL, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, REPOSITORY_ID, CATEGORY_ID } from 'astro:env/server';
-import i18nConfig, { type I18nConfig } from './i18n.config';
-
-export { i18nConfig };
-export type { I18nConfig };
+export type { I18nConfig } from './i18n.config';
 
 export interface SiteConfig {
   name: string;
@@ -165,12 +162,6 @@ export interface SiteConfig {
     tagCloudLimit?: number;
   };
   /**
-   * Internationalization (i18n) — see `src/config/i18n.config.ts`.
-   * Lives in a separate file so the i18n module can be imported by
-   * unit tests without pulling in `astro:env/server`.
-   */
-  i18n?: I18nConfig;
-  /**
    * Branding configuration
    * Logo files: Replace SVGs in src/assets/branding/
    * Favicon: Replace in public/favicon.svg
@@ -269,7 +260,6 @@ const siteConfig: SiteConfig = {
         theme: '',
         lang: '',
       },
-      },
     },
   },
   blog: {
@@ -280,7 +270,6 @@ const siteConfig: SiteConfig = {
     perPage: 12,
     tagCloudLimit: 10,
   },
-  i18n: i18nConfig,
   branding: {
     logo: {
       alt: 'FireStone',

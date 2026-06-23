@@ -241,18 +241,9 @@ const locale = getLocaleFromPath(Astro.url.pathname);
       })();
     </script>
 
-    <!-- Client-side view transitions are intentionally disabled. They composed
-         poorly with the theme's CSS keyframe animations (hero slide-up,
-         data-reveal fades) and produced a visible post-fade "aftershake" on
-         mobile. Each navigation now does a normal page load, so animations
-         run cleanly from frame 0 every time. -->
+    <!-- Client-side view transitions disabled: animations run cleanly from frame 0 on normal page loads. -->
 
-    <!-- Theme bootstrap (runs before body paint; no flash of wrong theme).
-         Implements a 3-state colour-mode contract:
-           localStorage.theme ∈ {'system','light','dark'}  (default 'system')
-           <html data-theme-mode="…">                      (mirrors saved mode)
-           <html class="dark">                              (resolved appearance)
-         When mode === 'system', <html>.dark tracks prefers-color-scheme live. -->
+    <!-- Theme bootstrap: localStorage.theme in {system, light, dark}. Default system. Resolves to dark class on html element. -->
     <script is:inline>
       (function () {
         //const COLOR_THEMES = ['orange', 'amber', 'lime', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'magenta'];
