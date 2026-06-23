@@ -191,7 +191,7 @@ const siteConfig: SiteConfig = {
   name: 'FireStone 火石',
   description:
     '兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。',
-  url: SITE_URL || 'https://f1restone.github.io',
+  url: SITE_URL || 'https://fire-stone.co/',
   ogImage: '/og-firestone.png',
   author: 'FireStone',
   email: 'fsfirestone@outlook.com',

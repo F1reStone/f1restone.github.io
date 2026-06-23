@@ -71,8 +71,8 @@ for (const [locale, texts] of Object.entries(expressiveCodeFrameTexts)) {
 export default defineConfig({
   output: 'static',
   //adapter: isNetlify ? netlify() : vercel(),
-  //site: process.env.SITE_URL || 'https://f1restone.github.io',
-  site: 'https://f1restone.github.io',
+  //site: process.env.SITE_URL || 'https://fire-stone.co/',
+  site: 'https://fire-stone.co/',
   base: '/',// FireStone: Adapt for GitHub Pages deployment.
   ...(astroI18nOptions ? { i18n: astroI18nOptions } : {}),
 

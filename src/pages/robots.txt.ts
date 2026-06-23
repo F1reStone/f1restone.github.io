@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = ({ site }) => {
-  const siteUrl = site?.toString() || 'https://f1restone.github.io/';
+  const siteUrl = site?.toString() || 'https://fire-stone.co/';
 
   const robotsTxt = `
   User-agent: *

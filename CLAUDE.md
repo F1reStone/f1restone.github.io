@@ -24,7 +24,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is **FireStone 火石** — a personal portfolio/tech blog/project showcase for a Chinese developer/designer. It's a fork of [Astro Rocket](https://github.com/hansmartensdev/astro-rocket) (1.6.0), heavily customized.
 
-- **URL**: `https://f1restone.github.io`
+- **URL**: `https://fire-stone.co/`
 - **Default locale**: `zh-CN`
 - **Deployment**: GitHub Pages (static output), no Vercel/Netlify adapter active
 - **Theme**: Custom `firestone` theme (`src/styles/themes/firestone.css`) — deep near-black dark mode with a purple-tinted brand scale (hue ~289°)

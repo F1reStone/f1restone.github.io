@@ -187,10 +187,20 @@ export function getFooterNavItems(locale: Locale = defaultLocale): ResolvedNavIt
 
 /**
  * Get configured legal links (Privacy, Terms, etc.), localized for `locale`.
+ * Preserves `icon` and `action` properties from the original LegalLink items
+ * so the Footer can render icons and wire up cookie-consent triggers.
  * Returned in declaration order.
  */
-export function getLegalLinks(locale: Locale = defaultLocale): ResolvedNavItem[] {
-  return legalLinks.map((item) => resolveNavItem(item, locale));
+export function getLegalLinks(locale: Locale = defaultLocale): LegalLink[] {
+  return legalLinks.map((item) => {
+    const resolved = resolveNavItem(item, locale);
+    return {
+      ...item,
+      label: resolved.label,
+      href: resolved.href !== '#' ? resolved.href : undefined,
+      external: resolved.external,
+    };
+  });
 }
 
 /**

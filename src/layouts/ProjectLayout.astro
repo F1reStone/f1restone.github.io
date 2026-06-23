@@ -57,35 +57,31 @@ const {
   meta = [],
   url,
   repo,
+  tags = [],
   image,
   imageAlt,
   gallery = [],
-  tags = [],
-  logo,
-  slug = '',
+  slug,
   related = [],
   headings = [],
   toc: tocOverride,
+  logo,
 } = Astro.props;
 
 const locale = getLocaleFromPath(Astro.url.pathname);
 
 // Prefer the project's own image; otherwise serve the per-project dynamic OG
-// image (see src/pages/og/projects/[slug].svg.ts). `slug` is the full
-// (locale-prefixed) project id, so strip the locale to match the OG route.
-const ogImage = image?.src || (slug ? getProjectOgPath(getProjectSlug(slug, locale)) : siteConfig.ogImage);
+// image (see src/pages/og/projects/[slug].svg.ts).
+const ogSlug = slug ? getProjectSlug(slug, locale) : '';
+const ogImage = image?.src || (ogSlug ? getProjectOgPath(ogSlug) : siteConfig.ogImage);
 
 // Mirror the blog TOC wiring — projects use the same site-wide config.
 const tocConfig = siteConfig.articleFeatures?.toc;
 const showToc = !!tocConfig?.enabled && tocOverride !== false;
 const tocLayout = tocConfig?.layout ?? 'auto';
 const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
-// Inline TOC is now opt-in: 'auto' shows only the desktop sidebar so the
-// mobile/landscape/tablet experience isn't dominated by a TOC card the
-// majority of visitors don't use. Posts that want the inline TOC visible
-// everywhere can set `toc.layout: 'inline'` in frontmatter.
 const inlineActive = showToc && tocLayout === 'inline';
-const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
 
 const breadcrumbs = [
   { label: '首页', href: localizedPath('/', locale) },
@@ -93,21 +89,24 @@ const breadcrumbs = [
   { label: title },
 ];
 
-// Resolve this project's real per-locale URLs so the hreflang tags and the
-// LanguageSwitcher point at the matching translation. Projects share one slug
-// across locales, so unlike the blog (which uses canonical uids) matching the
-// locale-stripped slug is enough. hreflang lists only verified translations;
-// the switcher shows every locale, falling back to a locale's projects index
-// when this project has no translation there, so switching never 404s.
-const projectTranslations = await getProjectTranslations(getProjectSlug(slug, locale), locale);
+// Resolve this project's real per-locale URLs for hreflang tags and the LanguageSwitcher.
+const projectTranslations = slug
+  ? await getProjectTranslations(getProjectSlug(slug, locale), locale)
+  : [];
 const translationByLocale = new Map(projectTranslations.map((tr) => [tr.locale, tr.url]));
 const languageAlternates = Object.fromEntries(
   getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? getProjectsBaseUrl(loc)])
 );
+
+const localizedHeadings = headings.map((heading) =>
+  heading.slug === 'footnote-label'
+    ? { ...heading, text: '尾注' }
+    : heading
+);
 ---
 
 <BaseLayout
-  title={title}
+  title={`${title} | 项目`}
   description={description}
   image={ogImage}
   imageAlt={imageAlt || title}
@@ -117,18 +116,17 @@ const languageAlternates = Object.fromEntries(
     slot="header"
     position="fixed"
     shape="bar"
-    variant="solid"
-    size="lg"
     showCta={false}
-    showScrollProgress
-    maxWidth="7xl"
+    maxWidth="8xl"
     languageAlternates={languageAlternates}
   />
+  <!-- FireStone: [Update Header width] -->
 
-  <div class="min-h-screen pt-16">
+  <div class="min-h-screen ">
     <ProjectHero
       title={title}
       description={description}
+      tags={tags}
       year={year}
       client={client}
       role={role}
@@ -139,13 +137,13 @@ const languageAlternates = Object.fromEntries(
       image={image}
       imageAlt={imageAlt}
       gallery={gallery}
-      tags={tags}
       logo={logo}
     />
 
     <article class="pt-8 pb-[var(--space-section-md)]">
       <div class:list={[
-        'mx-auto px-6 max-w-7xl',
+        // FireStone: [Update main project wrapper to 8xl]
+        'mx-auto px-6 max-w-8xl',
         sidebarActive && (sidebarOnLeft
           ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
           : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
@@ -153,7 +151,7 @@ const languageAlternates = Object.fromEntries(
         {sidebarActive && sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label="Table of contents">
             <TableOfContents
-              headings={headings}
+              headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
               minHeadings={tocConfig?.minHeadings ?? 3}
               sticky
@@ -161,13 +159,11 @@ const languageAlternates = Object.fromEntries(
           </aside>
         )}
 
-        <div class:list={['min-w-0 max-w-4xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
-          <Breadcrumbs items={breadcrumbs} class="mb-8" />
-
+        <div class:list={['min-w-0 max-w-8xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
           {inlineActive && (
             <div class="mb-10 rounded-xl border border-border bg-background-secondary p-5">
               <TableOfContents
-                headings={headings}
+                headings={localizedHeadings}
                 maxDepth={tocConfig?.maxDepth ?? 3}
                 minHeadings={tocConfig?.minHeadings ?? 3}
               />
@@ -178,10 +174,10 @@ const languageAlternates = Object.fromEntries(
             <slot />
           </div>
 
-          <footer class="border-border mt-12 border-t pt-8 flex justify-center" data-reveal>
+          <footer class="border-border mt-12 border-t pt-8" data-reveal>
             <Button href="/projects" variant="secondary" size="sm">
-              <Icon name="arrow-left" size="sm" />
-              Back to Projects
+              <Icon name="chevron-left" size="sm" />
+              返回「项目」
             </Button>
           </footer>
         </div>
@@ -189,7 +185,7 @@ const languageAlternates = Object.fromEntries(
         {sidebarActive && !sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label="Table of contents">
             <TableOfContents
-              headings={headings}
+              headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
               minHeadings={tocConfig?.minHeadings ?? 3}
               sticky
@@ -201,15 +197,15 @@ const languageAlternates = Object.fromEntries(
 
     {related.length > 0 && (
       <section class="py-[var(--space-section-md)] bg-background-secondary border-t border-border" data-reveal>
-        <div class="mx-auto max-w-7xl px-6">
-          <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">More projects</h2>
+        <div class="mx-auto max-w-8xl px-6">
+          <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8">更多项目</h2>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((project) => (
               <Card
                 variant="elevated"
                 hover
                 padding="none"
-                href={project.data.placeholder ? undefined : getProjectUrl(project.id, locale)}
+                href={project.data.placeholder ? undefined : `/projects/${project.id.replace(/\.mdx?$/, '')}`}
                 class="group flex flex-col"
               >
                 <div class="flex flex-1 flex-col p-6">
@@ -222,16 +218,16 @@ const languageAlternates = Object.fromEntries(
                   <div class="mb-2 flex items-baseline gap-2">
                     <h3 class="font-display text-lg font-bold text-foreground">{project.data.title}</h3>
                     {project.data.year && (
-                      <span class="text-xs text-foreground-muted">{project.data.year}</span>
+                      <span class="text-xs font-mono text-foreground-muted">{project.data.year}</span>
                     )}
                   </div>
                   <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1 line-clamp-3">{project.data.description}</p>
                   {project.data.tags && project.data.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-1.5">
-                      {project.data.tags.map((tag, i) => (
+                    <div class="flex flex-wrap items-center gap-2">
+                      {project.data.tags.map((tag, index) => (
                         <>
-                          {i === 3 && <div class="basis-full" aria-hidden="true"></div>}
-                          <Badge variant="brand">#{tag}</Badge>
+                          {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                          <Badge variant="brand">{tag}</Badge>
                         </>
                       ))}
                     </div>
@@ -243,56 +239,10 @@ const languageAlternates = Object.fromEntries(
         </div>
       </section>
     )}
-
-    <!-- Closing CTA -->
-    <section class="relative z-10 py-[var(--space-section-md)] bg-background border-t border-border">
-      <!-- Mobile: flat section, no glitch band -->
-      <div class="glitch:hidden mx-auto max-w-2xl px-6 text-center" data-reveal>
-        <Badge variant="brand" pill class="mb-6">Let's talk</Badge>
-        <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
-          Have a project in mind?
-        </h2>
-        <p class="text-lg text-foreground-muted mb-8 text-balance">
-          Whether it's a new build or something that needs a fresh perspective — I'd love to hear about it.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" href="/contact" class="cta-btn-brand">
-            Start a project
-            <Icon name="arrow-right" size="sm" />
-          </Button>
-          <Button size="lg" variant="outline" href="/projects">
-            All projects
-            <Icon name="arrow-right" size="sm" />
-          </Button>
-        </div>
-      </div>
-
-      <!-- Desktop: LetterGlitch band with glass card -->
-      <LetterGlitchBand maxWidth="7xl">
-        <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
-          Have a project in mind?
-        </h2>
-        <p class="text-lg text-foreground-muted mb-8 text-balance">
-          Whether it's a new build or something that needs a fresh perspective — I'd love to hear about it.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" href="/contact" class="hero-btn-brand">
-            Start a project
-            <Icon name="arrow-right" size="sm" />
-          </Button>
-          <Button size="lg" variant="outline" href="/projects">
-            All projects
-            <Icon name="arrow-right" size="sm" />
-          </Button>
-        </div>
-      </LetterGlitchBand>
-    </section>
   </div>
 
   <Footer
     slot="footer"
-    layout="simple"
-    background="secondary"
-    maxWidth="7xl"
+    breadcrumbs={breadcrumbs}
   />
 </BaseLayout>

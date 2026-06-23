@@ -52,7 +52,7 @@ jobs:
       - name: Build
         run: pnpm run build
         env:
-          SITE_URL: https://f1restone.github.io # FireStone: Core Change 3: Directly pass your website URL to the build tool
+          SITE_URL: https://fire-stone.co/ # FireStone: Core Change 3: Directly pass your website URL to the build tool
 
       # FireStone: Core Change 4: Upload the generated dist directory as a GitHub artifact
       - name: Upload artifact

@@ -4,7 +4,14 @@
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
     "selectLanguage": "选择语言",
-    "currentLanguage": "当前语言"
+    "currentLanguage": "当前语言",
+    "items": {
+      "projects": "项目",
+      "blog": "博客",
+      "about": "关于",
+      "services": "服务",
+      "contact": "联系"
+    }
   },
   "common": {
     "readMore": "阅读更多",

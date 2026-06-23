@@ -45,9 +45,6 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^11.0.0",
     "@expressive-code/plugin-frames": "^0.43.1",
-    "@fontsource-variable/jetbrains-mono": "^5.2.8",
-    "@fontsource-variable/manrope": "^5.2.8",
-    "@fontsource-variable/outfit": "^5.2.8",
     "@iconify-json/lucide": "^1.2.114",
     "@iconify-json/simple-icons": "^1.2.87",
     "@iconify/react": "^6.0.2",
@@ -88,12 +85,6 @@
     "typescript-eslint": "^8.62.0",
     "vitest": "^3.2.6",
     "zod": "^4.4.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
   },
   "engines": {
     "node": ">=22.12.0"
