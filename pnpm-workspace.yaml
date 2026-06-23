@@ -13,3 +13,9 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - astro@6.4.8
+  - '@astrojs/markdown-satteri@0.3.1'
+  - '@astrojs/mdx@7.0.0'
+  - '@astrojs/netlify@8.0.0'
+  - '@astrojs/react@6.0.0'
+  - '@astrojs/vercel@11.0.0'
+  - astro@7.0.0
