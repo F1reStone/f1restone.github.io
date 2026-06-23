@@ -6,6 +6,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/cn';
+import Icon from '../../primitives/Icon/Icon.astro';
 
 const sizes = {
   sm: 'max-w-sm',
@@ -121,8 +122,9 @@ export function Dialog({
       aria-describedby={descriptionId}
     >
       {/* Backdrop */}
+      {/* FireStone: [Inject the standard Liquid Glass backdrop and custom easing] */}
       <div
-        className="fixed inset-0 bg-background/50 backdrop-blur-sm opacity-100 transition-opacity duration-200"
+        className="fixed inset-0 bg-background/40 backdrop-blur-md opacity-100 transition-opacity duration-300 ease-[var(--ease-default)]"
         aria-hidden="true"
         onClick={onClose}
       />
@@ -134,8 +136,8 @@ export function Dialog({
           className={cn(
             'relative w-full',
             sizes[size],
-            'bg-background rounded-xl border border-border shadow-xl',
-            'scale-100 opacity-100 transition-all duration-200',
+            'bg-background/80 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-lg',
+            'scale-100 opacity-100 transition-all duration-300 ease-[var(--ease-default)]',
             className
           )}
         >
@@ -143,25 +145,14 @@ export function Dialog({
           <button
             type="button"
             className={cn(
-              'absolute top-4 right-4',
-              'text-foreground-muted hover:text-foreground',
-              'transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md'
+              'absolute top-4 right-4 p-1.5 rounded-full text-foreground-muted dialog-close-btn',
+              'hover:bg-foreground hover:text-background',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
             )}
             onClick={onClose}
-            aria-label="Close dialog"
+            aria-label="关闭对话框"
           >
-            <svg
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+            <Icon name="x" class="w-5 h-5" />
           </button>
 
           {/* Header */}
@@ -170,15 +161,16 @@ export function Dialog({
               {title && (
                 <h2
                   id={titleId}
-                  className="text-lg font-semibold text-foreground pr-8"
+                  className="text-lg font-bold tracking-tight text-foreground pr-8"
                 >
                   {title}
                 </h2>
               )}
+              {/* FireStone: [Align React Dialog typography with the refined 13px/leading-relaxed standard] */}
               {description && (
                 <p
                   id={descriptionId}
-                  className="mt-1 text-sm text-foreground-muted"
+                  className="mt-1.5 text-xs leading-relaxed text-foreground-muted"
                 >
                   {description}
                 </p>
