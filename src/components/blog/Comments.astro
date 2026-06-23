@@ -139,9 +139,12 @@ const dataAttrs = isConfigured
     }
   }
 
+  // FireStone: [Cast window safely to bypass the no-explicit-any rule, keeping consistency with Astro Rocket's patterns]
+  const w = window as unknown as { __giscusThemeObserverInit?: boolean };
+
   // 挂载 MutationObserver 监听 <html> 上 .dark 类名的改变
-  if (!(window as any).__giscusThemeObserverInit) {
-    (window as any).__giscusThemeObserverInit = true;
+  if (!w.__giscusThemeObserverInit) {
+    w.__giscusThemeObserverInit = true;
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
