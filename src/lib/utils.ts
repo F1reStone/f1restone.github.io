@@ -38,7 +38,7 @@ export function isExternalUrl(url: string): boolean {
  */
 const SOCIAL_PLATFORMS = [
   { key: 'github',    match: /github\.com/i,                  label: 'GitHub',      icon: 'github'    },
-  { key: 'twitter',   match: /x\.com|twitter\.com/i,          label: 'X', icon: 'x-twitter' },
+  { key: 'x-twitter',   match: /x\.com|twitter\.com/i,          label: 'X', icon: 'x-twitter' },
   { key: 'bilibili',  match: /bilibili\.com/i,                label: '哔哩哔哩',    icon: 'bilibili'  },
   { key: 'zhihu',     match: /zhihu\.com/i,                   label: '知乎',        icon: 'zhihu'     },
   { key: 'neteasecloudmusic', match: /music\.163\.com/i,      label: '网易云音乐',    icon: 'neteasecloudmusic' },
