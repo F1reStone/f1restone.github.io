@@ -4,8 +4,8 @@
 name = "firestone-website"
 compatibility_date = "2026-01-31"
 
-[site]
-bucket = "./dist"
+[assets]
+directory = "dist"
 
 [observability]
 enabled = false
