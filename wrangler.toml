@@ -1,8 +1,23 @@
 # Cloudflare Pages configuration
 # This file is used when deploying to Cloudflare Pages with wrangler
 
-name = "astro-rocket"
+name = "firestone-website"
 compatibility_date = "2026-01-31"
 
 [site]
 bucket = "./dist"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1

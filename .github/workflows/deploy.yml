@@ -1,22 +1,14 @@
-name: Deploy
+name: Deploy to Cloudflare Workers
 
 on:
   push:
     branches: [main]
 
-# FireStone: Core Change 1 - Must grant permissions for the automation script to publish Pages.
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-# FireStone: Core Change 2 - Ensure that only one deployment job runs at a time to avoid conflicts.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     env:
       PUBLIC_GTM_ID: ${{ secrets.PUBLIC_GTM_ID }}
@@ -24,6 +16,7 @@ jobs:
       BING_SITE_VERIFICATION: ${{ secrets.BING_SITE_VERIFICATION }}
       REPOSITORY_ID: ${{ secrets.REPOSITORY_ID }}
       CATEGORY_ID: ${{ secrets.CATEGORY_ID }}
+      SITE_URL: https://fire-stone.co/
 
     steps:
       - name: Checkout
@@ -51,23 +44,11 @@ jobs:
 
       - name: Build
         run: pnpm run build
-        env:
-          SITE_URL: https://fire-stone.co/ # FireStone: Core Change 3: Directly pass your website URL to the build tool
 
-      # FireStone: Core Change 4: Upload the generated dist directory as a GitHub artifact
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # FireStone: 使用官方 Wrangler 动作，将构建好的静态网站一键发布为 Worker
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: ./dist
-
-  # FireStone: Core Change 5 - Add a separate deployment job that takes the artifact from the build job and deploys it to GitHub Pages.
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # 它会自动读取根目录的 wrangler.toml 并上传 dist 文件夹
