@@ -45,10 +45,11 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      # FireStone: 使用官方 Wrangler 动作，将构建好的静态网站一键发布为 Worker
+      - name: Configure pnpm safety for CI/CD
+        run: pnpm config set ignore-workspace-root-check true
+
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # 它会自动读取根目录的 wrangler.toml 并上传 dist 文件夹
