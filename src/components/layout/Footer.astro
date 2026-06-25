@@ -142,7 +142,7 @@ const processedCopyright = copyright
 
 // FireStone: Added class names for legal links and separators for better styling control
 const legalLinkClass =
-  'inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover:text-foreground';
+  'inline-flex items-center gap-2 text-sm transition-colors text-foreground-subtle/90 hover-glow-text hover:text-foreground';
 
 const legalSeparatorClass = 'mx-3 h-4 w-px bg-border';
 
@@ -243,7 +243,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               <slot name="logo" />
             ) : (
               <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
-                <Logo size="md" class="text-foreground" />
+                <Logo size="md" class="text-foreground hdr-logo-glow" />
               </a>
             )}
             {(hasTaglineSlot || tagline) && (
@@ -307,7 +307,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                 <slot name="logo" />
               ) : (
                 <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
-                  <Logo size="md" class="text-foreground" />
+                  <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
               {(hasTaglineSlot || tagline) && (
@@ -323,7 +323,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                     {socialLinks.map((social) => (
                       <a
                         href={social.href}
-                        class="transition-colors text-foreground-muted hover:text-foreground"
+                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={social.label || `Follow us on ${social.key}`}
@@ -343,15 +343,15 @@ const footerClasses = cn(footerVariants({ background }), className);
           ) : (
             linkGroups.map((group) => (
               <div class="space-y-[var(--space-stack-md)]">
-                <h3 class="font-semibold text-sm text-foreground">
+                <div class="font-medium font-mono uppercase tracking-[0.15em] text-xs text-foreground">
                   {group.title}
-                </h3>
+                </div>
                 <ul class="space-y-2">
                   {group.links.map((link) => (
                     <li>
                       <a
                         href={link.href}
-                        class="text-sm transition-colors text-foreground-muted hover:text-foreground"
+                        class="text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover:text-foreground"
                         target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
@@ -373,7 +373,7 @@ const footerClasses = cn(footerVariants({ background }), className);
             ) : (
               <>
                 {showCopyright && (
-                  <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
+                  <p class="text-sm text-foreground-subtle/90" set:html={processedCopyright} />
                 )}
                 {resolvedLegalLinks.length > 0 && (
                   <div class="flex flex-wrap items-center">
@@ -434,7 +434,7 @@ const footerClasses = cn(footerVariants({ background }), className);
             <slot name="logo" />
           ) : (
             <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
-              <Logo size="md" class="text-foreground" />
+              <Logo size="md" class="text-foreground hdr-logo-glow" />
             </a>
           )
         )}

@@ -410,7 +410,7 @@ const buttonId = `${menuId}-button`;
                       aria-label={label}
                       class={cn(
                         'rounded-md p-2',
-                        'hdr-social-link', /* FireStone: 接入纯净辉光，删掉原有的变灰和底色填充 */
+                        'hover-glow-icon', /* FireStone: 接入统一交互引擎 */
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                         isFloating
                           ? 'hdr-invert-text'
@@ -464,7 +464,7 @@ const buttonId = `${menuId}-button`;
             id={buttonId}
             class={cn(
               'hdr-hamburger inline-flex items-center justify-center rounded-md p-2 lg:hidden',
-              'hdr-social-link', /* FireStone: Hamburger 菜单应用 SparkFlow UI */
+              'hover-glow-icon', /* FireStone: Hamburger 菜单应用统一交互引擎 */
               'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
               isFloating ? 'hover:bg-secondary/40' : 'hover:bg-secondary'
             )}

@@ -462,54 +462,6 @@ input[type='reset'] {
     --nav-link-active-bg: transparent;
   }
 
-  /* -------------------------------------------------------------------------
-     FireStone: Header Controls
-     ------------------------------------------------------------------------- */
-  /* 下拉菜单药丸按钮 (语言、深浅模式、主题、搜索) */
-  .hdr-glass-pill {
-    color: var(--color-foreground-muted);
-    /* Liquid Glass: 极低不透明度的背景色 + 强力毛玻璃 + 轻微饱和度提升 */
-    background-color: color-mix(in oklch, var(--color-background) 8%, transparent);
-    border: 1.25px solid color-mix(in oklch, var(--color-foreground) 12%, transparent);
-    -webkit-backdrop-filter: blur(6px) saturate(1.15);
-    backdrop-filter: blur(6px) saturate(1.15);
-
-    /* 多层阴影：顶部镜面高光 (Liquid Glass 标志特征) + 基础深度阴影 */
-    box-shadow:
-      inset 0 0.5px 0 rgba(255, 255, 255, 0.10),
-      0 1px 3px rgba(0, 0, 0, 0.08);
-    transition: all 400ms var(--ease-fluid) !important;
-  }
-
-  .hdr-glass-pill:hover,
-  .hdr-glass-pill[aria-expanded="true"] {
-    /* 悬停/激活时：注满纯白，爆发出纯净耀眼的白光 + 多层光晕扩散 */
-    background-color: var(--color-foreground) !important;
-    border-color: var(--color-foreground) !important;
-    color: var(--color-background) !important;
-    box-shadow:
-      inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
-      0 0 14px rgba(255, 255, 255, 0.85),
-      0 0 28px rgba(255, 255, 255, 0.25) !important;
-    transform: scale(1.02); /* 微扩充增强果冻按压互动感 */
-  }
-
-  /* 纯图标按钮 (社交媒体、汉堡菜单) */
-  .hdr-social-link {
-    color: var(--color-foreground-muted);
-    background-color: transparent !important;
-    /* 使用 filter: drop-shadow 给异形 SVG 提供极其贴合的浅轮廓阴影 */
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
-    transition: all 400ms var(--ease-fluid) !important;
-  }
-
-  .hdr-social-link:hover {
-    color: var(--color-foreground);
-    background-color: transparent !important;
-    /* 悬停时去掉普通阴影，替换为高级的同色发光辉光 */
-    filter: drop-shadow(0 0 10px currentColor);
-    transform: scale(1.1); /* 放大反馈 */
-  }
 
 
 
@@ -539,41 +491,6 @@ input[type='reset'] {
       
     transform: translateZ(0) scale(1.04);
   }
-
-
-
-  /* =========================================================================
-     FireStone: Standardized Text Glow & Weight Shift
-     字重悬停与发光动效
-     分为居中 (center) 和左对齐 (left) 两种，使用 inline-flex 包裹文本
-     利用隐形 900 字重占位，防止排版异常变宽和文字裁切
-     ========================================================================= */
-  .interactive-glow-center,
-  .interactive-glow-left {
-    display: inline-flex;
-    flex-direction: column;
-    transition: font-weight 1s var(--ease-bouncy), 
-                text-shadow 400ms var(--ease-fluid),
-                color 200ms;
-  }
-
-  .interactive-glow-center { align-items: center; }
-  .interactive-glow-left   { align-items: flex-start; }
-
-  .interactive-glow-center::after,
-  .interactive-glow-left::after {
-    content: attr(data-text);
-    content: attr(data-text) / "";
-    height: 0;
-    visibility: hidden;
-    overflow: hidden;
-    -webkit-user-select: none;
-    user-select: none;
-    pointer-events: none;
-    font-weight: 900; /* 预留出最高字重 900 的物理空间，绝不裁切且不推挤布局 */
-  }
-
-
 
   /* =========================================================================
      Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
@@ -653,16 +570,18 @@ input[type='reset'] {
     100% { transform: translate(-50%, -50%) rotate(0deg); }
   }
 
-  /* 标题容器：保持原有属性 */
+  /* =========================================================================
+     FireStone: Hero Title (重构后使用原子类)
+     .hero-title-wrapper 负责布局，.hero-title-text / .hero-title-serif
+     负责渐变文字视觉。
+     ========================================================================= */
   .hero-title-wrapper {
     line-height: 0.75 !important;
     cursor: default;
   }
 
-  /* 文字基础样式 & 可变字体动画 */
   .hero-title-text {
     background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
-    -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
@@ -671,7 +590,7 @@ input[type='reset'] {
     font-style: italic;
     display: inline-block;
 
-    padding: 0.3em; 
+    padding: 0.3em;
     margin: -0.3em;
 
     transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1);
@@ -687,18 +606,17 @@ input[type='reset'] {
   .hero-title-serif {
     background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
     background-clip: text;
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
 
-    font-family: 'Playfair Display Variable', 'Playfair Display', 'New York', 'Garamond', 'Roboto Serif', 'Noto Serif', 'Source Han Serif SC', 'Source Han Serif CN', 'Noto Serif CJK SC', 'Noto Serif SC', 'Times Ten', 'Times New Roman', ui-serif, serif; 
+    font-family: 'Playfair Display Variable', 'Playfair Display', 'New York', 'Garamond', 'Roboto Serif', 'Noto Serif', 'Source Han Serif SC', 'Source Han Serif CN', 'Noto Serif CJK SC', 'Noto Serif SC', 'Times Ten', 'Times New Roman', ui-serif, serif;
     letter-spacing: -0.03em;
     text-transform: none;
     font-weight: 400;
     font-style: italic;
     display: inline-block;
 
-    padding: 0.3em; 
+    padding: 0.3em;
     margin: -0.3em;
 
     transition: font-weight 1s cubic-bezier(0.22, 1.6, 0.36, 1);
@@ -1650,35 +1568,9 @@ input[type='reset'] {
 }
 
 /* ── Hero / CTA button styles ───────────────────────────────────────────────
-   Shared across all pages. Re-enable by applying these classes to buttons.
-   hero-btn-brand : brand-coloured primary action
-   hero-btn-learn : secondary action (outline in light, white pill in dark)   */
-
-.hero-btn-brand {
-  background-color: var(--color-brand-700) !important;
-  background-image: none !important;
-  color: white !important;
-  border-color: transparent !important;
-}
-.hero-btn-brand:hover {
-  background-color: var(--color-brand-700) !important;
-  background-image: none !important;
-  opacity: 0.85;
-}
-
-/* CTA primary button on mobile / coarse-pointer CTA sections.
-   brand-700 fill / brand-800 hover in both modes: the lightest brand step
-   that holds white label text at WCAG AA (>=4.5:1) across every theme. */
-.cta-btn-brand {
-  background-color: var(--color-brand-700) !important;
-  background-image: none !important;
-  color: white !important;
-  border-color: transparent !important;
-}
-.cta-btn-brand:hover {
-  background-color: var(--color-brand-800) !important;
-  background-image: none !important;
-}
+   (Legacy classes removed. Use the Button variant system — primary variant
+   maps to the brand-coloured default, secondary/outline to the learn action.)
+   ─────────────────────────────────────────────────────────────────────────── */
 
 /* Header CTA — brand colour in light mode (brand-700 for AA white text) */
 :root:not(.dark) .hdr-cta-brand {
@@ -1702,27 +1594,7 @@ input[type='reset'] {
   background-color: oklch(47% 0.18 25);
 }
 
-.hero-btn-learn {
-  background-color: transparent !important;
-  background-image: none !important;
-  color: var(--color-foreground) !important;
-  border: 1px solid var(--color-border-strong) !important;
-}
-.hero-btn-learn:hover {
-  background-color: var(--color-secondary) !important;
-  background-image: none !important;
-  opacity: 1;
-}
-.dark .hero-btn-learn {
-  background-color: white !important;
-  background-image: none !important;
-  color: #111 !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-}
-.dark .hero-btn-learn:hover {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-}
-
+/* ── Arrow icon hover translation (shared utility) ─────────────────────── */
 [data-icon='arrow-right'],
 [data-icon='arrow-left'] {
   transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -1765,4 +1637,141 @@ input[type='reset'] {
   .group:hover [data-icon='chevron-left'] {
     transform: none;
   }
+}
+
+/* =========================================================================
+   FireStone Unified Interaction Engine (统一交互引擎 V3.0)
+   ========================================================================= */
+
+/* 1. 基础毛玻璃材质 (Liquid Glass) - 恢复原版绝美锐利与极浅阴影 */
+.glass-panel {
+  background-color: color-mix(in oklch, var(--color-background) 8%, transparent);
+  border: 1.25px solid color-mix(in oklch, var(--color-foreground) 12%, transparent) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(1.15);
+  backdrop-filter: blur(6px) saturate(1.15);
+  box-shadow: 
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.10),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* 1.5 实色填充交互 (Solid Fill) - 彻底解决深浅模式背景色反转的 Bug */
+.hover-solid-fill {
+  transition: all 400ms var(--ease-fluid) !important;
+}
+.hover-solid-fill:hover,
+.hover-solid-fill:focus-visible,
+.hover-solid-fill[aria-expanded="true"] {
+  /* 强制前景色填充，无视任何 Tailwind 覆盖 */
+  background-color: var(--color-foreground) !important;
+  border-color: var(--color-foreground) !important;
+  color: var(--color-background) !important;
+}
+
+/* 2. 实体盒状发光 (Box Glow) - 加大发光强度，动画延长至 400ms */
+.hover-glow-box {
+  will-change: transform, box-shadow;
+  /* 使用 all 保证背景、边框、阴影全部丝滑过渡 */
+  transition: all 400ms var(--ease-fluid) !important;
+}
+.hover-glow-box:hover,
+.hover-glow-box:focus-visible,
+.hover-glow-box[aria-expanded="true"] {
+  border-color: var(--color-foreground) !important;
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
+    0 0 16px color-mix(in srgb, var(--color-foreground) 70%, transparent),
+    0 0 32px color-mix(in srgb, var(--color-foreground) 30%, transparent) !important;
+  transform: scale(1.1);
+  z-index: 10;
+}
+.hover-glow-box:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-foreground) 40%, transparent) !important;
+}
+
+/* 3. 轮廓发光 (Outline Glow) - 用于 Outline 按钮，只发光不填充背景 */
+.hover-glow-outline {
+  will-change: transform, box-shadow, border-color;
+  transition: all 400ms var(--ease-fluid) !important;
+}
+.hover-glow-outline:hover,
+.hover-glow-outline:focus-visible {
+  border-color: var(--color-foreground) !important;
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--color-foreground) 60%, transparent),
+    0 0 32px color-mix(in srgb, var(--color-foreground) 20%, transparent) !important;
+  transform: scale(1.1);
+}
+.hover-glow-outline:active {
+  transform: scale(0.95);
+}
+
+/* 4. 图标微发光 (Icon Glow) */
+.hover-glow-icon {
+  will-change: transform, filter;
+  transform: translateZ(0) scale(1);
+  color: var(--color-foreground-muted);
+  background-color: transparent !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+  transition: all 400ms var(--ease-fluid) !important;
+}
+.hover-glow-icon:hover,
+.hover-glow-icon:focus-visible {
+  color: var(--color-foreground);
+  filter: drop-shadow(0 0 12px currentColor);
+  transform: translateZ(0) scale(1.1);
+}
+.hover-glow-icon:active {
+  transform: translateZ(0) scale(0.95);
+}
+
+/* 5. 纯文字发光 (Text Glow) - 修复突变，恢复完美渐变 */
+.hover-glow-text {
+  text-shadow: 0 0 0px currentColor; /* 必须声明初始值供浏览器进行计算插值 */
+  transition: text-shadow 400ms var(--ease-fluid),
+              color 200ms;
+}
+.hover-glow-text:hover,
+.hover-glow-text:active,
+.hover-glow-text:focus-visible,
+.hover-glow-text.active,
+.group:hover .hover-glow-text {
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* 6. 智能字重膨胀 (Weight Shift) - 适用于居中对齐排版场景 */
+.weight-shift {
+  display: inline-grid !important;
+  transition: font-weight 1000ms var(--ease-bouncy) !important;
+}
+.weight-shift::after {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  height: 0; 
+  visibility: hidden;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  font-weight: var(--ws-target, 900); 
+}
+.weight-shift:hover,
+.weight-shift:active,
+.weight-shift:focus-visible,
+.weight-shift.active,
+.group:hover .weight-shift {
+  font-weight: var(--ws-target, 900);
+}*/
+
+/* 7. 智能字重膨胀 (非挤压版) - 适用于非居中（左右）对齐排版场景 */
+.weight-shift-non-centered {
+  display: inline-grid !important;
+  transition: font-weight 1000ms var(--ease-fluid) !important;
+}
+
+.weight-shift-non-centered:hover,
+.weight-shift-non-centered:active,
+.weight-shift-non-centered:focus-visible,
+.weight-shift-non-centered.active,
+.group:hover .weight-shift-non-centered {
+  font-weight: var(--ws-target, 900);
 }

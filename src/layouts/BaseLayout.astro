@@ -536,5 +536,19 @@ const locale = getLocaleFromPath(Astro.url.pathname);
         }
       })();
     </script>
+
+    <!-- FireStone: 智能字重计算引擎，读取 .weight-shift 元素的当前 computed font-weight，自动 +300 (最高 900)，并注入 CSS 变量。 -->
+    <script is:inline>
+      function initSmartWeightShift() {
+        document.querySelectorAll('.weight-shift:not([data-ws-init])').forEach(function(el) {
+          el.setAttribute('data-ws-init', 'true');
+          var currentWeight = parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
+          var targetWeight = Math.min(currentWeight + 300, 900);
+          el.style.setProperty('--ws-target', targetWeight);
+        });
+      }
+      document.addEventListener('DOMContentLoaded', initSmartWeightShift);
+      document.addEventListener('astro:page-load', initSmartWeightShift);
+    </script>
   </body>
 </html>

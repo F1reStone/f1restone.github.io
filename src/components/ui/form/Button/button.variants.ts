@@ -5,7 +5,6 @@ export const buttonVariants = cva(
     'group',
     'inline-flex items-center justify-center gap-2',
     'font-medium rounded-full',
-    'transition-all duration-150 ease-out',
     'cursor-pointer',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
@@ -15,16 +14,18 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'btn-primary bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98]',
+          'bg-foreground text-background hover-glow-box',
         secondary:
-          'bg-secondary text-secondary-foreground border border-border hover:bg-secondary-hover hover:border-border-strong active:scale-[0.98]',
+          'bg-secondary text-secondary-foreground border border-border/50 hover-glow-box hover-solid-fill',
         outline:
-          'border border-foreground/25 bg-transparent text-foreground hover:bg-secondary hover:border-foreground/40 active:scale-[0.98]',
+          'glass-panel text-foreground hover-glow-text hover-glow-outline',
         ghost:
-          'text-foreground-secondary hover:text-foreground hover:bg-secondary active:scale-[0.98]',
-        link: 'text-foreground-secondary hover:text-foreground underline-offset-4 hover:underline',
+          'bg-transparent text-foreground-secondary hover-glow-box hover-solid-fill',
         destructive:
-          'btn-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90 active:scale-[0.98]',
+          'bg-destructive text-destructive-foreground hover-glow-box hover:bg-destructive/80',
+        link: 
+          /* FireStone: 文本按钮仅使用发光，不能使用 weight-shift，防止破坏内部 Icon Flex 布局 */
+          'text-foreground-secondary hover:text-foreground hover-glow-text',
       },
       size: {
         sm: 'h-8 px-3 text-xs [&_svg]:h-4 [&_svg]:w-4',

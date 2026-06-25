@@ -46,7 +46,7 @@ const iconMap: Record<string, string> = {
   'brand-github':     'simple-icons:github',
   'brand-vercel':     'simple-icons:vercel',
   'brand-mdx':        'simple-icons:mdx',
-  'brand-claude':     'simple-icons:claude',
+  'brand-claude':     'simple-icons:anthropic',
 };
 
 export function Icon({

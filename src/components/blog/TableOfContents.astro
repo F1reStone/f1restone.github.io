@@ -55,7 +55,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
             href={`#${h.slug}`}
             data-toc-link={h.slug}
             data-text={h.text}
-            class="interactive-glow-left toc-link py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted"
+            class="weight-shift-non-centered toc-link py-1 pl-3 -ml-px border-l border-transparent text-foreground-muted"
           >
             {h.text}
           </a>
@@ -97,10 +97,10 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 
 <script>
   // =========================================================================
-  // FireStone: The Ultimate WinUI 3 TOC Engine
-  // - Click Lock & Debounce (恢复！解决跨章节跳转和快滑的动效队列堵塞)
-  // - Zero DOM insertion (保留！解决滚动条闪烁和 Layout Thrashing)
-  // - Pure Scale Morphing (恢复！去除错误的 opacity 渐隐，找回实打实的物理坍缩)
+  // FireStone: TOC Animation
+  // - Click Lock & Debounce (恢复了解决跨章节跳转和快滑的动效队列堵塞)
+  // - Zero DOM insertion (保留了解决滚动条闪烁和 Layout Thrashing)
+  // - Pure Scale Morphing 恢复了去除错误的 opacity 渐隐，并恢复物理坍缩
   // =========================================================================
   
   let isJumping = false;
@@ -178,10 +178,10 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
             void mainInd.offsetWidth;
 
             // 3. 执行物理动效 (恢复纯 scaleY 缩放，去除 opacity 渐隐，找回 WinUI 质感)
-            ghostInd.style.transition = 'transform 400ms var(--ease-fluid)';
+            ghostInd.style.transition = 'transform 500ms var(--ease-fluid)';
             ghostInd.style.transform = `translate3d(${currentLink.offsetLeft}px, ${currentLink.offsetTop}px, 0) scaleY(0)`;
 
-            mainInd.style.transition = 'transform 400ms var(--ease-fluid)';
+            mainInd.style.transition = 'transform 500ms var(--ease-fluid)';
             mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
 
           } else {
@@ -190,7 +190,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
             ghostInd.style.transition = 'none';
             
             mainInd.style.transformOrigin = 'center';
-            mainInd.style.transition = 'transform 400ms var(--ease-fluid), height 400ms var(--ease-fluid)';
+            mainInd.style.transition = 'transform 500ms var(--ease-fluid), height 500ms var(--ease-fluid)';
             mainInd.style.height = `${newLink.offsetHeight}px`;
             mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
           }

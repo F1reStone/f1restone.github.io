@@ -145,8 +145,7 @@ export function Dialog({
           <button
             type="button"
             className={cn(
-              'absolute top-4 right-4 p-1.5 rounded-full text-foreground-muted dialog-close-btn',
-              'hover:bg-foreground hover:text-background',
+              'absolute top-4 right-4 p-1.5 rounded-full text-foreground-muted glass-panel hover-glow-box hover-solid-fill',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
             )}
             onClick={onClose}

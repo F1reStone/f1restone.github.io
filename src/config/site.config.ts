@@ -194,7 +194,7 @@ const siteConfig: SiteConfig = {
   url: SITE_URL || 'https://fire-stone.co/',
   ogImage: '/og-firestone.png',
   author: 'FireStone',
-  email: 'fsfirestone@outlook.com',
+  email: 'contact@fire-stone.co',
   address: {
     street: '',
     city: '',

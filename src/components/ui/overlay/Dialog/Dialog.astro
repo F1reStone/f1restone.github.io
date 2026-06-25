@@ -57,8 +57,7 @@ const sizes = {
       <button
         type="button"
         class={cn(
-          'absolute top-4 right-4 p-1.5 rounded-full text-foreground-muted dialog-close-btn',
-          'hover:bg-foreground hover:text-background',
+          'absolute top-4 right-4 p-1.5 rounded-full text-foreground-muted glass-panel hover-glow-box hover-solid-fill',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         )}
         data-dialog-close
@@ -216,27 +215,3 @@ const sizes = {
   document.addEventListener('astro:page-load', initDialogs);
 </script>
 
-<style is:global>
-  /* =======================================================================
-     FireStone: Dialog Close Button Smooth Glow & Scale (GPU Accelerated)
-     通过将极其昂贵的 drop-shadow 替换为硬件加速的 box-shadow，
-     彻底根除由于浏览器在动画期间频繁重绘位图（Rasterization）导致的 hover 掉帧卡顿。
-     ======================================================================= */
-  .dialog-close-btn {
-    /* 提权至独立显卡合成器图层，并声明 box-shadow 参与过渡 */
-    will-change: transform, background-color, color, box-shadow;
-    transform: translateZ(0) scale(1);
-    
-    transition: transform 300ms var(--ease-default), 
-                background-color 300ms var(--ease-default), 
-                color 300ms var(--ease-default),
-                box-shadow 300ms var(--ease-default) !important;
-  }
-
-  .dialog-close-btn:hover,
-  .dialog-close-btn:active {
-    /* 使用 GPU 渲染的 box-shadow，搭配 color-mix 调配出通透温润的 35% 不透明度辉光 halo */
-    box-shadow: 0 0 12px color-mix(in srgb, var(--color-foreground) 35%, transparent);
-    transform: translateZ(0) scale(1.05); /* 5% 微扩缩放反馈 */
-  }
-</style>
