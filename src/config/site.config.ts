@@ -222,7 +222,7 @@ const siteConfig: SiteConfig = {
     google: GOOGLE_SITE_VERIFICATION,
     bing: BING_SITE_VERIFICATION,
   },
-  authorImage: '/avatar.svg',
+  authorImage: '/favicon.svg',
   blogImageOverlay: true,
   effects: {
     cursorTrail: true,

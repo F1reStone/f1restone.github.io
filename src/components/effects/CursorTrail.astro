@@ -5,6 +5,11 @@
  *  1. Dot at the pointer (precise indicator)
  *  2. Lagging ring (elastic follow, blooms on hover)
  *  3. Comet-trail particles (spawn behind movement, fade out)
+ *
+ * Intentionally desktop-only:
+ *  - Skipped on (hover: none) / (pointer: coarse) devices
+ *  - Skipped on prefers-reduced-motion
+ *  - Native cursor stays visible — this is purely additive
  */
 
 const PARTICLE_COUNT = 16;
@@ -97,11 +102,9 @@ const PARTICLE_COUNT = 16;
         ringWrap.style.opacity = '1';
       }
       
-      /* FireStone: 
-         【核心性能优化】
-         强制使用 translate3d 激活 GPU 独立图层硬件加速！
-         即使页面上的可变字体正在疯狂触发主线程 Layout 重排，
-         光标的移动也完全在 GPU 合成器上跑，彻底告别卡顿掉帧！
+      /* FireStone: 性能优化
+         使用 translate3d 激活 GPU 独立图层硬件加速
+         使光标的移动也完全在 GPU 合成器上跑
       */
       dot.style.transform = 'translate3d(' + (mouseX - 5) + 'px,' + (mouseY - 5) + 'px, 0)';
 
@@ -146,7 +149,7 @@ const PARTICLE_COUNT = 16;
         const sc = 0.4 + p.life * 0.6; 
         p.el.style.opacity = String(op);
         
-        // FireStone: 同步应用 translate3d 到彗星粒子拖尾
+        // FireStone: 同步应用 translate3d 到拖尾
         p.el.style.transform =
           'translate3d(' + (p.x - 3) + 'px,' + (p.y - 3) + 'px, 0) scale(' + sc + ')';
       }

@@ -1,15 +1,15 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const cardVariants = cva(
-  ['rounded-xl', 'transition-all duration-200 ease-out'],
+  ['rounded-2xl', 'transition-all duration-200 ease-out'],
   {
     variants: {
       variant: {
-        default: 'bg-card border border-brand-500/30 hover:border-brand-500/70',
+        default: 'bg-card border border-brand-500/30 hover-glow-box',
         solid: 'bg-secondary border border-transparent',
-        outline: 'bg-transparent border-2 border-brand-500/30 hover:border-brand-500/70',
+        outline: 'bg-transparent border-2 border-brand-500/30 hover-glow-box',
         ghost: 'bg-transparent border border-transparent',
-        elevated: 'bg-card border border-brand-500/30 shadow-lg hover:border-brand-500/70',
+        elevated: 'bg-card border border-brand-500/30 shadow-lg hover-glow-box',
       },
       padding: {
         none: '',

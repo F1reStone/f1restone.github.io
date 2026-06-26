@@ -22,7 +22,7 @@ export const buttonVariants = cva(
         ghost:
           'bg-transparent text-foreground-secondary hover-glow-box hover-solid-fill',
         destructive:
-          'bg-destructive text-destructive-foreground hover-glow-box hover:bg-destructive/80',
+          'bg-destructive text-destructive-foreground hover-glow-box hover-glow-outline hover:bg-destructive/80',
         link: 
           /* FireStone: 文本按钮仅使用发光，不能使用 weight-shift，防止破坏内部 Icon Flex 布局 */
           'text-foreground-secondary hover:text-foreground hover-glow-text',
@@ -36,7 +36,7 @@ export const buttonVariants = cva(
         true: 'w-full',
       },
       icon: {
-        true: 'rounded-md',
+        true: 'rounded-full',
       },
     },
     compoundVariants: [

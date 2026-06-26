@@ -6,11 +6,10 @@
     "selectLanguage": "Select language",
     "currentLanguage": "Current language",
     "items": {
-      "services": "Services",
       "projects": "Projects",
       "blog": "Blog",
       "about": "About",
-      "contact": "Contact"
+      "ai": "FireStone AI"
     }
   },
   "common": {

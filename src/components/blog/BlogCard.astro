@@ -48,7 +48,7 @@ const estimatedWords = description.split(' ').length * 10; // Rough estimate
 const readingTime = Math.max(1, Math.ceil(estimatedWords / wordsPerMinute));
 ---
 
-<article class:list={["group rounded-lg border border-brand-500/30 bg-background p-6 shadow-md ring-1 ring-brand-500/20 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-brand-500 hover:shadow-lg", className]} data-reveal data-reveal-delay={revealDelay || undefined} data-reveal-eager={eager ? '' : undefined}>
+<article class:list={["group rounded-2xl border border-brand-500/30 bg-background p-6 shadow-md ring-1 ring-brand-500/20 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-brand-500 hover-glow-box", className]} data-reveal data-reveal-delay={revealDelay || undefined} data-reveal-eager={eager ? '' : undefined}>
 
   <a href={href} class="block">
     <div

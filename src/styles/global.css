@@ -1014,75 +1014,6 @@ input[type='reset'] {
    Components
    ------------------------------------------------------------------------- */
 @layer components {
-/* -------------------------------------------------------------------------
-     Navigation Component Tokens & Progressive Blur Shape
-     ------------------------------------------------------------------------- */
-  .nav-link, .mobile-nav-link {
-    --nav-link-color: var(--color-foreground-muted);
-    --nav-link-bg: transparent;
-    --nav-link-font-weight: 500;
-    
-    /* FireStone: 为未激活的导航文本加上与社交图标同款的极浅阴影，提升层次感 */
-    --nav-link-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-
-    --nav-link-hover-color: var(--color-foreground);
-    --nav-link-hover-bg: transparent;
-    --nav-link-hover-font-weight: 700;
-    --nav-link-hover-text-shadow: 0 0 10px currentColor;
-
-    --nav-link-active-color: var(--color-foreground);
-    --nav-link-active-bg: transparent;
-    --nav-link-active-font-weight: 700;
-    --nav-link-active-text-shadow: 0 0 10px currentColor;
-
-    color: var(--nav-link-color);
-    background-color: var(--nav-link-bg);
-    text-shadow: var(--nav-link-text-shadow);
-    transition: font-weight 1s var(--ease-bouncy), 
-                text-shadow 400ms var(--ease-fluid),
-                background-color 150ms, 
-                color 150ms !important;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .nav-link::after {
-    content: attr(data-text);
-    content: attr(data-text) / "";
-    height: 0;
-    visibility: hidden;
-    overflow: hidden;
-    -webkit-user-select: none;
-    user-select: none;
-    pointer-events: none;
-    font-weight: 700;
-  }
-
-  .nav-link-inactive, .mobile-nav-link-inactive {
-    font-weight: var(--nav-link-font-weight);
-    text-shadow: var(--nav-link-text-shadow);
-  }
-
-  .nav-link-inactive:hover, .mobile-nav-link-inactive:hover {
-    color: var(--nav-link-hover-color);
-    background-color: var(--nav-link-hover-bg);
-    font-weight: var(--nav-link-hover-font-weight);
-    text-shadow: var(--nav-link-hover-text-shadow);
-  }
-
-  .nav-link-active, .mobile-nav-link-active {
-    color: var(--nav-link-active-color);
-    background-color: var(--nav-link-active-bg);
-    font-weight: var(--nav-link-active-font-weight);
-    text-shadow: var(--nav-link-active-text-shadow);
-  }
-
-  .nav-link-active:hover, .mobile-nav-link-active:hover {
-    font-weight: var(--nav-link-hover-font-weight);
-    text-shadow: var(--nav-link-hover-text-shadow);
-  }
 
   /* =========================================================================
      FireStone: Progressive Background Blur (渐进式毛玻璃)
@@ -1640,38 +1571,58 @@ input[type='reset'] {
 }
 
 /* =========================================================================
-   FireStone Unified Interaction Engine (统一交互引擎 V3.0)
+   FireStone SparkFlow UI 交互与材质
    ========================================================================= */
 
-/* 1. 基础毛玻璃材质 (Liquid Glass) - 恢复原版绝美锐利与极浅阴影 */
+/* 
+   全局过渡动画处理
+   将所有交互引擎触发的动画属性并在一起。
+   修复多个原子类叠加在同一元素上时，transition 互相覆写导致动画失效的 Bug
+*/
+:root {
+  --engine-transition: 
+    transform 500ms var(--ease-fluid),
+    box-shadow 500ms var(--ease-fluid),
+    border-color 400ms var(--ease-fluid),
+    background-color 200ms linear,
+    color 200ms linear,
+    text-shadow 500ms var(--ease-fluid),
+    font-weight 500ms var(--ease-bouncy),
+    filter 400ms var(--ease-fluid);
+}
+
+/* 1. 基础 SparkGlass 材质 */
 .glass-panel {
   background-color: color-mix(in oklch, var(--color-background) 8%, transparent);
   border: 1.25px solid color-mix(in oklch, var(--color-foreground) 12%, transparent) !important;
   -webkit-backdrop-filter: blur(6px) saturate(1.15);
   backdrop-filter: blur(6px) saturate(1.15);
+  /* 保留 4 层占位，以对齐 Hover 时的 4 层阴影，避免动画将出现断层跳变 */
   box-shadow: 
     inset 0 0.5px 0 rgba(255, 255, 255, 0.10),
-    0 1px 3px rgba(0, 0, 0, 0.08);
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 0 0 transparent,
+    0 0 0 transparent !important;
 }
 
-/* 1.5 实色填充交互 (Solid Fill) - 彻底解决深浅模式背景色反转的 Bug */
+/* 1.5 实色填充 */
 .hover-solid-fill {
-  transition: all 400ms var(--ease-fluid) !important;
+  transition: var(--engine-transition) !important;
 }
 .hover-solid-fill:hover,
 .hover-solid-fill:focus-visible,
 .hover-solid-fill[aria-expanded="true"] {
-  /* 强制前景色填充，无视任何 Tailwind 覆盖 */
   background-color: var(--color-foreground) !important;
   border-color: var(--color-foreground) !important;
   color: var(--color-background) !important;
 }
 
-/* 2. 实体盒状发光 (Box Glow) - 加大发光强度，动画延长至 400ms */
+/* 2. 实体盒状发光 */
 .hover-glow-box {
-  will-change: transform, box-shadow;
-  /* 使用 all 保证背景、边框、阴影全部丝滑过渡 */
-  transition: all 400ms var(--ease-fluid) !important;
+  will-change: transform, box-shadow, border-color;
+  /* 保留 3 层占位，对齐 Hover 时的 3 层发光 */
+  box-shadow: inset 0 0 0 transparent, 0 0 0 transparent, 0 0 0 transparent;
+  transition: var(--engine-transition) !important;
 }
 .hover-glow-box:hover,
 .hover-glow-box:focus-visible,
@@ -1679,80 +1630,84 @@ input[type='reset'] {
   border-color: var(--color-foreground) !important;
   box-shadow:
     inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
-    0 0 16px color-mix(in srgb, var(--color-foreground) 70%, transparent),
-    0 0 32px color-mix(in srgb, var(--color-foreground) 30%, transparent) !important;
-  transform: scale(1.1);
+    0 0 16px color-mix(in srgb, var(--color-foreground) 60%, transparent),
+    0 0 32px color-mix(in srgb, var(--color-foreground) 20%, transparent) !important;
+  transform: scale(1.03);
   z-index: 10;
 }
 .hover-glow-box:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--color-foreground) 40%, transparent) !important;
+  transform: scale(0.97);
 }
 
-/* 3. 轮廓发光 (Outline Glow) - 用于 Outline 按钮，只发光不填充背景 */
+/* 3. 轮廓发光 */
 .hover-glow-outline {
   will-change: transform, box-shadow, border-color;
-  transition: all 400ms var(--ease-fluid) !important;
+  transition: var(--engine-transition) !important;
 }
 .hover-glow-outline:hover,
 .hover-glow-outline:focus-visible {
   border-color: var(--color-foreground) !important;
+  /* 对应 glass-panel 的 4 层结构 */
   box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.10),
+    0 1px 3px rgba(0, 0, 0, 0.08),
     0 0 16px color-mix(in srgb, var(--color-foreground) 60%, transparent),
     0 0 32px color-mix(in srgb, var(--color-foreground) 20%, transparent) !important;
-  transform: scale(1.1);
+  transform: scale(1.03);
 }
 .hover-glow-outline:active {
-  transform: scale(0.95);
+  transform: scale(0.97);
 }
 
-/* 4. 图标微发光 (Icon Glow) */
+/* 4. 图标发光 */
 .hover-glow-icon {
   will-change: transform, filter;
   transform: translateZ(0) scale(1);
   color: var(--color-foreground-muted);
   background-color: transparent !important;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
-  transition: all 400ms var(--ease-fluid) !important;
+  transition: var(--engine-transition) !important;
 }
 .hover-glow-icon:hover,
 .hover-glow-icon:focus-visible {
   color: var(--color-foreground);
-  filter: drop-shadow(0 0 12px currentColor);
-  transform: translateZ(0) scale(1.1);
+  filter: drop-shadow(0 0 10px currentColor);
+  transform: translateZ(0) scale(1.03);
 }
 .hover-glow-icon:active {
-  transform: translateZ(0) scale(0.95);
+  transform: translateZ(0) scale(0.97);
 }
 
-/* 5. 纯文字发光 (Text Glow) - 修复突变，恢复完美渐变 */
+/* 5. 纯文本发光 (Text Glow) */
 .hover-glow-text {
-  text-shadow: 0 0 0px currentColor; /* 必须声明初始值供浏览器进行计算插值 */
-  transition: text-shadow 400ms var(--ease-fluid),
-              color 200ms;
+  transition: var(--engine-transition) !important;
 }
 .hover-glow-text:hover,
 .hover-glow-text:active,
 .hover-glow-text:focus-visible,
 .hover-glow-text.active,
 .group:hover .hover-glow-text {
-  text-shadow: 0 0 10px currentColor;
+  text-shadow: 0 0 10px currentColor !important;
 }
 
-/* 6. 智能字重膨胀 (Weight Shift) - 适用于居中对齐排版场景 */
+/* 6. 智能字重膨胀 - 居中版 */
 .weight-shift {
-  display: inline-grid !important;
-  transition: font-weight 1000ms var(--ease-bouncy) !important;
+  display: inline-flex !important; /* 避免 grid 布局引起的排版变化 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 严格对齐原 nav-link 规范 */
+  transition: var(--engine-transition) !important;
 }
 .weight-shift::after {
   content: attr(data-text);
   content: attr(data-text) / "";
-  height: 0; 
+  height: 0;
   visibility: hidden;
+  overflow: hidden;
   pointer-events: none;
   -webkit-user-select: none;
   user-select: none;
-  font-weight: var(--ws-target, 900); 
+  font-weight: 1000; /* 设置为 1000 以避免非线性动画导致顶到布局 */
 }
 .weight-shift:hover,
 .weight-shift:active,
@@ -1760,18 +1715,40 @@ input[type='reset'] {
 .weight-shift.active,
 .group:hover .weight-shift {
   font-weight: var(--ws-target, 900);
-}*/
-
-/* 7. 智能字重膨胀 (非挤压版) - 适用于非居中（左右）对齐排版场景 */
-.weight-shift-non-centered {
-  display: inline-grid !important;
-  transition: font-weight 1000ms var(--ease-fluid) !important;
 }
 
+/* 7. 智能字重膨胀 - 左对齐版 */
+.weight-shift-non-centered {
+  display: inline-flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: var(--engine-transition) !important;
+}
+.weight-shift-non-centered::after {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  height: 0;
+  visibility: hidden;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  font-weight: 1000; /* 设置为 1000 以避免非线性动画导致顶到布局 */
+}
 .weight-shift-non-centered:hover,
 .weight-shift-non-centered:active,
 .weight-shift-non-centered:focus-visible,
 .weight-shift-non-centered.active,
 .group:hover .weight-shift-non-centered {
   font-weight: var(--ws-target, 900);
+}
+
+/* prefers-reduced-motion 降级 */
+@media (prefers-reduced-motion: reduce) {
+  .hover-glow-box, .hover-glow-outline, .hover-glow-icon, .hover-glow-text, .weight-shift, .weight-shift-non-centered, .hover-solid-fill {
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
 }

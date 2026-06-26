@@ -9,8 +9,7 @@
       "projects": "项目",
       "blog": "博客",
       "about": "关于",
-      "services": "服务",
-      "contact": "联系"
+      "ai": "FireStone AI"
     }
   },
   "common": {
@@ -70,7 +69,7 @@
   "contact": {
     "heading": "联系我",
     "name": "姓名",
-    "email": "电子邮箱",
+    "email": "电子邮件",
     "subject": "主题",
     "message": "留言内容",
     "send": "发送留言",
@@ -86,8 +85,11 @@
     "toggleTheme": "切换主题"
   },
   "footer": {
-    "copyright": "© {year} {name}. 保留所有权利。",
+    "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
     "builtWith": "基于 Astro Rocket 构建",
-    "followOn": "在以下平台关注"
+    "followOn": "社交媒体",
+    "privacy-policy": "隐私政策",
+    "cookie-preferences": "Cookie 首选项",
+    "feedback": "问题反馈"
   }
 }

@@ -22,17 +22,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Identity
 
-This is **FireStone 火石** — a personal portfolio/tech blog/project showcase for a Chinese developer/designer. It's a fork of [Astro Rocket](https://github.com/hansmartensdev/astro-rocket) (1.6.0), heavily customized.
+This is **FireStone 火石** — a personal portfolio/tech blog/project showcase for a Chinese developer/designer. It's a fork of [Astro Rocket](https://github.com/hansmartensdev/astro-rocket) (2.0.0), heavily customized.
 
 - **URL**: `https://fire-stone.co/`
-- **Default locale**: `zh-CN`
+- **Default locale**: `zh-CN`, will added `en-US` and `zh-TW` in future, so needed i18n ready
 - **Deployment**: GitHub Pages (static output), no Vercel/Netlify adapter active
 - **Theme**: Custom `firestone` theme (`src/styles/themes/firestone.css`) — deep near-black dark mode with a purple-tinted brand scale (hue ~289°)
 - **Brand colors**: Purple (`#7832FF`), Cyan (`#00C3FF`), Pink (`#FD579C`)
 
 ## Architecture
 
-- **Framework**: Astro 6 + Tailwind CSS v4 + TypeScript + React
+- **Framework**: Astro 7 + Tailwind CSS 4 + TypeScript v5.9 + React
 - **Package manager**: pnpm
 - **Islands**: Mostly static (zero JS by default), React islands where needed (e.g. `TerminalDemo`)
 - **Content**: Astro Content Layer API with `glob` loaders — 6 collections: `blog`, `pages`, `projects`, `authors`, `faqs`, `stack`

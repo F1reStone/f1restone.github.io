@@ -44,11 +44,11 @@ const schema = createBreadcrumbSchema(schemaItems);
             </svg>
           )}
           {item.href && index !== items.length - 1 ? (
-            <a href={item.href} class="text-foreground-muted hover:text-foreground transition-colors duration-200">
+            <a href={item.href} class="text-foreground-muted hover-glow-text weight-shift hover:text-foreground transition-colors duration-200">
               {item.label}
             </a>
           ) : (
-            <span class="text-foreground font-semibold" aria-current={index === items.length - 1 ? 'page' : undefined}>
+            <span class="text-foreground text-shadow-[0_0_10px_currentColor] font-bold" aria-current={index === items.length - 1 ? 'page' : undefined}>
               {item.label}
             </span>
           )}
