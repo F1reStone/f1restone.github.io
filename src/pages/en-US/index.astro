@@ -1,0 +1,207 @@
+---
+import LandingLayout from '@/layouts/LandingLayout.astro';
+import { Hero } from '@/components/hero';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Card from '@/components/ui/data-display/Card/Card.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import TypingEffect from '@/components/ui/TypingEffect.astro';
+import { getCollection } from 'astro:content';
+import {
+  BLOG_POSTS_PER_PAGE,
+  collectTopTags,
+  getPostUrl,
+  getPublishedPosts,
+} from '@/lib/blog';
+import siteConfig from '@/config/site.config';
+
+const projectItems = await getCollection('projects');
+const featuredProjects = projectItems
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+  })
+  .slice(0, 4);
+---
+
+<LandingLayout
+  title="首页"
+  description="兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。"
+  image="/og-default.svg"
+  includePersonSchema={true}
+  includeProfessionalServiceSchema={true}
+>
+  <!-- Hero -->
+  <Hero layout="split" size="xl" class="hero-dark-gradient invert-section min-h-[100svh] grid items-center [&>div]:w-full" showScrollIndicator>
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,14vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text whitespace-nowrap text-[0.6em]">To the</span><br />
+      <span class="hero-title-text">Infinite Future</span>
+    </h1>
+
+   <Fragment slot="actions">
+      <Button size="lg" href="/about">
+        About me
+        <Icon name="chevron-right" size="sm" />
+      </Button>
+      <Button size="lg" variant="link" href="/projects">
+        Explore my projects
+        <Icon name="chevron-right" size="sm" />
+      </Button>
+    </Fragment>
+  </Hero>
+
+  <!-- Portfolio -->
+  <section id="work" class="relative z-10 py-[var(--space-section-md)] bg-background">
+    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
+      <div class="flex flex-col items-center gap-4 text-center" data-reveal>
+        <div class="flex flex-col items-center gap-6">
+          <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+            项目与作品
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        {featuredProjects.map((project, i) => (
+          <Card
+            variant="elevated"
+            hover
+            padding="none"
+            href={project.data.placeholder ? undefined : `/projects/${project.id.replace(/\.mdx?$/, '')}`}
+            class="group flex flex-col"
+            data-reveal
+            data-reveal-delay={i || undefined}
+          >
+            <div class="flex flex-1 flex-col p-6">
+              <div class="mb-3 flex items-start justify-between gap-4">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
+                  <Icon name="layers" size="sm" />
+                </div>
+                <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
+              </div>
+              <div class="mb-2 flex items-baseline gap-2">
+                <h3 class="font-display text-lg font-bold text-foreground">{project.data.title}</h3>
+                {project.data.year && (
+                  <span class="text-xs font-mono text-foreground-muted">{project.data.year}</span>
+                )}
+              </div>
+              <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1">{project.data.description}</p>
+              {project.data.tags && project.data.tags.length > 0 && (
+                <div class="flex flex-wrap items-center gap-1.5">
+                  {project.data.tags.map((tag, index) => (
+                    <>
+                      {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                      <Badge variant="brand">{tag}</Badge>
+                    </>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div class="text-center mt-4">
+        <Button variant="outline" href="/projects">
+          查看更多项目
+          <Icon name="chevron-right" size="sm" />
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Teaser -->
+  <section class="relative z-10 py-[var(--space-section-md)] bg-background">
+    <div class="mx-auto max-w-8xl px-6">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div class="flex flex-col justify-center" data-reveal="right" data-reveal-ease="smooth">
+          <div class="flex flex-col gap-6 mb-6">
+            <Badge variant="brand" pill class="self-start">关于 FireStone</Badge>
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+              一位兴趣使然的<br />
+              <span class="text-brand-500"><TypingEffect words={["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "《THE FINALS》选手", "奇袭者", "Sensei", "豪华版《战地风云 5》预购冤种", "（前）特勤干员", "《赛博朋克 2077》预购冤种", "《边境》首发冤种"]} /></span>
+            </h2>
+          </div>
+           <Button variant="outline" href="/about" class="self-start">
+            进一步了解
+            <Icon name="chevron-right" size="sm" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section class="relative z-10 py-[var(--space-section-md)] bg-background">
+    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
+      <div class="flex flex-col items-center gap-6 text-center" data-reveal>
+        <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+          推荐文章
+        </h2>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post, index) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            href={getPostUrl(post.id)}
+            publishedAt={post.data.publishedAt}
+            tags={post.data.tags}
+            author={post.data.author}
+            image={post.data.image}
+            svgSlug={post.data.svgSlug}
+            revealDelay={index}
+            class={index === 3 ? 'hidden sm:block lg:hidden' : undefined}
+          />
+        ))}
+      </div>
+
+      <div class="flex justify-center">
+        <Button variant="outline" href="/blog">
+          阅读所有文章
+          <Icon name="chevron-right" size="sm" />
+        </Button>
+      </div>
+    </div>
+  </section>
+
+<script>
+  function initCountup() {
+    const counters = document.querySelectorAll<HTMLElement>('[data-countup]:not([data-countup-init])');
+    if (counters.length === 0) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        const el = entry.target as HTMLElement;
+        const target = parseInt(el.dataset.countup ?? '0', 10);
+        const suffix = el.dataset.suffix ?? '';
+        const duration = 1200;
+        const start = performance.now();
+        const tick = (now: number) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.round(eased * target) + suffix;
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.4 });
+    counters.forEach((el) => {
+      el.dataset.countupInit = 'true';
+      observer.observe(el);
+    });
+  }
+
+  initCountup();
+</script>
+
+</LandingLayout>

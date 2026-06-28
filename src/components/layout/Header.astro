@@ -355,10 +355,10 @@ const buttonId = `${menuId}-button`;
                   'hover-glow-text weight-shift',
                   isFloating && 'hdr-invert-text',
                   isFloating
-                    ? (isActive(href) ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' : 'text-foreground-muted')
+                    ? (isActive(href) ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' : 'text-foreground-muted font-medium')
                     : (isActive(href) 
                         ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' 
-                        : 'text-foreground-muted hover:text-foreground')
+                        : 'text-foreground-muted hover:text-foreground font-medium')
                 )}
                 aria-current={isActive(href) ? 'page' : undefined}
                 data-text={label}
@@ -411,12 +411,12 @@ const buttonId = `${menuId}-button`;
                       rel="noopener noreferrer"
                       aria-label={label}
                       class={cn(
-                        'rounded-md p-2',
-                        'hover-glow-icon', /* FireStone: 接入统一交互引擎 */
+                        'rounded-full p-2',
+                        'hover-glow-icon',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                         isFloating
                           ? 'hdr-invert-text'
-                          : 'text-foreground-muted hover:text-foreground hover:bg-secondary/70'
+                          : 'text-foreground-muted hover:text-foreground'
                       )}
                     >
                       <Icon name={icon} size="md" />

@@ -367,7 +367,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (

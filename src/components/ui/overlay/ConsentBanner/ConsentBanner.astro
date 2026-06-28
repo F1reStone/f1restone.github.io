@@ -55,7 +55,7 @@ const configJson = JSON.stringify(consentConfig);
 // FireStone: 智能替换 {privacyPolicy} 占位符机制
 // 将 consent.config.ts 中写好的文本转换为带有 Tailwind 样式的超链接。
 const privacyLinkHtml = privacyPolicyUrl
-  ? `<a href="${privacyPolicyUrl}" class="text-primary underline underline-offset-4 hover:text-brand-500 font-medium transition-colors">${privacyPolicyLabel}</a>`
+  ? `<a href="${privacyPolicyUrl}" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors">${privacyPolicyLabel}</a>`
   : '';
 
 function injectPrivacyLink(text: string | undefined) {

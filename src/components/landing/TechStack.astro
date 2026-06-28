@@ -36,7 +36,7 @@ const cards = items
 const bgClass = background === 'primary' ? 'bg-background' : 'bg-background-secondary';
 ---
 
-<section class={`border-y border-border ${bgClass} py-[var(--space-section-md)]`}>
+<section class={`${bgClass} py-[var(--space-section-md)]`}>
   <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
     {(badge || title || description) && (
       <div class="flex flex-col items-center gap-4 text-center" data-reveal>

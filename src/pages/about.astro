@@ -9,10 +9,36 @@ import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
+import { Image } from 'astro:assets';
+import aboutMe from "./src/assets/about/about-me.png";
 import TypingEffect from '@/components/ui/TypingEffect.astro';
 import TechStack from '@/components/landing/TechStack.astro';
-import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
 import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
+
+// FireStone: Fav game source (600x900)
+const favoriteGames = [
+  { name: "《THE FINALS》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2073850/755e36577cc4a72d936c4532c1cf7ecf7d89dae5/library_capsule_2x.jpg", link: "https://www.reachthefinals.com/" },
+  { name: "《ARC Raiders》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1808500/e33d26c3175e3f590a0153fdcf0f4863f6c84288/library_600x900_2x.jpg", link: "https://www.arcraiders.com/" },
+  { name: "《侠盗猎车手 V》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3240220/ddab8eabe6e36d6dc58045ea8a51bc8a12b198dc/library_600x900_schinese_2x.jpg", link: "https://www.rockstargames.com/zh/gta-v" },
+  { name: "《荒野大镖客：救赎 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1174180/library_600x900_2x.jpg", link: "https://www.rockstargames.com/zh/reddeadredemption2" },
+  { name: "《识质存在》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3357650/2c65f388cb3ac6631c8a38ff1a59903263fc70e9/library_capsule_2x.jpg", link: "https://www.capcom-games.com/pragmata/zh-hans/" },
+  { name: "《剑星》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3489700/f33e11f3faa2d0e800102c8cc1046554d3edc5da/library_600x900_tchinese_2x.jpg", link: "https://www.stellar-blade.com/" },
+  { name: "《蔚蓝档案》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3557620/ae72bf133e6640facf0cbd184aacfaf4df0f215c/library_600x900_tchinese_2x.jpg", link: "https://bluearchive.jp/" },
+  { name: "《绝地潜兵 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/553850/ca2a6c359af254e709c911ba46fc63eb3142effe/library_capsule_schinese.jpg", link: "https://www.arrowheadgamestudios.com/aboutarrowhead/games/" },
+  { name: "《Minecraft》", image: "/src/assets/about/minecraft.png", link: "https://www.minecraft.net/zh-hans" },
+  { name: "《无人深空》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/275850/7dff8d5fc26b169629c02b9d0f00c28c64cd525e/library_capsule_schinese_2x.jpg", link: "https://www.nomanssky.com/" },
+  { name: "《深海迷航 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1962700/2de7531ca6224cd52ea6c56ceae98a1bf7cafb1f/library_capsule_schinese_2x.jpg", link: "https://www.subnautica.com/zh-cn" },
+  { name: "《潜渊症》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/602960/library_600x900_schinese_2x.jpg", link: "https://barotraumagame.com/" },
+  { name: "《拆迁》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1167630/943e8110c7b4eafc6a02c87703ea5f6f8e2ef2ba/library_capsule_2x.jpg", link: "https://www.teardowngame.com/" },
+  { name: "《极限竞速：地平线 4》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1293830/library_600x900_2x.jpg", link: "https://forza.net/" },
+  { name: "《极限竞速：地平线 5》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1551360/library_600x900_2x.jpg", link: "https://forza.net/forzahorizon5" },
+  { name: "《杀手 暗杀世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1659040/893b14fe999e64777ad2660cf88c52f1f403053f/library_capsule_2x.jpg", link: "https://ioi.dk/hitman" },
+  { name: "《死亡搁浅：导演剪辑版》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1850570/library_600x900_2x.jpg", link: "https://www.kojimaproductions.jp/zh-hans/death-stranding-dc" },
+  { name: "《半衰期：艾莉克斯》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/546560/library_600x900_2x.jpg", link: "https://www.half-life.com/zh-cn/alyx" },
+  { name: "《伊克西翁》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1113120/library_600x900_2x.jpg", link: "https://www.kasedogames.com/ixion" },
+  { name: "《边缘世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/294100/644bff2fcf3a104d1e022b53a7f9c8c58af91c8a/library_capsule_2x.jpg", link: "https://rimworldgame.com/" },
+  { name: "《生化危机 4 重制版》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2050650/library_600x900_2x.jpg", link: "https://www.residentevil.com/re4/zh-hans/" },
+];
 ---
 <PageLayout
   title="关于"
@@ -21,272 +47,143 @@ import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
   <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="user" size="sm" />
-      关于我
+      关于
     </Badge>
     
     <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
       <span class="hero-title-text">About</span>
     </h1>
 
-    <p slot="description" class="hero-description-text">一位兴趣使然的<TypingEffect words={["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "《THE FINALS》选手", "奇袭者", "Sensei", "豪华版《战地风云 5》预购冤种", "（前）特勤干员", "《赛博朋克 2077》预购冤种", "《边境》首发冤种"]} /></p>
+    <p slot="description" class="hero-description-text">一些关于 FireStone 的信息。</p>
   </Hero>
 
-  <!-- Values -->
-  <section class="py-[var(--space-section-md)] bg-background-secondary border-t border-border">
-    <div class="mx-auto max-w-8xl px-6">
-      <div class="mb-8 text-center flex flex-col items-center gap-4" data-reveal>
-        <div class="flex flex-col items-center gap-6">
-          <Badge variant="brand" pill>关于我</Badge>
-          <h2 class="font-display text-4xl font-bold text-foreground">
-            To the <span class="text-brand-500">Infinite Future</span>
-          </h2>
-        </div>
-        <p class="text-lg text-foreground-muted max-w-8xl mx-auto text-balance">
-          Placeholders
-        </p>
-      </div>
-      <div class="grid gap-8 lg:grid-cols-3">
-        <Card hover data-reveal>
-          <div class="flex items-start gap-4">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="zap" size="md" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-foreground">视觉设计</h3>
-              <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                Fast sites rank better, convert better, and keep users happy. I optimise for speed from the ground up.
-              </p>
-            </div>
-          </div>
-        </Card>
-        <Card hover data-reveal data-reveal-delay="1">
-          <div class="flex items-start gap-4">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="award" size="md" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-foreground">人工智能</h3>
-              <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                Sixteen years of experience means I know what works, what doesn't, and exactly what your project needs.
-              </p>
-            </div>
-          </div>
-        </Card>
-        <Card hover data-reveal data-reveal-delay="2">
-          <div class="flex items-start gap-4">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="rocket" size="md" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-semibold text-foreground">Modern from the Ground Up</h3>
-              <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                Built with today's tooling. Fast, maintainable, and ready for whatever comes next.
-              </p>
-            </div>
-          </div>
-        </Card>
-      </div>
-    </div>
-  </section>
-
-  <!-- What's possible now -->
-  <section class="py-[var(--space-section-md)] bg-background border-t border-border">
+  <!-- About -->
+  <section class="py-[var(--space-section-md)] bg-background">
     <div class="mx-auto max-w-8xl px-6">
       <div class="grid gap-12 lg:grid-cols-2">
         <!-- Left: text -->
         <div class="flex flex-col gap-4" data-reveal="right" data-reveal-ease="smooth">
           <div class="flex flex-col gap-6">
-            <Badge variant="brand" pill class="self-start">关于我和 AI</Badge>
-            <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-              启发<span class="text-brand-500">无限智能</span>
+            <Badge variant="brand" pill class="self-start">关于我</Badge>
+            <h2 class="font-display text-xl sm:text-2xl lg:text-4xl font-bold text-foreground">
+              一名兴趣使然的
+              <br>
+              <span class="text-brand-500"><TypingEffect words={["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "《THE FINALS》选手", "奇袭者", "Sensei", "豪华版《战地风云 5》预购冤种", "（前）特勤干员", "《赛博朋克 2077》预购冤种", "《边境》首发冤种"]}/></span>
             </h2>
           </div>
           <p class="text-lg text-foreground-muted leading-relaxed">
-            我始终认为 AI 的发展并不代表机器的胜利，⽽是⼈类创造⼒的镜像与延伸。AI 使我们能从繁重的重复性工作中解放出来，去完成那些真正需要我们独特视角和新颖想法的工作。
+            这里是「FireStone 火石」，一名兴趣使然的业余开发者 / 设计师 / 内容创作者，也是一个接连预购了豪华版《战地风云 5》、《赛博朋克 2077》，然后还首发入了《边境》的 <span class="text-foreground-subtle/50"><s>大傻逼</s></span> 倒霉蛋。
           </p>
           <p class="text-lg text-foreground-muted leading-relaxed">
-            我一直致力于将 AI 更深度的融入我的工作流中，让我能够专注于真正重要的设计决策和创意表达。
+          平日里最大的兴趣就是打打游戏，有时也会在  Figma 里 <span class="text-foreground-subtle/50"><s>梦到啥做啥</s></span> 做一些有趣的设计、拿 DaVinci Resolve 剪一些有的没的、用 GPT / Claude / Gemini / DeepSeek 来 Vibe Coding 并落地一些脑中的 <span class="text-foreground-subtle/50"><s>鬼点子</s></span> 想法（比如说这个网站或者 <a href="/projects/sparkforge" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-te
+            xt hover:text-brand-500 font-medium transition-colors">SparkForge 项目</a>）、用 ComfyUI 创作一些符合自己 <span class="text-foreground-subtle/50"><s>XP</s></span> 审美的 AI 绘画作品。也许样样都会，但样样都不太精。无论在哪个领域，都还请多指教。
           </p>
         </div>
-        <!-- Right: two stacked partner cards -->
-        <div class="flex flex-col gap-4 h-full" data-reveal="left" data-reveal-delay="1" data-reveal-ease="smooth">
-          <Card variant="elevated" hover class="flex-1 flex flex-col justify-center">
-            <div class="flex items-start gap-4">
-              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-                <Icon name="code-2" size="md" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-xs font-bold tracking-wide casesensitive text-foreground-muted mb-1">Web Designer & Developer</p>
-                <h3 class="text-base font-semibold text-foreground">Stable Diffusion</h3>
-                <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                  16 years of craft — design, code, performance, and honest communication. Based in Veghel, working worldwide.
-                </p>
-                <div class="flex flex-wrap gap-1.5 mt-3">
-                  <Badge size="sm" variant="brand">Astro</Badge>
-                  <Badge size="sm" variant="brand">Tailwind</Badge>
-                  <Badge size="sm" variant="brand">TypeScript</Badge>
-                </div>
-              </div>
-            </div>
-          </Card>
-          <Card variant="elevated" hover href="https://claude.ai/code" target="_blank" rel="noopener noreferrer" class="group flex-1 flex flex-col justify-center">
-            <div class="flex items-start justify-between gap-4">
-              <div class="flex items-start gap-4 flex-1 min-w-0">
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-                  <Icon name="sparkles" size="md" />
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-xs font-bold tracking-wide casesensitive text-foreground-muted mb-1">AI Thinking Partner</p>
-                <h3 class="text-base font-semibold text-foreground">Claude</h3>
-                <p class="text-sm text-foreground-muted leading-relaxed mt-1.5">
-                  Reasoning through decisions, reviewing code and copy, exploring alternatives — a second perspective at every stage of a project.
-                </p>
-                <div class="flex flex-wrap gap-1.5 mt-3">
-                  <Badge size="sm" variant="brand">Design review</Badge>
-                  <Badge size="sm" variant="brand">Code QA</Badge>
-                  <Badge size="sm" variant="brand">Deep thinking</Badge>
-                </div>
-              </div>
-              </div>
-              <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0" />
-            </div>
-          </Card>
+        <!-- FireStone: Right: Portrait Image (出血排版) -->
+        <div class="relative hidden lg:flex justify-end items-end h-full" data-reveal="left" data-reveal-delay="1" data-reveal-ease="smooth">
+          <!-- FireStone: public 目录下的本地图片使用 inferSize={true} 自动推算原生宽高防止 CLS 抖动 -->
+          <Image 
+            src={aboutMe}
+            inferSize={true}
+            alt="FireStone" 
+            class="absolute bottom-[calc(var(--space-section-md)*-0.5)] -right-12 h-[115%] max-h-[800px] w-auto object-contain object-bottom drop-shadow-2xl z-20 pointer-events-none" 
+          />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- My Stack -->
   <TechStack
-    title="我的工作流"
-    description="我每天都依赖这些工具来构建项目和作品——这些工具拥有优秀的性能、出色的体验和（相对来说）极高的可靠性。"
-    background="secondary"
+    title="我所使用的工具"
+    badge="技术栈 & 工作流"
+    description="我对与计算机相关的一切事物都很感兴趣，目前正在探索视觉设计、动效设计、3D 设计、视频制作、人工智能、Web 前端、虚幻 / Godot 开发等，期望未来能够借由下列工具打造出让你眼前一亮的作品。"
+    background="primary"
   />
-  <!-- FAQ -->
-  <section class="py-[var(--space-section-md)] bg-background border-t border-border">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-      <div class="flex flex-col items-center gap-4 text-center" data-reveal>
-        <div class="flex flex-col items-center gap-6">
-          <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-            常见问题
+
+  <!-- My Game Fav -->
+  <section class="py-[var(--space-section-md)] bg-background">
+    <div class="mx-auto max-w-8xl px-6">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <!-- Left: text -->
+        <div class="flex flex-col gap-4" data-reveal="right" data-reveal-ease="smooth">
+          <div class="flex flex-col gap-6">
+            <Badge variant="brand" pill class="self-start">游戏</Badge>
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+              我的游戏偏好
+            </h2>
+          </div>
+          <p class="text-lg text-foreground-muted leading-relaxed">
+            平时常玩的游戏类型包括但不限于 FPS、TPS、沙盒、开放世界、动作、竞速、策略等，美术上对于科幻风格情有独钟。是个 <a href="https://www.embark-studios.com/" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors">Embark</a> 批。喜欢冲动消费，游戏品味时神时鬼，经常会仅仅因为美术 / 音乐 / 剧情就为一款游戏冲动消费（例如《ARC Raiders》、《THE FINALS》和《伊克西翁》）。
+          </p>
+        </div>
+        <!-- Right: two stacked partner cards -->
+        <div class="flex flex-col gap-3 h-full" data-reveal="left" data-reveal-delay="1" data-reveal-ease="smooth">
+          <Image width={800} height={280} src="https://card.yuy1n.io/card/76561198359781026/tokyonight,badge,group,text-eeedf5,bg-0b0a11,badges,games,reviews" alt="FireStone 的 Steam 个人资料卡片" />
+          <p class="text-xs text-foreground-subtle" >FireStone 的 Steam 个人资料卡片</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- My Game List -->
+  <section class="pb-[var(--space-section-md)] bg-background">
+    <div class="mx-auto max-w-8xl px-6">
+      <div class="flex flex-col gap-4 mb-6" data-reveal>
+        <div class="flex flex-col gap-6">
+          <h2 class="font-display text-2xl font-semibold text-foreground">
+            最爱作品
           </h2>
         </div>
       </div>
+      
+      <!-- FireStone: Adaptive Game Grid (Steam Inventory Style) -->
+      <!-- 网格系统：手机端2列，平板3/4列，桌面端5/6列，极致自适应 -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
+        {favoriteGames.map((game, index) => (
+          <Card 
+            variant="default"
+            padding="none"
+            href={game.link}
+            target="_blank"
+            class="group relative overflow-hidden aspect-[2/3] bg-background-tertiary border-border/50 hover-glow-box block w-full"
+            data-reveal
+            data-reveal-delay={index % 6}
+          >
+            <!-- 游戏封面 (使用原生 img 避免 Steam CDN 加载问题) -->
+            <img 
+              src={game.image} 
+              alt={game.name} 
+              width="600"
+              height="900"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105" 
+              loading="lazy" 
+              decoding="async"
+            />
 
-      <div class="grid gap-6 md:grid-cols-2">
-        <!-- Card 1: About Astro -->
-        <Card variant="elevated" padding="lg" data-reveal data-reveal-delay="1">
-          <div class="flex items-center gap-3 pb-4 border-b border-border">
-            <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="rocket" size="md" />
-            </div>
-            <h3 class="font-display text-base font-semibold text-foreground">About Astro</h3>
-          </div>
-          <div class="w-full">
-            <details class="border-b border-border" name="faq-astro">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                What is Astro?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Astro is a modern web framework built for content-driven sites. It ships zero JavaScript by default — only sending what the page actually needs. The result is fast load times, excellent Core Web Vitals scores, and lean, maintainable code.
-              </div>
-            </details>
-            <details class="border-b border-border" name="faq-astro">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Why do you build with Astro?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Because it matches the way I think about the web: lean, purposeful, and built to last. Astro lets me ship fast sites without fighting the framework — minimal JavaScript, clean HTML, great SEO — so I can focus on the design and details that actually matter.
-              </div>
-            </details>
-            <details class="border-b border-border" name="faq-astro">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Do you always build with Astro?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Almost always. For portfolios, business sites, marketing pages, and blogs, Astro is the right tool. If a project genuinely calls for something different, I'll be upfront about it. But Astro handles most of what clients need, and it does it exceptionally well.
-              </div>
-            </details>
-            <details class="border-b border-border" name="faq-astro">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Do you build Astro themes?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Yes. I built <a href="https://astro.build/themes/details/astro-rocket/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-2 decoration-brand-500 hover:text-brand-400 transition-colors">Astro Rocket</a> — a free, production-ready theme listed on the official Astro themes directory. It includes a full component library, blog support, dark mode, SEO, and everything you need to launch a fast modern website without starting from scratch.
-              </div>
-            </details>
-            <details class="border-b border-border last:border-0" name="faq-astro">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Do you plan to build more Astro themes?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Yes, that's the plan. Astro Rocket is actively maintained and I have ideas for new themes in the pipeline. Follow along on the blog or keep an eye on the official Astro themes directory for what's next.
-              </div>
-            </details>
-          </div>
-        </Card>
+            <!-- 渐进式毛玻璃遮罩 (底层背景) -->
+            <div class="game-card-overlay absolute inset-0 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
 
-        <!-- Card 2: About the work -->
-        <Card variant="elevated" padding="lg" data-reveal data-reveal-delay="2">
-          <div class="flex items-center gap-3 pb-4 border-b border-border">
-            <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-              <Icon name="user" size="md" />
+            <!-- 右上角悬浮跳转图标 (调用全局的 glass-panel 与 hover-glow-icon/box) -->
+            <div class="absolute top-2.5 right-2.5 opacity-0 scale-75 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full glass-panel hover-glow-box text-white shadow-lg">
+                <Icon name="arrow-up-right" size="sm" class="w-4 h-4" />
+              </span>
             </div>
-            <h3 class="font-display text-base font-semibold text-foreground">About the work</h3>
-          </div>
-          <div class="w-full">
-            <details class="border-b border-border" name="faq-work">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Do you use AI when you build a website?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Yes — I work alongside Claude as a thinking partner throughout every project. Not as a shortcut, but as a second perspective that helps me think through design decisions, review code, and spot things I might otherwise miss.
-              </div>
-            </details>
-            <details class="border-b border-border" name="faq-work">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Are you a company or agency?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                No. I'm a designer and developer who works solo, driven by genuine enthusiasm for the craft — not by commercial targets. There's no sales team, no account manager, no handoff to a junior. You work directly with me from the first conversation to the final delivery.
-              </div>
-            </details>
-            <details class="border-b border-border" name="faq-work">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                How do you choose which projects to take on?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                I look for projects where good design and solid execution actually matter to the client. I work best when there's a clear goal, an open line of communication, and a client who trusts the process. I'd rather take on fewer projects and do them properly than stretch across too many at once.
-              </div>
-            </details>
-            <details class="border-b border-border" name="faq-work">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Do you offer support or maintenance after launch?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Yes. Whether it's small updates, content changes, or something more involved — I'm available after launch. We can agree on whatever arrangement works best for the project.
-              </div>
-            </details>
-            <details class="border-b border-border last:border-0" name="faq-work">
-              <summary class="flex w-full items-center justify-between text-sm py-4 text-left font-medium text-foreground transition-colors hover:text-foreground-secondary cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                Do you work with clients outside the Netherlands?
-                <Icon name="chevron-down" size="sm" class="faq-icon shrink-0 text-foreground-muted transition-transform duration-200" />
-              </summary>
-              <div class="pb-4 text-sm text-foreground-muted leading-relaxed">
-                Absolutely. I'm based in Veghel but work with clients worldwide. Most projects run entirely remote, which works well for clear briefs and good communication. Time zone differences are rarely a problem.
-              </div>
-            </details>
-          </div>
-        </Card>
+
+            <!-- 底部游戏名称 (悬停向上滑入) -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:translate-y-0 group-hover:opacity-100 group-active:translate-y-0 group-active:opacity-100 pointer-events-none">
+              <h3 class="font-display font-bold text-lg sm:text-xl text-foreground tracking-tight leading-tight">
+                {game.name}
+              </h3>
+            </div>
+          </Card>
+        ))}
+      </div>
+      <div class="flex flex-col gap-4 mt-4" data-reveal>
+        <p class="flex items-center gap-1.5 pl-0.5 text-[11px] text-foreground-subtle">
+          <Icon name="info" size="xs"/>
+          点击上方游戏封面将跳转至对应游戏官网，这些第三方网站适用其各自的《隐私政策》，FireStone 不对第三方网站中的任何内容负责。
+        </p>
       </div>
     </div>
   </section>
@@ -296,5 +193,24 @@ import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
 <style>
   details[open] > summary .faq-icon {
     transform: rotate(180deg);
+  }
+
+  /* FireStone: Game Card Progressive Blur Overlay */
+  .game-card-overlay {
+    /* 物理颜色渐变：底部为 95% 主背景色（确保文字绝对清晰），向顶部渐变为全透明 */
+    background: linear-gradient(
+      to top, 
+      color-mix(in oklch, var(--color-background) 95%, transparent) 0%, 
+      color-mix(in oklch, var(--color-background) 40%, transparent) 40%, 
+      transparent 100%
+    );
+    
+    /* 全局毛玻璃应用 */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* 核心魔法遮罩：只允许毛玻璃在底部 30% 最强烈，然后平滑过渡消失在顶部 */
+    mask-image: linear-gradient(to top, black 0%, black 25%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 25%, transparent 80%);
   }
 </style>

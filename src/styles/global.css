@@ -1587,7 +1587,7 @@ input[type='reset'] {
     background-color 200ms linear,
     color 200ms linear,
     text-shadow 500ms var(--ease-fluid),
-    font-weight 500ms var(--ease-bouncy),
+    font-weight 700ms var(--ease-bouncy),
     filter 400ms var(--ease-fluid);
 }
 
