@@ -103,7 +103,7 @@ const {
   copyright = 'Copyright © {year} FireStone. All Rights Reserved.',
   legalLinks,
   hideLogo = false,
-  tagline = '兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。',
+  tagline = '',
   maxWidth = '8xl',// FireStone: Change max width to 8xl to adapt out designs.
   breadcrumbs: explicitBreadcrumbs, // 接收手动传入的面包屑
   hideBreadcrumbs = false,          // 接收强制隐藏指令
@@ -228,10 +228,12 @@ const footerClasses = cn(footerVariants({ background }), className);
   <div class={cn('mx-auto px-6', maxWidthClass)}>
 
     {showBreadcrumbs && (
-      <div class="pb-6 mb-6 md:mb-8 border-b border-border/50">
+      <div class="mb-6">
         <Breadcrumbs items={resolvedBreadcrumbs || []} />
       </div>
     )}
+
+    <div class="pt-8 border-t border-border/50"></div>
 
     {layout === 'simple' && (
       <>

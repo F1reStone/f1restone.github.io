@@ -1400,6 +1400,16 @@ input[type='reset'] {
 [data-reveal][data-reveal-delay="2"] { transition-delay: 200ms; }
 [data-reveal][data-reveal-delay="3"] { transition-delay: 300ms; }
 [data-reveal][data-reveal-delay="4"] { transition-delay: 400ms; }
+[data-reveal][data-reveal-delay="1"] { transition-delay: 100ms; }
+[data-reveal][data-reveal-delay="2"] { transition-delay: 200ms; }
+[data-reveal][data-reveal-delay="3"] { transition-delay: 300ms; }
+[data-reveal][data-reveal-delay="4"] { transition-delay: 400ms; }
+[data-reveal][data-reveal-delay="5"] { transition-delay: 500ms; }
+[data-reveal][data-reveal-delay="6"] { transition-delay: 600ms; }
+[data-reveal][data-reveal-delay="7"] { transition-delay: 700ms; }
+[data-reveal][data-reveal-delay="8"] { transition-delay: 800ms; }
+[data-reveal][data-reveal-delay="9"] { transition-delay: 900ms; }
+[data-reveal][data-reveal-delay="10"] { transition-delay: 1000ms; }
 
 /* Below lg the two-column sections collapse to a single stacked column, so a
    horizontal reveal slides content sideways while the hero above it rises —
@@ -1588,7 +1598,8 @@ input[type='reset'] {
     color 200ms linear,
     text-shadow 500ms var(--ease-fluid),
     font-weight 700ms var(--ease-bouncy),
-    filter 400ms var(--ease-fluid);
+    filter 400ms var(--ease-fluid),
+    opacity 500ms var(--ease-fluid); /* FireStone: 增加透明度过渡，让引擎支持入场淡入 */
 }
 
 /* 1. 基础 SparkGlass 材质 */
