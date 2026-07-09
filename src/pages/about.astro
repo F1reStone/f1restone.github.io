@@ -17,7 +17,7 @@ import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
 
 // FireStone: Fav game source (600x900)
 const favoriteGames = [
-  { name: "《THE FINALS》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2073850/755e36577cc4a72d936c4532c1cf7ecf7d89dae5/library_capsule_2x.jpg", link: "https://www.reachthefinals.com/" },
+  { name: "《THE FINALS》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2073850/6d9cfdeaea9f822d8f4af42d8f0dbd083e81f64e/library_capsule_2x.jpg", link: "https://www.reachthefinals.com/" },
   { name: "《ARC Raiders》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1808500/e33d26c3175e3f590a0153fdcf0f4863f6c84288/library_600x900_2x.jpg", link: "https://www.arcraiders.com/" },
   { name: "《侠盗猎车手 V》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3240220/ddab8eabe6e36d6dc58045ea8a51bc8a12b198dc/library_600x900_schinese_2x.jpg", link: "https://www.rockstargames.com/zh/gta-v" },
   { name: "《荒野大镖客：救赎 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1174180/library_600x900_2x.jpg", link: "https://www.rockstargames.com/zh/reddeadredemption2" },
@@ -141,7 +141,7 @@ const favoriteGames = [
       </div>
       
       <!-- FireStone: Adaptive Game Grid (Steam Inventory Style) -->
-      <!-- 网格系统：手机端2列，平板3/4列，桌面端5/6列，极致自适应 -->
+      <!-- 网格系统：手机端2列，折叠屏和平板3/4列，桌面端5/6列 -->
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-5">
         {favoriteGames.map((game, index) => (
           <div data-reveal data-reveal-delay={index % 6} class="w-full h-full">
