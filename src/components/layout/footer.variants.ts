@@ -7,7 +7,8 @@ export const footerVariants = cva('py-[var(--space-stack-lg)]', {
       secondary: 'bg-background-secondary border-border',
       invert: 'invert-section bg-background border-border',
       /* FireStone: Added glow background */
-      glow: 'footer-glow-theme border-border',
+      //glow: 'footer-glow-theme border-border',
+      glow: 'footer-aurora border-border',
     },
   },
   defaultVariants: {
