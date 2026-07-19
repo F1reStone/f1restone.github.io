@@ -46,7 +46,7 @@ const trendIcons = {
   <div class="flex items-start justify-between">
     <div>
       <p class="text-sm text-foreground-muted">{label}</p>
-      <p class="text-2xl font-bold text-foreground mt-1">{value}</p>
+      <p class="text-2xl font-bold font-mono text-foreground mt-1">{value}</p>
       {trend && trendText && (
         <div class={cn('flex items-center gap-1 mt-2 text-xs font-medium', trendColors[trend])}>
           <Icon name={trendIcons[trend]} size="xs" />

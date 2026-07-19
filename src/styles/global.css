@@ -44,6 +44,15 @@ input[type='reset'] {
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }*/
 
+/*@font-face {
+  font-family: 'Wix Madefor Display Variable';
+  src: url('/fonts/wix-madefor-display-variable.woff2') format('woff2');*/
+  /*font-style: normal;*/
+  /*font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}*/
+
 /* Neue Regrade (Local) */
 @font-face {
   font-family: 'Neue Regrade Variable';
@@ -250,11 +259,11 @@ input[type='reset'] {
 @layer utilities {
   /* 
      CSS max() 响应式宽屏适配：
-     - 在普通/较小屏幕上，保持至少 88rem (1408px) 的最大宽度设定，由外层的 px-6 保证移动端边距。
-     - 在 21:9 等带鱼屏/超宽屏上展开为 80vw（占据屏幕 80% 宽度）。
+     - 在普通/较小屏幕上，保持至少指定 rem 的最大宽度设定，由外层的 px-6 保证移动端边距。
+     - 在 21:9 等带鱼屏/超宽屏上展开为指定vw（占据屏幕 80% 宽度）。
   */
-  .max-w-8xl { max-width: max(70rem, 80vw); }
-  .max-w-9xl { max-width: max(80rem, 90vw); }
+  .max-w-8xl { max-width: max(70rem, 90vw); }
+  .max-w-9xl { max-width: max(70rem, 90vw); }
 }
 
 /* -------------------------------------------------------------------------
@@ -1396,20 +1405,10 @@ input[type='reset'] {
   transform: none;
 }
 
-[data-reveal][data-reveal-delay="1"] { transition-delay: 100ms; }
-[data-reveal][data-reveal-delay="2"] { transition-delay: 200ms; }
-[data-reveal][data-reveal-delay="3"] { transition-delay: 300ms; }
-[data-reveal][data-reveal-delay="4"] { transition-delay: 400ms; }
-[data-reveal][data-reveal-delay="1"] { transition-delay: 100ms; }
-[data-reveal][data-reveal-delay="2"] { transition-delay: 200ms; }
-[data-reveal][data-reveal-delay="3"] { transition-delay: 300ms; }
-[data-reveal][data-reveal-delay="4"] { transition-delay: 400ms; }
-[data-reveal][data-reveal-delay="5"] { transition-delay: 500ms; }
-[data-reveal][data-reveal-delay="6"] { transition-delay: 600ms; }
-[data-reveal][data-reveal-delay="7"] { transition-delay: 700ms; }
-[data-reveal][data-reveal-delay="8"] { transition-delay: 800ms; }
-[data-reveal][data-reveal-delay="9"] { transition-delay: 900ms; }
-[data-reveal][data-reveal-delay="10"] { transition-delay: 1000ms; }
+/* FireStone: 结合 JS 注入的 CSS 变量，实现动态无限级联延迟 */
+[data-reveal] {
+  transition-delay: calc(var(--reveal-idx, 0) * 100ms);
+}
 
 /* Below lg the two-column sections collapse to a single stacked column, so a
    horizontal reveal slides content sideways while the hero above it rises —
@@ -1445,19 +1444,10 @@ input[type='reset'] {
   transform: none;
 }
 
-[data-reveal-children] > *:nth-child(1)    { transition-delay: calc(var(--reveal-stagger) * 0);  }
-[data-reveal-children] > *:nth-child(2)    { transition-delay: calc(var(--reveal-stagger) * 1);  }
-[data-reveal-children] > *:nth-child(3)    { transition-delay: calc(var(--reveal-stagger) * 2);  }
-[data-reveal-children] > *:nth-child(4)    { transition-delay: calc(var(--reveal-stagger) * 3);  }
-[data-reveal-children] > *:nth-child(5)    { transition-delay: calc(var(--reveal-stagger) * 4);  }
-[data-reveal-children] > *:nth-child(6)    { transition-delay: calc(var(--reveal-stagger) * 5);  }
-[data-reveal-children] > *:nth-child(7)    { transition-delay: calc(var(--reveal-stagger) * 6);  }
-[data-reveal-children] > *:nth-child(8)    { transition-delay: calc(var(--reveal-stagger) * 7);  }
-[data-reveal-children] > *:nth-child(9)    { transition-delay: calc(var(--reveal-stagger) * 8);  }
-[data-reveal-children] > *:nth-child(10)   { transition-delay: calc(var(--reveal-stagger) * 9);  }
-[data-reveal-children] > *:nth-child(11)   { transition-delay: calc(var(--reveal-stagger) * 10); }
-[data-reveal-children] > *:nth-child(12)   { transition-delay: calc(var(--reveal-stagger) * 11); }
-[data-reveal-children] > *:nth-child(n+13) { transition-delay: calc(var(--reveal-stagger) * 12); }
+/* FireStone: 配合 JS 注入的索引变量，实现无限子元素的瀑布流延时 */
+[data-reveal-children] > * {
+  transition-delay: calc(var(--reveal-stagger) * var(--reveal-index, 0));
+}
 
 /* Per-block reveal for long-form article bodies (single blog posts /
    single project pages). Each direct child of the prose container —

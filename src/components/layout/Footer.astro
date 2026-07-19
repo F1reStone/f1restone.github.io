@@ -32,6 +32,7 @@ import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
+import giantLogoRaw from '@/assets/firestone-text.svg?raw'; // FireStone: Import the giant logo SVG as raw string
 
 export interface NavItem {
   label: string;
@@ -59,11 +60,11 @@ export interface LegalLink {
 
 interface Props extends HTMLAttributes<'footer'> {
   /** Layout style */
-  layout?: 'simple' | 'columns' | 'minimal' | 'stacked';
+  layout?: 'simple' | 'columns' | 'asymmetricColumns' | 'minimal' | 'stacked';
   /** Number of columns (only for columns layout) */
   columns?: 2 | 3 | 4 | 5 | 6;
   /** Background variant */
-  background?: 'default' | 'secondary' | 'invert';
+  background?: 'default' | 'secondary' | 'invert' | 'glow'; // FireStone: Added glow background variant
   /** Override default navigation */
   nav?: NavItem[];
   /** Link groups for columns layout */
@@ -89,12 +90,14 @@ interface Props extends HTMLAttributes<'footer'> {
   breadcrumbs?: { label: string; href?: string }[];
   /** 强制隐藏面包屑（如首页默认隐藏） */
   hideBreadcrumbs?: boolean;
+  // FireStone: Added support for footer giant logo
+  giantLogoSvg?: string;
 }
 
 const {
-  layout = 'columns',
+  layout = 'asymmetricColumns',
   columns = 5,
-  background = 'default',
+  background = 'glow',
   nav,
   linkGroups = getFooterLinkGroups(),// FireStone: Fallback to global link groups instead of an empty array
   socialLinks = resolveSocialLinks(siteConfig.socialLinks),
@@ -104,9 +107,10 @@ const {
   legalLinks,
   hideLogo = false,
   tagline = '',
-  maxWidth = '8xl',// FireStone: Change max width to 8xl to adapt out designs.
+  maxWidth = '9xl',// FireStone: Change max width to 9xl to adapt out designs and wider footer.
   breadcrumbs: explicitBreadcrumbs, // 接收手动传入的面包屑
   hideBreadcrumbs = false,          // 接收强制隐藏指令
+  giantLogoSvg={giantLogoRaw}, // FireStone: 接收巨型 Logo SVG 字符串
   class: className,
   ...attrs
 } = Astro.props;
@@ -142,9 +146,9 @@ const processedCopyright = copyright
 
 // FireStone: Added class names for legal links and separators for better styling control
 const legalLinkClass =
-  'inline-flex items-center gap-2 text-sm transition-colors text-foreground-subtle/90 hover-glow-text hover:text-foreground';
+  'inline-flex items-center gap-2 text-sm font-semibold transition-colors text-foreground-subtle hover-glow-text hover:text-foreground';
 
-const legalSeparatorClass = 'mx-3 h-4 w-px bg-border';
+const legalSeparatorClass = 'mx-3 h-4 w-px bg-foreground-subtle/30';
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -152,6 +156,15 @@ const hasTaglineSlot = Astro.slots.has('tagline');
 const hasColumnsSlot = Astro.slots.has('columns');
 const hasSocialSlot = Astro.slots.has('social');
 const hasBottomSlot = Astro.slots.has('bottom');
+
+// FireStone: 处理巨型 Logo，加入 typeof 安全锁防止误传对象导致全站崩溃
+// 如果确实是字符串，就剥离硬编码宽高，并注入全宽和主题色继承类名
+const safeGiantLogoStr = typeof giantLogoRaw === 'string' ? giantLogoRaw : '';
+const cleanGiantLogoSvg = safeGiantLogoStr
+  ? safeGiantLogoStr
+      .replace(/\s(width|height)="[^"]*"/g, '')
+      .replace(/^<svg/, '<svg class="w-full h-auto text-foreground" fill="currentColor"')
+  : null;
 
 // =========================================================================
 // Auto-Routing Breadcrumb
@@ -225,7 +238,18 @@ const footerClasses = cn(footerVariants({ background }), className);
 ---
 
 <footer class={footerClasses} data-pagefind-ignore {...attrs}>
-  <div class={cn('mx-auto px-6', maxWidthClass)}>
+
+  {background === 'glow' && (
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+      <div class="footer-mask-layer absolute inset-0 w-full h-full">
+        <div class="aurora-blob aurora-cyan"></div>
+        <div class="aurora-blob aurora-pink"></div>
+        <div class="aurora-blob aurora-purple"></div>
+      </div>
+    </div>
+  )}
+
+  <div class={cn('mx-auto px-6 relative z-10', maxWidthClass)}>
 
     {showBreadcrumbs && (
       <div class="mb-6">
@@ -369,13 +393,144 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
               <>
                 {showCopyright && (
-                  <p class="text-sm text-foreground-subtle/90" set:html={processedCopyright} />
+                  <p class="text-sm font-semibold text-foreground-subtle" set:html={processedCopyright} />
+                )}
+                {resolvedLegalLinks.length > 0 && (
+                  <div class="flex flex-wrap items-center">
+                    {resolvedLegalLinks.map((link, index) => (
+                      <div class="contents">
+                        {index > 0 && (
+                          <span aria-hidden="true" class={legalSeparatorClass} />
+                        )}
+
+                        {link.action === 'openConsentSettings' ? (
+                          <button
+                            type="button"
+                            class={legalLinkClass}
+                            data-consent-settings-trigger
+                          >
+                            {link.icon && (
+                              <Icon name={link.icon} size="sm" />
+                            )}
+                            <span>{link.label}</span>
+                          </button>
+                        ) : (
+                          <a
+                            href={link.href}
+                            class={legalLinkClass}
+                            target={link.href?.startsWith('http') ? '_blank' : undefined}
+                            rel={link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          >
+                            {link.icon && (
+                              <Icon name={link.icon} size="sm" />
+                            )}
+                            <span>{link.label}</span>
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </>
+    )}
+
+    {/* FireStone: 不对称排版 Asymmetric Columns */}
+    {layout === 'asymmetricColumns' && (
+      <>
+        <div class="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8">
+          {/* 左侧：Logo、描述与社交媒体 (允许在极端情况下挤压 shrink) */}
+          {!hideLogo && (
+            <div class="flex-none lg:w-1/3 xl:w-1/4 shrink min-w-[200px] space-y-[var(--space-stack-md)] pr-0 lg:pr-8">
+              {hasLogoSlot ? (
+                <slot name="logo" />
+              ) : (
+                <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+                  <Logo size="md" class="text-foreground hdr-logo-glow" />
+                </a>
+              )}
+              {(hasTaglineSlot || tagline) && (
+                <p class="text-sm text-foreground-muted leading-relaxed">
+                  {hasTaglineSlot ? <slot name="tagline" /> : tagline}
+                </p>
+              )}
+              {/* 社交媒体：加入 flex-wrap 保证极端 4:3 屏幕下自动折行不溢出 */}
+              {showSocial && socialLinks.length > 0 && (
+                <div class="flex flex-col gap-3 pt-2">
+                  <p class="footer-social-link-intro">社交媒体</p>
+                  <div class="flex flex-wrap items-center gap-[var(--space-stack-md)]">
+                    {socialLinks.map((social) => (
+                      <a
+                        href={social.href}
+                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.label || `在 ${social.key} 上关注 FireStone`}
+                      >
+                        <Icon name={social.icon} size="md" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 右侧：链接组丛 (Link Groups) */}
+          <div class="flex-1 flex flex-wrap lg:flex-nowrap justify-start lg:justify-end gap-x-8 gap-y-10 sm:gap-x-12 xl:gap-x-16 min-w-0">
+            {hasColumnsSlot ? (
+              <slot name="columns" />
+            ) : (
+              linkGroups.map((group) => (
+                <div class="space-y-[var(--space-stack-md)] min-w-[120px] shrink">
+                  <div class="font-semibold font-mono uppercase tracking-[0.15em] text-xs text-foreground">
+                    {group.title}
+                  </div>
+                  <ul class="space-y-2">
+                    {group.links.map((link) => (
+                      <li>
+                        <a
+                          href={link.href}
+                          class="text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover:text-foreground"
+                          target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
+                          rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* FireStone: 巨型品牌 Logo */}
+        {cleanGiantLogoSvg && (
+          <div class="mt-[var(--space-stack-lg)] w-full flex justify-center items-center pointer-events-none select-none">
+            <div class="w-full [&>svg]:w-full [&>svg]:h-auto [&>svg]:text-foreground" set:html={cleanGiantLogoSvg} />
+          </div>
+        )}
+
+        {/* Bottom section (版权与合规链接，复用原有逻辑) */}
+        {(showCopyright || resolvedLegalLinks.length > 0) && (
+          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+            {hasBottomSlot ? (
+              <slot name="bottom" />
+            ) : (
+              <>
+                {showCopyright && (
+                  <p class="text-sm font-semibold text-foreground-subtle" set:html={processedCopyright} />
                 )}
                 {resolvedLegalLinks.length > 0 && (
                   <div class="flex flex-wrap items-center">
@@ -530,6 +685,67 @@ const footerClasses = cn(footerVariants({ background }), className);
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--color-foreground-subtle);
+    }
+
+    /* =========================================================================
+      FireStone: Footer Glow Theme (OOBE Firefly Effect)
+      纯净、克制的高级呼吸流体辉光。
+      利用 mask-image 确保光斑在顶部完美隐没于背景，无缝衔接上方 Section。
+    ========================================================================= */
+    .footer-glow-theme {
+      position: relative;
+      background-color: var(--color-background);
+      overflow: hidden;
+      z-index: 1; /* 确保文字内容在光斑之上 */
+    }
+
+    /* 底部动态光斑容器 */
+    .footer-glow-theme::before {
+      content: '';
+      position: absolute;
+      /* 向外扩张尺寸以支持大幅度平滑移动，并且集中在底部 */
+      left: -20%;
+      right: -20%;
+      bottom: -50%;
+      top: 0;
+      z-index: -1;
+      pointer-events: none;
+      
+      /* 品牌色（青、粉、紫/金）动态光斑。
+        浅色模式下采用极低透明度 (0.08)，保持极致的纯净感 */
+      background-image: 
+        radial-gradient(circle at 30% 90%, rgba(0, 195, 255, 0.08), transparent 45%),
+        radial-gradient(circle at 70% 90%, rgba(253, 87, 156, 0.08), transparent 45%),
+        radial-gradient(circle at 50% 110%, rgba(120, 50, 255, 0.08), transparent 55%);
+      
+      filter: blur(80px);
+      animation: footer-firefly 20s ease-in-out infinite alternate;
+      
+      /* 顶部遮罩渐变：让光斑平滑过渡到顶部的纯色背景，不产生生硬的接缝 */
+      mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 100%);
+    }
+
+    .dark .footer-glow-theme::before {
+      /* 暗色模式下，亮度稍微提高以增强深邃高级感 */
+      background-image: 
+        radial-gradient(circle at 30% 90%, rgba(0, 195, 255, 0.18), transparent 50%),
+        radial-gradient(circle at 70% 90%, rgba(253, 87, 156, 0.18), transparent 50%),
+        radial-gradient(circle at 50% 110%, rgba(120, 50, 255, 0.20), transparent 55%),
+        radial-gradient(circle at 10% 100%, rgba(248, 215, 98, 0.12), transparent 40%);
+    }
+
+    /* 缓慢的流体呼吸位移，模拟 OOBE 极光效果 */
+    @keyframes footer-firefly {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-4%) scale(1.05); opacity: 1; }
+      100% { transform: translateY(3%) scale(0.96); opacity: 0.85; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .footer-glow-theme::before {
+        animation: none !important;
+      }
     }
 
   </style>

@@ -985,18 +985,24 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content">
             <div class="flex flex-wrap items-center gap-3">
-              <Badge>Default</Badge>
+              <Badge>
+                默认
+              </Badge>
               <Badge variant="success">
                 <Icon name="check" size="xs" />
-                Success
+                成功
               </Badge>
               <Badge variant="warning">
                 <Icon name="alert-triangle" size="xs" />
-                Warning
+                警告
+              </Badge>
+              <Badge variant="error">
+                <Icon name="circle-x" size="xs" />
+                错误
               </Badge>
               <Badge variant="info">
                 <Icon name="info" size="xs" />
-                Info
+                信息
               </Badge>
             </div>
           </div>
@@ -1009,17 +1015,17 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             <span class="showcase-hint">Contextual messages</span>
           </div>
           <div class="showcase-content space-y-4">
-            <Alert variant="info" title="Tip">
-              Use keyboard shortcuts to navigate faster. Press <kbd class="px-1.5 py-0.5 text-xs font-mono bg-background-secondary rounded border border-border">⌘ + K</kbd> to open the command palette.
+            <Alert variant="info" title="提示">
+              使用键盘快捷键可以更流畅地进行导航。按 <kbd class="px-1.5 py-0.5 text-xs font-mono bg-background-secondary rounded border border-border">⌘ + K</kbd> 打开命令面板。
             </Alert>
-            <Alert variant="success" title="Deployment successful">
-              Your changes are now live at <span class="underline underline-offset-2">your-app.vercel.app</span>
+            <Alert variant="success" title="部署成功">
+              您的更改现已在 <span class="underline underline-offset-2">www.fire-stone.co</span> 生效。
             </Alert>
-            <Alert variant="warning" title="Approaching limit">
-              You've used 80% of your monthly API quota. Consider upgrading your plan.
+            <Alert variant="warning" title="即将达到上限">
+              您已使用本月 API 配额的 80%。请考虑升级您的计划。
             </Alert>
-            <Alert variant="error" title="Build failed" dismissible>
-              Error in <code class="text-xs font-mono">src/components/Button.tsx</code> — missing required prop "variant"
+            <Alert variant="error" title="构建失败" dismissible>
+              错误发生在 <code class="text-xs font-mono">src/components/Button.tsx</code> — 缺少必要的属性「variant」。
             </Alert>
           </div>
         </div>

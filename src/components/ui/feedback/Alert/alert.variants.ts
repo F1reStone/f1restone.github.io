@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const alertVariants = cva(
-  'relative flex gap-4 p-4 rounded-lg border overflow-hidden',
+  'relative flex gap-4 p-4 rounded-2xl border overflow-hidden',
   {
     variants: {
       variant: {
@@ -25,10 +25,10 @@ export const alertIconColors = {
 } as const;
 
 export const alertAccentColors = {
-  info: 'bg-foreground-muted',
-  success: 'bg-[var(--success)]',
-  warning: 'bg-[var(--warning)]',
-  error: 'bg-[var(--error)]',
+  info: 'box-shadow-[0_0_8px_foreground-muted] bg-foreground-muted',
+  success: 'box-shadow-[0_0_8px_[var(--success)]] bg-[var(--success)]',
+  warning: 'box-shadow-[0_0_8px_[var(--warning)]] bg-[var(--warning)]',
+  error: 'box-shadow-[0_0_8px_[var(--error)]] bg-[var(--error)]',
 } as const;
 
 export type AlertVariants = VariantProps<typeof alertVariants>;

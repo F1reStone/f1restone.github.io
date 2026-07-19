@@ -203,12 +203,12 @@ const siteConfig: SiteConfig = {
     country: '中国',
   },
   socialLinks: [
-    'https://github.com/f1restone',
-    'https://space.bilibili.com/299649937',
-    'https://www.zhihu.com/people/FireStone',
-    'https://music.163.com/#/user/home?id=435228979',
-    'https://www.youtube.com/@FSFireStone',
-    'https://x.com/FSFireStone',
+    'https://github.com/f1restone',// GitHub
+    'https://space.bilibili.com/299649937',// Bilibili
+    'https://www.zhihu.com/people/FireStone',// Zhihu
+    'https://music.163.com/#/user/home?id=435228979',// NetEase Cloud Music
+    'https://www.youtube.com/@FSFireStone',// YouTube
+    'https://x.com/FSFireStone',// X (Twitter)
   ],
   header: {
     // Flip to `true` to show the social icons (incl. GitHub) in the header.

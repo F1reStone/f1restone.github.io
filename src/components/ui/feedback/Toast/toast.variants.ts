@@ -2,17 +2,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 export const toastVariants = cva(
   [
-    'pointer-events-auto relative flex items-start gap-3 overflow-hidden rounded-lg border p-4 shadow-lg',
+    'pointer-events-auto relative flex items-start gap-3 overflow-hidden p-4 rounded-2xl md:rounded-[2rem] border bg-background/50 shadow-2xl backdrop-blur-md',
     'transition-all duration-300 ease-out',
   ],
   {
     variants: {
       variant: {
-        default: 'bg-card border-border text-foreground',
-        success: 'bg-card border-[var(--success)]/30 text-foreground',
-        error: 'bg-card border-[var(--error)]/30 text-foreground',
-        warning: 'bg-card border-[var(--warning)]/30 text-foreground',
-        info: 'bg-card border-[var(--info)]/30 text-foreground',
+        default: 'border-border/50 text-foreground',
+        success: 'border-[var(--success)]/30 text-foreground',
+        error: 'border-[var(--error)]/30 text-foreground',
+        warning: 'border-[var(--warning)]/30 text-foreground',
+        info: 'border-[var(--info)]/30 text-foreground',
       },
     },
     defaultVariants: {

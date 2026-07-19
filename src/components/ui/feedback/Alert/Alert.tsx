@@ -46,7 +46,7 @@ export function Alert({ ref, variant = 'info', title, dismissible = false, onDis
     >
       <div className={cn('absolute left-0 top-0 bottom-0 w-1', alertAccentColors[variant])} />
 
-      <div className={cn('shrink-0 mt-0.5', alertIconColors[variant])}>
+      <div className={cn('shrink-0 mt-0.5 drop-shadow-[0_0_8px_currentColor]', alertIconColors[variant])}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true">
           {iconPaths[variant].split('M').filter(Boolean).map((d, i) => (
             <path key={i} d={`M${d}`} />
@@ -56,7 +56,7 @@ export function Alert({ ref, variant = 'info', title, dismissible = false, onDis
 
       <div className="flex-1 min-w-0 pl-1">
         {title && (
-          <h5 className="font-semibold text-sm mb-1 text-foreground">{title}</h5>
+          <h5 className="font-bold text-lg mb-1 text-foreground">{title}</h5>
         )}
         <div className="text-sm leading-relaxed text-foreground-muted">{children}</div>
       </div>

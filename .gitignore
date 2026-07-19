@@ -52,6 +52,9 @@ public/pagefind/
 # Claude Code
 .claude/
 
+# Reasonix
+.reasonix/
+
 # npm lockfile (pnpm only)
 package-lock.json
 

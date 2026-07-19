@@ -90,19 +90,25 @@ html[data-theme="firestone"] {
   /* -------------------------------------------------------------------------
      FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
      ------------------------------------------------------------------------- */
-  --theme-font-sans: 'Wix Madefor Text Variable', 'Wix Madefor Text', 'Montserrat', 'Outfit',
+  --theme-font-sans: 'Wix Madefor Text Variable', 'Wix Madefor Text', 'Wix Madefor Display', 'Montserrat', 'Outfit',
     'SF Pro Text', 'Google Sans Flex', 'Inter', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
     var(--theme-font-zh-cn), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
 
   --theme-font-display: 'Neue Regrade Variable', 'Neue Regrade', 'Inter',
-  'SF Pro Text', 'Google Sans Flex', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
-  var(--theme-font-zh-cn), -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
+  'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Google Sans Flex', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
+  var(--theme-font-zh-cn), ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
+
+  --theme-font-serif: 'Playfair Display Variable', 'Playfair Display', 'Instrument Serif',
+  'New York', 'Noto Serif', 'Roboto Serif', 'Times Ten', 'Times New Roman',
+  var(--theme-font-serif-zh-cn), -apple-system, BlinkMacSystemFont, ui-serif, serif, system-ui var(--theme-font-emoji);
 
   --theme-font-mono: 'NKDuy Mono Variable', 'NKDuy Mono', 'JetBrains Mono',
     'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
-    var(--theme-font-zh-cn), ui-monospace, monospace, var(--theme-font-emoji);
+    var(--theme-font-zh-cn), ui-monospace, monospace, system-ui, sans-serif, var(--theme-font-emoji);
 
-  --theme-font-zh-cn: 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans CN Variable', 'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei';
+  --theme-font-zh-cn: 'Noto Sans SC', 'Noto Sans CJK SC', 'Source Han Sans SC', 'Source Han Sans CN', 'Source Han Sans CN Variable', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei';
+
+  --theme-font-serif-zh-cn: 'Noto Serif SC', 'Noto Serif CJK SC', 'Source Han Serif SC', 'Source Han Serif CN', 'Source Han Serif CN Variable', 'STSongti-SC';
 
   --theme-font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 

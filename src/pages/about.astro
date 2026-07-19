@@ -24,21 +24,22 @@ const favoriteGames = [
   { name: "《识质存在》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3357650/2c65f388cb3ac6631c8a38ff1a59903263fc70e9/library_capsule_2x.jpg", link: "https://www.capcom-games.com/pragmata/zh-hans/" },
   { name: "《剑星》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3489700/f33e11f3faa2d0e800102c8cc1046554d3edc5da/library_600x900_tchinese_2x.jpg", link: "https://www.stellar-blade.com/" },
   { name: "《蔚蓝档案》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3557620/ae72bf133e6640facf0cbd184aacfaf4df0f215c/library_600x900_tchinese_2x.jpg", link: "https://bluearchive.jp/" },
+  { name: "《镜之边缘：催化剂》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1233570/library_600x900_2x.jpg", link: "https://www.ea.com/games/mirrors-edge/mirrors-edge-catalyst" },
   { name: "《绝地潜兵 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/553850/ca2a6c359af254e709c911ba46fc63eb3142effe/library_capsule_schinese.jpg", link: "https://www.arrowheadgamestudios.com/aboutarrowhead/games/" },
   //{ name: "《Minecraft》", image: "/src/assets/about/minecraft.png", link: "https://www.minecraft.net/zh-hans" },
   { name: "《无人深空》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/275850/7dff8d5fc26b169629c02b9d0f00c28c64cd525e/library_capsule_schinese_2x.jpg", link: "https://www.nomanssky.com/" },
+  { name: "《深海迷航》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/264710/library_600x900_schinese_2x.jpg", link: "https://www.subnautica.com/zh-cn" },
   { name: "《深海迷航 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1962700/2de7531ca6224cd52ea6c56ceae98a1bf7cafb1f/library_capsule_schinese_2x.jpg", link: "https://www.subnautica.com/zh-cn" },
   { name: "《潜渊症》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/602960/library_600x900_schinese_2x.jpg", link: "https://barotraumagame.com/" },
   { name: "《拆迁》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1167630/943e8110c7b4eafc6a02c87703ea5f6f8e2ef2ba/library_capsule_2x.jpg", link: "https://www.teardowngame.com/" },
   { name: "《极限竞速：地平线 4》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1293830/library_600x900_2x.jpg", link: "https://forza.net/" },
   { name: "《极限竞速：地平线 5》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1551360/library_600x900_2x.jpg", link: "https://forza.net/forzahorizon5" },
-  { name: "《杀手 暗杀世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1659040/893b14fe999e64777ad2660cf88c52f1f403053f/library_capsule_2x.jpg", link: "https://ioi.dk/hitman" },
-  { name: "《死亡搁浅：导演剪辑版》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1850570/library_600x900_2x.jpg", link: "https://www.kojimaproductions.jp/zh-hans/death-stranding-dc" },
+  { name: "《杀手：暗杀世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1659040/893b14fe999e64777ad2660cf88c52f1f403053f/library_capsule_2x.jpg", link: "https://ioi.dk/hitman" },
+  { name: "《死亡搁浅 导演剪辑版》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1850570/library_600x900_2x.jpg", link: "https://www.kojimaproductions.jp/zh-hans/death-stranding-dc" },
   { name: "《半衰期：艾莉克斯》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/546560/library_600x900_2x.jpg", link: "https://www.half-life.com/zh-cn/alyx" },
   { name: "《伊克西翁》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1113120/library_600x900_2x.jpg", link: "https://www.kasedogames.com/ixion" },
   { name: "《边缘世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/294100/644bff2fcf3a104d1e022b53a7f9c8c58af91c8a/library_capsule_2x.jpg", link: "https://rimworldgame.com/" },
   { name: "《生化危机 4 重制版》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2050650/library_600x900_2x.jpg", link: "https://www.residentevil.com/re4/zh-hans/" },
-  { name: "《镜之边缘：催化剂》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1233570/library_600x900_2x.jpg", link: "https://www.ea.com/games/mirrors-edge/mirrors-edge-catalyst" },
 ];
 ---
 <PageLayout
@@ -123,7 +124,7 @@ const favoriteGames = [
         </div>
         <!-- Right: two stacked partner cards -->
         <div class="flex flex-col gap-3 h-full" data-reveal="left" data-reveal-delay="1" data-reveal-ease="smooth">
-          <Image width={800} height={280} src="https://card.yuy1n.io/card/76561198359781026/tokyonight,badge,group,text-eeedf5,bg-0b0a11,badges,games,reviews" alt="FireStone 的 Steam 个人资料卡片" />
+          <iframe title="Steam Mini Profile Preview" allowtransparency="true" class="absolute top-0 left-0 w-full h-full border-0 rounded" loading="lazy" name="steamMiniProfilePreview" scrolling="no" frameborder="0" allowfullscreen="false" src="https://gamer2810.github.io/steam-miniprofile/?accountId=76561198359781026&lang=schinese&interactive=true&vanityId=FS_FireStone"></iframe>
           <p class="text-xs text-foreground-subtle" >FireStone 的 Steam 个人资料卡片</p>
         </div>
       </div>
@@ -143,9 +144,13 @@ const favoriteGames = [
       
       <!-- FireStone: Adaptive Game Grid (Steam Inventory Style) -->
       <!-- 网格系统：手机端2列，折叠屏和平板3/4列，桌面端5/6列 -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-5">
+      <!-- 接入原生 data-reveal-children 响应式梯次淡入 -->
+      <div 
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-5"
+        data-reveal-children
+      >
         {favoriteGames.map((game, index) => (
-          <div data-reveal data-reveal-delay={index % 6} class="w-full h-full">
+          <div class="w-full h-full">
             <Card 
               variant="default" 
               padding="none" 
@@ -165,7 +170,7 @@ const favoriteGames = [
                 decoding="async"
               />
 
-              <!-- F渐进式毛玻璃遮罩 (底层背景) 扩大覆盖范围 (将 inset-0 改为 -inset-4) 以解决模糊覆盖缝隙 -->
+              <!-- 渐进式毛玻璃遮罩 (底层背景) 扩大覆盖范围 (将 inset-0 改为 -inset-4) 以解决模糊覆盖缝隙 -->
               <div class="game-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
 
               <!-- 右上角悬浮跳转图标 (调用全局 glass-panel 与 hover-glow-icon/box) -->

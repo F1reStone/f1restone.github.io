@@ -69,7 +69,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
       role="alert"
     >
       {icons[variant] && (
-        <div className={cn('mt-0.5', toastIconColors[variant])}>
+        <div className={cn('mt-0.5 drop-shadow-[0_0_8px_currentColor]', toastIconColors[variant])}>
           {icons[variant]}
         </div>
       )}

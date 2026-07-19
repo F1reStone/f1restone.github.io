@@ -91,9 +91,9 @@ export const footerNavItems: NavItem[] = [
 ];
 
 export const legalLinks: LegalLink[] = [
-  { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues/', icon: 'github', labelKey: 'footer.feedback' },
-  { label: 'Cookie 首选项', action: 'openConsentSettings', icon: 'cookie', labelKey: 'footer.cookie-preferences' },
-  { label: '隐私政策', href: '/legal/privacy-policy/', icon: 'shield-check', labelKey: 'footer.privacy-policy' },
+  { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues/', labelKey: 'footer.feedback' },
+  { label: 'Cookie 首选项', action: 'openConsentSettings', labelKey: 'footer.cookie-preferences' },
+  { label: '隐私政策', href: '/legal/privacy-policy/', labelKey: 'footer.privacy-policy' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [

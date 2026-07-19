@@ -455,6 +455,18 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <script is:inline>
       (function () {
         function initReveal() {
+          // FireStone: 动态扫描所有元素，为其注入索引 CSS 变量
+          // 1. 处理单独带有 data-reveal-delay 的元素
+          document.querySelectorAll('[data-reveal-delay]').forEach(function(el) {
+            el.style.setProperty('--reveal-idx', el.getAttribute('data-reveal-delay'));
+          });
+          // 2. 处理 [data-reveal-children] 网格内无限数量的子元素
+          document.querySelectorAll('[data-reveal-children]').forEach(function(container) {
+            Array.prototype.forEach.call(container.children, function(child, idx) {
+              child.style.setProperty('--reveal-index', idx);
+            });
+          });
+
           const els = Array.prototype.slice.call(
             document.querySelectorAll('[data-reveal]:not(.is-visible), [data-reveal-children]:not(.is-visible)')
           );
@@ -540,11 +552,21 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <!-- FireStone: 可变字重放大计算：读取 .weight-shift 元素的当前 computed font-weight 并自动 +300 (最高 900)，传到 CSS 变量 -->
     <script is:inline>
       function initSmartWeightShift() {
-        document.querySelectorAll('.weight-shift:not([data-ws-init]), .weight-shift-not-centered:not([data-ws-init])').forEach(function(el) {
-          el.setAttribute('data-ws-init', 'true');
-          const currentWeight = parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
-          const targetWeight = Math.min(currentWeight + 300, 900);
-          el.style.setProperty('--ws-target', targetWeight);
+        const els = Array.from(document.querySelectorAll('.weight-shift:not([data-ws-init]), .weight-shift-non-centered:not([data-ws-init])'));
+        if (!els.length) return;
+
+        // 1. 集中读取: 连续读取属性不会触发浏览器重排
+        const weights = els.map(function(el) {
+          return parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
+        });
+
+        // 2. 集中写入: 在浏览器的下一帧统一应用 DOM 和 CSS 修改，彻底杜绝 Layout Thrashing
+        requestAnimationFrame(function() {
+          els.forEach(function(el, index) {
+            el.setAttribute('data-ws-init', 'true');
+            const targetWeight = Math.min(weights[index] + 300, 900);
+            el.style.setProperty('--ws-target', targetWeight);
+          });
         });
       }
       document.addEventListener('DOMContentLoaded', initSmartWeightShift);
