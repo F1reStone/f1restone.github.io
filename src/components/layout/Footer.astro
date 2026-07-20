@@ -237,7 +237,17 @@ const footerClasses = cn(footerVariants({ background }), className);
 }*/
 ---
 
-<footer class={footerClasses} data-pagefind-ignore {...attrs}>
+<footer class={cn(footerClasses, "relative overflow-hidden")} data-pagefind-ignore {...attrs}>
+
+  {background === 'glow' && (
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+      <div class="footer-mask-layer absolute inset-0 w-full h-full">
+        <div class="aurora-blob aurora-cyan"></div>
+        <div class="aurora-blob aurora-pink"></div>
+        <div class="aurora-blob aurora-purple"></div>
+      </div>
+    </div>
+  )}
 
   <div class={cn('mx-auto px-6 relative z-10', maxWidthClass)}>
 
@@ -677,164 +687,90 @@ const footerClasses = cn(footerVariants({ background }), className);
       color: var(--color-foreground-subtle);
     }
 
-    /* Footer 极光 / 萤火虫辉光背景 */
-    .footer-aurora {
-      position: relative;
-      isolation: isolate;
-      overflow: hidden;
+  /* =========================================================================
+     FireStone: OOBE Aurora Glow (终极极光渲染引擎)
+     采用独立硬件加速节点 + 极致毛玻璃，彻底碾压传统 background-position 方案
+     ========================================================================= */
+  
+  /* 顶部羽化遮罩：完美无缝融入上方内容，消灭接缝边界感 */
+  .footer-mask-layer {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 100%);
+  }
 
-      /*
-      * Footer 本体仍使用网站原有背景色。
-      * 顶部的辉光会逐渐淡出，因此可自然衔接上方
-      * background-color: var(--color-background) 的内容区域。
-      */
-      background-color: var(--color-background);
+  /* 光团基础物理属性 */
+  .aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px); /* 120px 极致柔化，彻底化解边缘，形成气态光影 */
+    will-change: transform;
+    opacity: 0.15; /* 浅色模式下的克制高雅感 */
+  }
+
+  html.dark .aurora-blob {
+    opacity: 0.25; /* 深色模式下适当提亮，呼应深邃感 */
+  }
+
+  /* 1. 青色光团 (Cyan #00C3FF) - 左下角逆时针游离 */
+  .aurora-cyan {
+    width: 65vw;
+    height: 65vw;
+    max-width: 800px;
+    max-height: 800px;
+    bottom: -30%;
+    left: -15%;
+    background: radial-gradient(circle, #00C3FF 0%, transparent 70%);
+    animation: blob-float-left 25s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  }
+
+  /* 2. 粉色光团 (Pink #FD579C) - 右下角顺时针游离 */
+  .aurora-pink {
+    width: 55vw;
+    height: 55vw;
+    max-width: 700px;
+    max-height: 700px;
+    bottom: -20%;
+    right: -10%;
+    background: radial-gradient(circle, #FD579C 0%, transparent 70%);
+    animation: blob-float-right 30s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  }
+
+  /* 3. 紫色光团 (Purple #7832FF) - 底部中央核心宽幅呼吸 */
+  .aurora-purple {
+    width: 80vw;
+    height: 40vw;
+    max-width: 1000px;
+    max-height: 500px;
+    bottom: -25%;
+    left: 10%;
+    background: radial-gradient(ellipse, #7832FF 0%, transparent 70%);
+    animation: blob-float-center 35s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+  }
+
+  /* 独立硬件加速位移动画，分别赋予不同的轨道与形变，创造彻底无序的生命力感 */
+  @keyframes blob-float-left {
+    0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50%  { transform: translate(15%, -15%) scale(1.15) rotate(15deg); }
+    100% { transform: translate(30%, 5%) scale(0.9) rotate(30deg); }
+  }
+
+  @keyframes blob-float-right {
+    0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50%  { transform: translate(-20%, -10%) scale(1.1) rotate(-15deg); }
+    100% { transform: translate(-40%, 10%) scale(0.95) rotate(-30deg); }
+  }
+
+  @keyframes blob-float-center {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(10%, -25%) scale(1.25); }
+    100% { transform: translate(-10%, -5%) scale(0.85); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-blob {
+      animation: none !important;
     }
-
-    /* 确保 Footer 内容始终在辉光层上方 */
-    .footer-aurora > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* 大面积、柔和的彩色光团 */
-    .footer-aurora::before,
-    .footer-aurora::after {
-      position: absolute;
-      z-index: -1;
-      inset: -35%;
-      content: "";
-      pointer-events: none;
-
-      /* 让光效在 Footer 顶部自然消失，平滑融入页面背景 */
-      -webkit-mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(0, 0, 0, 0.08) 10%,
-        rgba(0, 0, 0, 0.75) 28%,
-        #000 52%,
-        #000 100%
-      );
-      mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(0, 0, 0, 0.08) 10%,
-        rgba(0, 0, 0, 0.75) 28%,
-        #000 52%,
-        #000 100%
-      );
-
-      filter: blur(42px) saturate(105%);
-      will-change: transform;
-    }
-
-    /* 第一层：较大的缓慢流动光晕 */
-    .footer-aurora::before {
-      opacity: 0.62;
-      background:
-        radial-gradient(
-          circle at 22% 38%,
-          color-mix(in srgb, #00C3FF 28%, transparent) 0%,
-          transparent 31%
-        ),
-        radial-gradient(
-          circle at 78% 30%,
-          color-mix(in srgb, #7832FF 25%, transparent) 0%,
-          transparent 34%
-        ),
-        radial-gradient(
-          circle at 53% 78%,
-          color-mix(in srgb, #FD579C 20%, transparent) 0%,
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 82% 84%,
-          color-mix(in srgb, #00C3FF 15%, transparent) 0%,
-          transparent 28%
-        );
-
-      animation: footer-aurora-drift-a 28s ease-in-out infinite alternate;
-    }
-
-    /* 第二层：更轻、更细腻的漂浮彩光 */
-    .footer-aurora::after {
-      opacity: 0.5;
-      inset: -45%;
-      filter: blur(68px) saturate(110%);
-      background:
-        radial-gradient(
-          circle at 70% 48%,
-          color-mix(in srgb, #FD579C 20%, transparent) 0%,
-          transparent 26%
-        ),
-        radial-gradient(
-          circle at 31% 72%,
-          color-mix(in srgb, #7832FF 19%, transparent) 0%,
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 47% 24%,
-          color-mix(in srgb, #00C3FF 17%, transparent) 0%,
-          transparent 27%
-        );
-
-      animation: footer-aurora-drift-b 36s ease-in-out infinite alternate;
-    }
-
-    @keyframes footer-aurora-drift-a {
-      0% {
-        transform: translate3d(-3%, -2%, 0) scale(1);
-      }
-
-      35% {
-        transform: translate3d(5%, 3%, 0) scale(1.08);
-      }
-
-      70% {
-        transform: translate3d(-1%, 7%, 0) scale(1.03);
-      }
-
-      100% {
-        transform: translate3d(6%, -4%, 0) scale(1.1);
-      }
-    }
-
-    @keyframes footer-aurora-drift-b {
-      0% {
-        transform: translate3d(5%, 4%, 0) scale(1.05) rotate(0deg);
-      }
-
-      40% {
-        transform: translate3d(-6%, -2%, 0) scale(1.12) rotate(5deg);
-      }
-
-      75% {
-        transform: translate3d(3%, -6%, 0) scale(1.04) rotate(-3deg);
-      }
-
-      100% {
-        transform: translate3d(-4%, 5%, 0) scale(1.13) rotate(2deg);
-      }
-    }
-
-    /* 深色模式下稍微提升可见度，但仍保持克制 */
-    @media (prefers-color-scheme: dark) {
-      .footer-aurora::before {
-        opacity: 0.78;
-      }
-
-      .footer-aurora::after {
-        opacity: 0.62;
-      }
-    }
-
-    /* 尊重用户“减少动态效果”的系统设置 */
-    @media (prefers-reduced-motion: reduce) {
-      .footer-aurora::before,
-      .footer-aurora::after {
-        animation: none;
-      }
-    }
+  }
 
   </style>
 
