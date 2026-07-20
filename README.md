@@ -2,9 +2,9 @@
 Personal blog website built on [Astro Rocket](https://astrorocket.dev/), prioritizes visual appeal and interactive experience.
 
 <p align="left">
-  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-6.4-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
-  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.3-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
-  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.1-bc52ee?logo=astro&style=flat-square&logoColor=white" alt="Astro" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.3-38bdf8?logo=tailwindcss&style=flat-square&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&style=flat-square&logoColor=white" alt="TypeScript" /></a>
 </p>
 
 ---
