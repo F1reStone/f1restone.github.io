@@ -253,9 +253,13 @@ input[type='reset'] {
 
   /* Container */
   --container-max: 1200px;
+
+  /* Breakpoints */
+  --breakpoint-3xl: 120rem; /* 1920px */
+  --breakpoint-4xl: 128rem; /* 2160px */
 }
 
-/* FireStone: [Register adaptive 8xl and 9xl max-width utilities in Tailwind layer] */
+/* FireStone: Register adaptive 8xl and 9xl max-width utilities in Tailwind layer */
 @layer utilities {
   /* 
      CSS max() 响应式宽屏适配：
