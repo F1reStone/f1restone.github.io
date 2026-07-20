@@ -934,7 +934,56 @@ const buttonId = `${menuId}-button`;
 </script>
 
 <style is:global>
-  .mobile-menu-blur {
+
+/* =========================================================================
+    FireStone: Progressive Background Blur (渐进式毛玻璃)
+    ========================================================================= */
+/* FireStone: [Only apply transparent overrides when the mobile menu is NOT open to prevent layout conflicts] */
+header:not([data-menu-open]).hdr-progressive-glass {
+  background-color: transparent !important;
+  border: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.hdr-progressive-glass::before {
+  content: '';
+  position: absolute;
+  /* 容器向下物理延伸 50%，实际总高度已经达到原 Header 的 150% */
+  inset: -10px 0 -100% 0; 
+  z-index: -1;
+  pointer-events: none;
+  
+  /* FireStone: 完美优化的背景透明度平滑过渡曲线。
+      (这里的 100% 即代表延伸后容器的最底端，也就是视觉上的 150% 处) */
+  background: linear-gradient(
+    to bottom, 
+    color-mix(in oklch, var(--color-background) 55%, transparent) 0%, 
+    color-mix(in oklch, var(--color-background) 45%, transparent) 25%,
+    color-mix(in oklch, var(--color-background) 25%, transparent) 60%,
+    color-mix(in oklch, var(--color-background) 5%, transparent) 85%,
+    transparent 100%
+  );
+  
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  
+  /* 遮罩的非线性 Ease-out 淡出曲线，确保毛玻璃模糊度与背景颜色同步完美消散 */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.35) 75%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.35) 75%, transparent 100%);
+
+  /* 核心机制：首屏未滚动时完全透明，隐藏背景，保持沉浸 */
+  opacity: 0;
+  transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 当页面发生滚动时，渐进式模糊平滑显现 */
+header[data-scrolled].hdr-progressive-glass::before {
+  opacity: 1;
+}
+
+.mobile-menu-blur {
     opacity: 0.3;
     filter: blur(4px);
     transition: opacity 200ms, filter 200ms;

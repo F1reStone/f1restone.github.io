@@ -32,7 +32,7 @@ import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
-import giantLogoRaw from '@/assets/firestone-text.svg?raw'; // FireStone: Import the giant logo SVG as raw string
+import giantLogoRaw from '@/assets/firestone-text-gradient.svg?raw'; // FireStone: Import the giant logo SVG as raw string
 
 export interface NavItem {
   label: string;
@@ -146,7 +146,7 @@ const processedCopyright = copyright
 
 // FireStone: Added class names for legal links and separators for better styling control
 const legalLinkClass =
-  'inline-flex items-center gap-2 text-sm font-semibold transition-colors text-foreground-subtle hover-glow-text hover:text-foreground';
+  'inline-flex items-center gap-2 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover:text-foreground';
 
 const legalSeparatorClass = 'mx-3 h-4 w-px bg-foreground-subtle/30';
 
@@ -393,7 +393,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-section-header)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
@@ -517,20 +517,20 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* FireStone: 巨型品牌 Logo */}
         {cleanGiantLogoSvg && (
-          <div class="mt-[var(--space-stack-lg)] w-full flex justify-center items-center pointer-events-none select-none">
+          <div class="mt-16 w-full flex justify-center items-center pointer-events-none select-none">
             <div class="w-full [&>svg]:w-full [&>svg]:h-auto [&>svg]:text-foreground" set:html={cleanGiantLogoSvg} />
           </div>
         )}
 
         {/* Bottom section (版权与合规链接，复用原有逻辑) */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-section-header)] flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
               <>
                 {showCopyright && (
-                  <p class="text-sm font-semibold text-foreground-subtle" set:html={processedCopyright} />
+                  <p class="text-sm font-medium text-foreground/60" set:html={processedCopyright} />
                 )}
                 {resolvedLegalLinks.length > 0 && (
                   <div class="flex flex-wrap items-center">
@@ -687,83 +687,95 @@ const footerClasses = cn(footerVariants({ background }), className);
       color: var(--color-foreground-subtle);
     }
 
+
+
   /* =========================================================================
-     FireStone: OOBE Aurora Glow (终极极光渲染引擎)
-     采用独立硬件加速节点 + 极致毛玻璃，彻底碾压传统 background-position 方案
+     FireStone: OOBE Aurora Glow (顶级 GPU 硬件加速版)
+     极高帧率、极低功耗、全分辨率完美贴底
      ========================================================================= */
   
-  /* 顶部羽化遮罩：完美无缝融入上方内容，消灭接缝边界感 */
   .footer-mask-layer {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
   }
 
-  /* 光团基础物理属性 */
+  /* 
+     光团基础属性：
+     利用 width: 400vw 打造一个无敌长的物理卷轴。
+     高度限制为 600px 并通过 bottom 定位，彻底解决带鱼屏上光晕飘高的问题。
+  */
   .aurora-blob {
     position: absolute;
-    border-radius: 50%;
-    filter: blur(120px); /* 120px 极致柔化，彻底化解边缘，形成气态光影 */
+    bottom: -10%; /* 死死锁定在底部区域 */
+    left: 0;
+    width: 400vw; /* 4倍屏宽的超长画卷，提供充足的无缝平移空间 */
+    height: clamp(300px, 40vw, 600px); /* 控制最大高度，防止4K屏向上溢出 */
+    filter: blur(90px); /* 适当回调模糊半径以减轻 GPU 负担，视觉依然气态无形 */
+    background-repeat: repeat-x;
+    
+    /* 核心性能指令：强行提权至独立显卡合成层 */
     will-change: transform;
-    opacity: 0.15; /* 浅色模式下的克制高雅感 */
+    
+    /* FireStone: 大幅提升浅色模式下的浓度，使其视觉存在感更强 */
+    opacity: 0.35; 
   }
 
   html.dark .aurora-blob {
-    opacity: 0.25; /* 深色模式下适当提亮，呼应深邃感 */
+    opacity: 0.45; /* 深色模式匹配提升 */
   }
 
-  /* 1. 青色光团 (Cyan #00C3FF) - 左下角逆时针游离 */
+  /* 
+     光束着色与循环设定：
+     将圆心下移到 70%~80%，让光晕呈现出强烈的“沉底”感。
+  */
   .aurora-cyan {
-    width: 65vw;
-    height: 65vw;
-    max-width: 800px;
-    max-height: 800px;
-    bottom: -30%;
-    left: -15%;
-    background: radial-gradient(circle, #00C3FF 0%, transparent 70%);
-    animation: blob-float-left 25s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+    background-image: radial-gradient(ellipse at 50% 75%, #00C3FF 0%, transparent 60%);
+    background-size: 150vw 100%;
+    animation: flow-cyan 20s linear infinite;
   }
 
-  /* 2. 粉色光团 (Pink #FD579C) - 右下角顺时针游离 */
   .aurora-pink {
-    width: 55vw;
-    height: 55vw;
-    max-width: 700px;
-    max-height: 700px;
-    bottom: -20%;
-    right: -10%;
-    background: radial-gradient(circle, #FD579C 0%, transparent 70%);
-    animation: blob-float-right 30s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+    background-image: radial-gradient(ellipse at 50% 80%, #FD579C 0%, transparent 60%);
+    background-size: 180vw 100%;
+    animation: flow-pink 24s linear infinite reverse;
+    animation-delay: -7s;
   }
 
-  /* 3. 紫色光团 (Purple #7832FF) - 底部中央核心宽幅呼吸 */
   .aurora-purple {
-    width: 80vw;
-    height: 40vw;
-    max-width: 1000px;
-    max-height: 500px;
-    bottom: -25%;
-    left: 10%;
-    background: radial-gradient(ellipse, #7832FF 0%, transparent 70%);
-    animation: blob-float-center 35s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+    background-image: radial-gradient(ellipse at 50% 85%, #7832FF 0%, transparent 65%);
+    background-size: 200vw 100%;
+    animation: flow-purple 28s linear infinite;
+    animation-delay: -14s;
   }
 
-  /* 独立硬件加速位移动画，分别赋予不同的轨道与形变，创造彻底无序的生命力感 */
-  @keyframes blob-float-left {
-    0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
-    50%  { transform: translate(15%, -15%) scale(1.15) rotate(15deg); }
-    100% { transform: translate(30%, 5%) scale(0.9) rotate(30deg); }
+  /* 
+    【GPU 硬件加速融合帧】
+    将原本的 X轴平移 (流动) 和 Y轴起伏 (呼吸)，合并写在同一个 translate3d 中。
+    这种写法利用了 CSS 的线性插值，能够画出完美的“波浪形”正弦轨迹。
+    且 100% 由 GPU 处理，实现极致降功耗！
+  */
+  @keyframes flow-cyan {
+    0%   { transform: translate3d(0vw, 20px, 0); }
+    25%  { transform: translate3d(-37.5vw, -10px, 0); }
+    50%  { transform: translate3d(-75vw, 20px, 0); }
+    75%  { transform: translate3d(-112.5vw, -10px, 0); }
+    100% { transform: translate3d(-150vw, 20px, 0); }
   }
 
-  @keyframes blob-float-right {
-    0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
-    50%  { transform: translate(-20%, -10%) scale(1.1) rotate(-15deg); }
-    100% { transform: translate(-40%, 10%) scale(0.95) rotate(-30deg); }
+  @keyframes flow-pink {
+    0%   { transform: translate3d(0vw, -15px, 0); }
+    25%  { transform: translate3d(-45vw, 15px, 0); }
+    50%  { transform: translate3d(-90vw, -15px, 0); }
+    75%  { transform: translate3d(-135vw, 15px, 0); }
+    100% { transform: translate3d(-180vw, -15px, 0); }
   }
 
-  @keyframes blob-float-center {
-    0%   { transform: translate(0, 0) scale(1); }
-    50%  { transform: translate(10%, -25%) scale(1.25); }
-    100% { transform: translate(-10%, -5%) scale(0.85); }
+  @keyframes flow-purple {
+    0%   { transform: translate3d(0vw, 10px, 0); }
+    25%  { transform: translate3d(-50vw, -20px, 0); }
+    50%  { transform: translate3d(-100vw, 10px, 0); }
+    75%  { transform: translate3d(-150vw, -20px, 0); }
+    100% { transform: translate3d(-200vw, 10px, 0); }
   }
 
   @media (prefers-reduced-motion: reduce) {
