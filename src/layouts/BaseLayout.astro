@@ -4,6 +4,7 @@ import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
 import Analytics from '@/components/layout/Analytics.astro';
 import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 //import CursorTrail from '@/components/effects/CursorTrail.astro';
 import { createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
 import type { Thing, WithContext } from 'schema-dts';
@@ -344,8 +345,8 @@ const locale = getLocaleFromPath(Astro.url.pathname);
         <circle id="back-to-top-ring" cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-brand-500" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="131.95" stroke-dashoffset="131.95" />
       </svg>
       <!-- Inner face -->
-      <span class="absolute inset-[5px] flex items-center justify-center rounded-full bg-background border border-border-strong text-foreground-muted shadow-md" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
+      <span class="absolute inset-[5px] flex items-center justify-center rounded-full glass-panel text-foreground-muted shadow-md hover-solid-fill hover-glow-box" aria-hidden="true">
+        <Icon name="chevron-up" size="md" />
       </span>
     </button>
 

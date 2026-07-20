@@ -7,6 +7,7 @@
     "currentLanguage": "当前语言",
     "items": {
       "projects": "项目",
+      "legal": "法律",
       "blog": "博客",
       "about": "关于",
       "ai": "FireStone AI"
@@ -86,10 +87,8 @@
   },
   "footer": {
     "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
-    "builtWith": "基于 Astro Rocket 构建",
     "followOn": "社交媒体",
-    "privacy-policy": "隐私政策",
-    "cookie-preferences": "Cookie 首选项",
-    "feedback": "问题反馈"
+    "privacyPolicy": "隐私政策",
+    "cookiePreferences": "Cookie 首选项"
   }
 }

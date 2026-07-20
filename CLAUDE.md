@@ -82,7 +82,7 @@ The `Header` component accepts `secondaryLogoSvg` (an inline SVG string with `vi
 Custom Chinese-text consent banner (`src/config/consent.config.ts`), `strict` mode (scripts fully blocked until consent). Triggered from footer legal links via `#consent-settings` anchor.
 
 ### Footer Architecture
-Uses `footerLinkGroups` — 4 columns: 探索, 推荐项目, 关于, Powered by. Configured in `nav.config.ts` via `getFooterLinkGroups()`.
+Uses `footerLinkGroups` — 4 columns: 探索, 项目, 关于, Powered by. Configured in `nav.config.ts` via `getFooterLinkGroups()`.
 
 ### Social Links
 Custom Chinese-platform mix: GitHub, Bilibili, Zhihu, NetEase Cloud Music, YouTube, X (Twitter). Parsed by regex in `utils.ts` to extract platform-specific icons.

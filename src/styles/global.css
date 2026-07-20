@@ -1583,11 +1583,11 @@ input[type='reset'] {
     inset 0 0.5px 0 rgba(255, 255, 255, 0.30),
     0 0 16px color-mix(in srgb, var(--color-foreground) 60%, transparent),
     0 0 32px color-mix(in srgb, var(--color-foreground) 20%, transparent) !important;
-  transform: scale(1.03);
+  transform: scale(1.05);
   z-index: 10;
 }
 .hover-glow-box:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 /* 3. 轮廓发光 */
@@ -1604,10 +1604,10 @@ input[type='reset'] {
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 0 16px color-mix(in srgb, var(--color-foreground) 60%, transparent),
     0 0 32px color-mix(in srgb, var(--color-foreground) 20%, transparent) !important;
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
 .hover-glow-outline:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 /* 4. 图标发光 */
@@ -1623,10 +1623,10 @@ input[type='reset'] {
 .hover-glow-icon:focus-visible {
   color: var(--color-foreground);
   filter: drop-shadow(0 0 10px currentColor);
-  transform: translateZ(0) scale(1.03);
+  transform: translateZ(0) scale(1.05);
 }
 .hover-glow-icon:active {
-  transform: translateZ(0) scale(0.97);
+  transform: translateZ(0) scale(0.95);
 }
 
 /* 5. 纯文本发光 (Text Glow) */

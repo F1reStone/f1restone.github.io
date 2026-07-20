@@ -171,7 +171,7 @@ const localizedHeadings = headings.map((heading) =>
           </div>
 
           <!-- FireStone: [Moved local back-button footer inside the content column, matching ProjectLayout.astro's inner-grid alignment] -->
-          <footer class="border-border border-t pt-8" data-reveal>
+          <footer class="pt-[var(--space-section-header)]" data-reveal>
             <Button href="/projects" variant="secondary" size="sm">
               <Icon name="chevron-left" size="sm" />
               返回「项目」
@@ -193,8 +193,8 @@ const localizedHeadings = headings.map((heading) =>
     </article>
 
     <!-- Back link and footnotes -->
-    <div class="mx-auto max-w-8xl px-6" data-reveal>
-      <div class="pt-[var(--space-stack-lg)] border-t border-border/50 text-[11px] leading-relaxed text-foreground-subtle space-y-3">
+    <div class="mx-auto max-w-8xl px-6">
+      <div class="pt-[var(--space-stack-lg)] border-t border-foreground-subtle/25 text-[11px] leading-relaxed text-foreground-subtle space-y-3">
         <p>访问项目源代码需要拥有 GitHub 账号与 Epic Games 账号并将二者关联。详情请参阅<a href="https://www.unrealengine.com/ue-on-github" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors" target="_blank" rel="noopener noreferrer">虚幻引擎 GitHub 关联指南</a>。下载、安装或使用本项目源代码，即代表您已阅读并同意<a href="https://www.unrealengine.com/eula/unreal" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors" target="_blank" rel="noopener noreferrer">《虚幻引擎 (Unreal® Engine) 终端用户许可协议》</a>以及<a href="/legal/sparkforge-amla" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors" rel="noopener noreferrer">《SparkForge 附加修改内容许可协议》</a>。</p>
         <p>本项目与 Epic Games, Inc. 无任何商业关联。访问、下载及使用本项目源码须遵守适用的许可协议。版权所有 © 2026 FireStone. 保留所有权利。FireStone 及 FireStone 标志是 FireStone 的商标或注册商标。Unreal Engine © {year} Epic Games, Inc. 保留所有权利。Unreal、Unreal Engine、虚幻、虚幻引擎及其各自标志是 Epic Games, Inc. 在美国专利商标局及其他地区的商标或注册商标。NVIDIA 及 NVIDIA 标志是 NVIDIA Corporation 在美国及其他国家的商标和/或注册商标。所有其他商标均为其各自所有者的财产。</p>
       </div>

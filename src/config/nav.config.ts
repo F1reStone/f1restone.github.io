@@ -91,9 +91,8 @@ export const footerNavItems: NavItem[] = [
 ];
 
 export const legalLinks: LegalLink[] = [
-  { label: '问题反馈', href: 'https://github.com/F1reStone/f1restone.github.io/issues/', labelKey: 'footer.feedback' },
-  { label: 'Cookie 首选项', action: 'openConsentSettings', labelKey: 'footer.cookie-preferences' },
-  { label: '隐私政策', href: '/legal/privacy-policy/', labelKey: 'footer.privacy-policy' },
+  { label: 'Cookie 首选项', action: 'openConsentSettings', labelKey: 'footer.cookiePreferences' },
+  { label: '隐私政策', href: '/legal/privacy-policy/', labelKey: 'footer.privacyPolicy' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [
@@ -106,7 +105,7 @@ export const footerLinkGroups: FooterLinkGroup[] = [
     ],
   },
   {
-    title: '推荐项目',
+    title: '项目',
     links: [
       { label: 'FireStone 网站', href: '/projects/firestone-website/', order: 1, labelKey: 'nav.items.firestone-website' },
       { label: 'SparkForge 燧光', href: '/projects/sparkforge/', order: 2, labelKey: 'nav.items.sparkforge' },
@@ -119,17 +118,23 @@ export const footerLinkGroups: FooterLinkGroup[] = [
     ],
   },
   {
+    title: '法律',
+    links: [
+      { label: '法律信息', href: '/legal/', order: 1, labelKey: 'nav.items.legal' },
+      { label: '隐私政策', href: '/legal/privacy-policy/', order: 2, labelKey: 'footer.privacyPolicy' },
+    ],
+  },
+  {
     title: 'Powered by',
     links: [
       { label: 'Astro', href: 'https://astro.build/', order: 1 },
       { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
       { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
       { label: 'Google Fonts', href: 'https://fonts.google.com/', order: 4 },
-      { label: 'GitHub Pages', href: 'https://docs.github.com/pages/', order: 5 },
-      { label: 'Lucide', href: 'https://lucide.dev/', order: 6 },
-      { label: 'React', href: 'https://react.dev/', order: 7 },
-      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 8 },
-      { label: 'Tailwind CSS', href: 'https://tailwindcss.com/', order: 9 },
+      { label: 'Lucide', href: 'https://lucide.dev/', order: 5 },
+      { label: 'React', href: 'https://react.dev/', order: 6 },
+      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 7 },
+      { label: 'Tailwind CSS', href: 'https://tailwindcss.com/', order: 8 },
     ],
   },
 ];

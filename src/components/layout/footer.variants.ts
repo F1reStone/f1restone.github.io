@@ -3,12 +3,12 @@ import { cva, type VariantProps } from 'class-variance-authority';
 export const footerVariants = cva('py-[var(--space-stack-lg)]', {
   variants: {
     background: {
-      default: 'bg-background border-border',
-      secondary: 'bg-background-secondary border-border',
-      invert: 'invert-section bg-background border-border',
+      default: 'bg-background',
+      secondary: 'bg-background-secondary',
+      invert: 'invert-section bg-background',
       /* FireStone: Added glow background */
-      //glow: 'footer-glow-theme border-border',
-      glow: 'footer-aurora border-border',
+      //glow: 'footer-glow-theme',
+      glow: 'footer-aurora',
     },
   },
   defaultVariants: {
