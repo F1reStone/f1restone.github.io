@@ -161,6 +161,8 @@ const favoriteGames = [
               class="group relative overflow-hidden aspect-[2/3] bg-background-tertiary border-border/50 hover-glow-box block w-full h-full"
             >
               <!-- 游戏封面 (悬停轻微缩放) -->
+              {typeof game.image === 'string' ? (
+              /* 远程图片：src 为 string，必须提供 width/height */
               <Picture
                 src={game.image} 
                 alt={game.name}
@@ -168,9 +170,20 @@ const favoriteGames = [
                 height={900}
                 formats={['avif', 'webp']}
                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105"
-                loading="lazy"
+                loading="lazy" 
                 decoding="async"
               />
+            ) : (
+              /* 本地图片：src 为 ImageMetadata，Astro 自动推断尺寸，无需 width/height */
+              <Picture
+                src={game.image} 
+                alt={game.name}
+                formats={['avif', 'webp']}
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105"
+                loading="lazy" 
+                decoding="async"
+              />
+            )}
               <!-- 渐进式毛玻璃遮罩 (底层背景) 扩大覆盖范围 (将 inset-0 改为 -inset-4) 以解决模糊覆盖缝隙 -->
               <div class="game-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
 
