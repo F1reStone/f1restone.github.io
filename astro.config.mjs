@@ -81,6 +81,11 @@ export default defineConfig({
   // rendering — significant whitespace between inline tags is preserved.
   compressHTML: true,
 
+  // About page images are hosted on Steam's CDN, so we need to allow that domain for the image optimization.
+  image: {
+    domains: ['shared.fastly.steamstatic.com'],
+  },
+
   build: {
     inlineStylesheets: 'always',
   },

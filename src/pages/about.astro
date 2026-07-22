@@ -9,6 +9,7 @@ import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
+import { Picture } from 'astro:assets';
 import { Image } from 'astro:assets';
 import aboutMe from "@/assets/about/about-me.svg";
 import TypingEffect from '@/components/ui/TypingEffect.astro';
@@ -35,7 +36,7 @@ const favoriteGames = [
   { name: "《极限竞速：地平线 4》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1293830/library_600x900_2x.jpg", link: "https://forza.net/" },
   { name: "《极限竞速：地平线 5》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1551360/library_600x900_2x.jpg", link: "https://forza.net/forzahorizon5" },
   { name: "《杀手：暗杀世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1659040/893b14fe999e64777ad2660cf88c52f1f403053f/library_capsule_2x.jpg", link: "https://ioi.dk/hitman" },
-  { name: "《死亡搁浅 导演剪辑版》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1850570/library_600x900_2x.jpg", link: "https://www.kojimaproductions.jp/zh-hans/death-stranding-dc" },
+  { name: "《死亡搁浅》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1850570/library_600x900_2x.jpg", link: "https://www.kojimaproductions.jp/zh-hans/death-stranding-dc" },
   { name: "《半衰期：艾莉克斯》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/546560/library_600x900_2x.jpg", link: "https://www.half-life.com/zh-cn/alyx" },
   { name: "《伊克西翁》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1113120/library_600x900_2x.jpg", link: "https://www.kasedogames.com/ixion" },
   { name: "《边缘世界》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/294100/644bff2fcf3a104d1e022b53a7f9c8c58af91c8a/library_capsule_2x.jpg", link: "https://rimworldgame.com/" },
@@ -87,10 +88,11 @@ const favoriteGames = [
         <!-- FireStone: 响应式图片 -->
         <div class="flex justify-center lg:justify-end items-center w-full h-full mt-12 lg:mt-0 z-0" data-reveal="left" data-reveal-delay="1" data-reveal-ease="smooth">
 
-          <Image 
+          <Image
             src={aboutMe}
-            alt="变体 FireStone 标志。" 
-            class="w-full max-w-[260px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] h-auto object-contain drop-shadow-2xl pointer-events-none transition-all duration-500" 
+            alt="变体 FireStone 标志。"
+            class="w-full max-w-[260px] sm:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] h-auto object-contain drop-shadow-2xl pointer-events-none transition-all duration-500"
+            loading="eager"
           />
           <!-- 当为黑白 Logo 时，需加入 dark:invert -->
           
@@ -122,7 +124,7 @@ const favoriteGames = [
         </div>
         <!-- Right: two stacked partner cards -->
         <p class="text-lg text-foreground-muted leading-relaxed" data-reveal="left" data-reveal-ease="smooth">
-          平时常玩的游戏类型包括但不限于 FPS、TPS、沙盒、开放世界、动作、竞速、策略等，在美术上对于科幻风格情有独钟。是个 <a href="https://www.embark-studios.com/" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors">Embark</a> 批。喜欢冲动消费，游戏品味时神时鬼，经常会仅仅因为美术 / 音乐 / 剧情就为一款游戏买单（例如《ARC Raiders》、《THE FINALS》和《伊克西翁》）。
+          平时常玩的游戏类型包括但不限于 FPS、TPS、沙盒、开放世界、动作、竞速、策略等，对于科幻风格情有独钟。是个 <a href="https://www.embark-studios.com/" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors">Embark</a> 批。喜欢冲动消费，游戏品味时神时鬼，经常会仅仅因为美术 / 音乐 / 剧情就为一款游戏买单（例如《ARC Raiders》、《THE FINALS》和《伊克西翁》）。
         </p>
       </div>
     </div>
@@ -133,14 +135,14 @@ const favoriteGames = [
     <div class="mx-auto max-w-8xl px-6">
       <div class="flex flex-col gap-4 mb-6" data-reveal>
         <div class="flex flex-col gap-6">
-          <h2 class="font-display text-2xl font-semibold text-foreground">
+          <h4 class="font-sans text-md font-semibold tracking-[0.2em] text-foreground-subtle uppercase" data-reveal>
             最爱作品
-          </h2>
+          </h4>
         </div>
       </div>
       
       <!-- FireStone: Adaptive Game Grid (Steam Inventory Style) -->
-      <!-- 网格系统：手机端2列，折叠屏和平板3/4列，桌面端5/6列 -->
+      <!-- 网格系统：手机端2列，折叠屏和平板3/4/5列，桌面端5/6/7列 -->
       <!-- 接入原生 data-reveal-children 响应式梯次淡入 -->
       <div 
         class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-7 gap-4 md:gap-5"
@@ -156,17 +158,16 @@ const favoriteGames = [
               class="group relative overflow-hidden aspect-[2/3] bg-background-tertiary border-border/50 hover-glow-box block w-full h-full"
             >
               <!-- 游戏封面 (悬停轻微缩放) -->
-              <!-- 保持原生 img 与明确宽高，避开 Astro Image 外部抓取报错 -->
-              <img 
+              <Picture
                 src={game.image} 
-                alt={game.name} 
-                width="600"
-                height="900"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105" 
-                loading="lazy" 
+                alt={game.name}
+                width={600}
+                height={900}
+                formats={['avif', 'webp']}
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105"
+                loading="lazy"
                 decoding="async"
               />
-
               <!-- 渐进式毛玻璃遮罩 (底层背景) 扩大覆盖范围 (将 inset-0 改为 -inset-4) 以解决模糊覆盖缝隙 -->
               <div class="game-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
 
@@ -193,7 +194,7 @@ const favoriteGames = [
       <div class="flex flex-col gap-4 mt-4" data-reveal>
         <p class="flex items-center gap-1.5 pl-0.5 text-[11px] text-foreground-subtle">
           <Icon name="info" size="xs"/>
-          点击上方游戏封面将跳转至对应游戏官网，这些第三方网站适用其各自的《隐私政策》，FireStone 不对第三方网站中的任何内容负责。
+          点击上方游戏封面将跳转至对应游戏官网，这些第三方网站适用其各自的《隐私政策》，FireStone 不对第三方网站中的任何内容负责。所有商标均为其在美国及其他国家/地区的各自持有者所有。
         </p>
       </div>
     </div>

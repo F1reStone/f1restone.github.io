@@ -7,7 +7,7 @@
  * - Keyboard: arrow keys move slides when any nav control has focus
  * - First slide loads eagerly, the rest lazy — Lighthouse-friendly on mobile
  */
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { isVideoSlide, type GallerySlide } from '@/lib/gallery';
 
 interface Props {
@@ -57,10 +57,11 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
               aria-label={slide.alt}
             />
           ) : (
-            <Image
+            <Picture
               src={slide.src}
               alt={slide.alt}
               widths={[640, 960, 1280]}
+              formats={['avif', 'webp']}
               sizes="(max-width: 1024px) 100vw, 640px"
               class="aspect-video w-full object-cover"
               loading={i === 0 ? 'eager' : 'lazy'}
