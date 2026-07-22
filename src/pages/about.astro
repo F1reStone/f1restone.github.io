@@ -16,6 +16,9 @@ import TypingEffect from '@/components/ui/TypingEffect.astro';
 import TechStack from '@/components/landing/TechStack.astro';
 import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
 
+// Fav game local images (600x900)
+import minecraftImg from '@/assets/about/minecraft.png';
+
 // FireStone: Fav game source (600x900)
 const favoriteGames = [
   { name: "《THE FINALS》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2073850/6d9cfdeaea9f822d8f4af42d8f0dbd083e81f64e/library_capsule_2x.jpg", link: "https://www.reachthefinals.com/" },
@@ -27,7 +30,7 @@ const favoriteGames = [
   { name: "《蔚蓝档案》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3557620/ae72bf133e6640facf0cbd184aacfaf4df0f215c/library_600x900_tchinese_2x.jpg", link: "https://bluearchive.jp/" },
   { name: "《镜之边缘：催化剂》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1233570/library_600x900_2x.jpg", link: "https://www.ea.com/games/mirrors-edge/mirrors-edge-catalyst" },
   { name: "《绝地潜兵 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/553850/ca2a6c359af254e709c911ba46fc63eb3142effe/library_capsule_schinese.jpg", link: "https://www.arrowheadgamestudios.com/aboutarrowhead/games/" },
-  //{ name: "《Minecraft》", image: "/src/assets/about/minecraft.png", link: "https://www.minecraft.net/zh-hans" },
+  { name: "《Minecraft》", image: minecraftImg, link: "https://www.minecraft.net/zh-hans" },
   { name: "《无人深空》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/275850/7dff8d5fc26b169629c02b9d0f00c28c64cd525e/library_capsule_schinese_2x.jpg", link: "https://www.nomanssky.com/" },
   { name: "《深海迷航》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/264710/library_600x900_schinese_2x.jpg", link: "https://www.subnautica.com/zh-cn" },
   { name: "《深海迷航 2》", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1962700/2de7531ca6224cd52ea6c56ceae98a1bf7cafb1f/library_capsule_schinese_2x.jpg", link: "https://www.subnautica.com/zh-cn" },
