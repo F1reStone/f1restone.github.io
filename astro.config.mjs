@@ -79,7 +79,9 @@ export default defineConfig({
   // Astro 7 changed the default to 'jsx', which strips whitespace between
   // inline elements (React-style). Pin to `true` to keep this theme's v6
   // rendering — significant whitespace between inline tags is preserved.
-  compressHTML: true,
+
+  // FireStone: whitespace between inline elements is preserved for better formatting of text content, so we use 'jsx'.
+  compressHTML: 'jsx',
 
 
   build: {
@@ -108,7 +110,7 @@ export default defineConfig({
     layout: 'constrained',
 
     // About page images are provided by Steam CDN, so allow that domain for the image optimization.
-    domains: ['shared.fastly.steamstatic.com'],
+    //domains: ['shared.fastly.steamstatic.com'],
   },
 
   integrations: [
