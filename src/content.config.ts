@@ -176,10 +176,9 @@ const stack = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
-    version: z.string(),
     url: z.string().url(),
-    icon: z.string(), // icon name, e.g. 'brand-astro'
-    colorOklch: z.string(), // OKLCH params, e.g. '62.5% 0.22 38'
+    // FireStone: 移除了外置 icon、colorOklch 和无用的 version，改用自定义矢量 logo 文件名
+    logo: z.string(), 
     order: z.number().default(0),
   }),
 });

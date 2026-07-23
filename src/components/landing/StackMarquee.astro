@@ -1,38 +1,29 @@
 ---
 /**
  * StackMarquee
- * A double-row, pure-CSS infinite marquee of tech-stack cards. Row one scrolls
- * one way, row two scrolls the other (at a slightly different speed) for an
- * organic, non-synced feel. Content is driven by src/content/stack/*.mdx by
- * default, so adding or removing a tool is an MDX edit — no changes here.
- *
- * Reuses the existing Card and Icon components and the site's semantic colour
- * tokens, so it themes automatically in light and dark mode. Zero JavaScript:
- * the loop is a CSS keyframe animation on a duplicated track (GPU transform).
- * It pauses on hover, hides the duplicate/decorative copies from assistive
- * tech, and freezes under prefers-reduced-motion.
- *
- * Usage:
+ * FireStone Refactored: Pure SVG Logo Wall (Chameleon Mode)
+ * 
+ * - Removes heavy Card wrapping and static colored icons.
+ * - Uses import.meta.glob to load raw SVGs, injecting currentColor and hover-glow-icon engine.
+ * - Enforces smooth double-row marquee scrolling on ALL devices (mobile included).
+ * 
+ *  * Usage:
  *   <StackMarquee />                         // pulls from content/stack, 2 rows
  *   <StackMarquee rows={1} duration={30} />  // single strip
  *   <StackMarquee items={[{ name: 'Vercel', icon: 'brand-vercel', url: '…' }]} />
  */
 import { getCollection } from 'astro:content';
 import { cn } from '@/lib/cn';
-import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import Card from '@/components/ui/data-display/Card/Card.astro';
+
+// FireStone: 使用 Vite 的 import.meta.glob 批量在构建时以字符串形式引入 SVG。
+// 请确保你的 SVG 文件存放在 src/assets/stack/logo/ 目录下！
+const svgFiles = import.meta.glob('/src/assets/stack/logo/*.svg', { query: '?raw', import: 'default', eager: true });
 
 export interface StackItem {
-  /** Display name, e.g. "Astro". */
   name: string;
-  /** Icon name resolved by Icon.astro, e.g. "brand-astro". */
-  icon: string;
   /** Optional link target; when set (and `linked`), the card links here. */
   url?: string;
-  /** Optional small sub-label, e.g. "v6". */
-  version?: string;
-  /** Optional per-tool OKLCH params for the logo colour, e.g. "62.5% 0.22 38". */
-  colorOklch?: string;
+  logo: string;
 }
 
 interface Props {
@@ -50,16 +41,10 @@ interface Props {
   gap?: string;
   /** Gap between rows. Default "1rem". */
   rowGap?: string;
-  /** Fixed card width. Default "230px". */
-  cardWidth?: string;
   /** Gradient fade on the left/right edges. Default true. */
   fade?: boolean;
-  /** Logo colour: "brand" tints every logo with the theme brand colour (default); "tool" uses each tool's own `colorOklch`. */
-  logoColor?: 'brand' | 'tool';
   /** Wrap each card in its `url`. Default true. */
   linked?: boolean;
-  /** Show the version sub-label when present. Default false — avoids version numbers that can go stale. */
-  showVersion?: boolean;
   /** Extra classes on the wrapper. */
   class?: string;
 }
@@ -70,17 +55,13 @@ const {
   direction = 'left',
   duration = 40,
   pauseOnHover = true,
-  gap = '1.5rem',
-  rowGap = '1rem',
-  cardWidth = '230px',
+  gap = '4rem',    // FireStone: 增大 Logo 之间的水平呼吸空间
+  rowGap = '3rem', // FireStone: 增大行与行之间的垂直呼吸空间
   fade = true,
-  logoColor = 'brand',
   linked = true,
-  showVersion = false,
   class: className,
 } = Astro.props;
 
-// Default source: the MDX-driven stack collection, sorted by `order`.
 let data: StackItem[] = items ?? [];
 if (!items) {
   const entries = await getCollection('stack');
@@ -88,10 +69,8 @@ if (!items) {
     .sort((a, b) => a.data.order - b.data.order)
     .map((e) => ({
       name: e.data.name,
-      icon: e.data.icon,
       url: e.data.url,
-      version: e.data.version,
-      colorOklch: e.data.colorOklch,
+      logo: e.data.logo,
     }));
 }
 
@@ -99,12 +78,6 @@ const opposite = (d: 'left' | 'right'): 'left' | 'right' => (d === 'left' ? 'rig
 const rowCount = Math.max(1, rows);
 const MIN_DURATION = 12;
 
-// Seamless looping duplicates each row once and scrolls it by -50%, which only
-// hides the join when a single copy is at least as wide as the container. With
-// a small collection (e.g. 4 tools) one copy is narrower than a wide desktop,
-// so the loop would flash a gap at the seam. Repeat the source list to a
-// minimum card count first; the -50% math is unchanged because the track is
-// still exactly two copies of the (now longer) list.
 const MIN_CARDS = 8;
 const fill = (list: StackItem[]): StackItem[] => {
   if (list.length === 0) return list;
@@ -113,16 +86,14 @@ const fill = (list: StackItem[]): StackItem[] => {
   return out;
 };
 
-// Per-row config: alternate direction, nudge the speed so lanes don't march in
-// lockstep, and reverse the order so the same logos don't line up vertically.
 const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
   const base = r % 2 === 0 ? data : [...data].reverse();
   return {
     items: fill(base),
-    uniqueCount: base.length, // expose only one set of each tool to assistive tech
+    uniqueCount: base.length,
     direction: r % 2 === 0 ? direction : opposite(direction),
     duration: Math.max(MIN_DURATION, duration - r * 4),
-    decorative: r > 0, // only the first row is exposed to assistive tech
+    decorative: r > 0,
   };
 });
 ---
@@ -131,8 +102,7 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
   class={cn('stack-marquee', className)}
   data-fade={fade ? 'true' : 'false'}
   data-pause={pauseOnHover ? 'true' : 'false'}
-  data-logo-color={logoColor}
-  style={`--card-width: ${cardWidth}; --row-gap: ${rowGap};`}
+  style={`--row-gap: ${rowGap};`}
   aria-label="Tech stack"
 >
   {
@@ -145,37 +115,31 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
         <div class="stack-marquee-track">
           {[...row.items, ...row.items].map((item, idx) => {
             const hidden = idx >= row.uniqueCount || row.decorative;
+            
+            // FireStone: 解析并注入深浅模式适配的 CSS
+            const rawSvg = svgFiles[`/src/assets/stack/logo/${item.logo}`] as string | undefined;
+            const cleanSvg = rawSvg
+              ?.replace(/\s(width|height)="[^"]*"/g, '')
+              .replace(/^<svg/, '<svg class="w-auto h-8 md:h-10 object-contain" fill="currentColor"');
+
             return (
-              <div
-                class="stack-marquee-item"
-                style={logoColor === 'tool' && item.colorOklch ? `--tech-color: oklch(${item.colorOklch});` : undefined}
-              >
-                <Card
-                  variant="default"
-                  padding="md"
+              <div class="stack-marquee-item">
+                <a
                   href={linked ? item.url : undefined}
                   target={linked && item.url ? '_blank' : undefined}
                   rel={linked && item.url ? 'noopener noreferrer' : undefined}
-                  class="h-full w-full"
+                  class="flex items-center justify-center outline-none"
                   aria-hidden={hidden ? 'true' : undefined}
                   tabindex={hidden ? -1 : undefined}
+                  aria-label={item.name}
                 >
-                  <div class="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-3">
-                    <span class="stack-icon">
-                      <Icon name={item.icon} size="lg" />
-                    </span>
-                    <span class="flex min-w-0 flex-col">
-                      <span class="font-display text-foreground truncate text-base leading-tight font-bold">
-                        {item.name}
-                      </span>
-                      {showVersion && item.version && (
-                        <span class="text-foreground-muted text-xs font-medium">
-                          {item.version}
-                        </span>
-                      )}
-                    </span>
-                  </div>
-                </Card>
+                  <!-- FireStone: 调用全局 hover-glow-icon 实现交互 -->
+                  <span 
+                    class="hover-glow-icon block"
+                    style="color: var(--color-foreground);"
+                    set:html={cleanSvg || `<span class="text-lg font-bold">${item.name}</span>`} 
+                  />
+                </a>
               </div>
             );
           })}
@@ -189,33 +153,34 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
   .stack-marquee {
     display: flex;
     flex-direction: column;
-    gap: var(--row-gap, 1rem);
+    gap: var(--row-gap, 1.5rem);
     width: 100%;
   }
 
   .stack-marquee-row {
     position: relative;
-    /* Clip horizontally but let card shadows breathe vertically. */
     overflow-x: visible;
     overflow-y: visible;
     width: 100%;
+    
+    /* FireStone: 盒模型排版
+       1. 上下 padding 扩大了元素的实际绘制区域（Border-box），使得外围的 mask-image 遮罩跟着变高，给发光和放大留出完美的 24px 缓冲区，解决裁切。
+       2. 对应的上下负 margin 使得它在 Flex 布局中不会推挤其他元素。
+    */
+    padding: 24px 0;
+    margin: -24px 0;
   }
 
-  /* Gradient fade on the leading/trailing edges. */
+  /* 边缘羽化渐变遮罩 */
   .stack-marquee[data-fade='true'] .stack-marquee-row {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      #000 8%,
-      #000 92%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
   }
 
   .stack-marquee-track {
     display: flex;
-    gap: var(--marquee-gap, 1.5rem);
+    align-items: center;
+    gap: var(--marquee-gap, 3rem);
     width: max-content;
     animation: stack-marquee-scroll var(--marquee-duration, 40s) linear infinite;
     will-change: transform;
@@ -225,9 +190,6 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
     animation-direction: reverse;
   }
 
-  /* Pause the hovered row so visitors can read or click a card. Hover-capable
-     devices only: on touch, :hover sticks after a tap and would freeze the
-     marquee until you tapped elsewhere. */
   @media (hover: hover) {
     .stack-marquee[data-pause='true'] .stack-marquee-row:hover .stack-marquee-track {
       animation-play-state: paused;
@@ -236,44 +198,7 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
 
   .stack-marquee-item {
     flex: none;
-    width: var(--card-width, 230px);
-  }
-
-  /* On phones, collapse to a single row. Two opposite-scrolling rows share the
-     same logos, so in a narrow viewport the same card lines up top-and-bottom
-     for too long. One row removes the collision and reads cleaner on mobile. */
-  @media (max-width: 767px) {
-    .stack-marquee-row:not(:first-child) {
-      display: none;
-    }
-  }
-
-  /* On touch devices (any orientation), make the cards non-interactive so
-     scrolling the page never triggers an accidental tap through to a logo's
-     website. Pointer-driven (desktop) devices keep the links. */
-  @media (pointer: coarse) {
-    .stack-marquee-item {
-      pointer-events: none;
-    }
-  }
-
-  .stack-icon {
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 9999px;
-    /* Default: tint every logo with the active theme's brand colour for a cohesive look. */
-    color: var(--color-brand-500);
-    background: color-mix(in oklch, var(--color-brand-500) 12%, transparent);
-  }
-
-  /* Opt in to each tool's own colour via logoColor="tool" (falls back to foreground). */
-  .stack-marquee[data-logo-color='tool'] .stack-icon {
-    color: var(--tech-color, var(--color-foreground));
-    background: color-mix(in oklch, var(--tech-color, var(--color-foreground)) 12%, transparent);
+    /* 去除原来的固定 width，交由内部的 SVG 原生比例排版，获得极其舒适的呼吸感 */
   }
 
   @keyframes stack-marquee-scroll {
@@ -281,8 +206,7 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
       transform: translate3d(0, 0, 0);
     }
     to {
-      /* -50% minus half a gap lands the duplicate exactly on the original for a seamless loop. */
-      transform: translate3d(calc(-50% - (var(--marquee-gap, 1.5rem) / 2)), 0, 0);
+      transform: translate3d(calc(-50% - (var(--marquee-gap, 3rem) / 2)), 0, 0);
     }
   }
 
