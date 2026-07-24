@@ -62,6 +62,10 @@ export interface ConsentUIText {
   alwaysOnLabel?: string;
   /** Label for the privacy policy link */
   privacyPolicyLabel?: string;
+  /** Accessible label for the consent banner */
+  bannerAriaLabel?: string;
+  /** Accessible label for the consent settings opener button */
+  reopenerAriaLabel?: string;
 }
 
 /** Full consent manager configuration */

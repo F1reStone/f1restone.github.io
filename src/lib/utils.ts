@@ -10,12 +10,30 @@ export function formatDate(date: Date, locale = 'zh-CN'): string {
 }
 
 /**
- * Calculate reading time for content
+ * Calculate reading time for content. Counts CJK characters (Chinese, Japanese,
+ * Korean — space-less languages where each character is a word) at 400 cpm and
+ * Latin-script words at 200 wpm, combining both for mixed-language text. Fenced
+ * code blocks (```…```) are excluded. Always returns at least 1 minute.
  */
 export function getReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / wordsPerMinute);
+  // Strip fenced code blocks — code is scanned, not read.
+  const withoutCode = content.replace(/```[\s\S]*?```/g, '');
+
+  // Count CJK characters (Unicode range: CJK Unified Ideographs, CJK
+  // Extension A, and the common Japanese/Korean Hiragana/Katakana/Hangul
+  // blocks). Each character is a "word" in CJK typography.
+  const cjkChars = (withoutCode.match(/[一-鿿㐀-䶿぀-ゟ゠-ヿ가-힯]/g) || []).length;
+
+  // Count Latin-script words (whitespace-delimited tokens, minus any that are
+  // pure punctuation).
+  const latinWords = withoutCode
+    .replace(/[一-鿿㐀-䶿぀-ゟ゠-ヿ가-힯]/g, ' ')
+    .split(/\s+/)
+    .filter((w) => /[a-zA-Z0-9]/.test(w)).length;
+
+  const cpm = 400; // CJK chars per minute
+  const wpm = 200; // Latin words per minute
+  return Math.max(1, Math.ceil(cjkChars / cpm + latinWords / wpm));
 }
 
 /**

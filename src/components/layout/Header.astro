@@ -35,7 +35,7 @@ import ThemeSelector from '@/components/layout/ThemeSelector.astro';
 import ThemeSelectorDropdown from '@/components/layout/ThemeSelectorDropdown.astro';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher.astro';
 import siteConfig from '@/config/site.config';
-import { isEnabled as i18nIsEnabled } from '@/i18n';
+import { isEnabled as i18nIsEnabled, getLocaleFromPath } from '@/i18n';
 
 export interface NavItem {
   label: string;
@@ -159,7 +159,9 @@ const maxWidthClass = {
 const effectiveShowScrollProgress = showScrollProgress || (isFloating && !autoHide);
 const isInvert = colorScheme === 'invert';
 
-const defaultNav = getNavItems().map((item: ResolvedNavItem) => ({
+const locale = getLocaleFromPath(Astro.url.pathname);
+
+const defaultNav = getNavItems(locale).map((item: ResolvedNavItem) => ({
   label: item.label,
   href: item.href,
 }));

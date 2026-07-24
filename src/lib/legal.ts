@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { stripLocalePrefix } from '@/lib/blog';
+import { getPostSlug } from '@/lib/blog';
 
 export type LegalPageEntry = CollectionEntry<'pages'>;
 
@@ -13,7 +13,7 @@ export interface LegalPageSummary {
 }
 
 function isLegalEntry(entry: LegalPageEntry) {
-  return stripLocalePrefix(entry.id).startsWith('legal/');
+  return getPostSlug(entry.id).startsWith('legal/');
 }
 
 export async function getLegalEntries(locale = 'zh-CN'): Promise<LegalPageEntry[]> {
@@ -33,7 +33,7 @@ export async function getLegalPages(locale = 'zh-CN'): Promise<LegalPageSummary[
       return delta !== 0 ? delta : a.data.title.localeCompare(b.data.title);
     })
     .map((entry) => {
-      const id = stripLocalePrefix(entry.id); // zh-CN/legal/privacy-policy -> legal/privacy-policy
+      const id = getPostSlug(entry.id); // zh-CN/legal/privacy-policy -> legal/privacy-policy
       const slug = id.replace(/^legal\//, '');
 
       return {
@@ -49,7 +49,7 @@ export async function getLegalPages(locale = 'zh-CN'): Promise<LegalPageSummary[
 
 export async function getLegalPageBySlug(locale: string, slug: string): Promise<LegalPageEntry> {
   const entries = await getLegalEntries(locale);
-  const entry = entries.find((item) => stripLocalePrefix(item.id) === `legal/${slug}`);
+  const entry = entries.find((item) => getPostSlug(item.id) === `legal/${slug}`);
 
   if (!entry) {
     throw new Error(`Legal page not found: legal/${slug}`);

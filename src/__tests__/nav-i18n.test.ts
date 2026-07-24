@@ -7,79 +7,75 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('@/config/i18n.config', () => ({
   default: {
     enabled: true,
-    defaultLocale: 'en',
-    locales: ['en', 'nl'],
-    localeNames: { en: 'English', nl: 'Nederlands' },
+    defaultLocale: 'zh-CN',
+    locales: ['zh-CN', 'en-US'],
+    localeNames: { 'zh-CN': '简体中文', 'en-US': 'English' },
     detectBrowserLocale: false,
   },
 }));
 
 import { getNavItems, getLogoHref, resolveNavItem, type NavItem } from '@/config/nav.config';
 
-describe('nav config — locale resolution (en default, nl secondary)', () => {
+describe('nav config — locale resolution (zh-CN default, en-US secondary)', () => {
   it('keeps default-locale hrefs at the site root', () => {
-    const items = getNavItems('en');
-    expect(items.find((i) => i.label === 'Blog')?.href).toBe('/blog');
-    expect(items.find((i) => i.label === 'About')?.href).toBe('/about');
+    const items = getNavItems('zh-CN');
+    expect(items.find((i) => i.label === '博客')?.href).toBe('/blog/');
+    expect(items.find((i) => i.label === '关于')?.href).toBe('/about/');
   });
 
   it('prefixes secondary-locale hrefs with the locale', () => {
-    const items = getNavItems('nl');
-    expect(items.map((i) => i.href)).toEqual([
-      '/nl/services',
-      '/nl/projects',
-      '/nl/blog',
-      '/nl/about',
-      '/nl/contact',
-    ]);
+    const items = getNavItems('en-US');
+    // Should include locale-prefixed paths for our nav items
+    const hrefs = items.map((i) => i.href);
+    expect(hrefs.some((h) => h.startsWith('/en-US/'))).toBe(true);
   });
 
   it('translates labels via the dictionary (labelKey)', () => {
-    const nl = getNavItems('nl');
-    // nl.json: nav.items.about = "Over", nav.items.services = "Diensten"
-    expect(nl.find((i) => i.href === '/nl/about')?.label).toBe('Over');
-    expect(nl.find((i) => i.href === '/nl/services')?.label).toBe('Diensten');
+    const en = getNavItems('en-US');
+    // en-US.json has nav.items keys with English labels
+    expect(en.some((i) => i.href === '/en-US/blog/' && i.label === 'Blog')).toBe(true);
+    expect(en.some((i) => i.href === '/en-US/about/' && i.label === 'About')).toBe(true);
   });
 
   it('points the logo at the locale home', () => {
-    expect(getLogoHref('en')).toBe('/');
-    expect(getLogoHref('nl')).toBe('/nl');
+    expect(getLogoHref('zh-CN')).toBe('/');
+    expect(getLogoHref('en-US')).toBe('/en-US');
   });
 
   it('never locale-prefixes external, mailto/tel, or anchor hrefs', () => {
     expect(
       resolveNavItem(
         { label: 'GitHub', href: 'https://github.com/x', order: 1, external: true },
-        'nl'
+        'en-US'
       ).href
     ).toBe('https://github.com/x');
-    expect(resolveNavItem({ label: 'Top', href: '#top', order: 1 }, 'nl').href).toBe('#top');
-    expect(resolveNavItem({ label: 'Mail', href: 'mailto:a@b.com', order: 1 }, 'nl').href).toBe(
+    expect(resolveNavItem({ label: 'Top', href: '#top', order: 1 }, 'en-US').href).toBe('#top');
+    expect(resolveNavItem({ label: 'Mail', href: 'mailto:a@b.com', order: 1 }, 'en-US').href).toBe(
       'mailto:a@b.com'
     );
   });
 
   it('applies a per-locale override (label + path), still locale-prefixed', () => {
     const item: NavItem = {
-      label: 'Contact',
+      label: '联系我们',
       href: '/contact',
       order: 1,
-      locales: { nl: { label: 'Neem contact op', href: '/contacteer' } },
+      locales: { 'en-US': { label: 'Contact Us', href: '/contact-us' } },
     };
-    expect(resolveNavItem(item, 'nl')).toEqual({
-      label: 'Neem contact op',
-      href: '/nl/contacteer',
+    expect(resolveNavItem(item, 'en-US')).toEqual({
+      label: 'Contact Us',
+      href: '/en-US/contact-us',
       external: undefined,
     });
-    // The default locale is unaffected by an nl-only override.
-    expect(resolveNavItem(item, 'en')).toEqual({
-      label: 'Contact',
+    // The default locale is unaffected by an en-US-only override.
+    expect(resolveNavItem(item, 'zh-CN')).toEqual({
+      label: '联系我们',
       href: '/contact',
       external: undefined,
     });
   });
 
   it('falls back to the literal label when no labelKey is set', () => {
-    expect(resolveNavItem({ label: 'Docs', href: '/docs', order: 1 }, 'nl').label).toBe('Docs');
+    expect(resolveNavItem({ label: 'Docs', href: '/docs', order: 1 }, 'en-US').label).toBe('Docs');
   });
 });

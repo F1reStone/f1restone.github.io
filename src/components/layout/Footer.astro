@@ -33,6 +33,7 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
 import giantLogoRaw from '@/assets/firestone-text-gradient.svg?raw'; // FireStone: Import the giant logo SVG as raw string
+import { getLocaleFromPath } from '@/i18n';
 
 export interface NavItem {
   label: string;
@@ -94,12 +95,15 @@ interface Props extends HTMLAttributes<'footer'> {
   giantLogoSvg?: string;
 }
 
+// Resolve the current locale for i18n-aware nav/legal/group links
+const locale = getLocaleFromPath(Astro.url.pathname);
+
 const {
   layout = 'asymmetricColumns',
   columns = 5,
   background = 'glow',
   nav,
-  linkGroups = getFooterLinkGroups(),// FireStone: Fallback to global link groups instead of an empty array
+  linkGroups = getFooterLinkGroups(locale),// FireStone: Fallback to global link groups instead of an empty array
   socialLinks = resolveSocialLinks(siteConfig.socialLinks),
   showSocial = true,
   showCopyright = true,
@@ -127,7 +131,7 @@ const maxWidthClass = {
 
 // Get navigation items — footer nav is configured independently from the
 // header in `nav.config.ts` (see `footerNavItems`).
-const defaultNav: NavItem[] = getFooterNavItems().map((item: ResolvedNavItem) => ({
+const defaultNav: NavItem[] = getFooterNavItems(locale).map((item: ResolvedNavItem) => ({
   label: item.label,
   href: item.href,
   external: item.external,
@@ -136,7 +140,7 @@ const navItems: NavItem[] = nav || defaultNav;
 const allNavItems: NavItem[] = navItems;
 
 // Resolved legal links: prop wins, otherwise fall back to nav.config.ts
-const resolvedLegalLinks: LegalLink[] = legalLinks ?? getLegalLinks();
+const resolvedLegalLinks: LegalLink[] = legalLinks ?? getLegalLinks(locale);
 
 // Process copyright text
 const currentYear = new Date().getFullYear();
@@ -178,7 +182,7 @@ let resolvedBreadcrumbs = explicitBreadcrumbs;
 if (!resolvedBreadcrumbs && !hideBreadcrumbs && !isHomePage) {
   // 1. 构建全局路由字典 (合并头部导航和底部导航)
   const dict: Record<string, string> = { '/': '首页', '/en-US': 'Home', '/en-US/': 'Home' };
-  const allNavs = [...getNavItems(), ...getFooterLinkGroups().flatMap(g => g.links)];
+  const allNavs = [...getNavItems(locale), ...getFooterLinkGroups(locale).flatMap(g => g.links)];
   allNavs.forEach(item => {
     const normalized = item.href.replace(/\/$/, ''); // 去除末尾斜杠以统配
     dict[normalized] = item.label;

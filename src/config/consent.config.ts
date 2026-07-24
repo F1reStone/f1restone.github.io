@@ -53,6 +53,8 @@ const consentConfig: ConsentConfig = {
     settingsDescription: '选择您允许的 Cookie 类型。禁用 Cookie 可能会影响网站的功能和体验。访问 FireStone 的{privacyPolicy}，进一步了解我们如何使用 Cookie 改善您的体验。',
     alwaysOnLabel: '始终开启',
     privacyPolicyLabel: '《隐私政策》',
+    bannerAriaLabel: 'Cookie 首选项',
+    reopenerAriaLabel: '打开 Cookie 设置',
   },
 
   /** Milliseconds before banner slides in */

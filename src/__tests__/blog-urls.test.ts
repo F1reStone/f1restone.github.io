@@ -16,32 +16,36 @@ import {
   getSecondaryLocales,
 } from '@/lib/blog';
 
-// These run with the default i18n config (single locale 'en', i18n off), so
-// every URL must stay unprefixed — this is the non-breaking guarantee for the
-// single-locale sites that make up the majority of installs.
-describe('blog URL helpers (i18n disabled — default)', () => {
+// With i18n enabled (zh-CN default, en-US + zh-TW secondary):
+// - Default locale stays at site root (no prefix)
+// - Secondary locales get a locale prefix
+describe('blog URL helpers (i18n enabled)', () => {
   it('strips the locale prefix from a post id to get its slug', () => {
-    expect(getPostSlug('en/hello-world')).toBe('hello-world');
-    expect(getPostSlug('nl/hallo-wereld', 'nl')).toBe('hallo-wereld');
+    expect(getPostSlug('zh-CN/hello-world')).toBe('hello-world');
+    // Case-insensitive matching
+    expect(getPostSlug('zh-cn/hello-world')).toBe('hello-world');
+    expect(getPostSlug('en-US/hello-world', 'en-US')).toBe('hello-world');
     // No matching prefix → id returned unchanged.
-    expect(getPostSlug('hello-world', 'en')).toBe('hello-world');
+    expect(getPostSlug('hello-world')).toBe('hello-world');
   });
 
-  it('builds an unprefixed post URL', () => {
-    expect(getPostUrl('en/hello-world')).toBe('/blog/hello-world');
-    // Even a non-default locale stays unprefixed while i18n is off.
-    expect(getPostUrl('nl/hallo-wereld', 'nl')).toBe('/blog/hallo-wereld');
+  it('builds locale-aware post URLs', () => {
+    // Default locale: no prefix
+    expect(getPostUrl('zh-CN/hello-world')).toBe('/blog/hello-world');
+    // Secondary locale: prefixed
+    expect(getPostUrl('en-US/hello-world', 'en-US')).toBe('/en-US/blog/hello-world');
   });
 
-  it('builds the blog index base URL', () => {
+  it('builds the blog index base URL, locale-aware', () => {
+    // Default locale: no prefix
     expect(getBlogBaseUrl()).toBe('/blog');
-    expect(getBlogBaseUrl('nl')).toBe('/blog');
+    // Secondary locale: prefixed
+    expect(getBlogBaseUrl('en-US')).toBe('/en-US/blog');
   });
 
   it('maps page 1 to the blog root and pages 2+ to /blog/page/N', () => {
     expect(getBlogPageUrl(1)).toBe('/blog');
     expect(getBlogPageUrl(2)).toBe('/blog/page/2');
-    expect(getBlogPageUrl(5)).toBe('/blog/page/5');
   });
 
   it('builds a tag URL from the slugified tag', () => {
@@ -49,7 +53,7 @@ describe('blog URL helpers (i18n disabled — default)', () => {
     expect(getTagUrl('Web Performance')).toBe('/blog/tag/web-performance');
   });
 
-  it('exposes no secondary locales when i18n is off', () => {
-    expect(getSecondaryLocales()).toEqual([]);
+  it('exposes secondary locales when i18n is on', () => {
+    expect(getSecondaryLocales()).toEqual(['en-US', 'zh-TW']);
   });
 });

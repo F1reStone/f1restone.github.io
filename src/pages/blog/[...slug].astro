@@ -1,7 +1,7 @@
 ---
 import BlogLayout from '@/layouts/BlogLayout.astro';
 import { getCollection, render } from 'astro:content';
-import { stripLocalePrefix } from '@/lib/blog';
+import { getPostSlug } from '@/lib/blog';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => {
@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 
   return posts.map((post) => ({
     params: {
-      slug: stripLocalePrefix(post.id),
+      slug: getPostSlug(post.id),
     },
     props: { post },
   }));
@@ -29,6 +29,7 @@ const { Content, headings } = await render(post);
   image={post.data.image}
   imageAlt={post.data.imageAlt}
   svgSlug={post.data.svgSlug}
+  body={post.body}
   tags={post.data.tags}
   slug={post.id}
   faqs={post.data.faqs}

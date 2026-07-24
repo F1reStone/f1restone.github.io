@@ -2,14 +2,14 @@
 import { render } from 'astro:content';
 import LegalLayout from '@/layouts/LegalLayout.astro';
 import { getLegalEntries } from '@/lib/legal';
-import { stripLocalePrefix } from '@/lib/blog';
+import { getPostSlug } from '@/lib/blog';
 
 export async function getStaticPaths() {
   const entries = await getLegalEntries('zh-CN');
 
   return entries.map((entry) => ({
     params: {
-      slug: stripLocalePrefix(entry.id).replace(/^legal\//, ''),
+      slug: getPostSlug(entry.id).replace(/^legal\//, ''),
     },
     props: { entry },
   }));

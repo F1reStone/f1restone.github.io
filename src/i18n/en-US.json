@@ -5,11 +5,22 @@
     "closeMenu": "Close menu",
     "selectLanguage": "Select language",
     "currentLanguage": "Current language",
+    "mainNav": "Main navigation",
+    "mobileNav": "Mobile navigation",
+    "toggleMenu": "Toggle menu",
+    "sectionNavigate": "Navigate",
+    "sectionTheme": "Theme",
+    "sectionLanguage": "Language",
+    "sectionConnect": "Connect",
     "items": {
+      "home": "Home",
       "projects": "Projects",
+      "legal": "Legal",
       "blog": "Blog",
       "about": "About",
-      "ai": "FireStone AI"
+      "ai": "FireStone AI",
+      "firestone-website": "FireStone Website",
+      "sparkforge": "SparkForge"
     }
   },
   "common": {
@@ -20,7 +31,8 @@
     "submit": "Submit",
     "cancel": "Cancel",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "home": "Home"
   },
   "blog": {
     "title": "Blog",
@@ -38,17 +50,67 @@
     "relatedPosts": "Related Posts",
     "share": "Share:",
     "shareOn": "Share on {platform}",
-    "copyLink": "Copy link"
+    "copyLink": "Copy link",
+    "metaTitle": "Blog",
+    "metaDescription": "FireStone's tech blog: insights on graphic design, front-end development, and game development.",
+    "heroBadge": "All posts",
+    "heroDescription": "Thoughts and notes on design, development, and creative work.",
+    "allPosts": "All posts",
+    "noPosts": "No posts yet",
+    "pageMetaTitle": "Blog — Page {page}",
+    "pageMetaDescription": "Page {page} of {total} — insights on design, development, and creative work.",
+    "pageBadge": "Page {page} of {total}",
+    "newestPosts": "Newest posts",
+    "tagMetaTitle": "#{tag} — Blog",
+    "tagMetaDescription": "Posts tagged \"{tag}\".",
+    "tagBadge": "Tag",
+    "tagCountOne": "{count} post tagged \"{tag}\".",
+    "tagCountOther": "{count} posts tagged \"{tag}\".",
+    "tagEmpty": "No posts found for this tag.",
+    "tagBackToAll": "Back to all posts",
+    "onThisPage": "On this page",
+    "backToBlog": "Back to Blog",
+    "updated": "Updated",
+    "followAlong": "Follow along",
+    "followAlongLead": "Stay in the loop — new articles, thoughts, and updates.",
+    "rssFeed": "RSS Feed",
+    "emailLabel": "Email"
   },
   "comments": {
-    "title": "Comments"
+    "title": "Comments",
+    "loadError": "Comments failed to load. Please refresh and try again.",
+    "requiresJs": "Comments require JavaScript to load."
   },
   "projects": {
     "title": "Projects",
     "description": "Things I've built",
     "viewProject": "View project",
     "viewSource": "View source",
-    "noProjectsFound": "No projects found."
+    "noProjectsFound": "No projects found.",
+    "metaTitle": "Projects",
+    "metaDescription": "Selected work — websites, tools, and open-source projects by FireStone.",
+    "heroBadge": "Selected work",
+    "heroDescription": "Work I'm most proud of.",
+    "allProjects": "All projects",
+    "pageMetaTitle": "Projects — Page {page}",
+    "pageMetaDescription": "Page {page} of {total} — selected work by FireStone.",
+    "pageBadge": "Page {page} of {total}",
+    "tagMetaTitle": "#{tag} — Projects",
+    "tagMetaDescription": "Projects tagged \"{tag}\".",
+    "tagBadge": "Tag",
+    "tagCountOne": "{count} project tagged \"{tag}\".",
+    "tagCountOther": "{count} projects tagged \"{tag}\".",
+    "tagEmpty": "No projects found for this tag.",
+    "tagBackToAll": "Back to all projects",
+    "backToProjects": "Back to Projects",
+    "moreProjects": "More projects",
+    "ctaBadge": "Let's talk",
+    "ctaHeading": "Want something like this?",
+    "ctaLead": "I build with the same care and craft you see here. If you've got a project, let's see what we can make together.",
+    "ctaPrimary": "Start a project",
+    "ctaSecondary": "More about me",
+    "closingHeading": "Have a project in mind?",
+    "closingLead": "Whether it's a new build or something that needs a fresh perspective — I'd love to hear about it."
   },
   "pagination": {
     "page": "Page {current} of {total}",
@@ -60,6 +122,8 @@
     "pageNotFound": "Page not found",
     "pageNotFoundMessage": "The page you're looking for doesn't exist or has moved.",
     "goHome": "Go to homepage",
+    "metaTitle": "Page not found",
+    "metaDescription": "This page has moved, been removed, or never existed in the first place.",
     "badge": "404 — page not found",
     "titleLead": "Page not",
     "titleHighlight": "found.",
@@ -95,15 +159,116 @@
     "error": "Failed to send message. Please try again."
   },
   "theme": {
-    "selectTheme": "Select theme",
-    "lightMode": "Light mode",
-    "darkMode": "Dark mode",
-    "systemMode": "System",
-    "toggleTheme": "Toggle theme"
+    "selectColourTheme": "Select colour theme",
+    "colourTheme": "Colour theme",
+    "colourMode": "Colour mode",
+    "modeTrigger": "Theme: {mode}. Click to change.",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark",
+    "currentlyLight": "Currently light",
+    "currentlyDark": "Currently dark",
+    "swatchLabel": "{name} theme"
+  },
+  "search": {
+    "placeholder": "Search posts, projects, and pages…",
+    "inputLabel": "Search query",
+    "resultsLabel": "Search results",
+    "hint": "Start typing to search the site.",
+    "noResults": "No results for \"{query}\"",
+    "unavailable": "The search index is generated at build time and isn't available in <code class=\"rounded bg-secondary px-1.5 py-0.5 text-xs\">astro dev</code>.<br />Run <code class=\"rounded bg-secondary px-1.5 py-0.5 text-xs\">pnpm build &amp;&amp; pnpm preview</code> to try it locally."
+  },
+  "video": {
+    "playLabel": "Play video: {title}",
+    "watchOn": "Watch on YouTube"
+  },
+  "consent": {
+    "bannerAriaLabel": "Cookie consent",
+    "reopenerAriaLabel": "Open cookie settings",
+    "heading": "Cookie Preferences",
+    "description": "FireStone use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By continuing to use this site, you consent to our use of cookies. Read our {privacyPolicy} to learn more about how we use cookies to improve your experience.",
+    "acceptAll": "Accept All",
+    "declineAll": "Decline All",
+    "customize": "Customize",
+    "savePreferences": "Save Preferences",
+    "settingsHeading": "Cookie Preferences",
+    "settingsDescription": "Choose which cookie categories you allow. Disabling cookies may affect the functionality and experience of the site. Read FireStone's {privacyPolicy} to learn more about how we use cookies.",
+    "alwaysOnLabel": "Always on",
+    "privacyPolicyLabel": "Privacy Policy",
+    "categories": {
+      "necessary": {
+        "label": "Necessary",
+        "description": "Essential cookies required for the website to function. These cannot be disabled."
+      },
+      "analytics": {
+        "label": "Analytics",
+        "description": "Help us understand how visitors interact with the website by collecting anonymous usage data."
+      },
+      "marketing": {
+        "label": "Marketing",
+        "description": "Used to deliver relevant ads and track ad campaign performance across websites."
+      },
+      "preferences": {
+        "label": "Preferences",
+        "description": "Allow the website to remember choices you make, such as language or region."
+      }
+    }
   },
   "footer": {
-    "copyright": "© {year} {siteName}. All rights reserved.",
+    "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
+    "credit": "Theme by <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
     "builtWith": "Built with Astro Rocket",
-    "followOn": "Follow us on {platform}"
+    "followOn": "Follow us on {platform}",
+    "socialMedia": "Social Media",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePreferences": "Cookie Preferences",
+    "groups": {
+      "explore": "Explore",
+      "projects": "Projects",
+      "about": "About",
+      "legal": "Legal",
+      "poweredBy": "Powered by",
+      "links": {
+        "projects": "Projects",
+        "blog": "Blog",
+        "ai": "FireStone AI",
+        "firestoneWebsite": "FireStone Website",
+        "sparkforge": "SparkForge",
+        "aboutFirestone": "About FireStone",
+        "legalInfo": "Legal Info",
+        "privacyPolicy": "Privacy Policy"
+      }
+    }
+  },
+  "pages": {
+    "about": {
+      "meta": {
+        "title": "About | FireStone",
+        "description": "An amateur developer, designer, and content creator's personal website."
+      },
+      "hero": {
+        "badge": "About",
+        "titleLead": "FireStone |",
+        "typingWords": ["Amateur Designer", "Amateur Developer", "Content Creator", "Amateur Tech Artist", "THE FINALS Player"],
+        "typingWordsMobile": ["Amateur Designer", "Amateur Developer", "Content Creator"],
+        "description": "A personal website of an amateur developer, designer, and content creator."
+      }
+    },
+    "home": {
+      "meta": {
+        "title": "Home | FireStone",
+        "description": "An amateur developer / designer / content creator — FireStone's personal website. Sharing interesting works and technical insights."
+      },
+      "hero": {
+        "badge": "Welcome",
+        "titleLine1": " | FireStone",
+        "titleLine2": "Amateur Developer",
+        "titleLine3": "& Designer",
+        "description": "An amateur developer, designer, and content creator sharing interesting works and technical insights.",
+        "descriptionMobile": "An amateur developer, designer, and content creator.",
+        "github": "View on GitHub",
+        "getStarted": "Learn more"
+      }
+    }
   }
 }

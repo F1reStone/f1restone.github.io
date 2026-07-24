@@ -26,14 +26,15 @@ export { tagToSlug, findTagBySlug };
 
 /**
  * Strip the locale prefix from a blog entry's id to get its URL slug
- * (e.g. "en-US/welcome" → "welcome").
+ * (e.g. "zh-CN/welcome" → "welcome").
  */
-export function stripLocalePrefix(id: string): string {
-  return id.includes('/') ? id.split('/').slice(1).join('/') : id;
-}
-
 export function getPostSlug(postId: string, locale: string = defaultLocale): string {
-  return postId.replace(new RegExp(`^${locale}/`, 'i'), '');
+  // Strip the leading locale-folder segment, leaving a single-segment slug. The
+  // prefix is normally `locale`, but we also strip any other configured locale,
+  // so a folder/locale mismatch still yields a clean slug rather than one
+  // containing a slash (which would break single-segment `[slug]` routes).
+  const localePrefix = new RegExp(`^(${[locale, ...getLocales()].join('|')})/`, 'i');
+  return postId.replace(localePrefix, '');
 }
 
 /**

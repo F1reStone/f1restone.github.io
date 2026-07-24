@@ -1,9 +1,16 @@
 import { SITE_URL, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, REPOSITORY_ID, CATEGORY_ID } from 'astro:env/server';
-export type { I18nConfig } from './i18n.config';
+import i18nConfig, { type I18nConfig } from './i18n.config';
+
+export { i18nConfig };
+export type { I18nConfig };
 
 export interface SiteConfig {
   name: string;
   description: string;
+  /** Identity line under the logo in the centered footer */
+  tagline?: string;
+  /** Short facts line under the footer tagline (licensing, location, availability) */
+  footerNote?: string;
   url: string;
   ogImage: string;
   author: string;
@@ -85,12 +92,12 @@ export interface SiteConfig {
       /** Deepest heading level to include (2 = H2 only, 3 = H2+H3, etc.) */
       maxDepth?: 2 | 3 | 4;
     };
-    /** Comments at the bottom of blog posts (powered by Giscus or Cusdis) */
+    /** Comments at the bottom of blog posts (powered by Giscus, Cusdis, or Artalk) */
     comments?: {
       /** Master switch — set to true to enable site-wide */
       enabled: boolean;
-      /** Comments provider — 'giscus' (GitHub Discussions) or 'cusdis'. */
-      provider?: 'giscus' | 'cusdis';
+      /** Comments provider — 'giscus' (GitHub Discussions), 'cusdis', or 'artalk'. */
+      provider?: 'giscus' | 'cusdis' | 'artalk';
       /** Giscus configuration. Get values from https://giscus.app */
       giscus?: {
         repo: `${string}/${string}`;
@@ -115,6 +122,41 @@ export interface SiteConfig {
          * to override.
          */
         lang?: string;
+      };
+      /** Artalk configuration. Requires your own Artalk server. */
+      artalk?: {
+        /**
+         * Artalk server address, for example:
+         * 'https://comments.example.com'
+         */
+        server: string;
+        /**
+         * Site name used by Artalk for multi-site isolation. This should match
+         * the site created in the Artalk dashboard/server config.
+         */
+        site: string;
+        /**
+         * Optional client JS URL. Defaults to `${server}/dist/Artalk.js`.
+         * Useful when serving the client from a CDN or custom asset path.
+         */
+        jsUrl?: string;
+        /**
+         * Optional client CSS URL. Defaults to `${server}/dist/Artalk.css`.
+         * Useful when serving the client from a CDN or custom asset path.
+         */
+        cssUrl?: string;
+        /**
+         * Dark mode. Leave empty (the default) to follow the site's own
+         * light/dark mode and keep it in sync live. Set 'auto' to follow the
+         * OS preference instead, or use true / false for a fixed mode.
+         */
+        darkMode?: boolean | 'auto';
+        /**
+         * Language. Leave empty (the default) to follow the site's current
+         * locale. Set a specific Artalk locale code such as 'zh-CN' or 'en'
+         * to override.
+         */
+        locale?: string;
       };
       /** Cusdis configuration. Get your App ID from your Cusdis dashboard. */
       cusdis?: {
@@ -162,6 +204,12 @@ export interface SiteConfig {
     tagCloudLimit?: number;
   };
   /**
+   * Internationalization (i18n) — see `src/config/i18n.config.ts`.
+   * Lives in a separate file so the i18n module can be imported by
+   * unit tests without pulling in `astro:env/server`.
+   */
+  i18n?: I18nConfig;
+  /**
    * Branding configuration
    * Logo files: Replace SVGs in src/assets/branding/
    * Favicon: Replace in public/favicon.svg
@@ -170,12 +218,20 @@ export interface SiteConfig {
     /** Logo alt text for accessibility */
     logo: {
       alt: string;
+      /**
+       * Optional path to a custom logo image in public/ (e.g. '/logo.svg').
+       * When set, it replaces the generated letter-monogram badge in the
+       * header, footer, and anywhere <Logo> is rendered — no layout edits
+       * needed. Leave unset to keep the monogram. Per-author byline avatars
+       * (which pass an explicit letter) are unaffected.
+       */
+      image?: string;
       /** Path to logo image for structured data (e.g. '/logo.png'). Add a PNG to public/ and set this. */
-      imageUrl?: '/favicon.svg';
+      imageUrl?: string;
     };
     /** Favicon path (lives in public/) */
     favicon: {
-      svg: '/favicon.svg';
+      svg: string;
     };
     /** Theme colors for manifest and browser UI */
     colors: {
@@ -191,6 +247,8 @@ const siteConfig: SiteConfig = {
   name: 'FireStone 火石',
   description:
     '兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。',
+  tagline: '业余开发者 / 设计师 / 内容创作者',
+  footerNote: '基于 Astro Rocket 构建 · MIT 协议开源',
   url: SITE_URL || 'https://fire-stone.co/',
   ogImage: '/og-firestone.png',
   author: 'FireStone',
@@ -251,6 +309,22 @@ const siteConfig: SiteConfig = {
         theme: 'preferred_color_scheme',
         lang: 'zh-CN',
       },
+      // Used when provider is 'artalk'. Point `server` at your own Artalk
+      // service — use an https:// address in production (a plain http:// URL
+      // is blocked as mixed content on an https site and is open to
+      // tampering). Comments render only once both `server` and `site` are set.
+      artalk: {
+        server: '',
+        // The Artalk "site" name you configured in the Artalk dashboard
+        // (used for multi-site isolation).
+        site: '',
+        // Optional: override the client asset URLs when needed.
+        // jsUrl: 'https://cdn.example.com/artalk/Artalk.js',
+        // cssUrl: 'https://cdn.example.com/artalk/Artalk.css',
+        // Leave undefined → follow the site's light/dark mode and locale.
+        // darkMode: 'auto',
+        // locale: 'en',
+      },
       // Used when provider is 'cusdis'. Get your App ID from the Cusdis
       // dashboard (Embed Code); `host` defaults to the hosted service.
       cusdis: {
@@ -270,6 +344,7 @@ const siteConfig: SiteConfig = {
     perPage: 12,
     tagCloudLimit: 10,
   },
+  i18n: i18nConfig,
   branding: {
     logo: {
       alt: 'FireStone',

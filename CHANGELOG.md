@@ -6,7 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased]
+## Synced — [2.1.0] — 2026-07-16
+
+### Added
+
+- **Community showcase in the README** — 【FireStone 注：README 中的更改，无需在意】 — a new **Showcase** section listing real sites built and shipped with Astro Rocket, opening with [LinkPress](https://linkpress.app/) by Mithun A. Sridharan. Submissions come in through a new structured issue form (`.github/ISSUE_TEMPLATE/showcase_submission.yml` — live URL, project description, credit line, and opt-in checkboxes for screenshot/testimonial use). The showcase deliberately lives in the README only: no `/showcase` page ships in the theme, so user sites are completely unaffected.
+- **About page → showcase button** — 【FireStone 注：我们的关于页应该没有这部分内容，可以不移植】 — the "Built in the open" section gained an optional second button ("See what others built") next to "View on GitHub", pointing at the README's Showcase anchor on GitHub. Driven by a new `pages.about.openSource.showcaseButton` key in `en.json`/`nl.json`; the button only renders when the key exists, so removing the key hides it with no template edit.
+- **Artalk comment provider** — 【FireStone 注：不冲突，保留该升级，虽然我们用的是 Giscus】 — the pluggable blog-comments system gained a third option alongside Giscus and Cusdis: [Artalk](https://artalk.js.org), a self-hosted comment system, wired with the same care as the existing providers and hardened in a follow-up pass. Existing sites are unaffected; the provider defaults stay unchanged.
+- **Cloudflare as a first-class deploy target** — 【FireStone 注：我们已经添加了 Cloudflare 插件，因此可能会有一些重复造的轮子被合并，如果上游的实现更好，那就以上游的为准】 — alongside Vercel (default) and Netlify, the theme now ships a Cloudflare deploy path via `@astrojs/cloudflare`.
+- **Built-in i18n for the main pages** — 【FireStone 注：我们当前的基线版本基于之前的开发分支，已经有 i18n 的半成品了，但是功能基本不可用，请在这次版本升级中将完整 i18n 彻底升级完成，我们需要将 i18n 尽可能对齐上游以解决这些问题，**这也是本次升级的主要目的**，请同时为我们当前的语言（简体中文）适配好新的本地化字符串，以避免显示问题】 — the home, About, Services, and Contact pages moved their copy into the locale dictionaries, the remaining hardcoded chrome strings and blog/projects UI strings were localized, and blog/article dates now follow the active locale.
+- **Brand-outline button variant** — a new `Button` variant with a brand border and brand text on a transparent fill, used for secondary actions across the demo. Text shades chosen to hold WCAG AA in both modes.
+- **Section pill icons**— 【FireStone 注：如果是我想的那个 badge，那也许冲突，请你判断一下。这个不是必须跟】 — every section badge pill across the demo pages now carries a matching icon.
+- **Theme-picker curation flag** — 【FireStone 注：我们不使用该功能，但也不冲突，可以跟】 — `src/lib/themes.ts` now single-sources the picker list for both the swatch row and the dropdown. A `showInSelector` flag per theme lets a site offer a subset of the pickers while all twelve palettes keep shipping (and keep working for visitors who saved one earlier).
+- **Official design variants as archive branches** — 【FireStone 注：新分支的变动，无需在意】 — two documented, frozen branches now accompany `main`: `archive/original-design` (the design before the #551 consistency system) and `archive/brand-consistency-design` (the full #551 brand look). Each carries a `DESIGN-ARCHIVE.md` explaining what it holds and how to build on it.
+- **Configurable consent-banner aria-labels** — 【FireStone 注：在不冲突的前提下保留该升级】 — the cookie-consent banner's accessibility labels are now driven from config.
+
+### Changed
+
+- **Updated to Astro 7.1.0** — 【FireStone 注：我已经手动更新了 Astro 依赖，你可能会发现上游的部分组件于我们而言反而降级了，牢记：我们比上游新的不降级，上游比我们新的直接跟，只升不降，具体参考 UPGRADE.md 写的内容】 `astro` `7.0.0` → `7.1.0` (a purely additive minor release: opt-in `deferRender` for large collections, experimental chunked collection storage, finer-grained CSP directives, a `format()` option for `paginate`, plus the 7.0.1–7.0.9 patch fixes in between). Integrations updated alongside: `@astrojs/mdx` `7.0.0` → `7.0.3`, `@astrojs/react` `6.0.0` → `6.0.1`. No breaking changes; the full site builds clean and key pages were smoke-tested in a rendered build.
+- **Deeper card elevation** — 【FireStone 注：设计更新，如果我没修改过，可以跟】 — cards drop the brand ring for a cleaner `shadow-lg` resting state with a `shadow-xl` hover; blog hero images and project screenshots float on a new media shadow; the stack marquee cards and the LetterGlitch band received matching treatments (including a dark-mode brand glow for the band, where grey shadows can't register).
+- **Primary buttons read brand** — 【FireStone 注：同样为设计更新，但是我改过了，不跟】 — the primary button uses a brand-600 fill in light mode (the four cooler hues — cyan, emerald, sky, teal — sit on brand-700/800 so white label text keeps WCAG AA), and the project hero's live-site button and the mobile menu CTA are solid brand in dark mode too.
+- **Unified tag pills** — 【FireStone 注：我已经重复造过类似的轮子了，要是有什么地方实现的比我的好，那可以部分移植过来，否则不跟】 project-card, blog-card, and archive tags share one pill design.
+- **Services page rebalance** — 【FireStone 注：我们没有 Services 页面，不跟】 restructured sections with five points per service card and the per-section CTA buttons removed in favour of one closing CTA.
+- **Sharper positioning and the true origin story** — 【FireStone 注：似乎是介绍和 About 更新，不跟】 the theme copy settles on "a lightning-fast Astro 7 starter theme to build anything on", Velocity is credited as the fork origin the theme evolved beyond, and the demo's own project page now tells the full story: the fork became a personal website first, the theme split off before that site was finished, and the two evolved side by side.
+- **The #551 design-consistency round trip** — 【FireStone 注：设计更新，不跟】 — the brand-consistency system proposed in #551 (thank you @Dixin) shipped as the default, and after user feedback the default returned to the original look the same day the feedback arrived. The system lives on in full as the `archive/brand-consistency-design` variant. Kept in the default permanently: the hand cursor on every enabled control and the centered footer on project pages.
+- **Footer refinements** — 【FireStone 注：网站上的 Footer 有很多样式版本，simple、minimal、stacked 由于我不使用，对其的更新可以跟，其他的（包括 columns、asymmetricColumns）不跟】 — the designer credit merged into the copyright line, and the footer menu and legal links settled on muted grey with a foreground hover.
+
+### Fixed
+
+- **Build crash when the default locale is not `"en"`** — 【FireStone 注：我没有遇到，但是建议跟】 — the build no longer assumes an English default locale.
+- **Blog reading time** — 【FireStone 注：涉及网站 CJK 适配，事关重要，必须跟】 — computed from the real post body, counts CJK text correctly, and the label is localized.
+- **Doubled site name in page titles** — 【FireStone 注：我没看出来这个 bug，不过可以一起修了】 page titles no longer repeat the site name; the About page keeps a descriptive title.
+- **Light hairline on the LetterGlitch band** — 【FireStone 注：虽然 LetterGlitch 目前尚未使用，但是可以一起修了】 the band showed a 1px line of the page background through its transparent border in light mode; it now paints its own background.
 
 ## [2.0.0] — 2026-06-22
 

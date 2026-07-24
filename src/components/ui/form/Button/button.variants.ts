@@ -19,6 +19,8 @@ export const buttonVariants = cva(
           'bg-secondary text-secondary-foreground border border-border/50 hover-glow-box hover-solid-fill',
         outline:
           'glass-panel text-foreground hover-glow-text hover-glow-outline',
+        'brand-outline':
+          'bg-transparent text-brand-700 border border-brand-500/40 hover:bg-brand-500/10 hover:border-brand-500/80 hover-glow-box dark:text-brand-400',
         ghost:
           'bg-transparent text-foreground-secondary hover-glow-box hover-solid-fill',
         destructive:

@@ -72,6 +72,8 @@ export interface ResolvedNavItem {
 
 export interface FooterLinkGroup {
   title: string;
+  /** i18n dictionary key for the group title (e.g. `'footer.groups.explore'`). Falls back to `title`. */
+  titleKey?: string;
   links: NavItem[];
 }
 // FireStone: [Added FooterLinkGroup interface and footerLinkGroups array to manage column-based footer globally]
@@ -98,34 +100,39 @@ export const legalLinks: LegalLink[] = [
 export const footerLinkGroups: FooterLinkGroup[] = [
   {
     title: '探索',
+    titleKey: 'footer.groups.explore',
     links: [
-      { label: '项目', href: '/projects/', order: 1, labelKey: 'nav.items.projects' },
-      { label: '博客', href: '/blog/', order: 2, labelKey: 'nav.items.blog' },
-      { label: 'FireStone AI', href: '/ai/', order: 3, labelKey: 'nav.items.ai' },
+      { label: '项目', href: '/projects/', order: 1, labelKey: 'footer.groups.links.projects' },
+      { label: '博客', href: '/blog/', order: 2, labelKey: 'footer.groups.links.blog' },
+      { label: 'FireStone AI', href: '/ai/', order: 3, labelKey: 'footer.groups.links.ai' },
     ],
   },
   {
     title: '项目',
+    titleKey: 'footer.groups.projects',
     links: [
-      { label: 'FireStone 网站', href: '/projects/firestone-website/', order: 1, labelKey: 'nav.items.firestone-website' },
-      { label: 'SparkForge 燧光', href: '/projects/sparkforge/', order: 2, labelKey: 'nav.items.sparkforge' },
+      { label: 'FireStone 网站', href: '/projects/firestone-website/', order: 1, labelKey: 'footer.groups.links.firestoneWebsite' },
+      { label: 'SparkForge 燧光', href: '/projects/sparkforge/', order: 2, labelKey: 'footer.groups.links.sparkforge' },
     ],
   },
   {
     title: '关于',
+    titleKey: 'footer.groups.about',
     links: [
-      { label: '关于 FireStone', href: '/about/', order: 1, labelKey: 'nav.items.about' },
+      { label: '关于 FireStone', href: '/about/', order: 1, labelKey: 'footer.groups.links.aboutFirestone' },
     ],
   },
   {
     title: '法律',
+    titleKey: 'footer.groups.legal',
     links: [
-      { label: '法律信息', href: '/legal/', order: 1, labelKey: 'nav.items.legal' },
-      { label: '隐私政策', href: '/legal/privacy-policy/', order: 2, labelKey: 'footer.privacyPolicy' },
+      { label: '法律信息', href: '/legal/', order: 1, labelKey: 'footer.groups.links.legalInfo' },
+      { label: '隐私政策', href: '/legal/privacy-policy/', order: 2, labelKey: 'footer.groups.links.privacyPolicy' },
     ],
   },
   {
     title: 'Powered by',
+    titleKey: 'footer.groups.poweredBy',
     links: [
       { label: 'Astro', href: 'https://astro.build/', order: 1 },
       { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
@@ -216,8 +223,17 @@ export function getLogoHref(locale: Locale = defaultLocale): string {
 }
 
 /**
- * Get configured footer link groups for the columns layout.
+ * Get configured footer link groups for the columns layout, localized for `locale`.
+ * Group titles are translated via `titleKey`; links are resolved with `resolveNavItem`.
  */
-export function getFooterLinkGroups(): FooterLinkGroup[] {
-  return [...footerLinkGroups];
+export function getFooterLinkGroups(locale: Locale = defaultLocale): FooterLinkGroup[] {
+  return footerLinkGroups.map((group) => ({
+    title: group.titleKey ? t(group.titleKey, locale) : group.title,
+    titleKey: group.titleKey,
+    links: group.links.map((link) => ({
+      ...link,
+      label: resolveNavItem(link, locale).label,
+      href: resolveNavItem(link, locale).href,
+    })),
+  }));
 }

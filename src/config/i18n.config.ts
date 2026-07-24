@@ -32,9 +32,9 @@ export interface I18nConfig {
 }
 
 const i18nConfig: I18nConfig = {
-  enabled: false,
+  enabled: true,
   defaultLocale: 'zh-CN',
-  locales: ['zh-CN', 'en-US', 'zh-TW'],
+  locales: ['zh-CN'],
   localeNames: {
     'en-US': 'English',
     'zh-CN': '简体中文',
@@ -60,6 +60,11 @@ export const expressiveCodeFrameTexts: Record<string, ExpressiveCodeFrameTexts> 
     terminalWindowFallbackTitle: '终端窗口',
     copyButtonTooltip: '复制到剪贴板',
     copyButtonCopied: '已复制！',
+  },
+  'en-US': {
+    terminalWindowFallbackTitle: 'Terminal Window',
+    copyButtonTooltip: 'Copy to Clipboard',
+    copyButtonCopied: 'Copied!',
   },
 };
 

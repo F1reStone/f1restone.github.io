@@ -5,7 +5,15 @@
     "closeMenu": "关闭菜单",
     "selectLanguage": "选择语言",
     "currentLanguage": "当前语言",
+    "mainNav": "主导航",
+    "mobileNav": "移动端导航",
+    "toggleMenu": "切换菜单",
+    "sectionNavigate": "导航",
+    "sectionTheme": "主题",
+    "sectionLanguage": "语言",
+    "sectionConnect": "社交",
     "items": {
+      "home": "首页",
       "projects": "项目",
       "legal": "法律",
       "blog": "博客",
@@ -20,8 +28,9 @@
     "search": "搜索",
     "submit": "提交",
     "cancel": "取消",
-    "next": "下一步",
-    "previous": "上一步"
+    "next": "下一页",
+    "previous": "上一页",
+    "home": "首页"
   },
   "blog": {
     "title": "博客",
@@ -36,36 +45,104 @@
     "noPostsFound": "未找到相关文章。",
     "tableOfContents": "本页目录",
     "shareThisPost": "分享此文章",
+    "relatedPosts": "相关文章",
     "share": "分享到：",
     "shareOn": "分享到 {platform}",
     "copyLink": "复制链接",
-    "relatedPosts": "相关文章"
+    "metaTitle": "博客",
+    "metaDescription": "FireStone 的技术博客：关于平面设计、前端开发与游戏开发的技术心得。",
+    "heroBadge": "全部文章",
+    "heroDescription": "关于设计、开发与创作的思考与记录。",
+    "allPosts": "全部文章",
+    "noPosts": "暂无文章",
+    "pageMetaTitle": "博客 — 第 {page} 页",
+    "pageMetaDescription": "第 {page} 页，共 {total} 页 — 关于设计、开发与创作的技术心得。",
+    "pageBadge": "第 {page} 页，共 {total} 页",
+    "newestPosts": "最新文章",
+    "tagMetaTitle": "#{tag} — 博客",
+    "tagMetaDescription": "标签为 \"{tag}\" 的文章。",
+    "tagBadge": "标签",
+    "tagCountOne": "共 {count} 篇标签为 \"{tag}\" 的文章。",
+    "tagCountOther": "共 {count} 篇标签为 \"{tag}\" 的文章。",
+    "tagEmpty": "该标签下暂无文章。",
+    "tagBackToAll": "返回全部文章",
+    "onThisPage": "本页目录",
+    "backToBlog": "返回「博客」",
+    "updated": "更新于",
+    "followAlong": "保持关注",
+    "followAlongLead": "不错过新文章、思考与更新。",
+    "rssFeed": "RSS 订阅",
+    "emailLabel": "电子邮件"
+  },
+  "comments": {
+    "title": "评论",
+    "loadError": "评论加载失败，请刷新后重试。",
+    "requiresJs": "评论需要启用 JavaScript 才能加载。"
   },
   "projects": {
     "title": "项目",
-    "description": "我的作品与项目",
+    "description": "一些由我制作的有趣作品",
     "viewProject": "查看项目",
     "viewSource": "查看源码",
-    "noProjectsFound": "未找到相关项目。"
+    "noProjectsFound": "未找到相关项目。",
+    "metaTitle": "项目",
+    "metaDescription": "精选作品 — 由 FireStone 制作的网站、工具与开源项目。",
+    "heroBadge": "精选作品",
+    "heroDescription": "我引以为豪的作品。",
+    "allProjects": "全部项目",
+    "pageMetaTitle": "项目 — 第 {page} 页",
+    "pageMetaDescription": "第 {page} 页，共 {total} 页 — 由 FireStone 制作的精选作品。",
+    "pageBadge": "第 {page} 页，共 {total} 页",
+    "tagMetaTitle": "#{tag} — 项目",
+    "tagMetaDescription": "标签为 \"{tag}\" 的项目。",
+    "tagBadge": "标签",
+    "tagCountOne": "共 {count} 个标签为 \"{tag}\" 的项目。",
+    "tagCountOther": "共 {count} 个标签为 \"{tag}\" 的项目。",
+    "tagEmpty": "该标签下暂无项目。",
+    "tagBackToAll": "返回全部项目",
+    "backToProjects": "返回「项目」",
+    "moreProjects": "更多项目",
+    "ctaBadge": "联系我们",
+    "ctaHeading": "想要类似的作品？",
+    "ctaLead": "我以同样用心的态度构建每一个项目。如果你有想法，欢迎和我聊聊。",
+    "ctaPrimary": "发起项目",
+    "ctaSecondary": "了解更多",
+    "closingHeading": "有项目想聊聊？",
+    "closingLead": "无论是全新构建还是需要焕然一新——我很乐意了解你的想法。"
   },
   "pagination": {
     "page": "第 {current} 页，共 {total} 页",
+    "label": "分页导航",
     "previousPage": "上一页",
     "nextPage": "下一页"
   },
   "errors": {
     "pageNotFound": "页面未找到",
     "pageNotFoundMessage": "此页面可能已移动、已删除或从未存在过。",
-    "goHome": "返回首页"
+    "goHome": "返回首页",
+    "metaTitle": "页面未找到",
+    "metaDescription": "此页面已移动、已删除或从未存在过。",
+    "badge": "404 — 页面未找到",
+    "titleLead": "页面未",
+    "titleHighlight": "找到。",
+    "description": "此页面可能已移动、已删除或从未存在过，让我们帮你回到正轨。",
+    "backHome": "返回「首页」",
+    "browseBlog": "浏览「博客」",
+    "tryInstead": "不妨…看看这些？",
+    "projectsDesc": "精选作品与案例。",
+    "blogDesc": "关于设计、代码与创作的笔记。",
+    "contactTitle": "联系",
+    "contactDesc": "发起项目合作对话。"
   },
   "newsletter": {
     "heading": "订阅时事通讯",
-    "description": "第一时间在您的收件箱接收最新文章。",
-    "emailPlaceholder": "your@email.com",
+    "description": "第一时间在收件箱接收最新文章。",
+    "emailPlaceholder": "输入你的邮箱",
     "subscribe": "订阅",
     "subscribing": "订阅中…",
-    "success": "感谢订阅！请检查您的收件箱进行确认。",
-    "error": "出错了，请稍后重试。"
+    "success": "感谢订阅！",
+    "genericError": "出错了",
+    "error": "订阅失败，请稍后重试。"
   },
   "contact": {
     "heading": "联系我",
@@ -75,20 +152,121 @@
     "message": "留言内容",
     "send": "发送留言",
     "sending": "发送中…",
-    "success": "谢谢！您的留言已成功发送。",
-    "error": "出错了，请稍后重试。"
+    "success": "留言发送成功！",
+    "genericError": "出错了",
+    "error": "留言发送失败，请稍后重试。"
   },
   "theme": {
-    "selectTheme": "选择主题",
-    "lightMode": "浅色模式",
-    "darkMode": "深色模式",
-    "systemMode": "跟随系统",
-    "toggleTheme": "切换主题"
+    "selectColourTheme": "选择配色主题",
+    "colourTheme": "配色主题",
+    "colourMode": "色彩模式",
+    "modeTrigger": "当前主题: {mode}。点击切换。",
+    "system": "跟随系统",
+    "light": "浅色",
+    "dark": "深色",
+    "currentlyLight": "当前为浅色模式",
+    "currentlyDark": "当前为深色模式",
+    "swatchLabel": "{name} 主题"
+  },
+  "search": {
+    "placeholder": "搜索文章、项目和页面…",
+    "inputLabel": "搜索内容",
+    "resultsLabel": "搜索结果",
+    "hint": "输入关键词搜索本站内容。",
+    "noResults": "未找到与「{query}」相关的结果",
+    "unavailable": "搜索索引在构建时生成，在 <code class=\"rounded bg-secondary px-1.5 py-0.5 text-xs\">astro dev</code> 模式下不可用。<br />运行 <code class=\"rounded bg-secondary px-1.5 py-0.5 text-xs\">pnpm build &amp;&amp; pnpm preview</code> 来本地体验搜索功能。"
+  },
+  "video": {
+    "playLabel": "播放视频: {title}",
+    "watchOn": "在 YouTube 上观看"
+  },
+  "consent": {
+    "bannerAriaLabel": "Cookie 首选项",
+    "reopenerAriaLabel": "打开 Cookie 设置",
+    "heading": "Cookie 首选项",
+    "description": "FireStone 使用 Cookie 来为您提供个性化内容、分析访问情况并改善您的使用体验，继续使用本网站，即表示您同意我们使用 Cookie。访问我们的{privacyPolicy}，进一步了解我们如何使用 Cookie 改善您的体验。",
+    "acceptAll": "接受全部",
+    "declineAll": "仅必要",
+    "customize": "自定义",
+    "savePreferences": "保存偏好设置",
+    "settingsHeading": "Cookie 首选项",
+    "settingsDescription": "选择您允许的 Cookie 类型。禁用 Cookie 可能会影响网站的功能和体验。访问 FireStone 的{privacyPolicy}，进一步了解我们如何使用 Cookie 改善您的体验。",
+    "alwaysOnLabel": "始终开启",
+    "privacyPolicyLabel": "《隐私政策》",
+    "categories": {
+      "necessary": {
+        "label": "必要 Cookie",
+        "description": "用于网站正常运行的必要 Cookie。这些 Cookie 无法被禁用。"
+      },
+      "analytics": {
+        "label": "分析 Cookie",
+        "description": "通过收集匿名使用数据，帮助我们了解访客如何使用本网站。"
+      },
+      "marketing": {
+        "label": "营销 Cookie",
+        "description": "用于提供更相关的内容与广告，并分析广告活动在不同网站上的表现。"
+      },
+      "preferences": {
+        "label": "偏好 Cookie",
+        "description": "允许网站记住您的个性化设置，例如语言或深浅模式选择。"
+      }
+    }
   },
   "footer": {
     "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
-    "followOn": "社交媒体",
+    "credit": "主题来自 <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
+    "builtWith": "使用 Astro Rocket 构建",
+    "followOn": "在 {platform} 上关注我们",
+    "socialMedia": "社交媒体",
     "privacyPolicy": "隐私政策",
-    "cookiePreferences": "Cookie 首选项"
+    "cookiePreferences": "Cookie 首选项",
+    "groups": {
+      "explore": "探索",
+      "projects": "项目",
+      "about": "关于",
+      "legal": "法律",
+      "poweredBy": "Powered by",
+      "links": {
+        "projects": "项目",
+        "blog": "博客",
+        "ai": "FireStone AI",
+        "firestoneWebsite": "FireStone 网站",
+        "sparkforge": "SparkForge 燧光",
+        "aboutFirestone": "关于 FireStone",
+        "legalInfo": "法律信息",
+        "privacyPolicy": "隐私政策"
+      }
+    }
+  },
+  "pages": {
+    "about": {
+      "meta": {
+        "title": "关于 | FireStone 火石",
+        "description": "一位兴趣使然的业余开发者 / 设计师 / 内容创作者的个人网站。"
+      },
+      "hero": {
+        "badge": "关于",
+        "titleLead": "FireStone |",
+        "typingWords": ["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "THE FINALS 选手"],
+        "typingWordsMobile": ["业余设计师", "业余开发者", "内容创作者"],
+        "description": "一名兴趣使然的业余开发者、设计师与内容创作者的个人网站。"
+      }
+    },
+    "home": {
+      "meta": {
+        "title": "首页 | FireStone 火石",
+        "description": "兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。"
+      },
+      "hero": {
+        "badge": "欢迎光临",
+        "titleLine1": " | FireStone 火石",
+        "titleLine2": "业余开发者",
+        "titleLine3": "& 设计师",
+        "description": "一名兴趣使然的业余开发者、设计师与内容创作者，在这里分享我的有趣作品和技术心得。",
+        "descriptionMobile": "一名兴趣使然的业余开发者、设计师与内容创作者。",
+        "github": "查看 GitHub",
+        "getStarted": "了解更多"
+      }
+    }
   }
 }
