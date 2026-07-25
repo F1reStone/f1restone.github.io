@@ -97,8 +97,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <link 
       rel="stylesheet" 
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap" 
-      media="print" 
-      onload="this.media='all'"
+      media="print"
     >
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap">
@@ -236,7 +235,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
             // 执行替换跳转 (携带参数和锚点)
             window.location.replace(newPath + window.location.search + window.location.hash);
           }
-        } catch (_e) {
+        } catch {
           // 忽略隐私模式下的异常。使用 _e 开头绕过 ESLint 检查
         }
       })();

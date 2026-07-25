@@ -6,8 +6,6 @@ import TagList from '@/components/blog/TagList.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import { Hero } from '@/components/hero';
-import siteConfig from '@/config/site.config';
-import { resolveSocialLinks } from '@/lib/utils';
 import {
   BLOG_POSTS_PER_PAGE,
   collectTopTags,
@@ -17,8 +15,6 @@ import {
 
 /** How many of the most-used tags to surface in the cloud. */
 const TAG_CLOUD_LIMIT = 10;
-
-const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
 
 const posts = await getPublishedPosts();
 

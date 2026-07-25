@@ -41,7 +41,7 @@ if (!project) {
 }
 
 const { Content, headings } = await render(project);
-const { title, description, repo, tags, year, role, services, meta, image, imageAlt, gallery, logo } = project.data;
+const { title, description, repo, year, meta, image, imageAlt, gallery, logo } = project.data;
 
 // Build carousel slides (same logic as the generic ProjectHero)
 const slides: GallerySlide[] =

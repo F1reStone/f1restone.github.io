@@ -4,13 +4,6 @@ import { renderOgSvg } from '@/lib/og';
 import { getPostSlug } from '@/lib/blog';
 import { defaultLocale } from '@/i18n';
 
-function getSlugFromEntryId(id: string): string {
-  // 例：
-  // "zh-CN/astro-rocket-getting-started" -> "astro-rocket-getting-started"
-  // "en-US/some-post" -> "some-post"
-  return id.split('/').slice(1).join('/');
-}
-
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('blog', ({ data }) => {
     return data.locale === defaultLocale && (import.meta.env.PROD ? data.draft !== true : true);

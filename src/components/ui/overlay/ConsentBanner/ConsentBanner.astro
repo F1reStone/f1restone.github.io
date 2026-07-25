@@ -47,9 +47,6 @@ function consentT(key: string, configValue: string | undefined, englishFallback:
   return englishFallback;
 }
 
-// Merge UI text: props override config defaults (kept for non-i18n backward compat)
-const ui = { ...consentConfig.ui, ...uiOverrides };
-
 // UI labels — i18n-aware with progressive fallback
 const heading = consentT('heading', consentConfig.ui.heading, 'Cookie Preferences');
 const acceptAll = consentT('acceptAll', consentConfig.ui.acceptAll, 'Accept All');

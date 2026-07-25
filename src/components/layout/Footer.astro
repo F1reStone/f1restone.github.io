@@ -23,7 +23,6 @@ import {
   getFooterNavItems,
   getLegalLinks,
   getFooterLinkGroups, // FireStone: Import the new global getter
-  type NavItem as NavConfigItem,
   type ResolvedNavItem,
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
@@ -114,7 +113,7 @@ const {
   maxWidth = '9xl',// FireStone: Change max width to 9xl to adapt out designs and wider footer.
   breadcrumbs: explicitBreadcrumbs, // 接收手动传入的面包屑
   hideBreadcrumbs = false,          // 接收强制隐藏指令
-  giantLogoSvg={giantLogoRaw}, // FireStone: 接收巨型 Logo SVG 字符串
+  giantLogoSvg: _giantLogoSvg,
   class: className,
   ...attrs
 } = Astro.props;

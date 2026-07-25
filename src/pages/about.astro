@@ -7,14 +7,12 @@ import PageLayout from '@/layouts/PageLayout.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
-import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
 import { Picture } from 'astro:assets';
 import { Image } from 'astro:assets';
 import aboutMe from "@/assets/about/about-me.svg";
 import TypingEffect from '@/components/ui/TypingEffect.astro';
 import TechStack from '@/components/landing/TechStack.astro';
-import BlogImageSVG from '@/components/blog/BlogImageSVG.astro';
 
 // Fav game local images (600x900)
 import minecraftImg from '@/assets/about/minecraft.png';
@@ -150,7 +148,7 @@ const favoriteGames = [
         class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 3xl:grid-cols-7 gap-4 md:gap-5"
         data-reveal-children
       >
-        {favoriteGames.map((game, index) => (
+        {favoriteGames.map((game) => (
           <div class="w-full h-full">
             <Card 
               variant="default" 

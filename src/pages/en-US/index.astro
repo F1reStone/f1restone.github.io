@@ -9,12 +9,8 @@ import BlogCard from '@/components/blog/BlogCard.astro';
 import TypingEffect from '@/components/ui/TypingEffect.astro';
 import { getCollection } from 'astro:content';
 import {
-  BLOG_POSTS_PER_PAGE,
-  collectTopTags,
   getPostUrl,
-  getPublishedPosts,
 } from '@/lib/blog';
-import siteConfig from '@/config/site.config';
 
 const projectItems = await getCollection('projects');
 const featuredProjects = projectItems

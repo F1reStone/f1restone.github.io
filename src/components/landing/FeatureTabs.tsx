@@ -221,14 +221,11 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
 
     // Process the line character by character with regex patterns
     while (remaining.length > 0) {
-      let matched = false;
-
       // Comments (// and /* */)
       const commentMatch = remaining.match(/^(\/\/.*|\/\*[\s\S]*?\*\/)/);
       if (commentMatch) {
         addToken(commentMatch[0], 'text-foreground-muted italic');
         remaining = remaining.slice(commentMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -237,7 +234,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (htmlCommentMatch) {
         addToken(htmlCommentMatch[0], 'text-foreground-muted italic');
         remaining = remaining.slice(htmlCommentMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -246,7 +242,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (stringMatch) {
         addToken(stringMatch[0], 'text-green-600 dark:text-green-400');
         remaining = remaining.slice(stringMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -254,7 +249,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (remaining.startsWith('---')) {
         addToken('---', 'text-purple-600 dark:text-purple-400 font-semibold');
         remaining = remaining.slice(3);
-        matched = true;
         continue;
       }
 
@@ -263,7 +257,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (tagMatch) {
         addToken(tagMatch[0], 'text-pink-600 dark:text-pink-400');
         remaining = remaining.slice(tagMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -272,7 +265,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (atRuleMatch) {
         addToken(atRuleMatch[0], 'text-purple-600 dark:text-purple-400 font-semibold');
         remaining = remaining.slice(atRuleMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -283,7 +275,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (keywordMatch) {
         addToken(keywordMatch[0], 'text-purple-600 dark:text-purple-400 font-semibold');
         remaining = remaining.slice(keywordMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -292,7 +283,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (boolMatch) {
         addToken(boolMatch[0], 'text-orange-700 dark:text-orange-300');
         remaining = remaining.slice(boolMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -301,7 +291,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
       if (numberMatch) {
         addToken(numberMatch[0], 'text-orange-700 dark:text-orange-300');
         remaining = remaining.slice(numberMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -311,7 +300,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
         addToken(cssPropMatch[1], 'text-blue-600 dark:text-blue-400');
         addToken(cssPropMatch[2], 'text-foreground-secondary');
         remaining = remaining.slice(cssPropMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -323,7 +311,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
         addToken(cssFuncMatch[1], 'text-amber-700 dark:text-amber-300');
         addToken(cssFuncMatch[2], 'text-foreground-secondary');
         remaining = remaining.slice(cssFuncMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -333,7 +320,6 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
         addToken(funcMatch[1], 'text-amber-700 dark:text-amber-300');
         addToken(funcMatch[2], 'text-foreground-secondary');
         remaining = remaining.slice(funcMatch[0].length);
-        matched = true;
         continue;
       }
 
@@ -343,15 +329,12 @@ function highlightCode(code: string, lang: string): React.ReactNode[] {
         addToken(typeMatch[1], 'text-foreground-secondary');
         addToken(typeMatch[2], 'text-cyan-700 dark:text-cyan-300');
         remaining = remaining.slice(typeMatch[0].length);
-        matched = true;
         continue;
       }
 
       // Default: single character
-      if (!matched) {
-        addToken(remaining[0], 'text-foreground-secondary');
-        remaining = remaining.slice(1);
-      }
+      addToken(remaining[0], 'text-foreground-secondary');
+      remaining = remaining.slice(1);
     }
 
     return tokens.length > 0 ? tokens : [<span key={lineIndex}> </span>];
