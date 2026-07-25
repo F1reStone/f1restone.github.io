@@ -3,7 +3,7 @@ import LandingLayout from '@/layouts/LandingLayout.astro';
 import { Hero } from '@/components/hero';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
-import Card from '@/components/ui/data-display/Card/Card.astro';
+import ProjectCard from '@/components/projects/ProjectCard.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import TypingEffect from '@/components/ui/TypingEffect.astro';
@@ -65,41 +65,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 
       <div class="grid gap-6 md:grid-cols-2">
         {featuredProjects.map((project, i) => (
-          <Card
-            variant="elevated"
-            hover
-            padding="none"
-            href={project.data.placeholder ? undefined : `/projects/${project.id.replace(/\.mdx?$/, '')}`}
-            class="group flex flex-col"
-            data-reveal
-            data-reveal-delay={i || undefined}
-          >
-            <div class="flex flex-1 flex-col p-6">
-              <div class="mb-3 flex items-start justify-between gap-4">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-                  <Icon name="layers" size="sm" />
-                </div>
-                <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
-              </div>
-              <div class="mb-2 flex items-baseline gap-2">
-                <h3 class="font-display text-lg font-bold text-foreground">{project.data.title}</h3>
-                {project.data.year && (
-                  <span class="text-xs font-mono text-foreground-muted">{project.data.year}</span>
-                )}
-              </div>
-              <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1">{project.data.description}</p>
-              {project.data.tags && project.data.tags.length > 0 && (
-                <div class="flex flex-wrap items-center gap-1.5">
-                  {project.data.tags.map((tag, index) => (
-                    <>
-                      {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
-                      <Badge variant="brand">{tag}</Badge>
-                    </>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Card>
+          <ProjectCard project={project} index={i} />
         ))}
       </div>
 
