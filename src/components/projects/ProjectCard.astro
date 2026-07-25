@@ -1,13 +1,15 @@
 ---
 /**
- * Project listing card. Extracted so the projects index, paginated pages,
- * and tag archives render identical cards from one source of truth.
- *
- * Placeholder projects render as a non-interactive card (no link), matching
- * how the listing treats projects that don't have their own detail page.
+ * Project listing card. 
+ * FireStone Refactored: Interactive Glass Reveal Card (Fluid Engine)
+ * 
+ * - Full background image with smart hover-blur and gradient transition.
+ * - Interactive CSS Grid `1fr` expansion for sliding content with fluid staggered enter/exit.
+ * - CSS Mask-Image injection for automatic dark/light mode logo adaptation.
+ * - Clean structure: Delays and reveals are delegated to parent `data-reveal-children`.
  */
+import { Picture } from 'astro:assets';
 import Card from '@/components/ui/data-display/Card/Card.astro';
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import type { CollectionEntry } from 'astro:content';
 import { defaultLocale } from '@/i18n';
@@ -28,38 +30,141 @@ const { project, index = 0, locale = defaultLocale } = Astro.props;
 const { data } = project;
 ---
 
-<Card
-  variant="elevated"
-  hover
-  padding="none"
-  href={data.placeholder ? undefined : getProjectUrl(project.id, locale)}
-  class="group flex flex-col"
-  data-reveal
-  data-reveal-delay={index || undefined}
->
-  <div class="flex flex-1 flex-col p-6">
-    <div class="mb-3 flex items-start justify-between gap-4">
-      <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-        <Icon name="layers" size="sm" />
-      </div>
-      <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
-    </div>
-    <div class="mb-2 flex items-baseline gap-2">
-      <h3 class="font-display text-lg font-bold text-foreground">{data.title}</h3>
-      {data.year && (
-        <span class="text-xs font-mono text-foreground-muted">{data.year}</span>
-      )}
-    </div>
-    <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1">{data.description}</p>
-    {data.tags && data.tags.length > 0 && (
-      <div class="flex flex-wrap items-center gap-1.5">
-        {data.tags.map((tag, tagIndex) => (
-          <>
-            {tagIndex > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
-            <Badge variant="brand">{tag}</Badge>
-          </>
-        ))}
-      </div>
+<div class="w-full h-full" data-reveal data-reveal-delay={index || undefined}>
+  <Card
+    variant="default"
+    padding="none"
+    href={data.placeholder ? undefined : getProjectUrl(project.id, locale)}
+    class="group relative overflow-hidden aspect-[4/3] sm:aspect-[16/10] lg:aspect-video bg-background-tertiary border-border/50 hover-glow-box block w-full h-full"
+  >
+    <!-- 1. 物理层：背景大图 / 占位符 -->
+    {data.image ? (
+      <Picture
+        src={data.image}
+        alt={data.title}
+        formats={['avif', 'webp']}
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-brand-500/20 to-brand-500/5 transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105" />
     )}
-  </div>
-</Card>
+
+    <!-- 2. 基础底色层：轻度阴影，确保在无悬停时 Logo 的绝对可读性 -->
+    <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0 pointer-events-none" />
+
+    <!-- 3. 高级毛玻璃层：柔和覆盖引擎 (-inset-4 防边缘漏光) -->
+    <div class="project-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
+
+    <!-- 4. 交互层：右上角悬浮跳转图标 -->
+    <span class="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center justify-center w-8 h-8 rounded-full glass-panel hover-glow-box hover-solid-fill text-white shadow-lg opacity-0 scale-75 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100 z-20">
+      <Icon name="arrow-up-right" size="sm" class="w-4 h-4" />
+    </span>
+
+    <!-- 5. 内容层：精确控制的防裁切出入场布局 -->
+    <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-7 z-10 pointer-events-none">
+      
+      <!-- FireStone 修复：移除了多余的 gap-2.5 和生硬的 -translate-y-1，
+          让内容的上升完全由下方 Grid 高度展开自然推起，极其丝滑！ -->
+      <div class="flex flex-col">
+        
+        <!-- Logo 或 标题回退 -->
+        <div class="origin-left">
+          {data.logo ? (
+            /* FireStone 修复：放大了 Logo 尺寸，使其更具气场 */
+            <div
+              class="h-9 sm:h-11 w-72 bg-foreground transition-colors duration-300"
+              style={`mask-image: url(${data.logo.src}); -webkit-mask-image: url(${data.logo.src}); mask-size: contain; mask-repeat: no-repeat; mask-position: left bottom;`}
+              aria-label={data.title}
+            />
+          ) : (
+            /* FireStone 修复：放大了回退文字标题字号 */
+            <h3 class="font-display text-4xl sm:text-3xl font-bold text-foreground drop-shadow-md tracking-tight leading-[0.75]">{data.title}</h3>
+          )}
+        </div>
+
+        <!-- 动态推挤内容区 (CSS Grid 1fr 魔法) -->
+        <div class="project-desc-wrapper">
+          <div class="overflow-hidden">
+            
+            <div class="project-desc-inner pt-3 flex flex-col gap-2.5">
+              
+              <!-- Tags & Year -->
+              <div class="flex items-center flex-wrap gap-2 text-[9px] sm:text-xs tracking-[0.1em] font-mono text-foreground-subtle uppercase">
+                {data.tags && data.tags.length > 0 && (
+                  <div class="flex items-center gap-1.5">
+                    {data.tags.map((tag, i) => (
+                      <>
+                        {i > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                        <span class="text-foreground-muted font-medium">{tag}</span>
+                      </>
+                    ))}
+                  </div>
+                )}
+                {data.tags?.length && data.year && <span class="text-foreground-subtle/50 select-none shrink-0 mx-1" aria-hidden="true" >/</span>}
+                {data.year && <span class="font-semibold text-foreground-muted">{data.year}</span>}
+              </div>
+
+              <!-- Description -->
+              <p class="text-[13px] sm:text-sm text-foreground-secondary leading-relaxed line-clamp-2 sm:line-clamp-3">
+                {data.description}
+              </p>
+
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </Card>
+</div>
+
+<style>
+  /* =========================================================================
+     FireStone: Project Card Interactive Overlay & Animation Engine
+     ========================================================================= */
+  
+  /* 渐进式毛玻璃遮罩 (底层背景) */
+  .project-card-overlay {
+    background: linear-gradient(
+      to top, 
+      color-mix(in oklch, var(--color-background) 95%, transparent) 0%, 
+      color-mix(in oklch, var(--color-background) 65%, transparent) 50%, 
+      transparent 100%
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
+  }
+
+  /* 动态高度推挤动画 */
+  .project-desc-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    /* FireStone 修复：将 ease-bouncy 替换为 ease-fluid！
+       这能彻底杜绝高度在临近结束时“上下抽搐”的生硬感，让 Logo 被推上去的动作如水般平滑！ */
+    transition: grid-template-rows 400ms var(--ease-fluid) 100ms;
+  }
+  .group:hover .project-desc-wrapper,
+  .group:active .project-desc-wrapper {
+    grid-template-rows: 1fr;
+    /* 立即展开 */
+    transition: grid-template-rows 500ms var(--ease-fluid) 0ms;
+  }
+
+  /* 内部文字淡入淡出控制 */
+  .project-desc-inner {
+    min-height: 0;
+    opacity: 0;
+    /* 快速淡出 */
+    transition: opacity 150ms ease-out 0ms;
+  }
+  .group:hover .project-desc-inner,
+  .group:active .project-desc-inner {
+    opacity: 1;
+    /* 等高度推开 100ms 后，文字再优雅浮现 */
+    transition: opacity 400ms var(--ease-fluid) 250ms;
+  }
+</style>
