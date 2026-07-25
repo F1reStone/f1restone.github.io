@@ -51,11 +51,14 @@ const { data } = project;
       <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-brand-500/20 to-brand-500/5 transition-transform duration-700 ease-[var(--ease-fluid)] group-hover:scale-105" />
     )}
 
-    <!-- 2. 基础底色层：轻度阴影，确保在无悬停时 Logo 的绝对可读性 -->
-    <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0 pointer-events-none" />
+    <!-- 2. 基础底色层：永远垫底提供可读性，移除 hover 隐藏指令，防止生硬交替 -->
+    <div class="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
 
-    <!-- 3. 高级毛玻璃层：柔和覆盖引擎 (-inset-4 防边缘漏光) -->
-    <div class="project-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
+    <!-- 3. 高级毛玻璃与强化渐变：拆分 Blur 和 Gradient，解决 WebKit 动画期间模糊失效天坑 -->
+    <!-- 纯毛玻璃层：永远保持 opacity:1，只过渡 blur 半径 -->
+    <div class="project-card-blur absolute -inset-4 pointer-events-none" />
+    <!-- 纯颜色渐变层：加入 translate-y-6，实现阴影从底部“向上蔓延生长”的绝美物理质感 -->
+    <div class="project-card-gradient absolute -inset-4 opacity-0 translate-y-6 transition-all duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-hover:translate-y-0 group-active:opacity-100 group-active:translate-y-0 pointer-events-none" />
 
     <!-- 4. 交互层：右上角悬浮跳转图标 -->
     <span class="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center justify-center w-8 h-8 rounded-full glass-panel hover-glow-box hover-solid-fill text-white shadow-lg opacity-0 scale-75 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100 z-20">
@@ -125,16 +128,28 @@ const { data } = project;
      FireStone: Project Card Interactive Overlay & Animation Engine
      ========================================================================= */
   
-  /* 渐进式毛玻璃遮罩 (底层背景) */
-  .project-card-overlay {
+  /* 1. 纯毛玻璃层 (无 Opacity 动画，彻底根除 WebKit/Blink 模糊失效 Bug) */
+  .project-card-blur {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    transition: backdrop-filter 500ms var(--ease-fluid), -webkit-backdrop-filter 500ms var(--ease-fluid);
+    mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
+    -webkit-mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
+  }
+  .group:hover .project-card-blur,
+  .group:active .project-card-blur {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* 2. 纯强化渐变层 (配合 HTML 中的 translateY 实现向上生长) */
+  .project-card-gradient {
     background: linear-gradient(
       to top, 
       color-mix(in oklch, var(--color-background) 95%, transparent) 0%, 
       color-mix(in oklch, var(--color-background) 65%, transparent) 50%, 
       transparent 100%
     );
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
     -webkit-mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
   }
