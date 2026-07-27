@@ -1,7 +1,10 @@
+import { defaultLocale } from '@/i18n';
 /**
- * Format a date for display
+ * Format a date for display. Defaults to the site's default locale so dates
+ * read correctly per language (e.g. "24 juni 2026" on a Dutch page, "2026年6月24日"
+ * on a Chinese one); callers that know the active locale should pass it.
  */
-export function formatDate(date: Date, locale = 'zh-CN'): string {
+export function formatDate(date: Date, locale: string = defaultLocale): string {
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'numeric',
@@ -9,31 +12,46 @@ export function formatDate(date: Date, locale = 'zh-CN'): string {
   }).format(date);
 }
 
+/** Latin-script reading speed, words per minute. */
+const WORDS_PER_MINUTE = 200;
 /**
- * Calculate reading time for content. Counts CJK characters (Chinese, Japanese,
- * Korean — space-less languages where each character is a word) at 400 cpm and
- * Latin-script words at 200 wpm, combining both for mixed-language text. Fenced
- * code blocks (```…```) are excluded. Always returns at least 1 minute.
+ * CJK reading speed, characters per minute. CJK scripts (Chinese, Japanese,
+ * Korean) aren't space-delimited, so they're counted per character rather than
+ * per whitespace-separated "word".
+ */
+const CJK_CHARS_PER_MINUTE = 400;
+/**
+ * Characters from space-less East Asian scripts: Hiragana, Katakana, the CJK
+ * Unified Ideographs (incl. Extension A) and Compatibility blocks, Hangul
+ * syllables, and halfwidth Katakana.
+ */
+const CJK_PATTERN = /[぀-ヿ㐀-䶿一-鿿豈-﫿가-힯ｦ-ﾟ]/g;
+
+/**
+ * Estimate reading time in minutes from a piece of content (typically a post's
+ * raw body). CJK characters are counted individually and every other script by
+ * whitespace-delimited words, each at its own reading speed — so a Chinese or
+ * Japanese post no longer collapses to "1 min" the way a naive `split(' ')`
+ * would. Light markup stripping keeps the estimate focused on prose rather than
+ * code, HTML/JSX, or MDX import lines. Always returns at least 1.
  */
 export function getReadingTime(content: string): number {
-  // Strip fenced code blocks — code is scanned, not read.
-  const withoutCode = content.replace(/```[\s\S]*?```/g, '');
+  const text = (content ?? '')
+    .replace(/^\s*(?:import|export)\s.*$/gm, ' ') // MDX import/export statements
+    .replace(/```[\s\S]*?```/g, ' ') // fenced code blocks
+    .replace(/`[^`]*`/g, ' ') // inline code
+    .replace(/<[^>]+>/g, ' ') // HTML / JSX tags
+    .replace(/[#>*_~]/g, ' '); // common Markdown markers
 
-  // Count CJK characters (Unicode range: CJK Unified Ideographs, CJK
-  // Extension A, and the common Japanese/Korean Hiragana/Katakana/Hangul
-  // blocks). Each character is a "word" in CJK typography.
-  const cjkChars = (withoutCode.match(/[一-鿿㐀-䶿぀-ゟ゠-ヿ가-힯]/g) || []).length;
-
-  // Count Latin-script words (whitespace-delimited tokens, minus any that are
-  // pure punctuation).
-  const latinWords = withoutCode
-    .replace(/[一-鿿㐀-䶿぀-ゟ゠-ヿ가-힯]/g, ' ')
+  const cjkChars = (text.match(CJK_PATTERN) || []).length;
+  const words = text
+    .replace(CJK_PATTERN, ' ')
+    .trim()
     .split(/\s+/)
-    .filter((w) => /[a-zA-Z0-9]/.test(w)).length;
+    .filter(Boolean).length;
 
-  const cpm = 400; // CJK chars per minute
-  const wpm = 200; // Latin words per minute
-  return Math.max(1, Math.ceil(cjkChars / cpm + latinWords / wpm));
+  const minutes = words / WORDS_PER_MINUTE + cjkChars / CJK_CHARS_PER_MINUTE;
+  return Math.max(1, Math.ceil(minutes));
 }
 
 /**
