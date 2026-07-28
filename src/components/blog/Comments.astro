@@ -79,7 +79,7 @@ const dataAttrs = isConfigured
     const isDark = document.documentElement.classList.contains('dark');
     const baseUrl = window.location.origin;
     // 使用我们在 public 目录下自定义的独立主题文件
-    return isDark ? `${baseUrl}/giscus/firestone-dark.css` : `${baseUrl}/giscus/firestone-light.css`;
+    return isDark ? `https://raw.githubusercontent.com/F1reStone/f1restone.github.io/refs/heads/main/public/giscus/firestone-dark.css` : `https://raw.githubusercontent.com/F1reStone/f1restone.github.io/refs/heads/main/public/giscus/firestone-light.css`;
   }
 
   function updateGiscusTheme() {
