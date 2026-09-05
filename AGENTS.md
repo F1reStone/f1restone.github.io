@@ -6,10 +6,10 @@ pointer here so project rules cannot drift between tools.
 
 ## Project Identity
 
-**FireStone 火石** is a Chinese personal portfolio, project showcase, and
-technical blog for FireStone. It is a heavily customized fork of
+**FireStone Website** is a Chinese personal portfolio, project showcase, and
+technical blog for **FireStone 火石**. It is a heavily customized fork of
 [Astro Rocket](https://github.com/hansmartensdev/astro-rocket), deployed as a
-static site to GitHub Pages.
+static site to Cloudflare.
 
 - Production URL: `https://fire-stone.co/`
 - Package manager: `pnpm`

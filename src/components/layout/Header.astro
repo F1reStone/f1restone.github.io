@@ -250,6 +250,13 @@ const buttonId = `${menuId}-button`;
   data-header-invert-on-return={invertOnReturn ? 'true' : 'false'}
   {...attrs}
 >
+  {variant === 'progressive' && (
+    <div class="hdr-progressive-blur" aria-hidden="true">
+      {[1, 2, 3, 4, 5].map((layer) => (
+        <div class={`hdr-progressive-blur-layer hdr-progressive-blur-layer--${layer}`} />
+      ))}
+    </div>
+  )}
   <div class={cn(innerClasses, 'hdr-inner')}>
     {
       !hideLogo && (
@@ -949,40 +956,94 @@ header:not([data-menu-open]).hdr-progressive-glass {
   box-shadow: none !important;
 }
 
-.hdr-progressive-glass::before {
-  content: '';
+.hdr-progressive-blur {
   position: absolute;
-  /* 容器向下物理延伸 50%，实际总高度已经达到原 Header 的 150% */
-  inset: -10px 0 -100% 0; 
+  inset: 0 0 auto;
+  height: 100%;
   z-index: -1;
   pointer-events: none;
-  
-  /* FireStone: 完美优化的背景透明度平滑过渡曲线。
-      (这里的 100% 即代表延伸后容器的最底端，也就是视觉上的 150% 处) */
+  border-radius: inherit;
+}
+
+/* Keep opacity and masks on individual layers: a faded wrapper would become
+   a backdrop root and prevent its children from sampling the page behind it. */
+.hdr-progressive-blur-layer,
+.hdr-progressive-blur::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 400ms var(--ease-fluid), visibility 400ms;
+}
+
+.hdr-progressive-blur::after {
+  content: '';
+  border-radius: inherit;
+  /* Fade the tint directly so a filter cannot soften the viewport edges or
+     extend the color beyond the header's height. */
   background: linear-gradient(
-    to bottom, 
-    color-mix(in oklch, var(--color-background) 55%, transparent) 0%, 
-    color-mix(in oklch, var(--color-background) 45%, transparent) 25%,
-    color-mix(in oklch, var(--color-background) 25%, transparent) 60%,
-    color-mix(in oklch, var(--color-background) 5%, transparent) 85%,
+    to bottom in oklab,
+    color-mix(in oklab, var(--color-background) 65%, transparent) 0%,
+    color-mix(in oklab, var(--color-background) 62%, transparent) 12%,
+    color-mix(in oklab, var(--color-background) 56%, transparent) 25%,
+    color-mix(in oklab, var(--color-background) 45%, transparent) 40%,
+    color-mix(in oklab, var(--color-background) 32%, transparent) 55%,
+    color-mix(in oklab, var(--color-background) 20%, transparent) 70%,
+    color-mix(in oklab, var(--color-background) 7%, transparent) 85%,
     transparent 100%
   );
-  
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
-  
-  /* 遮罩的非线性 Ease-out 淡出曲线，确保毛玻璃模糊度与背景颜色同步完美消散 */
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.35) 75%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 0%, black 10%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 0.35) 75%, transparent 100%);
+}
 
-  /* 核心机制：首屏未滚动时完全透明，隐藏背景，保持沉浸 */
-  opacity: 0;
-  transition: opacity 400ms cubic-bezier(0.25, 1, 0.5, 1);
+.hdr-progressive-blur-layer {
+  -webkit-backdrop-filter: blur(var(--hdr-blur));
+  backdrop-filter: blur(var(--hdr-blur));
+  -webkit-mask-image: var(--hdr-blur-mask);
+  mask-image: var(--hdr-blur-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* Overlapping bands reproduce the reference's strong-to-soft blur profile. */
+.hdr-progressive-blur-layer--1 {
+  --hdr-blur: 4px;
+  --hdr-blur-mask: linear-gradient(to bottom, transparent 40%, black 60% 80%, transparent 100%);
+}
+
+.hdr-progressive-blur-layer--2 {
+  --hdr-blur: 6px;
+  --hdr-blur-mask: linear-gradient(to bottom, transparent 20%, black 40% 60%, transparent 80%);
+}
+
+.hdr-progressive-blur-layer--3 {
+  --hdr-blur: 10px;
+  --hdr-blur-mask: linear-gradient(to bottom, transparent 0%, black 20% 40%, transparent 60%);
+}
+
+.hdr-progressive-blur-layer--4 {
+  --hdr-blur: 18px;
+  --hdr-blur-mask: linear-gradient(to bottom, black 0% 20%, transparent 40%);
+}
+
+.hdr-progressive-blur-layer--5 {
+  --hdr-blur: 34px;
+  --hdr-blur-mask: linear-gradient(to bottom, black 0%, transparent 20%);
 }
 
 /* 当页面发生滚动时，渐进式模糊平滑显现 */
-header[data-scrolled].hdr-progressive-glass::before {
+header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-progressive-blur > .hdr-progressive-blur-layer,
+header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-progressive-blur::after {
   opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hdr-progressive-blur-layer,
+  .hdr-progressive-blur::after {
+    transition: none;
+  }
 }
 
 .mobile-menu-blur {
@@ -1474,12 +1535,6 @@ header[data-scrolled].hdr-progressive-glass::before {
       background-color 400ms var(--ease-fluid), 
       border-color 400ms var(--ease-fluid),
       color 400ms var(--ease-fluid) !important;
-  }
-
-  /* 3. 菜单激活时：强制隐藏 Progressive 渐进式模糊的伪元素，避免双重背景层叠 */
-  header[data-menu-open]::before {
-    opacity: 0 !important;
-    transition: opacity 400ms var(--ease-fluid) !important;
   }
 
   /* =======================================================================
