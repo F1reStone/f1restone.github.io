@@ -4,6 +4,7 @@ import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
 import Analytics from '@/components/layout/Analytics.astro';
 import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
+import DynamicEffectsSettings from '@/components/layout/DynamicEffectsSettings.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 //import CursorTrail from '@/components/effects/CursorTrail.astro';
 import { createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
@@ -306,6 +307,246 @@ const locale = getLocaleFromPath(Astro.url.pathname);
         }
       })();
     </script>
+
+    <!-- FireStone: Global motion-effect preferences and device capability gate. -->
+    <script is:inline>
+      (function () {
+        const STORAGE_KEY = 'firestone-effect-settings';
+        const RUNTIME_STATIC_KEY = 'firestone-effects-runtime-static';
+        const VALID_HERO = ['static', 'dynamic'];
+        const VALID_FOOTER_QUALITY = ['low', 'high'];
+        const VALID_FOOTER_MOTION = ['static', 'dynamic'];
+        const VALID_VARIABLE_FONT = ['off', 'on'];
+        const root = document.documentElement;
+        const effectsWindow = window;
+
+        function prefersReducedMotion() {
+          return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+        }
+
+        function getPerformanceTier() {
+          const cores = navigator.hardwareConcurrency || 1;
+          const memory = navigator.deviceMemory;
+          const isMobileLike =
+            navigator.userAgentData?.mobile === true ||
+            window.matchMedia?.('(hover: none) and (pointer: coarse)').matches === true;
+          const physicalPixels =
+            window.screen.width * window.screen.height * (window.devicePixelRatio || 1) ** 2;
+          const demandingDisplay =
+            physicalPixels >= 5_000_000 &&
+            (cores < 12 || (memory !== undefined && memory < 8));
+
+          if (
+            isMobileLike ||
+            navigator.connection?.saveData === true ||
+            cores <= 8 ||
+            (memory !== undefined && memory <= 4) ||
+            demandingDisplay
+          ) {
+            return 'constrained';
+          }
+
+          if (cores >= 12 && (memory === undefined || memory >= 8)) return 'high';
+          return 'standard';
+        }
+
+        function getDefaultSettings() {
+          if (prefersReducedMotion()) {
+            return {
+              heroGradient: 'static',
+              footerGradientQuality: 'low',
+              footerGradient: 'static',
+              variableFont: 'off',
+            };
+          }
+
+          const tier = getPerformanceTier();
+          if (tier === 'constrained') {
+            return {
+              heroGradient: 'static',
+              footerGradientQuality: 'low',
+              footerGradient: 'static',
+              variableFont: 'off',
+            };
+          }
+
+          if (tier === 'standard') {
+            return {
+              heroGradient: 'dynamic',
+              footerGradientQuality: 'low',
+              footerGradient: 'dynamic',
+              variableFont: 'on',
+            };
+          }
+
+          return {
+            heroGradient: 'dynamic',
+            footerGradientQuality: 'high',
+            footerGradient: 'dynamic',
+            variableFont: 'on',
+          };
+        }
+
+        function isValidSettings(value) {
+          return Boolean(
+            value &&
+            VALID_HERO.includes(value.heroGradient) &&
+            VALID_FOOTER_QUALITY.includes(value.footerGradientQuality) &&
+            VALID_FOOTER_MOTION.includes(value.footerGradient) &&
+            VALID_VARIABLE_FONT.includes(value.variableFont)
+          );
+        }
+
+        function readStoredSettings() {
+          try {
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+            return isValidSettings(stored) ? stored : null;
+          } catch {
+            return null;
+          }
+        }
+
+        function hasRuntimeStaticFallback() {
+          try {
+            return sessionStorage.getItem(RUNTIME_STATIC_KEY) === 'true';
+          } catch {
+            return false;
+          }
+        }
+
+        if (effectsWindow.__firestoneEffects) {
+          effectsWindow.__firestoneEffects.apply();
+          return;
+        }
+
+        let settings = readStoredSettings() || getDefaultSettings();
+        let hasUserSettings = readStoredSettings() !== null;
+        let runtimeStaticFallback = hasRuntimeStaticFallback();
+        let runtimeProfileRunning = false;
+
+        function getEffectiveSettings() {
+          if (prefersReducedMotion() || runtimeStaticFallback) {
+            return {
+              heroGradient: 'static',
+              footerGradientQuality: 'low',
+              footerGradient: 'static',
+              variableFont: 'off',
+            };
+          }
+          return { ...settings };
+        }
+
+        function applySettings() {
+          const effective = getEffectiveSettings();
+          root.dataset.performanceTier = getPerformanceTier();
+          root.dataset.effectHero = effective.heroGradient;
+          root.dataset.effectFooterQuality = effective.footerGradientQuality;
+          root.dataset.effectFooter = effective.footerGradient;
+          root.dataset.effectVariableFont = effective.variableFont;
+          effectsWindow.dispatchEvent(new CustomEvent('firestone-effects-change', { detail: effective }));
+        }
+
+        function persistSettings() {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+          } catch {
+            // Private browsing or a strict storage policy may reject persistence.
+          }
+        }
+
+        function startRuntimeProfile() {
+          if (
+            runtimeProfileRunning ||
+            hasUserSettings ||
+            runtimeStaticFallback ||
+            prefersReducedMotion() ||
+            getEffectiveSettings().footerGradient === 'static'
+          ) return;
+
+          runtimeProfileRunning = true;
+          let startedAt = 0;
+          let previousFrame = 0;
+          let frameCount = 0;
+          let delayedFrames = 0;
+
+          function sampleFrame(timestamp) {
+            if (document.hidden) {
+              runtimeProfileRunning = false;
+              return;
+            }
+
+            if (startedAt === 0) startedAt = timestamp;
+            if (previousFrame > 0 && timestamp - previousFrame > 28) delayedFrames += 1;
+            previousFrame = timestamp;
+            frameCount += 1;
+
+            const elapsed = timestamp - startedAt;
+            if (elapsed < 2000) {
+              requestAnimationFrame(sampleFrame);
+              return;
+            }
+
+            runtimeProfileRunning = false;
+            const averageFps = (frameCount * 1000) / elapsed;
+            const delayedFrameRatio = delayedFrames / frameCount;
+            if (averageFps < 48 || delayedFrameRatio > 0.18) {
+              runtimeStaticFallback = true;
+              try {
+                sessionStorage.setItem(RUNTIME_STATIC_KEY, 'true');
+              } catch {
+                // Continue with the in-memory fallback when storage is blocked.
+              }
+              applySettings();
+            }
+          }
+
+          requestAnimationFrame(sampleFrame);
+        }
+
+        effectsWindow.__firestoneEffects = {
+          getState: function () { return { ...getEffectiveSettings() }; },
+          getDefaults: function () { return { ...getDefaultSettings() }; },
+          getPerformanceTier: getPerformanceTier,
+          setSettings: function (next) {
+            if (!isValidSettings(next)) return;
+            settings = { ...next };
+            hasUserSettings = true;
+            runtimeStaticFallback = false;
+            try { sessionStorage.removeItem(RUNTIME_STATIC_KEY); } catch { /* ignored */ }
+            persistSettings();
+            applySettings();
+          },
+          reset: function () {
+            try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignored */ }
+            try { sessionStorage.removeItem(RUNTIME_STATIC_KEY); } catch { /* ignored */ }
+            settings = getDefaultSettings();
+            hasUserSettings = false;
+            runtimeStaticFallback = false;
+            applySettings();
+          },
+          apply: applySettings,
+        };
+
+        applySettings();
+        document.addEventListener('DOMContentLoaded', startRuntimeProfile, { once: true });
+        document.addEventListener('astro:page-load', startRuntimeProfile);
+
+        const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+        reducedMotionQuery?.addEventListener('change', applySettings);
+        effectsWindow.addEventListener('storage', function (event) {
+          if (event.key !== STORAGE_KEY) return;
+          const next = readStoredSettings();
+          if (next) {
+            settings = next;
+            hasUserSettings = true;
+          } else {
+            settings = getDefaultSettings();
+            hasUserSettings = false;
+          }
+          applySettings();
+        });
+      })();
+    </script>
   </head>
 
   <body class="min-h-screen bg-background text-foreground antialiased" data-eager-reveal={eagerReveal ? '' : undefined}>
@@ -326,6 +567,8 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     <slot name="footer" />
 
     <ConsentBanner showReopener={false} />
+    <!-- The dialog is mounted once here; Footer/Header can trigger it by id. -->
+    <DynamicEffectsSettings showTrigger={false} />
 
     <!-- <CursorTrail /> -->
 
@@ -561,13 +804,14 @@ const locale = getLocaleFromPath(Astro.url.pathname);
         });
 
         // 2. 集中写入: 在浏览器的下一帧统一应用 DOM 和 CSS 修改，彻底杜绝 Layout Thrashing
-        requestAnimationFrame(function() {
-          els.forEach(function(el, index) {
-            el.setAttribute('data-ws-init', 'true');
-            const targetWeight = Math.min(weights[index] + 300, 900);
-            el.style.setProperty('--ws-target', targetWeight);
+          requestAnimationFrame(function() {
+            els.forEach(function(el, index) {
+              el.setAttribute('data-ws-init', 'true');
+              el.style.setProperty('--ws-base', weights[index]);
+              const targetWeight = Math.min(weights[index] + 300, 900);
+              el.style.setProperty('--ws-target', targetWeight);
+            });
           });
-        });
       }
       document.addEventListener('DOMContentLoaded', initSmartWeightShift);
       document.addEventListener('astro:page-load', initSmartWeightShift);

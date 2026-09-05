@@ -168,6 +168,30 @@
     "currentlyDark": "当前为深色模式",
     "swatchLabel": "{name} 主题"
   },
+  "effects": {
+    "trigger": "动态效果",
+    "title": "动态效果",
+    "description": "调整网站中的动态效果。网站默认会根据设备性能为您选择合适的效果；如果浏览器限制了偏好设置存储，这些设置可能会在网站重新加载后丢失。",
+    "heroGradient": "首屏动态渐变效果",
+    "heroGradientDescription": "开启或关闭首屏动态渐变效果。",
+    "footerGradientQuality": "页脚动态渐变质量",
+    "footerGradientQualityDescription": "调整页脚动态渐变效果的质量。",
+    "footerGradient": "页脚动态渐变效果",
+    "footerGradientDescription": "开启或关闭页脚动态渐变效果。",
+    "variableFont": "可变字体交互",
+    "variableFontDescription": "在悬停、点击、选择特定选项时增大字重。",
+    "options": {
+      "static": "静态",
+      "dynamic": "动态",
+      "low": "低",
+      "high": "高",
+      "off": "关",
+      "on": "开"
+    },
+    "reset": "恢复默认",
+    "save": "保存",
+    "ariaLabel": "动态效果设置"
+  },
   "search": {
     "placeholder": "搜索文章、项目和页面…",
     "inputLabel": "搜索内容",
@@ -247,7 +271,13 @@
       "hero": {
         "badge": "关于",
         "titleLead": "FireStone |",
-        "typingWords": ["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "THE FINALS 选手"],
+        "typingWords": [
+          "业余设计师",
+          "业余开发者",
+          "内容创作者",
+          "业余技术美术师",
+          "THE FINALS 选手"
+        ],
         "typingWordsMobile": ["业余设计师", "业余开发者", "内容创作者"],
         "description": "一名兴趣使然的业余开发者、设计师与内容创作者的个人网站。"
       }

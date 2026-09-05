@@ -288,6 +288,40 @@ dialogs, or carousels.
   footer aurora are optional enhancement. They must degrade without breaking
   content or navigation and respect reduced motion where applicable.
 
+### Global Motion Preferences
+
+`src/layouts/BaseLayout.astro` owns the site-wide effect controller. It detects
+the initial performance tier, applies `prefers-reduced-motion`, reads and saves
+the user's explicit choices, and publishes the effective state through
+`document.documentElement.dataset` plus the `window` event
+`firestone-effects-change`. Do not repeat hardware detection, storage keys, or
+frame profiling in individual components.
+
+The current settings model is intentionally split by responsibility:
+
+- `heroGradient`: `static | dynamic`; controls only the Hero conic-gradient
+  motion.
+- `footerGradientQuality`: `low | high`; selects the optimized single-layer
+  footer atmosphere or the original three-layer aurora.
+- `footerGradient`: `static | dynamic`; controls motion for the selected footer
+  quality without changing its visual quality.
+- `variableFont`: `off | on`; controls `.weight-shift` and
+  `.weight-shift-non-centered` while preserving independent text glow.
+
+`DynamicEffectsSettings.astro` mounts its Dialog once through `BaseLayout`.
+Triggers can be placed in Footer, Header, or another caller with
+`data-dynamic-effects-trigger="dynamic-effects-settings"`; callers should not
+mount duplicate dialogs with the same id. Its labels and option values must be
+kept i18n-ready. `SegmentedControl.astro` is the reusable two-or-more-option
+control; its selection indicator animates only with `transform` using the site
+fluid easing curve and disables that transition for reduced motion.
+
+`Footer.astro` is responsible only for viewport activation and rendering the
+selected visual layer. The high-quality blobs must remain paused unless the
+effective footer motion is dynamic and the footer is near the viewport. Keep
+the static fallback free of animated transforms and avoid reintroducing the old
+per-component performance sampler.
+
 ## Component Conventions
 
 Astro components should normally follow this shape:

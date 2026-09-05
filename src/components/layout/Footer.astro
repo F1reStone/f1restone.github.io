@@ -32,7 +32,7 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
 import giantLogoRaw from '@/assets/firestone-text-gradient.svg?raw'; // FireStone: Import the giant logo SVG as raw string
-import { getLocaleFromPath } from '@/i18n';
+import { getLocaleFromPath, t } from '@/i18n';
 
 export interface NavItem {
   label: string;
@@ -241,17 +241,18 @@ const footerClasses = cn(footerVariants({ background }), className);
 ---
 
 <footer class={cn(footerClasses, "relative overflow-hidden")} data-pagefind-ignore {...attrs}>
-
   {background === 'glow' && (
-    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
-      <div class="footer-mask-layer absolute inset-0 w-full h-full">
+    <div
+      class="footer-aurora-high-layer absolute inset-0 z-0 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
+      <div class="footer-mask-layer absolute inset-0 h-full w-full">
         <div class="aurora-blob aurora-cyan"></div>
         <div class="aurora-blob aurora-pink"></div>
         <div class="aurora-blob aurora-purple"></div>
       </div>
     </div>
   )}
-
   <div class={cn('mx-auto px-6 relative z-10', maxWidthClass)}>
 
     {showBreadcrumbs && (
@@ -437,7 +438,17 @@ const footerClasses = cn(footerVariants({ background }), className);
                           </a>
                         )}
                       </div>
-                    ))}
+                      ))}
+                    <span aria-hidden="true" class={legalSeparatorClass} />
+                    <button
+                      type="button"
+                      class={legalLinkClass}
+                      data-dynamic-effects-trigger="dynamic-effects-settings"
+                      aria-haspopup="dialog"
+                      aria-controls="dynamic-effects-settings"
+                    >
+                      <span>{t('effects.trigger', locale)}</span>
+                    </button>
                   </div>
                 )}
               </>
@@ -568,7 +579,17 @@ const footerClasses = cn(footerVariants({ background }), className);
                           </a>
                         )}
                       </div>
-                    ))}
+                      ))}
+                    <span aria-hidden="true" class={legalSeparatorClass} />
+                    <button
+                      type="button"
+                      class={legalLinkClass}
+                      data-dynamic-effects-trigger="dynamic-effects-settings"
+                      aria-haspopup="dialog"
+                      aria-controls="dynamic-effects-settings"
+                    >
+                      <span>{t('effects.trigger', locale)}</span>
+                    </button>
                   </div>
                 )}
               </>
@@ -679,6 +700,81 @@ const footerClasses = cn(footerVariants({ background }), className);
       });
     }
   </script>
+
+  <script>
+    type FooterMotion = 'static' | 'dynamic';
+    type FooterQuality = 'low' | 'high';
+
+    const getFooterEffectState = () => {
+      const root = document.documentElement;
+      return {
+        motion: (root.dataset.effectFooter === 'dynamic' ? 'dynamic' : 'static') as FooterMotion,
+        quality: (root.dataset.effectFooterQuality === 'high' ? 'high' : 'low') as FooterQuality,
+      };
+    };
+
+    const syncFooterAurora = (footer: HTMLElement) => {
+      const state = getFooterEffectState();
+      footer.dataset.auroraMotion = state.motion;
+      footer.dataset.auroraQuality = state.quality;
+
+      const shouldAnimate =
+        state.motion === 'dynamic' &&
+        footer.hasAttribute('data-aurora-in-view') &&
+        !document.hidden;
+      footer.toggleAttribute('data-aurora-active', shouldAnimate);
+    };
+
+    let footerAuroraObserver: IntersectionObserver | undefined;
+
+    const initFooterAuroras = () => {
+      const footers = document.querySelectorAll<HTMLElement>(
+        'footer.footer-aurora:not([data-aurora-observed])'
+      );
+
+      if (footers.length === 0) return;
+
+      if (!('IntersectionObserver' in window)) {
+        footers.forEach((footer) => {
+          footer.setAttribute('data-aurora-observed', '');
+          footer.setAttribute('data-aurora-in-view', '');
+          syncFooterAurora(footer);
+        });
+        return;
+      }
+
+      footerAuroraObserver ??= new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const footer = entry.target as HTMLElement;
+            footer.toggleAttribute('data-aurora-in-view', entry.isIntersecting);
+            syncFooterAurora(footer);
+          });
+        },
+        { rootMargin: '160px 0px' }
+      );
+
+      footers.forEach((footer) => {
+        footer.setAttribute('data-aurora-observed', '');
+        syncFooterAurora(footer);
+        footerAuroraObserver?.observe(footer);
+      });
+    };
+
+    const refreshFooterAuroras = () => {
+      document.querySelectorAll<HTMLElement>('footer.footer-aurora').forEach(syncFooterAurora);
+    };
+
+    window.addEventListener('firestone-effects-change', refreshFooterAuroras);
+    document.addEventListener('visibilitychange', refreshFooterAuroras);
+    document.addEventListener('astro:before-swap', () => {
+      document
+        .querySelectorAll<HTMLElement>('footer.footer-aurora[data-aurora-observed]')
+        .forEach((footer) => footerAuroraObserver?.unobserve(footer));
+    }, { once: true });
+    document.addEventListener('astro:page-load', initFooterAuroras);
+    initFooterAuroras();
+  </script>
   
   <style is:global>
     /* FireStone: Social links follow text*/
@@ -693,97 +789,253 @@ const footerClasses = cn(footerVariants({ background }), className);
 
 
   /* =========================================================================
-     FireStone: Footer Glow Background
-     GPU-accelerated aurora blobs and mask layer for smooth fade-out effect.
+     FireStone: Footer Aurora
+
+     A static full-height spectrum guarantees presence at every aspect ratio.
+     One compact gradient layer adds slow ambient drift only while the footer is
+     near the viewport. No blur, mask, background-position, or layout property
+     is animated.
      ========================================================================= */
-  
+
+  .footer-aurora {
+    --footer-cyan-alpha: 0.22;
+    --footer-purple-alpha: 0.34;
+    --footer-pink-alpha: 0.16;
+    --footer-drift-opacity: 0.28;
+    isolation: isolate;
+    contain: paint;
+    background:
+      radial-gradient(
+        ellipse 86% 68% at 4% 106%,
+        rgb(0 195 255 / var(--footer-cyan-alpha)) 0%,
+        rgb(0 195 255 / 0.07) 44%,
+        transparent 74%
+      ),
+      radial-gradient(
+        ellipse 92% 76% at 56% 112%,
+        rgb(120 50 255 / var(--footer-purple-alpha)) 0%,
+        rgb(120 50 255 / 0.1) 48%,
+        transparent 76%
+      ),
+      radial-gradient(
+        ellipse 72% 58% at 106% 94%,
+        rgb(253 87 156 / var(--footer-pink-alpha)) 0%,
+        rgb(253 87 156 / 0.05) 46%,
+        transparent 74%
+      ),
+      linear-gradient(
+        180deg,
+        var(--color-background) 0%,
+        var(--color-background) 30%,
+        color-mix(in srgb, var(--color-background) 96%, rgb(120 50 255)) 58%,
+        color-mix(in srgb, var(--color-background) 86%, rgb(120 50 255)) 100%
+      );
+  }
+
+  html.dark .footer-aurora {
+    --footer-cyan-alpha: 0.3;
+    --footer-purple-alpha: 0.48;
+    --footer-pink-alpha: 0.22;
+    --footer-drift-opacity: 0.42;
+  }
+
+  /* High quality keeps the original three-layer aurora; motion is controlled separately. */
+  .footer-aurora[data-aurora-quality='high'] {
+    background: var(--color-background);
+  }
+
+  .footer-aurora-high-layer {
+    display: none;
+  }
+
+  .footer-aurora[data-aurora-quality='high'] .footer-aurora-high-layer {
+    display: block;
+  }
+
   .footer-mask-layer {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
   }
 
-  /* 
-     光团基础属性：
-     利用 width: 400vw 打造一个无敌长的物理卷轴。
-     高度限制为 600px 并通过 bottom 定位，彻底解决带鱼屏上光晕飘高的问题。
-  */
   .aurora-blob {
     position: absolute;
-    bottom: -10%; /* 死死锁定在底部区域 */
+    bottom: -10%;
     left: 0;
-    width: 400vw; /* 4倍屏宽的超长画卷，提供充足的无缝平移空间 */
-    height: clamp(300px, 40vw, 600px); /* 控制最大高度，防止4K屏向上溢出 */
-    filter: blur(90px); /* 适当回调模糊半径以减轻 GPU 负担，视觉依然气态无形 */
+    width: 400vw;
+    height: clamp(300px, 40vw, 600px);
     background-repeat: repeat-x;
-    
-    /* 核心性能指令：强行提权至独立显卡合成层 */
-    will-change: transform;
-    
-    /* FireStone: 大幅提升浅色模式下的浓度，使其视觉存在感更强 */
-    opacity: 0.35; 
+    opacity: 0.35;
+    filter: blur(90px);
+    animation-play-state: paused;
   }
 
   html.dark .aurora-blob {
-    opacity: 0.45; /* 深色模式匹配提升 */
+    opacity: 0.45;
   }
 
-  /* 
-     光束着色与循环设定：
-     将圆心下移到 70%~80%，让光晕呈现出强烈的“沉底”感。
-  */
   .aurora-cyan {
-    background-image: radial-gradient(ellipse at 50% 75%, #00C3FF 0%, transparent 60%);
+    background-image: radial-gradient(ellipse at 50% 75%, #00c3ff 0%, transparent 60%);
     background-size: 150vw 100%;
     animation: flow-cyan 20s linear infinite;
   }
 
   .aurora-pink {
-    background-image: radial-gradient(ellipse at 50% 80%, #FD579C 0%, transparent 60%);
+    background-image: radial-gradient(ellipse at 50% 80%, #fd579c 0%, transparent 60%);
     background-size: 180vw 100%;
     animation: flow-pink 24s linear infinite reverse;
     animation-delay: -7s;
   }
 
   .aurora-purple {
-    background-image: radial-gradient(ellipse at 50% 85%, #7832FF 0%, transparent 65%);
+    background-image: radial-gradient(ellipse at 50% 85%, #7832ff 0%, transparent 65%);
     background-size: 200vw 100%;
     animation: flow-purple 28s linear infinite;
     animation-delay: -14s;
   }
 
-  /* 
-    【GPU 硬件加速融合帧】
-    将原本的 X轴平移 (流动) 和 Y轴起伏 (呼吸)，合并写在同一个 translate3d 中。
-    这种写法利用了 CSS 的线性插值，能够画出完美的“波浪形”正弦轨迹。
-    且 100% 由 GPU 处理，实现极致降功耗！
-  */
+  .footer-aurora .aurora-blob {
+    animation-play-state: paused;
+  }
+
+  .footer-aurora[data-aurora-motion='dynamic'][data-aurora-active] .aurora-blob {
+    animation-play-state: running;
+    will-change: transform;
+  }
+
+  .footer-aurora::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    right: -12%;
+    bottom: -12%;
+    left: -12%;
+    height: min(72%, 720px);
+    pointer-events: none;
+    transform-origin: 50% 100%;
+    animation-play-state: paused;
+    background:
+      radial-gradient(
+        ellipse 44% 76% at 12% 104%,
+        rgb(0 195 255 / 0.62) 0%,
+        rgb(0 195 255 / 0.18) 42%,
+        transparent 74%
+      ),
+      radial-gradient(
+        ellipse 58% 92% at 62% 112%,
+        rgb(120 50 255 / 0.86) 0%,
+        rgb(120 50 255 / 0.26) 44%,
+        transparent 76%
+      ),
+      radial-gradient(
+        ellipse 42% 72% at 96% 92%,
+        rgb(253 87 156 / 0.58) 0%,
+        rgb(253 87 156 / 0.16) 42%,
+        transparent 74%
+      );
+    opacity: var(--footer-drift-opacity);
+    animation: footer-aurora-drift 32s var(--ease-fluid) -9s infinite alternate;
+    animation-play-state: paused;
+  }
+
+  .footer-aurora[data-aurora-active]::before {
+    animation-play-state: running;
+    will-change: transform;
+  }
+
+  .footer-aurora[data-aurora-quality='high']::before,
+  .footer-aurora[data-aurora-motion='static']::before {
+    display: none;
+    animation: none;
+  }
+
+  @keyframes footer-aurora-drift {
+    0% {
+      transform: translate3d(-4%, 10px, 0) scale3d(1.04, 1, 1);
+    }
+    50% {
+      transform: translate3d(1%, -8px, 0) scale3d(1.07, 1.04, 1);
+    }
+    100% {
+      transform: translate3d(4%, 6px, 0) scale3d(1.04, 1.02, 1);
+    }
+  }
+
   @keyframes flow-cyan {
-    0%   { transform: translate3d(0vw, 20px, 0); }
-    25%  { transform: translate3d(-37.5vw, -10px, 0); }
-    50%  { transform: translate3d(-75vw, 20px, 0); }
-    75%  { transform: translate3d(-112.5vw, -10px, 0); }
+    0% { transform: translate3d(0vw, 20px, 0); }
+    25% { transform: translate3d(-37.5vw, -10px, 0); }
+    50% { transform: translate3d(-75vw, 20px, 0); }
+    75% { transform: translate3d(-112.5vw, -10px, 0); }
     100% { transform: translate3d(-150vw, 20px, 0); }
   }
 
   @keyframes flow-pink {
-    0%   { transform: translate3d(0vw, -15px, 0); }
-    25%  { transform: translate3d(-45vw, 15px, 0); }
-    50%  { transform: translate3d(-90vw, -15px, 0); }
-    75%  { transform: translate3d(-135vw, 15px, 0); }
+    0% { transform: translate3d(0vw, -15px, 0); }
+    25% { transform: translate3d(-45vw, 15px, 0); }
+    50% { transform: translate3d(-90vw, -15px, 0); }
+    75% { transform: translate3d(-135vw, 15px, 0); }
     100% { transform: translate3d(-180vw, -15px, 0); }
   }
 
   @keyframes flow-purple {
-    0%   { transform: translate3d(0vw, 10px, 0); }
-    25%  { transform: translate3d(-50vw, -20px, 0); }
-    50%  { transform: translate3d(-100vw, 10px, 0); }
-    75%  { transform: translate3d(-150vw, -20px, 0); }
+    0% { transform: translate3d(0vw, 10px, 0); }
+    25% { transform: translate3d(-50vw, -20px, 0); }
+    50% { transform: translate3d(-100vw, 10px, 0); }
+    75% { transform: translate3d(-150vw, -20px, 0); }
     100% { transform: translate3d(-200vw, 10px, 0); }
   }
 
+  @media (max-width: 767px) {
+    .footer-aurora {
+      --footer-cyan-alpha: 0.34;
+      --footer-purple-alpha: 0.52;
+      --footer-pink-alpha: 0.24;
+      --footer-drift-opacity: 0.46;
+      background:
+        radial-gradient(
+          ellipse 118% 64% at -8% 102%,
+          rgb(0 195 255 / var(--footer-cyan-alpha)) 0%,
+          rgb(0 195 255 / 0.1) 44%,
+          transparent 72%
+        ),
+        radial-gradient(
+          ellipse 138% 78% at 70% 108%,
+          rgb(120 50 255 / var(--footer-purple-alpha)) 0%,
+          rgb(120 50 255 / 0.16) 48%,
+          transparent 76%
+        ),
+        radial-gradient(
+          ellipse 104% 56% at 112% 76%,
+          rgb(253 87 156 / var(--footer-pink-alpha)) 0%,
+          rgb(253 87 156 / 0.07) 46%,
+          transparent 74%
+        ),
+        linear-gradient(
+          180deg,
+          var(--color-background) 0%,
+          var(--color-background) 22%,
+          color-mix(in srgb, var(--color-background) 95%, rgb(0 195 255)) 50%,
+          color-mix(in srgb, var(--color-background) 82%, rgb(120 50 255)) 100%
+        );
+    }
+
+    .footer-aurora::before {
+      top: 20%;
+      right: -36%;
+      bottom: -8%;
+      left: -36%;
+      height: auto;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .footer-aurora::before {
+      animation: none;
+      will-change: auto;
+    }
+
     .aurora-blob {
       animation: none !important;
+      will-change: auto;
     }
   }
 

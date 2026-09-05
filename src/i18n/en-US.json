@@ -170,6 +170,30 @@
     "currentlyDark": "Currently dark",
     "swatchLabel": "{name} theme"
   },
+  "effects": {
+    "trigger": "Motion effects",
+    "title": "Motion effects",
+    "description": "Adjust the site's motion effects. The site chooses suitable defaults based on your device; these settings may be lost after reload if preference storage is restricted by your browser.",
+    "heroGradient": "Hero dynamic gradient",
+    "heroGradientDescription": "Enable or disable the hero's dynamic gradient.",
+    "footerGradientQuality": "Footer gradient quality",
+    "footerGradientQualityDescription": "Adjust the quality of the footer's dynamic gradient.",
+    "footerGradient": "Footer dynamic gradient",
+    "footerGradientDescription": "Enable or disable the footer's dynamic gradient.",
+    "variableFont": "Variable-font interaction",
+    "variableFontDescription": "Increase font weight when hovering, clicking, or selecting certain options.",
+    "options": {
+      "static": "Static",
+      "dynamic": "Dynamic",
+      "low": "Low",
+      "high": "High",
+      "off": "Off",
+      "on": "On"
+    },
+    "reset": "Reset defaults",
+    "save": "Save",
+    "ariaLabel": "Motion effect settings"
+  },
   "search": {
     "placeholder": "Search posts, projects, and pages…",
     "inputLabel": "Search query",
@@ -249,7 +273,13 @@
       "hero": {
         "badge": "About",
         "titleLead": "FireStone |",
-        "typingWords": ["Amateur Designer", "Amateur Developer", "Content Creator", "Amateur Tech Artist", "THE FINALS Player"],
+        "typingWords": [
+          "Amateur Designer",
+          "Amateur Developer",
+          "Content Creator",
+          "Amateur Tech Artist",
+          "THE FINALS Player"
+        ],
         "typingWordsMobile": ["Amateur Designer", "Amateur Developer", "Content Creator"],
         "description": "A personal website of an amateur developer, designer, and content creator."
       }

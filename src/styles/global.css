@@ -573,6 +573,11 @@ input[type='reset'] {
     animation: spin-aura-reverse 18s linear infinite;
   }
 
+  html[data-effect-hero='static'] .hero-dark-gradient::before,
+  html[data-effect-hero='static'] .hero-dark-gradient::after {
+    animation: none;
+  }
+
   @keyframes spin-aura {
     0% { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
@@ -1698,6 +1703,13 @@ input[type='reset'] {
   font-weight: var(--ws-target, 900);
 }
 
+/* User/device preference can disable variable-font expansion without removing text glow. */
+html[data-effect-variable-font='off'] .weight-shift,
+html[data-effect-variable-font='off'] .weight-shift-non-centered {
+  font-weight: var(--ws-base, 400) !important;
+  transition: none !important;
+}
+
 /* prefers-reduced-motion 降级 */
 @media (prefers-reduced-motion: reduce) {
   .hover-glow-box, .hover-glow-outline, .hover-glow-icon, .hover-glow-text, .weight-shift, .weight-shift-non-centered, .hover-solid-fill {
@@ -1705,5 +1717,10 @@ input[type='reset'] {
     transform: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
+  }
+
+  .weight-shift,
+  .weight-shift-non-centered {
+    font-weight: var(--ws-base, 400) !important;
   }
 }

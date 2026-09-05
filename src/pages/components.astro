@@ -8,6 +8,7 @@ import Select from '@/components/ui/form/Select/Select.astro';
 import Checkbox from '@/components/ui/form/Checkbox/Checkbox.astro';
 import Radio from '@/components/ui/form/Radio/Radio.astro';
 import Switch from '@/components/ui/form/Switch/Switch.astro';
+import SegmentedControl from '@/components/ui/form/SegmentedControl';
 // Data Display Components
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
@@ -300,6 +301,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             </p>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -958,6 +960,65 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <Switch size="lg" label="Large switch" checked />
               <Switch label="Disabled off" disabled />
               <Switch label="Disabled on" disabled checked />
+            </div>
+          </div>
+        </div>
+
+        <!-- Segmented Control -->
+        <div class="grid gap-6 lg:grid-cols-2">
+          <div class="component-showcase">
+            <div class="showcase-header">
+              <span class="showcase-label">Segmented Control</span>
+              <span class="showcase-hint">Compact and default sizes</span>
+            </div>
+            <div class="showcase-content space-y-5">
+              <div>
+                <p class="text-foreground-muted mb-2 font-mono text-xs">size="sm"</p>
+                <SegmentedControl
+                  options={[
+                    { value: 'static', label: '静态' },
+                    { value: 'dynamic', label: '动态' },
+                  ]}
+                  value="dynamic"
+                  ariaLabel="动画模式"
+                  size="sm"
+                  class="w-full max-w-64"
+                />
+              </div>
+              <div>
+                <p class="text-foreground-muted mb-2 font-mono text-xs">size="md"</p>
+                <SegmentedControl
+                  options={[
+                    { value: 'off', label: '关闭' },
+                    { value: 'on', label: '开启' },
+                  ]}
+                  value="off"
+                  ariaLabel="功能状态"
+                  class="w-full max-w-72"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="component-showcase">
+            <div class="showcase-header">
+              <span class="showcase-label">Option Count</span>
+              <span class="showcase-hint">Equal-width tracks for 2+ choices</span>
+            </div>
+            <div class="showcase-content space-y-5">
+              <SegmentedControl
+                options={[
+                  { value: 'low', label: '低' },
+                  { value: 'medium', label: '中' },
+                  { value: 'high', label: '高' },
+                ]}
+                value="medium"
+                ariaLabel="质量"
+                class="w-full max-w-sm"
+              />
+              <p class="text-foreground-subtle text-xs leading-relaxed">
+                Use the arrow keys to move between options. Home and End select the first and last option.
+              </p>
             </div>
           </div>
         </div>

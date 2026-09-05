@@ -136,7 +136,7 @@ export function Dialog({
           className={cn(
             'relative w-full',
             sizes[size],
-            'bg-background/80 rounded-3xl border border-border/50 shadow-2xl backdrop-blur-lg',
+            'bg-background rounded-3xl border border-border/50 shadow-2xl',
             'scale-100 opacity-100 transition-all duration-300 ease-[var(--ease-default)]',
             className
           )}

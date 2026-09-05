@@ -1,0 +1,258 @@
+---
+import Button from '@/components/ui/form/Button/Button.astro';
+import SegmentedControl from '@/components/ui/form/SegmentedControl';
+import Dialog from '@/components/ui/overlay/Dialog/Dialog.astro';
+import { cn } from '@/lib/cn';
+import { getLocaleFromPath, t } from '@/i18n';
+
+const locale = getLocaleFromPath(Astro.url.pathname);
+
+interface Props {
+  /** Stable dialog id. Change it only when rendering more than one settings dialog. */
+  dialogId?: string;
+  /** Render the default footer-style trigger. Set false when the caller supplies its own trigger. */
+  showTrigger?: boolean;
+  triggerClass?: string;
+}
+
+const { dialogId = 'dynamic-effects-settings', showTrigger = true, triggerClass } = Astro.props;
+const text = (key: string) => t(`effects.${key}`, locale);
+
+const heroGradientOptions = [
+  { value: 'static', label: text('options.static') },
+  { value: 'dynamic', label: text('options.dynamic') },
+];
+
+const footerGradientQualityOptions = [
+  { value: 'low', label: text('options.low') },
+  { value: 'high', label: text('options.high') },
+];
+
+const footerGradientOptions = [
+  { value: 'static', label: text('options.static') },
+  { value: 'dynamic', label: text('options.dynamic') },
+];
+
+const variableFontOptions = [
+  { value: 'off', label: text('options.off') },
+  { value: 'on', label: text('options.on') },
+];
+---
+
+{
+  showTrigger && (
+    <button
+      type="button"
+      class={cn(
+        'text-foreground/60 hover-glow-text hover:text-foreground inline-flex cursor-pointer items-center text-sm font-medium transition-colors',
+        triggerClass
+      )}
+      data-dynamic-effects-trigger={dialogId}
+      aria-haspopup="dialog"
+      aria-controls={dialogId}
+    >
+      {text('trigger')}
+    </button>
+  )
+}
+
+<Dialog id={dialogId} title={text('title')} description={text('description')} size="md">
+  <div class="divide-border/50 divide-y" data-dynamic-effects-form>
+    <section class="grid items-center gap-3 pb-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
+      <div>
+        <h3 class="text-foreground text-sm font-semibold">{text('heroGradient')}</h3>
+        <p class="text-foreground-muted mt-1 text-xs leading-relaxed">
+          {text('heroGradientDescription')}
+        </p>
+      </div>
+      <div data-effect-setting="heroGradient">
+        <SegmentedControl
+          options={heroGradientOptions}
+          value="dynamic"
+          ariaLabel={text('heroGradient')}
+          size="sm"
+          class="w-full sm:w-40"
+        />
+      </div>
+    </section>
+
+    <section class="grid items-center gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
+      <div>
+        <h3 class="text-foreground text-sm font-semibold">{text('footerGradientQuality')}</h3>
+        <p class="text-foreground-muted mt-1 text-xs leading-relaxed">
+          {text('footerGradientQualityDescription')}
+        </p>
+      </div>
+      <div data-effect-setting="footerGradientQuality">
+        <SegmentedControl
+          options={footerGradientQualityOptions}
+          value="high"
+          ariaLabel={text('footerGradientQuality')}
+          size="sm"
+          class="w-full sm:w-40"
+        />
+      </div>
+    </section>
+
+    <section class="grid items-center gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
+      <div>
+        <h3 class="text-foreground text-sm font-semibold">{text('footerGradient')}</h3>
+        <p class="text-foreground-muted mt-1 text-xs leading-relaxed">
+          {text('footerGradientDescription')}
+        </p>
+      </div>
+      <div data-effect-setting="footerGradient">
+        <SegmentedControl
+          options={footerGradientOptions}
+          value="dynamic"
+          ariaLabel={text('footerGradient')}
+          size="sm"
+          class="w-full sm:w-40"
+        />
+      </div>
+    </section>
+
+    <section class="grid items-center gap-3 pt-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
+      <div>
+        <h3 class="text-foreground text-sm font-semibold">{text('variableFont')}</h3>
+        <p class="text-foreground-muted mt-1 text-xs leading-relaxed">
+          {text('variableFontDescription')}
+        </p>
+      </div>
+      <div data-effect-setting="variableFont">
+        <SegmentedControl
+          options={variableFontOptions}
+          value="on"
+          ariaLabel={text('variableFont')}
+          size="sm"
+          class="w-full sm:w-40"
+        />
+      </div>
+    </section>
+  </div>
+
+  <div slot="footer" class="border-border/50 grid grid-cols-2 gap-3 border-t p-5 sm:px-6">
+    <Button variant="secondary" size="sm" fullWidth id="dynamic-effects-reset">
+      {text('reset')}
+    </Button>
+    <Button variant="primary" size="sm" fullWidth id="dynamic-effects-save">
+      {text('save')}
+    </Button>
+  </div>
+</Dialog>
+<span class="hidden" data-dynamic-effects-dialog={dialogId} aria-hidden="true"></span>
+
+<script>
+  type EffectSettings = {
+    heroGradient: 'static' | 'dynamic';
+    footerGradientQuality: 'low' | 'high';
+    footerGradient: 'static' | 'dynamic';
+    variableFont: 'off' | 'on';
+  };
+
+  type EffectsController = {
+    getState: () => EffectSettings;
+    getDefaults: () => EffectSettings;
+    setSettings: (settings: EffectSettings) => void;
+    reset: () => void;
+  };
+
+  type EffectsWindow = Window & {
+    __firestoneEffects?: EffectsController;
+    openDialog?: (id: string) => void;
+    closeDialog?: (id: string) => void;
+  };
+
+  function initDynamicEffectsSettings() {
+    const dialogMarker = document.querySelector<HTMLElement>('[data-dynamic-effects-dialog]');
+    const dialog = dialogMarker?.dataset.dynamicEffectsDialog
+      ? document.getElementById(dialogMarker.dataset.dynamicEffectsDialog)
+      : null;
+    if (!dialog || dialog.dataset.effectsInit) return;
+
+    dialog.dataset.effectsInit = 'true';
+    const effectsWindow = window as EffectsWindow;
+    const form = dialog.querySelector<HTMLElement>('[data-dynamic-effects-form]');
+    const resetButton = dialog.querySelector<HTMLButtonElement>('#dynamic-effects-reset');
+    const saveButton = dialog.querySelector<HTMLButtonElement>('#dynamic-effects-save');
+    let draft: EffectSettings = effectsWindow.__firestoneEffects?.getState() ?? {
+      heroGradient: 'dynamic',
+      footerGradientQuality: 'low',
+      footerGradient: 'dynamic',
+      variableFont: 'on',
+    };
+
+    const getControl = (name: string) =>
+      form?.querySelector<HTMLElement>(`[data-effect-setting="${name}"] [data-segmented-control]`);
+
+    const syncControls = () => {
+      const values: Record<string, string> = {
+        heroGradient: draft.heroGradient,
+        footerGradientQuality: draft.footerGradientQuality,
+        footerGradient: draft.footerGradient,
+        variableFont: draft.variableFont,
+      };
+
+      Object.entries(values).forEach(([name, value]) => {
+        const control = getControl(name) as
+          (HTMLElement & { setValue?: (value: string, emit?: boolean) => void }) | null;
+        control?.setValue?.(value, false);
+      });
+    };
+
+    const openFromTrigger = (event: Event) => {
+      const eventTarget =
+        event.target instanceof Element
+          ? event.target.closest<HTMLElement>('[data-dynamic-effects-trigger]')
+          : null;
+      if (!eventTarget) return;
+
+      const requestedDialog = eventTarget.dataset.dynamicEffectsTrigger;
+      if (requestedDialog && requestedDialog !== dialog.id) return;
+
+      event.preventDefault();
+      draft = effectsWindow.__firestoneEffects?.getState() ?? draft;
+      syncControls();
+      effectsWindow.openDialog?.(dialog.id);
+    };
+
+    document.addEventListener('click', openFromTrigger);
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        document.removeEventListener('click', openFromTrigger);
+      },
+      { once: true }
+    );
+
+    form?.addEventListener('segmented-change', (event) => {
+      const target = event.target as HTMLElement | null;
+      const setting = target?.closest<HTMLElement>('[data-effect-setting]')?.dataset.effectSetting;
+      const value = (event as CustomEvent<{ value: string }>).detail?.value;
+      if (!setting || !value) return;
+
+      if (setting === 'heroGradient' && (value === 'static' || value === 'dynamic')) {
+        draft.heroGradient = value;
+      } else if (setting === 'footerGradientQuality' && (value === 'low' || value === 'high')) {
+        draft.footerGradientQuality = value;
+      } else if (setting === 'footerGradient' && (value === 'static' || value === 'dynamic')) {
+        draft.footerGradient = value;
+      } else if (setting === 'variableFont' && (value === 'off' || value === 'on')) {
+        draft.variableFont = value;
+      }
+    });
+
+    resetButton?.addEventListener('click', () => {
+      draft = effectsWindow.__firestoneEffects?.getDefaults() ?? draft;
+      syncControls();
+    });
+
+    saveButton?.addEventListener('click', () => {
+      effectsWindow.__firestoneEffects?.setSettings(draft);
+      effectsWindow.closeDialog?.(dialog.id);
+    });
+  }
+
+  initDynamicEffectsSettings();
+  document.addEventListener('astro:page-load', initDynamicEffectsSettings);
+</script>

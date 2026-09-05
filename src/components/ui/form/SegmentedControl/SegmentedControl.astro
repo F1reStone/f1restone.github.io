@@ -1,0 +1,198 @@
+---
+/**
+ * SegmentedControl
+ *
+ * An accessible single-choice control for switching between two or more closely
+ * related views or settings. The selected pill is a single absolutely positioned
+ * element that moves with `transform`, so changing values does not animate layout.
+ *
+ * Basic usage:
+ *   <SegmentedControl
+ *     options={[{ value: 'list', label: 'List' }, { value: 'grid', label: 'Grid' }]}
+ *     value="list"
+ *     ariaLabel="Layout"
+ *   />
+ *
+ * Listen for the bubbling `segmented-change` CustomEvent to react to user input.
+ * Its `detail.value` property contains the newly selected option value. A caller
+ * may also invoke `setValue(value, emit)` on the `[data-segmented-control]`
+ * element when an external state source needs to synchronize the control.
+ */
+import { cn } from '@/lib/cn';
+
+/** A selectable value and its visible label. Values must be unique per control. */
+export interface SegmentedOption {
+  value: string;
+  label: string;
+}
+
+export type SegmentedControlSize = 'sm' | 'md';
+
+interface Props {
+  /** Two or more choices displayed in source order. */
+  options: SegmentedOption[];
+  /** Initially selected value. Falls back to the first option when invalid. */
+  value: string;
+  /** Accessible name announced for the radiogroup. */
+  ariaLabel: string;
+  /** Visual density. Use `sm` in compact settings panels. */
+  size?: SegmentedControlSize;
+  /** Additional classes for width and placement, such as `w-full` or `max-w-xs`. */
+  class?: string;
+  /** Optional DOM id used by labels or tests. */
+  id?: string;
+}
+
+const { options, value, ariaLabel, size = 'md', class: className, id } = Astro.props;
+const selectedValue = options.some((option) => option.value === value) ? value : options[0]?.value;
+
+const optionSizes: Record<SegmentedControlSize, string> = {
+  sm: 'min-h-7 min-w-12 px-3 py-1 text-xs',
+  md: 'min-h-8 min-w-14 px-4 py-1 text-sm',
+};
+---
+
+<div
+  id={id}
+  class={cn(
+    'relative grid min-w-0 grid-flow-col auto-cols-fr rounded-full bg-foreground/10 p-1',
+    className
+  )}
+  role="radiogroup"
+  aria-label={ariaLabel}
+  data-segmented-control
+  data-segmented-value={selectedValue}
+  style={`--segment-count: ${options.length}; --segment-index: ${Math.max(
+    0,
+    options.findIndex((option) => option.value === selectedValue)
+  )};`}
+>
+  <!-- One shared indicator slides beneath every option; buttons only animate text color. -->
+  <span class="segmented-indicator bg-foreground" aria-hidden="true"></span>
+  {
+    options.map((option) => (
+      <button
+        type="button"
+        class={cn(
+          'text-foreground-muted relative z-10 rounded-full font-medium',
+          optionSizes[size],
+          'hover:text-foreground transition-colors duration-300 ease-[var(--ease-fluid)]',
+          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+          'data-[selected=true]:text-background data-[selected=true]:hover:text-background motion-reduce:transition-none'
+        )}
+        role="radio"
+        aria-checked={option.value === selectedValue ? 'true' : 'false'}
+        tabindex={option.value === selectedValue ? 0 : -1}
+        data-segment-option
+        data-segment-value={option.value}
+        data-selected={option.value === selectedValue ? 'true' : 'false'}
+      >
+        {option.label}
+      </button>
+    ))
+  }
+</div>
+
+<style>
+  /*
+   * The indicator fills one equal-width grid track inside the 4px parent inset.
+   * Translating by 100% advances it exactly one option without changing geometry.
+   */
+  .segmented-indicator {
+    position: absolute;
+    inset-block: 0.25rem;
+    left: 0.25rem;
+    z-index: 0;
+    width: calc((100% - 0.5rem) / var(--segment-count));
+    border-radius: 9999px;
+    box-shadow:
+      0 1px 2px color-mix(in srgb, var(--color-background) 18%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-background) 8%, transparent);
+    pointer-events: none;
+    transform: translateX(calc(var(--segment-index) * 100%));
+    transition: transform 400ms var(--ease-fluid);
+  }
+
+  /* Honor the operating system motion preference even before site settings load. */
+  @media (prefers-reduced-motion: reduce) {
+    .segmented-indicator {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /** Public synchronization hook attached to each control root. */
+  type SegmentedControlElement = HTMLElement & {
+    setValue?: (value: string, emit?: boolean) => void;
+  };
+
+  /**
+   * Enhances every server-rendered control once. The data guard keeps this safe
+   * across Astro client navigation and repeated `astro:page-load` events.
+   */
+  function initSegmentedControls() {
+    document
+      .querySelectorAll<SegmentedControlElement>('[data-segmented-control]')
+      .forEach((control) => {
+        if (control.dataset.segmentedInit) return;
+        control.dataset.segmentedInit = 'true';
+
+        const options = Array.from(
+          control.querySelectorAll<HTMLButtonElement>('[data-segment-option]')
+        );
+
+        /**
+         * Updates ARIA state, roving tabindex, and the indicator position.
+         * Set `emit` to false when synchronizing from an external state store.
+         */
+        const setValue = (value: string, emit = true) => {
+          const selected = options.find((option) => option.dataset.segmentValue === value);
+          if (!selected) return;
+
+          control.dataset.segmentedValue = value;
+          options.forEach((option) => {
+            const isSelected = option === selected;
+            option.setAttribute('aria-checked', String(isSelected));
+            option.dataset.selected = String(isSelected);
+            option.tabIndex = isSelected ? 0 : -1;
+          });
+          control.style.setProperty('--segment-index', String(options.indexOf(selected)));
+
+          if (emit) {
+            control.dispatchEvent(
+              new CustomEvent('segmented-change', {
+                bubbles: true,
+                detail: { value },
+              })
+            );
+          }
+        };
+
+        control.setValue = setValue;
+        options.forEach((option, index) => {
+          option.addEventListener('click', () => setValue(option.dataset.segmentValue ?? ''));
+
+          // Arrow keys move cyclically; Home and End jump to the boundary options.
+          option.addEventListener('keydown', (event) => {
+            if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+
+            event.preventDefault();
+            const direction = event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : 0;
+            const nextIndex =
+              event.key === 'Home'
+                ? 0
+                : event.key === 'End'
+                  ? options.length - 1
+                  : (index + direction + options.length) % options.length;
+            options[nextIndex]?.focus();
+            setValue(options[nextIndex]?.dataset.segmentValue ?? '');
+          });
+        });
+      });
+  }
+
+  // Initialize both the first page load and controls introduced by Astro navigation.
+  initSegmentedControls();
+  document.addEventListener('astro:page-load', initSegmentedControls);
+</script>
