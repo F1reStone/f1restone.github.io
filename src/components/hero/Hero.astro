@@ -4,6 +4,8 @@ import { cn } from '@/lib/cn';
 import { heroSectionVariants } from './hero.variants';
 import HeroGrid from '@/components/effects/HeroGrid.astro';
 import HeroBeam from '@/components/effects/HeroBeam.astro';
+import HeroLogoField from '@/components/effects/HeroLogoField.astro';
+import type { HeroLogoFieldOptions } from '@/components/effects/hero-logo-field/types';
 
 interface Props extends HTMLAttributes<'section'> {
   /** Layout mode: centered single column or split two-column */
@@ -18,6 +20,10 @@ interface Props extends HTMLAttributes<'section'> {
   showBlob?: boolean;
   /** Render the light-mode architectural grid + dark-mode halo behind the hero */
   showHeroHalo?: boolean;
+  /** Render the FireStone logo field hero atmosphere. */
+  showLogoField?: boolean;
+  /** Independent palette and motion parameters for the radial logo scene. */
+  logoField?: Partial<HeroLogoFieldOptions>;
   /** Blob position (only applies when showBlob is true) */
   blobPosition?: 'left' | 'right' | 'center';
   /** Fade the bottom of the section into the next section's background */
@@ -36,6 +42,8 @@ const {
   blobPosition: _blobPosition = 'center',
   showGlow = false,
   showHeroHalo = false,
+  showLogoField = false,
+  logoField,
   bottomFade = false,
   showScrollIndicator = false,
   fullHeight = false,
@@ -52,7 +60,8 @@ const hasAsideSlot = Astro.slots.has('aside');
 const hasBottomSlot = Astro.slots.has('bottom');
 
 // Compute alignment based on layout
-const alignment = layout === 'centered' ? 'text-center items-center' : 'text-left items-start';
+const isCentered = showLogoField || layout === 'centered';
+const alignment = isCentered ? 'text-center items-center' : 'text-left items-start';
 
 // When a bottom slot is used in a full-height hero, lay the section out as a flex
 // column so the slot can be pushed to the floor (mt-auto) while the CONTENT stays
@@ -72,6 +81,8 @@ const sectionClasses = cn(
   // Floored bottom slot (e.g. the homepage tech-stack marquee): flex column so the
   // slot floats to the floor with a guaranteed minimum gap above it.
   isFlooredBottom && 'flex flex-col gap-[var(--hero-floor-gap,4rem)]',
+  showLogoField && 'hero-logo-hero isolate',
+  showLogoField && fullHeight && 'hero-logo-full-height',
   className
 );
 
@@ -82,11 +93,13 @@ const contentClasses = cn(
 
 const gridClasses = cn(
   'mx-auto grid max-w-8xl grid-cols-1 items-center gap-[var(--space-section-gap)] px-6',
-  layout === 'split' && 'lg:grid-cols-2 lg:gap-[var(--space-section-gap)]'
+  showLogoField && 'hero-logo-content-grid',
+  layout === 'split' && !showLogoField && 'lg:grid-cols-2 lg:gap-[var(--space-section-gap)]'
 );
 ---
 
 <section class={sectionClasses} {...attrs}>
+  {showLogoField && <HeroLogoField {...logoField} />}
   {showHeroHalo && <HeroGrid />}
   {showHeroHalo && <HeroBeam />}
 
@@ -137,10 +150,10 @@ const gridClasses = cn(
 
   <div class={gridClasses}>
     {/* Content Column */}
-    <div class={cn(contentClasses, 'order-1 lg:order-none animate-hero-stagger')}>
+    <div class={cn(contentClasses, 'order-1 lg:order-none animate-hero-stagger', showLogoField && 'hero-logo-content')}>
       {/* Badge Slot */}
       {hasBadgeSlot && (
-        <div class="mb-[var(--space-heading-gap)]">
+        <div class="hero-badge-slot mb-[var(--space-heading-gap)]">
           <slot name="badge" />
         </div>
       )}
@@ -159,9 +172,9 @@ const gridClasses = cn(
       {/* Description Slot */}
       {hasDescriptionSlot && (
         <div class={cn(
-          'mb-[var(--space-stack-lg)] max-w-xl text-lg leading-relaxed text-foreground-muted',
+          'hero-description-slot mb-[var(--space-stack-lg)] max-w-xl text-lg leading-relaxed text-foreground-muted',
           '[&>p]:text-lg [&>p]:leading-relaxed [&>p]:text-foreground-muted',
-          layout === 'centered' && 'mx-auto'
+          isCentered && 'mx-auto'
         )}>
           <slot name="description" />
         </div>
@@ -170,8 +183,8 @@ const gridClasses = cn(
       {/* Actions Slot */}
       {hasActionsSlot && (
         <div class={cn(
-          'flex w-full flex-col gap-4 sm:w-auto sm:flex-row',
-          layout === 'centered' && 'justify-center'
+          'hero-actions-slot flex w-full flex-col gap-4 sm:w-auto sm:flex-row',
+          isCentered && 'justify-center'
         )}>
           <slot name="actions" />
         </div>
@@ -205,6 +218,103 @@ const gridClasses = cn(
 </section>
 
 <style>
+  .hero-logo-hero {
+    --hero-logo-center-y: clamp(210px, 35svh, 430px);
+    --hero-logo-size: clamp(210px, 34svh, 400px);
+    --hero-logo-content-gap: 52px;
+    --color-foreground: #e9f3ff;
+    --color-foreground-secondary: #cedbeb;
+    --color-foreground-muted: #adbfd4;
+    --color-background: #000102;
+    --color-ring: #d5f2ff;
+
+    min-height: calc(100svh - 32px);
+    padding-block: calc(var(--hero-logo-center-y) + var(--hero-logo-size) / 2 + var(--hero-logo-content-gap)) 88px;
+    color: var(--color-foreground);
+  }
+
+  .hero-logo-content-grid {
+    width: 100%;
+    max-width: 960px;
+    gap: 32px;
+  }
+
+  .hero-logo-content {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hero-logo-hero .hero-title-slot {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .hero-logo-hero .hero-badge-slot {
+    margin-bottom: 18px;
+  }
+
+  .hero-logo-hero .hero-badge-slot > :global(span),
+  .hero-logo-hero .hero-badge-slot > :global(a) {
+    color: var(--color-foreground-secondary);
+    letter-spacing: 0;
+    filter: none;
+  }
+
+  .hero-logo-hero .hero-description-slot {
+    margin-bottom: 24px;
+  }
+
+  .hero-logo-hero .hero-description-slot:last-child {
+    margin-bottom: 0;
+  }
+
+  .hero-logo-hero .hero-actions-slot {
+    align-items: center;
+    width: auto;
+    max-width: 100%;
+    gap: 12px;
+  }
+
+  .hero-logo-hero .hero-actions-slot :global(a) {
+    max-width: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .hero-logo-hero {
+      --hero-logo-center-y: clamp(170px, 30svh, 250px);
+      --hero-logo-size: clamp(160px, 27svh, 230px);
+      --hero-logo-content-gap: 34px;
+
+      min-height: calc(100svh - 24px);
+      padding-bottom: 64px;
+    }
+
+    .hero-logo-content-grid {
+      padding-inline: 24px;
+    }
+
+    .hero-logo-hero .hero-description-slot,
+    .hero-logo-hero .hero-description-slot :global(p) {
+      font-size: 16px;
+      line-height: 1.65;
+    }
+  }
+
+  @media (max-height: 540px) and (min-width: 600px) {
+    .hero-logo-hero {
+      --hero-logo-center-y: 164px;
+      --hero-logo-size: 162px;
+      --hero-logo-content-gap: 24px;
+
+      padding-bottom: 40px;
+    }
+
+  }
+
+  .hero-logo-hero.hero-logo-full-height {
+    min-height: 100svh;
+  }
+
   /* Desktop only: hide on landscape mobile (phones max out ~430px tall) */
   .scroll-indicator-wrapper {
     display: none;

@@ -50,7 +50,7 @@ const { tag, posts, visibleTags } = Astro.props;
   description={`带有 #${tag} 标签的文章。`}
   eagerReveal
 >
-  <Hero layout="split" size="xl" class="hero-dark-gradient invert-section" showScrollIndicator>
+  <Hero layout="split" size="xl" class="invert-section" showLogoField showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="tag" size="sm" />
       标签

@@ -299,8 +299,9 @@ frame profiling in individual components.
 
 The current settings model is intentionally split by responsibility:
 
-- `heroGradient`: `static | dynamic`; controls only the Hero conic-gradient
-  motion.
+- `heroGradient`: `static | dynamic`; controls the Three.js Hero light-trail
+  motion. The persisted key is retained for compatibility. A static setting
+  renders one complete frame, including the logo and post-processing.
 - `footerGradientQuality`: `low | high`; selects the optimized single-layer
   footer atmosphere or the original three-layer aurora.
 - `footerGradient`: `static | dynamic`; controls motion for the selected footer

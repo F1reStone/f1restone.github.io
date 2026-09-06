@@ -169,7 +169,7 @@ export function Dialog({
               {description && (
                 <p
                   id={descriptionId}
-                  className="mt-1.5 text-xs leading-relaxed text-foreground-muted"
+                  className="mt-1.5 text-2xs leading-relaxed text-foreground-muted"
                 >
                   {description}
                 </p>

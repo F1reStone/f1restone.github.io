@@ -212,6 +212,8 @@ input[type='reset'] {
   --color-brand-900: var(--brand-900);
 
   /* Font Sizes - matches original design scale */
+  --font-size-3xs: 0.5rem;      /* 8px */
+  --font-size-2xs: 0.625rem;    /* 10px */
   --font-size-xs: 0.75rem;     /* 12px */
   --font-size-sm: 0.875rem;    /* 14px */
   --font-size-base: 1rem;      /* 16px */
@@ -506,89 +508,6 @@ input[type='reset'] {
   }
 
   /* =========================================================================
-     Dynamic Brand Conic Aura Hero (Cyan, Pink, Gold)
-     参考实现：圆锥渐变 (conic-gradient) 结合重度模糊与平滑旋转，打造高级流体光场
-     ========================================================================= */
-  .hero-dark-gradient {
-    position: relative;
-    isolation: isolate;
-    background-color: #080C13 !important;
-    overflow: hidden;
-  }
-
-  .dark .hero-dark-gradient {
-    background-color: #080C13 !important;
-  }
-
-  /* 底层主光环：多色圆锥渐变环绕 */
-  .hero-dark-gradient::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 140vw;
-    height: 140vw;
-    max-width: 1400px;
-    max-height: 1400px;
-    /* 严格使用品牌色调色盘：#00C3FF(青), #FD579C(粉), #F8D762(金) */
-    background: conic-gradient(
-      from 0deg at 50% 50%,
-      #080C13 0%,
-      #00C3FF 20%,
-      #080C13 35%,
-      #FD579C 55%,
-      #080C13 70%,
-      #7D3CFA 85%,
-      #080C13 100%
-    );
-    filter: blur(100px); /* 极高斯模糊，化线为影，形成类似极光的高级流体感 */
-    opacity: 0.55; /* 控制通透感，不喧宾夺主 */
-    z-index: -1;
-    pointer-events: none;
-    animation: spin-aura 24s linear infinite;
-  }
-
-  /* 顶层辅助光环：反向旋转的副光斑，产生交织融合的光学错觉 */
-  .hero-dark-gradient::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 100vw;
-    max-width: 1000px;
-    max-height: 1000px;
-    background: conic-gradient(
-      from 180deg at 50% 50%,
-      transparent 0%,
-      #7D3CFA 30%,
-      transparent 50%,
-      #00C3FF 80%,
-      transparent 100%
-    );
-    filter: blur(120px);
-    opacity: 0.4;
-    z-index: -1;
-    pointer-events: none;
-    animation: spin-aura-reverse 18s linear infinite;
-  }
-
-  html[data-effect-hero='static'] .hero-dark-gradient::before,
-  html[data-effect-hero='static'] .hero-dark-gradient::after {
-    animation: none;
-  }
-
-  @keyframes spin-aura {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-  }
-
-  @keyframes spin-aura-reverse {
-    0% { transform: translate(-50%, -50%) rotate(360deg); }
-    100% { transform: translate(-50%, -50%) rotate(0deg); }
-  }
-
-  /* =========================================================================
      FireStone: Hero Title (重构后使用原子类)
      .hero-title-wrapper 负责布局，.hero-title-text / .hero-title-serif
      负责渐变文字视觉。
@@ -656,7 +575,7 @@ input[type='reset'] {
      the homepage primary CTA marker (added by the primary button variant). */
   /* FireStone: 修复浅色模式下 Hero 首屏主按钮悬停时暴露出品牌色的 Bug。
      利用 !important 覆盖原框架漏掉的 hover 变量，锁定为白色。*/
-  html:not(.dark) .hero-dark-gradient .btn-primary {
+  html:not(.dark) .hero-logo-hero .btn-primary {
     background-color: var(--color-foreground) !important;
     background-image: linear-gradient(
       180deg,
@@ -667,7 +586,7 @@ input[type='reset'] {
     color: var(--color-background) !important;
   }
   
-  html:not(.dark) .hero-dark-gradient .btn-primary:hover {
+  html:not(.dark) .hero-logo-hero .btn-primary:hover {
     background-image: none !important;
     background-color: color-mix(in oklch, var(--color-foreground) 90%, transparent) !important;
     color: var(--color-background) !important;
@@ -675,7 +594,7 @@ input[type='reset'] {
 
   /* Brand badge in the hero — applied in BOTH light and dark mode.
      Glass pill with a brand-400 pulse core and brand-300 soft halo. */
-  .hero-dark-gradient .bg-brand-500\/10 {
+  .hero-logo-hero .bg-brand-500\/10 {
     background-color: color-mix(in oklch, var(--color-brand-500) 18%, transparent);
     border-color:     color-mix(in oklch, var(--color-brand-400) 55%, transparent);
     color:            var(--color-brand-100);
@@ -683,10 +602,10 @@ input[type='reset'] {
     -webkit-backdrop-filter: blur(8px);
     box-shadow: 0 0 24px -4px color-mix(in oklch, var(--color-brand-500) 35%, transparent);
   }
-  .hero-dark-gradient .bg-brand-500\/10 .bg-brand-500 {
+  .hero-logo-hero .bg-brand-500\/10 .bg-brand-500 {
     background-color: var(--color-brand-400);
   }
-  .hero-dark-gradient .bg-brand-500\/10 .bg-brand-500:not(.animate-ping) {
+  .hero-logo-hero .bg-brand-500\/10 .bg-brand-500:not(.animate-ping) {
     box-shadow: 0 0 14px 0 color-mix(in oklch, var(--color-brand-300) 40%, transparent);
   }
 

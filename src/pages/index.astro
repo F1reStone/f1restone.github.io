@@ -34,8 +34,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   includeProfessionalServiceSchema={true}
 >
   <!-- Hero -->
-  <Hero layout="split" size="xl" class="hero-dark-gradient invert-section min-h-[100svh] grid items-center [&>div]:w-full" showScrollIndicator>
-    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,14vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+  <Hero layout="centered" size="xl" class="invert-section" fullHeight showLogoField showScrollIndicator>
+    <h1 slot="title" class="hero-title-wrapper relative z-10 !text-4xl tracking-normal sm:!text-6xl md:!text-7xl lg:!text-8xl">
       <span class="hero-title-text whitespace-nowrap text-[0.6em]">To the</span><br />
       <span class="hero-title-text">Infinite Future</span>
     </h1>
@@ -53,7 +53,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </Hero>
 
   <!-- Portfolio -->
-  <section id="work" class="relative z-10 py-[var(--space-section-md)] bg-background border-t border-border">
+  <section id="work" class="relative z-10 py-[var(--space-section-md)] bg-background border-border">
     <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-4 text-center" data-reveal>
         <div class="flex flex-col items-center gap-6">
