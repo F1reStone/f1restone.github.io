@@ -37,6 +37,7 @@
  */
 import { PUBLIC_GA_MEASUREMENT_ID, PUBLIC_GTM_ID, PUBLIC_CONSENT_ENABLED } from 'astro:env/client';
 import consentConfig from '@/config/consent.config';
+import UmamiAnalytics from './UmamiAnalytics.astro';
 
 const gaId = PUBLIC_GA_MEASUREMENT_ID;
 const gtmId = PUBLIC_GTM_ID;
@@ -96,6 +97,7 @@ const analyticsDataJson = JSON.stringify({
 ---
 
 {/* Analytics data element — read by all inline scripts below */}
+<UmamiAnalytics />
 {hasAnalytics && (
   <script is:inline type="application/json" id="analytics-data" set:html={analyticsDataJson} />
 )}

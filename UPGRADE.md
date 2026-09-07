@@ -2,6 +2,26 @@
 
 当从上游 [Astro Rocket](https://github.com/hansmartensdev/astro-rocket) 合并新版本时，按照本文档的规则和检查清单执行。
 
+## 2.6.0 起的现行约定（优先于下方历史操作示例）
+
+本次采用逐项移植，详见 [as260 迁移记录](docs/upgrade-as260.md)。用户的当次要求始终优先。
+
+- 先升级、验证本地依赖，再移植源码。优先最新兼容稳定版本；源码移植后依赖以本地为准，只补必要的新增依赖。高风险主版本单独评估，当前 TS 保持 6，暂不使用 TS 7。
+- 设计更新不跟随；组件化升级跟随并承载 FireStone 设计。不能按目录批量执行下方示例中的 `--ours` 或 `--theirs`。
+- 页面正文现位于 `src/components/pages/views`、`blog/views`、`projects/views`。薄路由负责构建时渲染和传参，并不是浏览器跳转页。
+- 正式 i18n 保持关闭，支持代码为 `zh-CN`、`en-US`。当前仅完成共用界面本地化，正文翻译另行进行。
+- 面包屑由页面/布局提供标题与层级，Footer 只渲染。禁止再次通过菜单或 URL 片段猜标题。语言链接只能指向真实目标，未翻译页面用 `requestedLocale` 提示原文回退。
+- Hero、Shader、Picture fallback、全局性能分级，以及 Header/Footer、卡片、字体和交互样式都属于定制实现；不能再按“通用未改动组件”覆盖。
+- 严格 consent 适用于新增分析服务，包括 Umami。保留静态输出；不自动加入 API、部署配置或 GitHub Actions 变更。
+
+完整检查使用 `pnpm validate`（lint、check、单元测试、build）及 `pnpm test:e2e`。开发中的单元测试用 `pnpm test`，一次性执行用 `pnpm test:run`。
+
+`pnpm test:i18n` 临时开启英语、创建测试内容，输出到 `test-results/i18n-dist`，验证完毕或失败时恢复原配置并移除测试内容。运行期间不要编辑语言配置；强制杀死进程后应检查语言开关及 `as260-*` 临时内容。它不会修改正式环境文件。
+
+浏览器测试自动启停仅监听本机的服务器，默认使用已安装的 Edge，可用 `PLAYWRIGHT_CHANNEL=chrome` 改用 Chrome。输出限定到 `test-results/playwright`，避免清理其他诊断资料。先 build 再测试搜索，因为 dev 没有 Pagefind 索引。
+
+以下保留历史文件分类及故障背景；版本、路径和取舍以本节、AGENTS.md 和当前代码为准。
+
 ## 前置准备
 
 ### 1. 创建备份分支
@@ -25,10 +45,10 @@ pnpm up
 
 | 规则 | 说明 |
 |------|------|
-| Astro 核心 | 以X.Y.Z为例，大版本（X）跟随上游 — 中小版本可用官方工具升级（Y.Z） |
-| ESLint / TypeScript 等包括格式检查的依赖 | **绝不自行升级大版本**。上游升了才跟，上游没升绝对不升 |
-| 其他插件 | 仅升小版本（`pnpm up` 不加 `--latest`） |
-| 独占依赖 | `astro-expressive-code`、`@expressive-code/plugin-frames` 等上游不用的包，保持兼容范围最新即可 |
+| Astro 核心 | 采用最新兼容稳定版本；高风险主版本需明确升级范围与验证 |
+| ESLint / TypeScript 等 | 不因上游较旧而降级；当前 TS 6，暂不升级 TS 7 |
+| 其他插件 | 优先最新兼容稳定版本，逐项核对主要变更 |
+| Expressive Code | 三个配套包同步到最新兼容版本，特别验证 Markdown/MDX 升级后的实际代码块 |
 
 ---
 
@@ -213,7 +233,7 @@ export function getPostSlug(postId: string, locale: string = defaultLocale): str
 
 **原因**：`import.meta.glob` 返回 `Record<string, unknown>`，但 `Dictionary` 类型是具体的 JSON 结构类型
 
-**修复**：将 `Dictionary` 改为 `Record<string, unknown>`（失去严格类型但兼容 glob 自动加载）
+**修复**：保持字典结构一致，为 glob 提供正确的模块类型；不要通过弱化 Dictionary 类型来掩盖错误。
 
 ### 6. 未闭合的 `<div>` 标签
 
@@ -245,7 +265,7 @@ export function getPostSlug(postId: string, locale: string = defaultLocale): str
 
 **原因**：Astro 新版本发布不到 24 小时
 
-**临时绕过**：`pnpm config set minimumReleaseAge 0 --location project`，等 24 小时后删除
+**处理**：保留供应链限制，等待依赖满足发布年龄要求，或选择已验证版本；不要为让安装通过而关闭检查。
 
 ---
 

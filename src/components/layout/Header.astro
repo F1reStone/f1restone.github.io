@@ -24,6 +24,7 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { ImageMetadata } from 'astro';
 import { cn } from '@/lib/cn';
+import { resolveSocialLinks } from '@/lib/utils';
 import { getNavItems, type ResolvedNavItem } from '@/config/nav.config';
 import { headerVariants, headerInnerVariants } from './header.variants';
 import Button from '@/components/ui/form/Button/Button.astro';
@@ -35,7 +36,8 @@ import ThemeSelector from '@/components/layout/ThemeSelector.astro';
 import ThemeSelectorDropdown from '@/components/layout/ThemeSelectorDropdown.astro';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher.astro';
 import siteConfig from '@/config/site.config';
-import { isEnabled as i18nIsEnabled, getLocaleFromPath } from '@/i18n';
+import { isEnabled as i18nIsEnabled, getLocaleFromPath, t, localizedPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 export interface NavItem {
   label: string;
@@ -115,7 +117,7 @@ const {
   nav,
   extraNav = [],
   showCta = false,
-  cta = { label: '探索我的项目', href: '/projects' },
+  cta = { label: t('header.exploreProjects', locale), href: localizedPath('/projects', locale), icon: undefined, trailingIcon: undefined },
   actions = [],
   showSearch = true,
   showThemeToggle = true,
@@ -159,7 +161,6 @@ const maxWidthClass = {
 const effectiveShowScrollProgress = showScrollProgress || (isFloating && !autoHide);
 const isInvert = colorScheme === 'invert';
 
-const locale = getLocaleFromPath(Astro.url.pathname);
 
 const defaultNav = getNavItems(locale).map((item: ResolvedNavItem) => ({
   label: item.label,
@@ -206,14 +207,7 @@ function isActive(href: string): boolean {
 }
 
 function getSocialIconData(url: string): { icon: string; label: string } {
-  if (url.includes('github.com'))    return { icon: 'github',    label: 'GitHub' };
-  if (url.includes('bilibili.com'))   return { icon: 'bilibili',   label: '哔哩哔哩' };
-  if (url.includes('zhihu.com'))   return { icon: 'zhihu',   label: '知乎' };
-  if (url.includes('music.163.com'))  return { icon: 'neteasecloudmusic', label: '网易云音乐' };
-  if (url.includes('weibo.com'))   return { icon: 'weibo',   label: '微博' };
-  if (url.includes('youtube.com'))   return { icon: 'youtube',   label: 'YouTube' };
-  if (url.includes('x.com') || url.includes('twitter.com')) return { icon: 'x-twitter', label: 'X' };
-  return { icon: 'link', label: 'Social' };
+  return resolveSocialLinks([url], locale)[0];
 }
 
 function getNavIcon(href: string): string {
@@ -273,7 +267,7 @@ const buttonId = `${menuId}-button`;
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center w-fit" aria-label="FireStone Logo">
+                <a href={localizedPath('/', locale)} class="flex items-center w-fit" aria-label={t('common.logo', locale)}>
                   <Logo
                     size={size === 'sm' ? 'md' : 'lg'}
                     class="text-foreground hdr-logo-glow"
@@ -351,11 +345,11 @@ const buttonId = `${menuId}-button`;
     {
       layout !== 'minimal' &&
         (hasNavSlot ? (
-          <nav class="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+          <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
             <slot name="nav" />
           </nav>
         ) : (
-          <nav class="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+          <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
             {navItems.map(({ label, href }) => (
               <a
                 href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
@@ -481,7 +475,7 @@ const buttonId = `${menuId}-button`;
             )}
             aria-expanded="false"
             aria-controls={menuId}
-            aria-label="Toggle menu"
+            aria-label={t('nav.toggleMenu', locale)}
           >
             <span class="menu-icon">
               <Icon name="menu" size="md" />
@@ -529,7 +523,7 @@ const buttonId = `${menuId}-button`;
               : 'border-border bg-background border-t'
           )}
           role="navigation"
-          aria-label="Mobile navigation"
+          aria-label={t('nav.mobileNav', locale)}
         >
           <slot name="mobile-menu" />
         </div>
@@ -544,14 +538,14 @@ const buttonId = `${menuId}-button`;
               : 'border-border bg-background border-t'
           )}
           role="navigation"
-          aria-label="Mobile navigation"
+          aria-label={t('nav.mobileNav', locale)}
         >
           <div class={cn(
             'mobile-menu-body py-3',
             isFloating ? 'px-3' : cn('mx-auto px-4', maxWidthClass)
           )}>
             <section class="mobile-menu-section">
-              <p class="mobile-menu-label">导航</p>
+              <p class="mobile-menu-label">{t('nav.sectionNavigate', locale)}</p>
               <ul class="space-y-0.5">
                 {navItems.map(({ label, href }, idx) => {
                   const active = isActive(href);
@@ -583,12 +577,12 @@ const buttonId = `${menuId}-button`;
 
             {showThemeSelector && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">主题</p>
+                <p class="mobile-menu-label">{t('nav.sectionTheme', locale)}</p>
                 <div
                   class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
                   style={`--stagger-index: ${navItems.length}`}
                 >
-                  <span class="text-sm text-foreground-muted">颜色主题</span>
+                  <span class="text-sm text-foreground-muted">{t('theme.colourTheme', locale)}</span>
                   <ThemeSelector />
                 </div>
               </section>
@@ -596,12 +590,12 @@ const buttonId = `${menuId}-button`;
 
             {showLanguageSwitcher && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">语言</p>
+                <p class="mobile-menu-label">{t('nav.sectionLanguage', locale)}</p>
                 <div
                   class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
                   style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0)}`}
                 >
-                  <span class="text-sm text-foreground-muted">语言</span>
+                  <span class="text-sm text-foreground-muted">{t('nav.sectionLanguage', locale)}</span>
                   <LanguageSwitcher alternates={languageAlternates} />
                 </div>
               </section>
@@ -609,7 +603,7 @@ const buttonId = `${menuId}-button`;
 
             {mobileSocialLinks.length > 0 && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">社交媒体</p>
+                <p class="mobile-menu-label">{t('footer.socialMedia', locale)}</p>
                 <div class="flex flex-wrap items-center gap-2 px-2 pt-1 pb-2">
                   {mobileSocialLinks.map((url, sIdx) => {
                     const { icon, label } = getSocialIconData(url);

@@ -13,6 +13,7 @@ import Card from '@/components/ui/data-display/Card/Card.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import type { CollectionEntry } from 'astro:content';
 import { defaultLocale } from '@/i18n';
+import { withLocaleFallback } from '@/lib/locale-fallback';
 import { getProjectUrl } from '@/lib/projects';
 
 interface Props {
@@ -34,7 +35,7 @@ const { data } = project;
   <Card
     variant="default"
     padding="none"
-    href={data.placeholder ? undefined : getProjectUrl(project.id, locale)}
+    href={data.placeholder ? undefined : withLocaleFallback(getProjectUrl(project.id, data.locale), data.locale, locale)}
     class="group relative overflow-hidden aspect-[4/3] sm:aspect-[16/10] lg:aspect-video bg-background-tertiary border-border/50 hover-glow-box block w-full h-full"
   >
     <!-- 1. 物理层：背景大图 / 占位符 -->

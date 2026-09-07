@@ -1,4 +1,6 @@
 ---
+import { buildBreadcrumbs, type BreadcrumbItem } from '@/lib/breadcrumbs';
+import { getLocaleFromPath } from '@/i18n';
 /**
  * PageLayout
  * Layout wrapper for standard content pages (non-landing)
@@ -9,6 +11,8 @@ import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
 
 interface Props {
+  breadcrumbs?: BreadcrumbItem[] | false;
+  breadcrumbLabel?: string;
   title?: string;
   description?: string;
   image?: string;
@@ -22,9 +26,12 @@ interface Props {
 
 const { title, description, image, imageAlt, noindex, nofollow, showScrollProgress = false, eagerReveal = false } = Astro.props;
 
+const locale = getLocaleFromPath(Astro.url.pathname);
+const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcrumbs ?? buildBreadcrumbs(Astro.props.breadcrumbLabel ?? title, Astro.url.pathname, locale);
 ---
 
 <BaseLayout
+  breadcrumbs={breadcrumbs}
   title={title}
   description={description}
   image={image}
@@ -47,7 +54,7 @@ const { title, description, image, imageAlt, noindex, nofollow, showScrollProgre
     <slot />
   </main>
 
-  <Footer 
-    slot="footer" 
+  <Footer breadcrumbs={breadcrumbs}
+    slot="footer"
   />
 </BaseLayout>

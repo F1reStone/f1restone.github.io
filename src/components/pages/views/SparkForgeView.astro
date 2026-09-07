@@ -1,0 +1,207 @@
+---
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
+const breadcrumbs = buildBreadcrumbs('SparkForge 燧光', Astro.url.pathname, 'zh-CN', 'projects');
+/**
+ * SparkForge 燧光 — solo project page.
+ *
+ * When `soloPage: true` is set in the MDX frontmatter, the generic
+ * [slug].astro route skips this project.  Astro's file-based router
+ * then serves this file directly at /projects/sparkforge, giving you
+ * full control over the page chrome.
+ *
+ * Use `getEntry()` to pull in the project data, and `render()` to
+ * render the MDX body.  From here you can build any layout you need.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import ProjectCarousel from '@/components/projects/ProjectCarousel.astro';
+import TableOfContents from '@/components/blog/TableOfContents.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import siteConfig from '@/config/site.config';
+import { getEntry, render } from 'astro:content';
+import type { GallerySlide } from '@/lib/gallery';
+import fullLogoRaw from '@/assets/projects/sparkforge/logo/sparkforge-logo-full.svg?raw';
+import logoRaw from '@/assets/projects/sparkforge/logo/sparkforge-logo.svg?raw';
+
+// Strip width/height so CSS controls sizing, then inject Tailwind sizing
+// classes onto the <svg> element — exactly like Logo.astro (classes must be
+// on the SVG root, not on a wrapper <span>, for height/width to work).
+const logoSvg = logoRaw
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-7 w-auto shrink-0 hdr-logo-glow"');
+
+const fullLogoSvg = fullLogoRaw
+  .replace(/\s(width|height)="[^"]*"/g, '')
+  .replace(/^<svg/, '<svg class="block h-14 md:h-16 lg:h-[5.5rem] w-auto max-w-full"');
+
+const project = await getEntry('projects', 'sparkforge');
+if (!project) {
+  throw new Error('Project "sparkforge" not found. Is the MDX file present?');
+}
+
+const { Content, headings } = await render(project);
+const { title, description, repo, year, meta, image, imageAlt, gallery, logo } = project.data;
+
+// Build carousel slides (same logic as the generic ProjectHero)
+const slides: GallerySlide[] =
+  (gallery as GallerySlide[] | undefined)?.length
+    ? (gallery as GallerySlide[])
+    : image
+      ? [{ src: image, alt: imageAlt || title } as GallerySlide]
+      : [];
+
+// Mirror the blog TOC wiring — projects use the same site-wide config.
+const tocConfig = siteConfig.articleFeatures?.toc;
+const showToc = !!tocConfig?.enabled;
+
+const ogImage = image?.src;
+
+const localizedHeadings = headings.map((heading) =>
+  heading.slug === 'footnote-label'
+    ? { ...heading, text: '尾注' }
+    : heading
+);
+---
+
+<BaseLayout
+  breadcrumbs={breadcrumbs}
+  title={`${title} | 项目`}
+  description={description}
+  image={ogImage}
+  imageAlt={imageAlt || title}
+>
+  <Header
+    slot="header"
+    position="sticky"
+    colorScheme="default"
+    shape="bar"
+    secondaryLogoSvg={logoSvg}
+    secondaryLogoHref="/projects/sparkforge/"
+    showCta={false}
+    maxWidth="8xl"
+  />
+
+  <main class="min-h-screen">
+    <!-- Hero section -->
+    <header class="relative isolate overflow-hidden pt-[var(--space-page-top-sm)] pb-[var(--space-section-md)]">
+      <div class="relative z-10 mx-auto max-w-8xl px-6">
+        <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14">
+          <!-- Text column -->
+          <!-- FireStone: [Explicitly set self-center to align text vertically with the media carousel, and removed the heavy bottom disclaimer] -->
+          <div class="animate-hero-stagger min-w-0 self-center">
+            {logo ? (
+              <>
+                <h1 class="sr-only">{title}</h1>
+                <span
+                  class="inline-block text-foreground mb-[var(--space-heading-gap)]"
+                  set:html={fullLogoSvg}
+                />
+              </>
+            ) : (
+              <h1 class="font-display text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl mb-[var(--space-heading-gap)] text-balance">
+                {title}
+              </h1>
+            )}
+
+            <p class="text-lg md:text-xl text-foreground-muted leading-relaxed mb-[var(--space-stack-lg)]">
+              {description}
+            </p>
+
+            {meta && meta.length > 0 && (
+              <div class="mb-[var(--space-stack-lg)] flex flex-wrap items-center gap-2">
+                {meta.map((item, index) => (
+                  <>
+                    {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                    <Badge variant="brand">{item}</Badge>
+                  </>
+                ))}
+              </div>
+            )}
+
+            {repo && (
+                  // FireStone: [Structured the CTA button into a column layout to place a subtle, high-priority helper text right below it]
+                  <div class="flex flex-col gap-2.5">
+                    <div class="flex flex-wrap gap-3">
+                      <Button href={repo} target="_blank" rel="noopener noreferrer" size="md">
+                        <Icon name="github" size="sm" />
+                        访问源代码
+                        <Icon name="arrow-up-right" size="xs" />
+                      </Button>
+                    </div>
+                    {/* Subtle micro-tip to guide users on joining Epic Games GitHub organization, critical for resolving potential 404s */}
+                    <p class="text-[11px] text-foreground-subtle leading-normal flex items-center gap-1.5 pl-0.5 animate-hero-slide-up [animation-delay:150ms]">
+                      <Icon name="info" size="xs" class="shrink-0" />
+                      <span>
+                        访问源代码需要拥有 GitHub 账号，并将其关联至您的 Epic Games 账号。<a href="https://www.unrealengine.com/ue-on-github" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors">进一步了解</a>。
+                      </span>
+                    </p>
+                  </div>
+                )}
+          </div>
+
+          <!-- Media column -->
+          <div class="animate-hero-slide-up [animation-delay:300ms]">
+            {slides.length > 0 ? (
+              <ProjectCarousel slides={slides} label={`${title} screenshots`} />
+            ) : (
+              <div
+                class="aspect-video w-full rounded-xl border border-border bg-gradient-to-br from-brand-500/20 via-brand-500/5 to-transparent flex items-center justify-center shadow-lg"
+                aria-hidden="true"
+              >
+                <Icon name="layers" size="lg" class="text-brand-500/60" />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MDX content + optional TOC sidebar -->
+    <article class="pt-8 pb-[var(--space-section-md)]">
+      <div
+        class:list={[
+          'mx-auto px-6 max-w-8xl',
+          showToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10',
+        ]}
+      >
+        {/* FireStone: [Main Content Column - Wraps Content, Disclaimer Card, and Local Back Footer to match ProjectLayout.astro's neat column structure] */}
+        <div class="min-w-0 max-w-8xl w-full mx-auto xl:mx-0">
+          <div class="prose prose-lg max-w-none" data-reveal-content>
+            <Content />
+          </div>
+
+          <!-- FireStone: [Moved local back-button footer inside the content column, matching ProjectLayout.astro's inner-grid alignment] -->
+          <footer class="pt-[var(--space-section-header)]" data-reveal>
+            <Button href="/projects" variant="secondary" size="sm">
+              <Icon name="chevron-left" size="sm" />
+              返回「项目」
+            </Button>
+          </footer>
+        </div>
+
+        {showToc && (
+          <aside class="hidden xl:block" aria-label="Table of contents">
+            <TableOfContents
+              headings={localizedHeadings}
+              maxDepth={tocConfig?.maxDepth ?? 3}
+              minHeadings={tocConfig?.minHeadings ?? 3}
+              sticky
+            />
+          </aside>
+        )}
+      </div>
+    </article>
+
+    <!-- Back link and footnotes -->
+    <div class="mx-auto max-w-8xl px-6">
+      <div class="pt-[var(--space-stack-lg)] border-t border-foreground-subtle/25 text-[11px] leading-relaxed text-foreground-subtle space-y-3">
+        <p>访问项目源代码需要拥有 GitHub 账号，并将其关联至您的 Epic Games 账号。详情请参阅<a href="https://www.unrealengine.com/ue-on-github" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors" target="_blank" rel="noopener noreferrer">虚幻引擎 GitHub 关联指南</a>。下载、安装或使用本项目源代码，即代表您已阅读并同意<a href="https://www.unrealengine.com/eula/unreal" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors" target="_blank" rel="noopener noreferrer">《虚幻引擎 (Unreal® Engine) 终端用户许可协议》</a>以及<a href="/legal/sparkforge-amla" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors" rel="noopener noreferrer">《SparkForge 附加修改内容许可协议》</a>。</p>
+        <p>本项目与 Epic Games, Inc. 无任何商业关联。访问、下载及使用本项目源码须遵守适用的许可协议。版权所有 © 2026 FireStone. 保留所有权利。FireStone 及 FireStone 标志是 FireStone 的商标或注册商标。Unreal Engine © {year} Epic Games, Inc. 保留所有权利。Unreal、Unreal Engine、虚幻、虚幻引擎及其各自标志是 Epic Games, Inc. 在美国专利商标局及其他地区的商标或注册商标。NVIDIA 及 NVIDIA 标志是 NVIDIA Corporation 在美国及其他国家的商标和/或注册商标。所有其他商标均为其各自所有者的财产。</p>
+      </div>
+    </div>
+  </main>
+  <Footer breadcrumbs={breadcrumbs} slot="footer" />
+</BaseLayout>

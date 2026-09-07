@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 
-// `lib/blog` imports `astro:content` at the top level for its data helpers.
+vi.mock('@/config/i18n.config', () => ({ default: { enabled: true, defaultLocale: 'zh-CN', locales: ['zh-CN', 'en-US'] } }));
+
+// `lib/blog` imports `astro:content at the top level for its data helpers.
 // The URL helpers under test don't touch the content runtime, so a tiny stub
 // is enough to let the module load in a plain Node test environment.
 vi.mock('astro:content', () => ({
@@ -16,7 +18,7 @@ import {
   getSecondaryLocales,
 } from '@/lib/blog';
 
-// With i18n enabled (zh-CN default, en-US + zh-TW secondary):
+// With i18n enabled (zh-CN default, en-US secondary):
 // - Default locale stays at site root (no prefix)
 // - Secondary locales get a locale prefix
 describe('blog URL helpers (i18n enabled)', () => {
@@ -54,6 +56,6 @@ describe('blog URL helpers (i18n enabled)', () => {
   });
 
   it('exposes secondary locales when i18n is on', () => {
-    expect(getSecondaryLocales()).toEqual(['en-US', 'zh-TW']);
+    expect(getSecondaryLocales()).toEqual(['en-US']);
   });
 });

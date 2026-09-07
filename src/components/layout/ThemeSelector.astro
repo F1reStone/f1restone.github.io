@@ -1,4 +1,6 @@
 ---
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 /**
  * ThemeSelector
  * A row of twelve colour swatches that switches the active colour theme at
@@ -13,28 +15,13 @@ interface Props {
 
 const { class: className } = Astro.props;
 
-// All 12 themes in Tailwind color order
-const themes = [
-  //{ id: 'orange',  name: 'Orange',  color: 'oklch(62.5% 0.22  38)'  },
-  //{ id: 'amber',   name: 'Amber',   color: 'oklch(68%   0.19  75)'  },
-  //{ id: 'lime',    name: 'Lime',    color: 'oklch(64%   0.27 130)'  },
-  //{ id: 'emerald', name: 'Emerald', color: 'oklch(62.5% 0.22 160)'  },
-  //{ id: 'teal',    name: 'Teal',    color: 'oklch(62.5% 0.22 190)'  },
-  //{ id: 'cyan',    name: 'Cyan',    color: 'oklch(65%   0.22 200)'  },
-  //{ id: 'sky',     name: 'Sky',     color: 'oklch(67%   0.21 222)'  },
-  //{ id: 'blue',    name: 'Blue',    color: 'oklch(62.5% 0.22 255)'  },
-  //{ id: 'indigo',  name: 'Indigo',  color: 'oklch(60%   0.24 264)'  },
-  //{ id: 'violet',  name: 'Violet',  color: 'oklch(62.5% 0.26 277)'  },
-  { id: 'firestone',  name: 'FireStone',  color: 'oklch(65%   0.22 229.43)'  },
-  //{ id: 'purple',  name: 'Purple',  color: 'oklch(62.5% 0.25 303)'  },
-  //{ id: 'magenta', name: 'Magenta', color: 'oklch(58%   0.28 330)'  },
-];
+import { selectorThemes as themes } from '@/lib/themes';
 ---
 
 <div
   class:list={['theme-selector flex flex-wrap items-center gap-1', className]}
   role="group"
-  aria-label="Select colour theme"
+  aria-label={t('theme.selectColour', locale)}
 >
   {themes.map((theme) => (
     <button
@@ -43,7 +30,7 @@ const themes = [
       data-theme-id={theme.id}
       style={`background-color:${theme.color};--swatch:${theme.color}`}
       title={theme.name}
-      aria-label={`${theme.name} theme`}
+      aria-label={t('theme.namedTheme', locale, { name: theme.name })}
     />
   ))}
 </div>
@@ -85,7 +72,7 @@ const themes = [
 
 <script>
   const STORAGE_KEY = 'color-theme';
-  const DEFAULT_THEME = 'blue';
+  const DEFAULT_THEME = 'firestone';
 
   function getActiveTheme(): string {
     try {

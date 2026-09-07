@@ -1,55 +1,83 @@
-name: Deploy to Cloudflare Workers
+name: CI and deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, as260]
+  pull_request:
+    branches: [main, as260]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
-      PUBLIC_GTM_ID: ${{ secrets.PUBLIC_GTM_ID }}
-      GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
-      BING_SITE_VERIFICATION: ${{ secrets.BING_SITE_VERIFICATION }}
-      REPOSITORY_ID: ${{ secrets.REPOSITORY_ID }}
-      CATEGORY_ID: ${{ secrets.CATEGORY_ID }}
       SITE_URL: https://fire-stone.co/
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
-          version: 9
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
-          cache: 'pnpm'
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - name: Setup pnpm from package.json
+        uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b # v2.1.0
+        with:
+          cache: true
+          install: false
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm run lint
+      - name: Lint, type check, unit tests and production build
+        run: pnpm validate
+        env:
+          PUBLIC_GTM_ID: ${{ secrets.PUBLIC_GTM_ID }}
+          GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
+          BING_SITE_VERIFICATION: ${{ secrets.BING_SITE_VERIFICATION }}
+          REPOSITORY_ID: ${{ secrets.REPOSITORY_ID }}
+          CATEGORY_ID: ${{ secrets.CATEGORY_ID }}
 
-      - name: Type check
-        run: pnpm run check
+      - name: Install test browser
+        run: pnpm exec playwright install --with-deps --only-shell chromium
 
-      - name: Build
-        run: pnpm run build
+      - name: Test production pages in browser
+        run: pnpm test:e2e
+        env:
+          PLAYWRIGHT_OUTPUT_DIR: test-results/playwright-production
 
-      - name: Configure pnpm safety for CI/CD
-        run: pnpm config set ignore-workspace-root-check true
+      - name: Test bilingual routes and shared UI
+        run: pnpm test:i18n
+        env:
+          PLAYWRIGHT_OUTPUT_DIR: test-results/playwright-i18n
+
+      - name: Upload browser failure traces
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-failures-${{ github.run_attempt }}
+          path: |
+            test-results/playwright-production/
+            test-results/playwright-i18n/
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

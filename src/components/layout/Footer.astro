@@ -19,7 +19,6 @@
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
 import {
-  getNavItems,
   getFooterNavItems,
   getLegalLinks,
   getFooterLinkGroups, // FireStone: Import the new global getter
@@ -32,7 +31,7 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
 import giantLogoRaw from '@/assets/firestone-text-gradient.svg?raw'; // FireStone: Import the giant logo SVG as raw string
-import { getLocaleFromPath, t } from '@/i18n';
+import { getLocaleFromPath, t, localizedPath } from '@/i18n';
 
 export interface NavItem {
   label: string;
@@ -86,7 +85,7 @@ interface Props extends HTMLAttributes<'footer'> {
   // FireStone: [Add '8xl' and '9xl' to the props interface]
   maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl' | 'full';
   // FireStone: Added explicit props for the Smart Breadcrumb Engine
-  /** 如果传入，将覆盖自动生成的面包屑 */
+  /** Page-owned breadcrumb hierarchy. No automatic URL inference. */
   breadcrumbs?: { label: string; href?: string }[];
   /** 强制隐藏面包屑（如首页默认隐藏） */
   hideBreadcrumbs?: boolean;
@@ -103,10 +102,10 @@ const {
   background = 'glow',
   nav,
   linkGroups = getFooterLinkGroups(locale),// FireStone: Fallback to global link groups instead of an empty array
-  socialLinks = resolveSocialLinks(siteConfig.socialLinks),
+  socialLinks = resolveSocialLinks(siteConfig.socialLinks, locale),
   showSocial = true,
   showCopyright = true,
-  copyright = 'Copyright © {year} FireStone. All Rights Reserved.',
+  copyright = t('footer.copyright', locale),
   legalLinks,
   hideLogo = false,
   tagline = '',
@@ -169,58 +168,8 @@ const cleanGiantLogoSvg = safeGiantLogoStr
       .replace(/^<svg/, '<svg class="w-full h-auto text-foreground" fill="currentColor"')
   : null;
 
-// =========================================================================
-// Auto-Routing Breadcrumb
-// =========================================================================
-const currentPath = Astro.url.pathname;
-const isHomePage = currentPath === '/' || currentPath === '/en-US' || currentPath === '/en-US/';
-
-let resolvedBreadcrumbs = explicitBreadcrumbs;
-
-// 如果没有手动传入，且不是首页，且没有被强制隐藏，则开启自动生成
-if (!resolvedBreadcrumbs && !hideBreadcrumbs && !isHomePage) {
-  // 1. 构建全局路由字典 (合并头部导航和底部导航)
-  const dict: Record<string, string> = { '/': '首页', '/en-US': 'Home', '/en-US/': 'Home' };
-  const allNavs = [...getNavItems(locale), ...getFooterLinkGroups(locale).flatMap(g => g.links)];
-  allNavs.forEach(item => {
-    const normalized = item.href.replace(/\/$/, ''); // 去除末尾斜杠以统配
-    dict[normalized] = item.label;
-  });
-
-  // 2. 切分当前路径
-  const segments = currentPath.replace(/\/$/, '').split('/').filter(Boolean);
-  
-  // 3. 处理多语言前缀基准
-  let basePath = '';
-  let startIndex = 0;
-  if (segments[0] === 'en-US') {
-    basePath = '/en-US';
-    startIndex = 1;
-    resolvedBreadcrumbs = [{ label: 'Home', href: '/en-US' }];
-  } else {
-    resolvedBreadcrumbs = [{ label: '首页', href: '/' }];
-  }
-
-  // 4. 逐级生成层级
-  let pathAcc = basePath;
-  for (let i = startIndex; i < segments.length; i++) {
-    const seg = segments[i];
-    pathAcc += '/' + seg;
-    
-    // 查字典，如果字典里没有（比如动态页面的最后一级），则首字母大写作为 fallback
-    let label = dict[pathAcc];
-    if (!label) {
-      label = seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ');
-    }
-    
-    resolvedBreadcrumbs.push({
-      label,
-      href: i === segments.length - 1 ? undefined : pathAcc // 最后一级没有链接
-    });
-  }
-}
-
-// 最终判定是否渲染：有数据且至少有两级（排除只有"首页"的情况）
+// Page layouts own the hierarchy; Footer only renders it.
+const resolvedBreadcrumbs = explicitBreadcrumbs;
 const showBreadcrumbs = resolvedBreadcrumbs && resolvedBreadcrumbs.length > 1 && !hideBreadcrumbs;
 
 // Compute footer classes
@@ -272,7 +221,7 @@ const footerClasses = cn(footerVariants({ background }), className);
             {hasLogoSlot ? (
               <slot name="logo" />
             ) : (
-              <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+              <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
                 <Logo size="md" class="text-foreground hdr-logo-glow" />
               </a>
             )}
@@ -310,7 +259,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                   class="transition-colors text-foreground-muted hover:text-foreground"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={social.label || `在 ${social.key} 上关注我`}
+                  aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
                 >
                   <Icon name={social.icon} size="md" />
                 </a>
@@ -336,7 +285,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+                <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
                   <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
@@ -348,7 +297,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {/* Social Links in columns layout */}
               {showSocial && socialLinks.length > 0 && (
                 <div class="flex flex-col gap-2.5 pt-2">
-                  <p class="footer-social-link-intro">社交媒体</p>
+                  <p class="footer-social-link-intro">{t('footer.socialMedia', locale)}</p>
                   <div class="flex items-center gap-[var(--space-stack-md)]">
                     {socialLinks.map((social) => (
                       <a
@@ -356,7 +305,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                         class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={social.label || `Follow us on ${social.key}`}
+                        aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
                       >
                         <Icon name={social.icon} size="md" />
                       </a>
@@ -468,7 +417,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+                <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
                   <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
@@ -480,7 +429,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {/* 社交媒体：加入 flex-wrap 保证极端 4:3 屏幕下自动折行不溢出 */}
               {showSocial && socialLinks.length > 0 && (
                 <div class="flex flex-col gap-3 pt-2">
-                  <p class="footer-social-link-intro">社交媒体</p>
+                  <p class="footer-social-link-intro">{t('footer.socialMedia', locale)}</p>
                   <div class="flex flex-wrap items-center gap-[var(--space-stack-md)]">
                     {socialLinks.map((social) => (
                       <a
@@ -488,7 +437,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                         class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={social.label || `在 ${social.key} 上关注 FireStone`}
+                        aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
                       >
                         <Icon name={social.icon} size="md" />
                       </a>
@@ -614,7 +563,7 @@ const footerClasses = cn(footerVariants({ background }), className);
           hasLogoSlot ? (
             <slot name="logo" />
           ) : (
-            <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+            <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
               <Logo size="md" class="text-foreground hdr-logo-glow" />
             </a>
           )
@@ -650,7 +599,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                 class="transition-colors text-foreground-muted hover:text-foreground"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={social.label || `Follow us on ${social.key}`}
+                aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
               >
                 <Icon name={social.icon} size="md" />
               </a>

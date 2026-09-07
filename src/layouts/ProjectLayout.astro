@@ -1,4 +1,6 @@
 ---
+import { withLocaleFallback } from '@/lib/locale-fallback';
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
 import type { ImageMetadata, MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import type { GallerySlide } from '@/lib/gallery';
@@ -13,10 +15,10 @@ import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { getProjectOgPath } from '@/lib/og';
-import { getLocaleFromPath, localizedPath, getLocales } from '@/i18n';
+import { getLocaleFromPath, localizedPath, getLocales, t } from '@/i18n';
 import {
   getProjectSlug,
-  getProjectsBaseUrl,
+  getProjectUrl,
   getProjectTranslations,
 } from '@/lib/projects';
 
@@ -70,7 +72,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 // Prefer the project's own image; otherwise serve the per-project dynamic OG
 // image (see src/pages/og/projects/[slug].svg.ts).
 const ogSlug = slug ? getProjectSlug(slug, locale) : '';
-const ogImage = image?.src || (ogSlug ? getProjectOgPath(ogSlug) : siteConfig.ogImage);
+const ogImage = (image && image.format !== 'svg' ? image.src : undefined) || (ogSlug ? getProjectOgPath(ogSlug, locale) : siteConfig.ogImage);
 
 // Mirror the blog TOC wiring — projects use the same site-wide config.
 const tocConfig = siteConfig.articleFeatures?.toc;
@@ -80,11 +82,7 @@ const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto
 const inlineActive = showToc && tocLayout === 'inline';
 const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
 
-const breadcrumbs = [
-  { label: '首页', href: localizedPath('/', locale) },
-  { label: '项目', href: getProjectsBaseUrl(locale) },
-  { label: title },
-];
+const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'projects');
 
 // Resolve this project's real per-locale URLs for hreflang tags and the LanguageSwitcher.
 const projectTranslations = slug
@@ -92,18 +90,19 @@ const projectTranslations = slug
   : [];
 const translationByLocale = new Map(projectTranslations.map((tr) => [tr.locale, tr.url]));
 const languageAlternates = Object.fromEntries(
-  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? getProjectsBaseUrl(loc)])
+  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? withLocaleFallback(Astro.url.pathname, locale, loc)])
 );
 
 const localizedHeadings = headings.map((heading) =>
   heading.slug === 'footnote-label'
-    ? { ...heading, text: '尾注' }
+    ? { ...heading, text: t('common.footnotes', locale) }
     : heading
 );
 ---
 
 <BaseLayout
-  title={`${title} | 项目`}
+  breadcrumbs={breadcrumbs}
+  title={`${title} | ${t('projects.title', locale)}`}
   description={description}
   image={ogImage}
   imageAlt={imageAlt || title}
@@ -146,7 +145,7 @@ const localizedHeadings = headings.map((heading) =>
           : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
       ]}>
         {sidebarActive && sidebarOnLeft && (
-          <aside class="hidden xl:block" aria-label="Table of contents">
+          <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
             <TableOfContents
               headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
@@ -172,15 +171,15 @@ const localizedHeadings = headings.map((heading) =>
           </div>
 
           <footer class="border-border mt-12 border-t pt-8" data-reveal>
-            <Button href="/projects" variant="secondary" size="sm">
+            <Button href={localizedPath('/projects', locale)} variant="secondary" size="sm">
               <Icon name="chevron-left" size="sm" />
-              返回「项目」
+              {t('projects.backToProjects', locale)}
             </Button>
           </footer>
         </div>
 
         {sidebarActive && !sidebarOnLeft && (
-          <aside class="hidden xl:block" aria-label="Table of contents">
+          <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
             <TableOfContents
               headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
@@ -195,14 +194,14 @@ const localizedHeadings = headings.map((heading) =>
     {related.length > 0 && (
       <section class="py-[var(--space-section-md)] bg-background" data-reveal>
         <div class="mx-auto max-w-8xl px-6">
-          <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8">更多项目</h2>
+          <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8">{t('projects.moreProjects', locale)}</h2>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((project) => (
               <Card
                 variant="elevated"
                 hover
                 padding="none"
-                href={project.data.placeholder ? undefined : `/projects/${project.id.replace(/\.mdx?$/, '')}`}
+                href={project.data.placeholder ? undefined : getProjectUrl(project.id, project.data.locale)}
                 class="group flex flex-col"
               >
                 <div class="flex flex-1 flex-col p-6">

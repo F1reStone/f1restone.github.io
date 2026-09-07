@@ -1,4 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import config from '@/config/i18n.config';
+const originalEnabled = config.enabled;
+beforeEach(() => { config.enabled = false; });
+afterEach(() => { config.enabled = originalEnabled; });
 import {
   t,
   localizedPath,
@@ -92,7 +96,8 @@ describe('i18n stripLocaleFromPath()', () => {
 });
 
 describe('i18n swapLocaleInPath()', () => {
-  it('swaps the locale in a path', () => {
+  it('swaps the locale in a path when enabled', () => {
+    config.enabled = true;
     // Default locale (zh-CN): no prefix
     expect(swapLocaleInPath('/about', 'zh-CN')).toBe('/about');
     expect(swapLocaleInPath('/en-US/about', 'zh-CN')).toBe('/about');

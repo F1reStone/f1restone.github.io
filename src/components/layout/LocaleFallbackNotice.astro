@@ -1,0 +1,35 @@
+---
+import { getLocaleFromPath, getLocales, getLocaleName, isEnabled, localizedPath, t } from '@/i18n';
+
+const currentLocale = getLocaleFromPath(Astro.url.pathname);
+const section = Astro.url.pathname.startsWith('/blog/') ? 'blog' : Astro.url.pathname.startsWith('/projects/') ? 'projects' : null;
+---
+
+{isEnabled() && (
+  <div data-locale-fallback hidden class="fixed bottom-4 left-4 right-4 z-[70] mx-auto max-w-xl rounded-xl border border-border bg-background p-4 text-foreground shadow-xl" role="status">
+    {getLocales().filter(locale => locale !== currentLocale).map(locale => (
+      <template data-fallback-locale={locale}>
+        <div lang={locale} class="flex items-start gap-4">
+          <div class="flex-1 text-sm">
+            <p>{t(section === 'blog' ? 'localeFallback.article' : 'localeFallback.page', locale, { language: getLocaleName(currentLocale) })}</p>
+            <a class="mt-2 inline-block underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring" href={localizedPath(section ? `/${section}` : '/', locale)}>{t(section === 'blog' ? 'localeFallback.backToBlog' : section === 'projects' ? 'localeFallback.backToProjects' : 'localeFallback.backToHome', locale)}</a>
+          </div>
+          <button type="button" data-dismiss-fallback class="rounded px-2 focus-visible:ring-2 focus-visible:ring-ring" aria-label={t('common.dismiss', locale)}>×</button>
+        </div>
+      </template>
+    ))}
+    <div data-fallback-content></div>
+    <script is:inline>
+      (() => {
+        const notice = document.querySelector('[data-locale-fallback]');
+        if (!notice) return;
+        const requested = new URLSearchParams(location.search).get('requestedLocale');
+        const template = [...notice.querySelectorAll('template')].find(item => item.dataset.fallbackLocale === requested);
+        if (!template) return;
+        notice.querySelector('[data-fallback-content]').append(template.content.cloneNode(true));
+        notice.hidden = false;
+        notice.querySelector('[data-dismiss-fallback]').addEventListener('click', () => { notice.hidden = true; });
+      })();
+    </script>
+  </div>
+)}

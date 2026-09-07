@@ -46,7 +46,7 @@ interface ContentEntryLike {
  */
 export function localeStrippedSlug(id: string, locale: string): string {
   const prefix = `${locale}/`;
-  return id.startsWith(prefix) ? id.slice(prefix.length) : id;
+  return id.toLowerCase().startsWith(prefix.toLowerCase()) ? id.slice(prefix.length) : id;
 }
 
 /**
@@ -151,7 +151,7 @@ export async function assertNoSlugCollisions(): Promise<void> {
   const publishablePosts = posts.filter((post) => post.data.draft !== true);
   const publishableProjects = projects.filter((project) => project.data.draft !== true);
   const collisions = findSlugCollisions(
-    collectSlugRecords(publishablePosts, pages, publishableProjects)
+    collectSlugRecords(publishablePosts, pages.filter(page => page.data.draft !== true), publishableProjects)
   );
 
   if (collisions.length > 0) {

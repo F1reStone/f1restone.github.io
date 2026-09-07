@@ -12,6 +12,6 @@ const schemas = Array.isArray(schema) ? schema : [schema];
 
 {
   schemas.map((s) => (
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(s, null, 0)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(s).replace(/</g, '\\u003c')} />
   ))
 }

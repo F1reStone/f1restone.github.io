@@ -9,7 +9,7 @@ valuable: inspect them, work with them, and do not reset or discard them.
 - FireStone 火石 is a Chinese portfolio, project showcase, and technical blog.
 - It is a customized Astro Rocket fork. The site is statically built and
   deployed to Cloudflare; the canonical site URL is `https://fire-stone.co/`.
-- Stack: Astro 7.1, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
+- Stack: Astro 7.3, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
   Pagefind, and pnpm. Node must satisfy `>=22.12.0`.
 - The default locale is `zh-CN`. Native Astro i18n is currently disabled in
   `src/config/i18n.config.ts`, although locale-aware routes and content support
@@ -26,9 +26,11 @@ pnpm dev             # local development server, usually http://localhost:4321
 pnpm check           # Astro and TypeScript diagnostics
 pnpm lint            # ESLint
 pnpm test            # Vitest
+pnpm test:run        # Vitest, one run without watch mode
+pnpm test:i18n       # isolated bilingual build and browser checks; restores config
 pnpm test:e2e        # Playwright
 pnpm build           # production build plus Pagefind index
-pnpm validate        # lint, check, and build
+pnpm validate        # lint, check, unit tests, and build
 pnpm format:check    # Prettier verification
 ```
 

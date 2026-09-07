@@ -1,0 +1,10 @@
+---
+import HomeView from '@/components/pages/views/HomeView.astro';
+import { getSecondaryLocales } from '@/i18n';
+export function getStaticPaths() {
+  return getSecondaryLocales().map(locale => ({ params: { locale } }));
+}
+const { locale } = Astro.params;
+---
+
+<HomeView locale={locale} />

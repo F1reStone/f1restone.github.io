@@ -1,4 +1,6 @@
 ---
+import { t, getLocaleFromPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 /**
  * Dialog Component
  * Accessible modal dialog with focus trap and keyboard navigation
@@ -61,7 +63,7 @@ const sizes = {
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         )}
         data-dialog-close
-        aria-label="关闭对话框"
+        aria-label={t('common.closeDialog', locale)}
       >
         <Icon name="x" class="w-5 h-5" />
       </button>

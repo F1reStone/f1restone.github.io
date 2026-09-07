@@ -97,6 +97,11 @@ export async function getProjectPageCount(locale: string = defaultLocale): Promi
   return Math.max(1, Math.ceil(projects.length / PROJECTS_PER_PAGE));
 }
 
+/** Published entries with a detail page; solo projects keep their dedicated route. */
+export async function getRoutableProjects(locale: string = defaultLocale) {
+  return (await getVisibleProjects(locale)).filter(project => !project.data.placeholder);
+}
+
 /**
  * Resolve a project's real per-locale URLs by matching slugs across locales.
  * Projects share one slug across locales (one folder per locale, same filename),
@@ -117,7 +122,7 @@ export async function getProjectTranslations(
     const match = all.find(
       (p) => p.data.locale === locale && getProjectSlug(p.id, locale) === slug,
     );
-    if (match) results.push({ locale, url: getProjectUrl(match.id, locale) });
+    if (match && !match.data.placeholder && (!match.data.soloPage || locale === defaultLocale)) results.push({ locale, url: getProjectUrl(match.id, locale) });
   }
   return results;
 }

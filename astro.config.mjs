@@ -1,3 +1,7 @@
+import { existsSync } from 'node:fs';
+import { generateOgImages } from './scripts/og-images.mjs';
+import { readdir, readFile } from 'node:fs/promises';
+import { canonicalOf, jsonLdUrlOf, siteUrlDisagreement, disagreementMessage } from './scripts/site-url-agreement.mjs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, envField } from 'astro/config';
@@ -68,11 +72,54 @@ for (const [locale, texts] of Object.entries(expressiveCodeFrameTexts)) {
   pluginFramesTexts.addLocale(locale, texts);
 }
 
+function verifySiteUrl() {
+  return {
+    name: 'verify-site-url',
+    hooks: {
+      'astro:build:done': async ({ dir, logger }) => {
+        const root = fileURLToPath(dir);
+
+        async function htmlFiles(directory) {
+          const found = [];
+          for (const entry of await readdir(directory, { withFileTypes: true })) {
+            const path = join(directory, entry.name);
+            if (entry.isDirectory()) found.push(...(await htmlFiles(path)));
+            else if (entry.name.endsWith('.html')) found.push(path);
+          }
+          return found;
+        }
+
+        // index.html first: it is the page most likely to carry both, and
+        // finding it there avoids reading the rest of the site.
+        const pages = await htmlFiles(root);
+        pages.sort((a, b) => Number(b.endsWith('index.html')) - Number(a.endsWith('index.html')));
+
+        for (const page of pages) {
+          const html = await readFile(page, 'utf8');
+          const canonical = canonicalOf(html);
+          const jsonLd = jsonLdUrlOf(html);
+          if (!canonical || !jsonLd) continue; // proves nothing either way
+
+          const found = siteUrlDisagreement(html);
+          if (found) throw new Error(disagreementMessage(page.replace(`${root}`, ''), found));
+
+        }
+
+        logger.info(`checked canonical and JSON-LD site addresses across ${pages.length} pages`);
+      },
+    },
+  };
+}
+
+for (const file of ['.env.local', '.env']) {
+  if (existsSync(file)) process.loadEnvFile(file);
+}
+
 export default defineConfig({
   output: 'static',
   //adapter: isNetlify ? netlify() : vercel(),
   //site: process.env.SITE_URL || 'https://fire-stone.co/',
-  site: 'https://fire-stone.co/',
+  site: process.env.SITE_URL || 'https://fire-stone.co/',
   base: '/',// FireStone: Adapt for GitHub Pages deployment.
   ...(astroI18nOptions ? { i18n: astroI18nOptions } : {}),
 
@@ -93,6 +140,8 @@ export default defineConfig({
       SITE_URL: envField.string({ context: 'server', access: 'public', optional: true }),
       PUBLIC_GA_MEASUREMENT_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GTM_ID: envField.string({ context: 'client', access: 'public', optional: true }),
+      PUBLIC_UMAMI_WEBSITE_ID: envField.string({ context: 'client', access: 'public', optional: true }),
+      PUBLIC_UMAMI_SRC: envField.string({ context: 'client', access: 'public', default: 'https://cloud.umami.is/script.js' }),
       RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_FROM_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       NEWSLETTER_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
@@ -124,9 +173,13 @@ export default defineConfig({
       },
     }),
     mdx(),
-    sitemap(),
+    sitemap({ filter: (page) => !['/components/', '/404/'].includes(new URL(page).pathname) }),
     icon(),
     pagefind(),
+    { name: 'firestone-og-images', hooks: { 'astro:build:done': async ({ dir, logger }) => {
+      logger.info(`generated ${await generateOgImages(fileURLToPath(dir))} PNG sharing images`);
+    } } },
+    verifySiteUrl(),
   ],
 
   vite: {

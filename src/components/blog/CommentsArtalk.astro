@@ -37,12 +37,12 @@ const jsUrl = artalk?.jsUrl?.trim() || (server ? `${server}/dist/Artalk.js` : ''
 const adaptiveDarkMode = artalk?.darkMode === undefined;
 
 // Empty (or unset) means "follow the site's current locale".
-const artalkLocale = artalk?.locale?.trim() ? artalk.locale.trim() : locale;
+const artalkLocale = artalk?.locale?.trim() ? artalk.locale.trim() : (locale === 'en-US' ? 'en' : locale);
 ---
 
 {
   isConfigured && (
-    <section id="comments" class="mx-auto mt-12 max-w-4xl px-6" aria-label={commentsTitle}>
+    <section id="comments" class="mx-auto mt-12 max-w-8xl px-6" aria-label={commentsTitle}>
       <h2 class="text-foreground mb-4 text-xl font-semibold">{commentsTitle}</h2>
       <div
         class="artalk-mount"

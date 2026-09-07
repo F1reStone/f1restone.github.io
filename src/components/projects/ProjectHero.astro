@@ -1,4 +1,6 @@
 ---
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 import type { ImageMetadata } from 'astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
@@ -136,13 +138,13 @@ const hasMedia = slides.length > 0;
             {url && (
               <Button href={url} target="_blank" rel="noopener noreferrer" size="md">
                 <Icon name="globe" size="sm" />
-                访问网站
+                {t('projects.visitWebsite', locale)}
               </Button>
             )}
             {repo && (
               <Button href={repo} target="_blank" rel="noopener noreferrer" variant="outline" size="md">
                 <Icon name="github" size="sm" />
-                访问源代码
+                {t('projects.viewSource', locale)}
                 <Icon name="arrow-up-right" size="xs" />
               </Button>
             )}

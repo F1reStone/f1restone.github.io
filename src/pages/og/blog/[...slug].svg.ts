@@ -2,15 +2,15 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { renderOgSvg } from '@/lib/og';
 import { getPostSlug } from '@/lib/blog';
-import { defaultLocale } from '@/i18n';
+import { defaultLocale, isEnabled, getLocales } from '@/i18n';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('blog', ({ data }) => {
-    return data.locale === defaultLocale && (import.meta.env.PROD ? data.draft !== true : true);
+    return (data.locale === defaultLocale || (isEnabled() && getLocales().includes(data.locale))) && (import.meta.env.PROD ? data.draft !== true : true);
   });
 
   return posts.map((post) => ({
-    params: { slug: getPostSlug(post.id, post.data.locale) },
+    params: { slug: (post.data.locale === defaultLocale ? '' : post.data.locale + '/') + getPostSlug(post.id, post.data.locale) },
     props: {
       title: post.data.title,
       description: post.data.description,

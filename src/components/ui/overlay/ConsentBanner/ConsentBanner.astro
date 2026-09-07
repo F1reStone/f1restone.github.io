@@ -37,12 +37,12 @@ const consentEnabled = PUBLIC_CONSENT_ENABLED;
 const privacyPolicyUrl = PUBLIC_PRIVACY_POLICY_URL;
 const locale = getLocaleFromPath(Astro.url.pathname);
 
-// Resolve a consent label: i18n dictionary → config override → config default → English fallback.
+// Explicit component copy wins; normal copy comes from the active dictionary.
 function consentT(key: string, configValue: string | undefined, englishFallback: string): string {
+  if (uiOverrides?.[key as keyof ConsentUIText]) return uiOverrides[key as keyof ConsentUIText] as string;
   const i18nVal = t(`consent.${key}`, locale);
   // i18n returned the key itself → no translation found; fall down the chain
   if (i18nVal !== `consent.${key}`) return i18nVal;
-  if (uiOverrides?.[key as keyof ConsentUIText]) return uiOverrides[key as keyof ConsentUIText] as string;
   if (configValue) return configValue;
   return englishFallback;
 }
@@ -80,7 +80,7 @@ for (const [key, cat] of Object.entries(consentConfig.categories)) {
 const categoryGcmMapJson = JSON.stringify(categoryGcmMap);
 
 // Serialize config for client-side use
-const configJson = JSON.stringify(consentConfig);
+const configJson = JSON.stringify({ version: consentConfig.version, mode: consentConfig.mode, storageKey: consentConfig.storageKey, showDelay: consentConfig.showDelay, categories: consentConfig.categories });
 
 // FireStone: 智能替换 {privacyPolicy} 占位符机制
 // 将 consent.config.ts 中写好的文本转换为带有 Tailwind 样式的超链接。

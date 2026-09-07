@@ -14,6 +14,7 @@
  */
 import { localizedPath, defaultLocale, getLocales } from '@/i18n';
 import { localeStrippedSlug } from './content-validation';
+import { withLocaleFallback } from './locale-fallback';
 
 /** A post resolved from its canonical id, within one locale. */
 export interface ResolvedPost {
@@ -172,7 +173,7 @@ export async function resolvePostUrl(
   }
 
   return {
-    url: localizedPath(`/blog/${resolved.slug}`, locale),
+    url: withLocaleFallback(localizedPath(`/blog/${resolved.slug}`, byLocale.has(locale) ? locale : defaultLocale), byLocale.has(locale) ? locale : defaultLocale, locale),
     title: resolved.title,
   };
 }

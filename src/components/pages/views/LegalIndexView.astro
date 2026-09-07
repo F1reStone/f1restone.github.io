@@ -1,0 +1,108 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Hero } from '@/components/hero';
+import Header from '@/components/layout/Header.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import Footer from '@/components/layout/Footer.astro';
+import Card from '@/components/ui/data-display/Card/Card.astro';
+import { getLegalPages } from '@/lib/legal';
+
+const legalPages = await getLegalPages('zh-CN');
+
+const breadcrumbs = [
+  { label: '首页', href: '/' },
+  { label: '法律信息', href: '/legal' },
+];
+---
+
+<BaseLayout
+  breadcrumbs={breadcrumbs}
+  title="法律信息"
+  description="查看本网站的隐私政策、使用条款与相关说明。"
+>
+  <Header
+    slot="header"
+    position="fixed"
+    shape="bar"
+    showCta={false}
+    maxWidth="8xl"
+  />
+
+  <main class="min-h-screen">
+    <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
+      <Badge slot="badge" variant="brand" pill>
+        <Icon name="shield-check" size="sm" />
+        法律信息
+      </Badge>
+
+      <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+        <span class="hero-title-text">Legal Information</span>
+      </h1>
+
+      <p slot="description" class="hero-description-text">与 FireStone 网站相关的法律信息。</p>
+
+      <p class="text-sm text-foreground-muted"> 共 {legalPages.length} 项 </p>
+    </Hero>
+
+    <section class="mt-8 pb-[var(--space-section-md)]">
+      <div class="mx-auto max-w-8xl px-6">
+        {legalPages.length > 0 ? (
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {legalPages.map((page) => (
+              <Card
+                href={page.href}
+                variant="elevated"
+                padding="lg"
+                hover
+                class="group h-full transition-all duration-200"
+                data-reveal
+              >
+                <div class="flex h-full flex-col">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="min-w-0">
+                      <h3 class="font-display text-2xl font-bold text-foreground transition-colors group-hover:text-brand-500">
+                        {page.titleEn}
+                      </h3>
+
+                      {page.title && (
+                        <p class="mt-1 text-sm text-foreground-muted">
+                          {page.title}
+                        </p>
+                      )}
+                    </div>
+
+                    <span class="rounded-full border border-border bg-background p-3 text-foreground-muted transition-colors group-hover:text-brand-500">
+                      <Icon name="arrow-up-right" size="sm" />
+                    </span>
+                  </div>
+
+                  <p class="mt-4 flex-1 leading-7 text-foreground-muted">
+                    {page.description}
+                  </p>
+
+                  <div class="mt-6 border-t border-border pt-4 text-sm text-foreground-muted">
+                    最后更新于{' '}
+                    {page.updatedAt ? page.updatedAt.toLocaleDateString('zh-CN') : '未知时间'}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div class="py-16 text-center">
+            <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <Icon name="file-text" size="lg" class="text-foreground-muted" />
+            </div>
+            <p class="text-lg text-foreground-muted">未找到法律文档</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+
+  <Footer 
+    slot="footer" 
+    breadcrumbs={breadcrumbs} 
+  />
+</BaseLayout>

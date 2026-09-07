@@ -1,4 +1,4 @@
-import { defaultLocale } from '@/i18n';
+import { defaultLocale, t } from '@/i18n';
 /**
  * Format a date for display. Defaults to the site's default locale so dates
  * read correctly per language (e.g. "24 juni 2026" on a Dutch page, "2026年6月24日"
@@ -89,14 +89,14 @@ export interface ResolvedSocialLink {
   icon: string;
 }
 
-export function resolveSocialLinks(urls: string[]): ResolvedSocialLink[] {
+export function resolveSocialLinks(urls: string[], locale: string = defaultLocale): ResolvedSocialLink[] {
   // FireStone: [Optimized to map all URLs. Returns a fallback icon for unknown platforms]
   return urls.map((href) => {
     const platform = SOCIAL_PLATFORMS.find((p) => p.match.test(href));
     if (platform) {
-      return { key: platform.key, href, label: platform.label, icon: platform.icon };
+      return { key: platform.key, href, label: t(`social.${platform.key}`, locale), icon: platform.icon };
     }
     // Fallback for unknown links
-    return { key: 'link', href, label: 'Social', icon: 'link' };
+    return { key: 'link', href, label: t('footer.socialMedia', locale), icon: 'link' };
   });
 }

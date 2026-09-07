@@ -14,6 +14,9 @@
  * - Visuals and animations are aligned with the site's true Dialog component
  *   (src/components/ui/overlay/Dialog/Dialog.astro).
  */
+import { t, getLocaleFromPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
+const messages = { hint: t('search.hint', locale), noResults: t('search.noResults', locale), unavailable: t(import.meta.env.DEV ? 'search.devNotice' : 'search.unavailable', locale) };
 import { cn } from '@/lib/cn';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
@@ -26,7 +29,7 @@ const { class: className } = Astro.props;
 const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
-<div class={cn('search-wrapper', className)} data-search-modal-id={modalId}>
+<div class={cn('search-wrapper', className)} data-search-modal-id={modalId} data-messages={JSON.stringify(messages)}>
   <!-- Trigger — round icon button matching the hdr-glass-pill treatment used by
        ThemeModeDropdown, ThemeSelectorDropdown and LanguageSwitcher. -->
   <button
@@ -38,7 +41,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
     )}
     aria-haspopup="dialog"
     aria-controls={modalId}
-    aria-label="搜索"
+    aria-label={t('common.search', locale)}
   >
     <Icon name="search" size="sm" />
   </button>
@@ -49,7 +52,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
     class="search-modal fixed inset-0 z-[100] hidden"
     role="dialog"
     aria-modal="true"
-    aria-label="搜索"
+    aria-label={t('common.search', locale)}
     data-pagefind-ignore
   >
     <!-- FireStone: 统一步调的高级毛玻璃遮罩 -->
@@ -74,19 +77,19 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           <input
             type="search"
             class="search-input w-full bg-transparent py-5 text-base font-medium text-foreground placeholder:text-foreground-subtle focus:outline-none"
-            placeholder="搜索文章、项目或关键字..."
+            placeholder={t('search.placeholder', locale)}
             autocomplete="off"
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
             role="searchbox"
-            aria-label="搜索查询"
+            aria-label={t('common.search', locale)}
           />
           <button
             type="button"
             class="shrink-0 rounded-lg border border-border/50 bg-transparent px-2 py-1 text-[10px] font-mono font-bold uppercase text-foreground-muted hover:text-foreground hover:border-foreground hover:drop-shadow-[0_0_8px_currentColor] transition-all duration-300"
             data-search-close
-            aria-label="按下 Esc 以关闭搜索"
+            aria-label={t('common.closeDialog', locale)}
           >
             Esc
           </button>
@@ -96,11 +99,11 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         <div
           class="search-results max-h-[60vh] overflow-y-auto overscroll-contain p-3"
           role="listbox"
-          aria-label="搜索结果"
+          aria-label={t('search.results', locale)}
         >
           <!-- 规范化提示字号 -->
           <p class="search-hint px-3 py-10 text-center text-sm text-foreground-muted">
-            输入关键字以开始在网站上搜索。
+            {messages.hint}
           </p>
         </div>
       </div>
@@ -157,6 +160,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
     );
 
     wrappers.forEach((wrapper) => {
+      const messages = JSON.parse(wrapper.dataset.messages!);
       wrapper.dataset.searchInit = 'true';
 
       const trigger = wrapper.querySelector<HTMLButtonElement>('.search-trigger');
@@ -296,7 +300,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         const pf = await loadPagefind();
         if (!pf) {
           renderMessage(
-            '搜索索引是在构建时生成的，在 <code class="rounded-md border border-border/50 bg-secondary px-1.5 py-0.5 text-xs">astro dev</code> 中不可用。<br />运行 <code class="rounded-md border border-border/50 bg-secondary px-1.5 py-0.5 text-xs mt-2 inline-block">pnpm build &amp;&amp; pnpm preview</code> 以在本地尝试。'
+            escapeHtml(messages.unavailable)
           );
           return;
         }
@@ -306,7 +310,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         if (input.value.trim() !== query) return;
 
         if (search.results.length === 0) {
-          renderMessage(`没有找到关于「<span class="text-foreground font-semibold">${escapeHtml(query)}</span>」的结果。`);
+          renderMessage(escapeHtml(messages.noResults).replace('{query}', escapeHtml(query)));
           return;
         }
 
@@ -337,7 +341,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         if (debounce) window.clearTimeout(debounce);
         const query = input.value.trim();
         if (!query) {
-          renderMessage('输入关键字以开始在网站上搜索。');
+          renderMessage(escapeHtml(messages.hint));
           return;
         }
         debounce = window.setTimeout(() => renderResults(query), 150);

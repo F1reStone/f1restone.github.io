@@ -65,6 +65,10 @@ export function getTagUrl(tag: string, locale: string = defaultLocale): string {
   return localizedPath(`/blog/tag/${tagToSlug(tag)}`, locale);
 }
 
+export function getRssUrl(locale: string = defaultLocale): string {
+  return localizedPath('/rss.xml', locale);
+}
+
 /**
  * The non-default locales that should get their own prefixed blog routes
  * (`/<locale>/blog/...`). Empty when i18n is off or only one locale is

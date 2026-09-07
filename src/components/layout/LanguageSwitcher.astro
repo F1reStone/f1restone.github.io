@@ -13,12 +13,12 @@
  * The only script is for opening/closing the dropdown panel.
  */
 import { cn } from '@/lib/cn';
+import { getPageAlternates } from '@/lib/page-alternates';
 import {
   isEnabled as i18nIsEnabled,
   getLocales,
   getLocaleName,
   getLocaleFromPath,
-  swapLocaleInPath,
   t,
 } from '@/i18n';
 
@@ -31,7 +31,7 @@ interface Props {
    * When provided (e.g. by a blog post that knows its real per-locale URLs),
    * it overrides the default behaviour of swapping the locale segment of the
    * current path — which is wrong when a translation lives at a different slug.
-   * Locales missing from the map fall back to the path swap.
+   * Locales missing from the map are omitted.
    */
   alternates?: Record<string, string>;
 }
@@ -41,7 +41,8 @@ const { class: className, compact = false, alternates } = Astro.props;
 const enabled = i18nIsEnabled();
 const currentPath = Astro.url.pathname;
 const currentLocale = getLocaleFromPath(currentPath);
-const locales = enabled ? getLocales() : [];
+const resolvedAlternates = alternates ?? Object.fromEntries(getPageAlternates(currentPath).map(alt => [alt.locale, alt.url]));
+const locales = enabled ? getLocales().filter(locale => Boolean(resolvedAlternates[locale])) : [];
 
 const triggerLabel = t('nav.selectLanguage', currentLocale);
 const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
@@ -101,7 +102,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         aria-label={triggerLabel}
       >
         {locales.map((locale) => {
-          const href = alternates?.[locale] ?? swapLocaleInPath(currentPath, locale);
+          const href = resolvedAlternates[locale];
           const isActive = locale === currentLocale;
           return (
             <a
@@ -213,7 +214,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
       row.addEventListener('click', () => {
         const locale = row.getAttribute('data-locale');
         if (locale) {
-          localStorage.setItem('preferred_locale', locale);
+          try { localStorage.setItem('preferred_locale', locale); } catch { /* Storage may be unavailable. */ }
         }
       });
     });

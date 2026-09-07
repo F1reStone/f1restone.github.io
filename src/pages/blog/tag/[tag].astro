@@ -1,15 +1,9 @@
 ---
-import PageLayout from '@/layouts/PageLayout.astro';
-import BlogCard from '@/components/blog/BlogCard.astro';
-import TagList from '@/components/blog/TagList.astro';
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
-import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import Button from '@/components/ui/form/Button/Button.astro';
-import { Hero } from '@/components/hero';
+import BlogTagView from '@/components/blog/views/BlogTagView.astro';
+import { defaultLocale } from '@/i18n';
 import {
   collectTags,
   collectTopTags,
-  getPostUrl,
   getPublishedPosts,
   tagToSlug,
 } from '@/lib/blog';
@@ -41,73 +35,6 @@ export async function getStaticPaths() {
     }];
   });
 }
-
-const { tag, posts, visibleTags } = Astro.props;
 ---
 
-<PageLayout
-  title={`#${tag} 相关文章 | 博客`}
-  description={`带有 #${tag} 标签的文章。`}
-  eagerReveal
->
-  <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
-    <Badge slot="badge" variant="brand" pill>
-      <Icon name="tag" size="sm" />
-      标签
-    </Badge>
-    
-    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
-      <span class="hero-title-text">#{tag}</span>
-    </h1>
-
-    <p slot="description" class="hero-description-text">{posts.length} 篇文章带有 #{tag} 标签。</p>
-  </Hero>
-
-  <section class="bg-background py-[var(--space-section-md)]">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-      <div class="flex flex-col items-center gap-4" data-reveal>
-        <Button variant="outline" href="/blog/" data-reveal>
-          <Icon name="chevron-left" size="sm" />
-          返回「全部文章」
-        </Button>
-
-        {visibleTags.length > 0 && (
-          <TagList tags={visibleTags} active={tag} class="justify-center" />
-        )}
-      </div>
-
-      {posts.length > 0 ? (
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <BlogCard
-              title={post.data.title}
-              description={post.data.description}
-              body={post.body}
-              href={getPostUrl(post.id)}
-              publishedAt={post.data.publishedAt}
-              tags={post.data.tags}
-              author={post.data.author}
-              image={post.data.image}
-              svgSlug={post.data.svgSlug}
-              revealDelay={index % 3}
-              eager={index === 0}
-            />
-          ))}
-        </div>
-      ) : (
-        <div class="py-16 text-center">
-          <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-            <Icon name="file-text" size="lg" class="text-foreground-muted" />
-          </div>
-          <p class="text-foreground-muted text-lg">未找到带有此标签的文章。</p>
-          <div class="mt-6">
-            <Button href="/blog" variant="outline" size="sm">
-              <Icon name="chevron-left" size="sm" />
-              返回「全部文章」
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  </section>
-</PageLayout>
+<BlogTagView locale={defaultLocale} {...Astro.props} />

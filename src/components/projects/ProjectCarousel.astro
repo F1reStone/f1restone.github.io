@@ -8,6 +8,8 @@
  * - First slide loads eagerly, the rest lazy — Lighthouse-friendly on mobile
  */
 import { Picture } from 'astro:assets';
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 import { isVideoSlide, type GallerySlide } from '@/lib/gallery';
 
 interface Props {
@@ -16,7 +18,7 @@ interface Props {
   label?: string;
 }
 
-const { slides, label = 'Project screenshots' } = Astro.props;
+const { slides, label = t('projects.galleryLabel', locale) } = Astro.props;
 const carouselId = `carousel-${Math.random().toString(36).slice(2, 9)}`;
 const hasMultiple = slides.length > 1;
 const dotsWidth = 12 * (slides.length - 1) + 24;
@@ -27,7 +29,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
   data-carousel
   id={carouselId}
   role="region"
-  aria-roledescription="carousel"
+  aria-roledescription={t('projects.carousel', locale)}
   aria-label={label}
 >
   <div class="relative overflow-hidden rounded-3xl border border-border shadow-xl ring-1 ring-black/5 dark:ring-white/10">
@@ -41,8 +43,8 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
         <div
           class="carousel-slide w-full shrink-0 snap-center"
           role="group"
-          aria-roledescription="slide"
-          aria-label={`${i + 1} of ${slides.length}`}
+          aria-roledescription={t('projects.slide', locale)}
+          aria-label={t('projects.slideOf', locale, { number: i + 1, total: slides.length })}
           data-carousel-slide
           data-index={i}
         >
@@ -78,7 +80,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
         type="button"
         class="carousel-nav relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-background text-foreground shadow-sm transition-all hover:border-brand-500 hover:bg-background-secondary hover:text-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:pointer-events-none disabled:border-border disabled:text-foreground-muted"
         data-carousel-prev
-        aria-label="Previous slide"
+        aria-label={t('projects.carouselPreviousSlide', locale)}
         aria-controls={carouselId}
         disabled
       >
@@ -92,7 +94,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           <div
             class="relative h-1.5"
             role="tablist"
-            aria-label="Choose slide"
+            aria-label={t('projects.carouselChooseSlide', locale)}
             data-carousel-dots
             style={`width: ${dotsWidth}px;`}
           >
@@ -104,7 +106,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
                   data-carousel-dot
                   data-index={i}
                   role="tab"
-                  aria-label={`Go to slide ${i + 1}`}
+                  aria-label={t('projects.goToSlide', locale, { number: i + 1 })}
                   aria-selected={i === 0 ? 'true' : 'false'}
                   data-active={i === 0 ? 'true' : 'false'}
                 ></button>
@@ -124,7 +126,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
         type="button"
         class="carousel-nav relative z-10 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-background text-foreground shadow-sm transition-all hover:border-brand-500 hover:bg-background-secondary hover:text-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:pointer-events-none disabled:border-border disabled:text-foreground-muted"
         data-carousel-next
-        aria-label="Next slide"
+        aria-label={t('projects.carouselNextSlide', locale)}
         aria-controls={carouselId}
       >
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
