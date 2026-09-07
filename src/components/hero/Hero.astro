@@ -4,8 +4,8 @@ import { cn } from '@/lib/cn';
 import { heroSectionVariants } from './hero.variants';
 import HeroGrid from '@/components/effects/HeroGrid.astro';
 import HeroBeam from '@/components/effects/HeroBeam.astro';
-import HeroLogoField from '@/components/effects/HeroLogoField.astro';
-import type { HeroLogoFieldOptions } from '@/components/effects/hero-logo-field/types';
+import HeroEffect1 from '@/components/effects/HeroEffect1.astro';
+import type { HeroEffect1Options } from '@/components/effects/hero-effect-1/types';
 
 interface Props extends HTMLAttributes<'section'> {
   /** Layout mode: centered single column or split two-column */
@@ -20,10 +20,10 @@ interface Props extends HTMLAttributes<'section'> {
   showBlob?: boolean;
   /** Render the light-mode architectural grid + dark-mode halo behind the hero */
   showHeroHalo?: boolean;
-  /** Render the FireStone logo field hero atmosphere. */
-  showLogoField?: boolean;
-  /** Independent palette and motion parameters for the radial logo scene. */
-  logoField?: Partial<HeroLogoFieldOptions>;
+  /** Render the Figma Moving gradient shader through HeroEffect1. */
+  showEffect1?: boolean;
+  /** Original Figma gradient, geometry and animation controls. */
+  effect1?: Partial<HeroEffect1Options>;
   /** Blob position (only applies when showBlob is true) */
   blobPosition?: 'left' | 'right' | 'center';
   /** Fade the bottom of the section into the next section's background */
@@ -42,8 +42,8 @@ const {
   blobPosition: _blobPosition = 'center',
   showGlow = false,
   showHeroHalo = false,
-  showLogoField = false,
-  logoField,
+  showEffect1 = false,
+  effect1,
   bottomFade = false,
   showScrollIndicator = false,
   fullHeight = false,
@@ -60,7 +60,7 @@ const hasAsideSlot = Astro.slots.has('aside');
 const hasBottomSlot = Astro.slots.has('bottom');
 
 // Compute alignment based on layout
-const isCentered = showLogoField || layout === 'centered';
+const isCentered = layout === 'centered';
 const alignment = isCentered ? 'text-center items-center' : 'text-left items-start';
 
 // When a bottom slot is used in a full-height hero, lay the section out as a flex
@@ -81,237 +81,240 @@ const sectionClasses = cn(
   // Floored bottom slot (e.g. the homepage tech-stack marquee): flex column so the
   // slot floats to the floor with a guaranteed minimum gap above it.
   isFlooredBottom && 'flex flex-col gap-[var(--hero-floor-gap,4rem)]',
-  showLogoField && 'hero-logo-hero isolate',
-  showLogoField && fullHeight && 'hero-logo-full-height',
+  showEffect1 && 'hero-effect-1-hero isolate',
+  showEffect1 && fullHeight && 'hero-effect-1-full-height',
   className
 );
 
-const contentClasses = cn(
-  'z-10 flex flex-col',
-  alignment
-);
+const contentClasses = cn('z-10 flex flex-col', alignment);
 
 const gridClasses = cn(
   'mx-auto grid max-w-8xl grid-cols-1 items-center gap-[var(--space-section-gap)] px-6',
-  showLogoField && 'hero-logo-content-grid',
-  layout === 'split' && !showLogoField && 'lg:grid-cols-2 lg:gap-[var(--space-section-gap)]'
+  showEffect1 && layout === 'split' && 'hero-effect-1-content-grid',
+  layout === 'split' && !showEffect1 && 'lg:grid-cols-2 lg:gap-[var(--space-section-gap)]'
 );
 ---
 
 <section class={sectionClasses} {...attrs}>
-  {showLogoField && <HeroLogoField {...logoField} />}
+  {showEffect1 && <HeroEffect1 {...effect1} />}
   {showHeroHalo && <HeroGrid />}
   {showHeroHalo && <HeroBeam />}
 
-  {showGrid && (
-    <div
-      class="bg-grid-pattern pointer-events-none absolute inset-x-0 -inset-y-[20%] opacity-30 hidden md:dark:block"
-      style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"
-      aria-hidden="true"
-    />
-  )}
-
-  {showGlow && (
-    <>
-      <div class="pointer-events-none absolute left-1/2 top-1/4 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-500/15 blur-[120px] hidden dark:block" aria-hidden="true" />
-      <div class="pointer-events-none absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-brand-600/10 blur-[100px] hidden dark:block" aria-hidden="true" />
-    </>
-  )}
-
-  {showBlob && (
-    <>
+  {
+    showGrid && (
       <div
-        class="pointer-events-none absolute hidden dark:block dark:opacity-[0.20] rounded-full blur-[120px] h-[500px] w-[500px] -left-20 top-0 -translate-y-1/4"
-        style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
+        class="bg-grid-pattern pointer-events-none absolute inset-x-0 -inset-y-[20%] hidden opacity-30 md:dark:block"
+        style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"
         aria-hidden="true"
       />
+    )
+  }
+
+  {
+    showGlow && (
+      <>
+        <div
+          class="bg-brand-500/15 pointer-events-none absolute top-1/4 left-1/2 hidden h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px] dark:block"
+          aria-hidden="true"
+        />
+        <div
+          class="bg-brand-600/10 pointer-events-none absolute right-1/4 bottom-1/4 hidden h-[400px] w-[400px] rounded-full blur-[100px] dark:block"
+          aria-hidden="true"
+        />
+      </>
+    )
+  }
+
+  {
+    showBlob && (
+      <>
+        <div
+          class="pointer-events-none absolute top-0 -left-20 hidden h-[500px] w-[500px] -translate-y-1/4 rounded-full blur-[120px] dark:block dark:opacity-[0.20]"
+          style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
+          aria-hidden="true"
+        />
+        <div
+          class="pointer-events-none absolute top-0 -right-20 hidden h-[500px] w-[500px] -translate-y-1/4 rounded-full blur-[120px] dark:block dark:opacity-[0.20]"
+          style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
+          aria-hidden="true"
+        />
+      </>
+    )
+  }
+
+  {
+    bottomFade && (
       <div
-        class="pointer-events-none absolute hidden dark:block dark:opacity-[0.20] rounded-full blur-[120px] h-[500px] w-[500px] -right-20 top-0 -translate-y-1/4"
-        style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
+        class="to-background-secondary pointer-events-none absolute inset-x-0 bottom-0 hidden h-40 bg-gradient-to-b from-transparent dark:block"
         aria-hidden="true"
       />
-    </>
-  )}
+    )
+  }
 
-  {bottomFade && (
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background-secondary hidden dark:block" aria-hidden="true" />
-  )}
-
-
-  {showScrollIndicator && (
-    <div class="scroll-indicator-wrapper absolute bottom-4 left-1/2 -translate-x-1/2 z-10" aria-hidden="true">
-      <div class="scroll-indicator flex flex-col items-center gap-0.5">
-        <svg class="scroll-indicator-chevron w-7 h-7 text-white/60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 2L12 8L21 2" />
-        </svg>
+  {
+    showScrollIndicator && (
+      <div
+        class="scroll-indicator-wrapper absolute bottom-4 left-1/2 z-10 -translate-x-1/2"
+        aria-hidden="true"
+      >
+        <div class="scroll-indicator flex flex-col items-center gap-0.5">
+          <svg
+            class="scroll-indicator-chevron h-7 w-7 text-white/60"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 2L12 8L21 2" />
+          </svg>
+        </div>
       </div>
-    </div>
-  )}
+    )
+  }
 
   <div class={gridClasses}>
     {/* Content Column */}
-    <div class={cn(contentClasses, 'order-1 lg:order-none animate-hero-stagger', showLogoField && 'hero-logo-content')}>
-      {/* Badge Slot */}
-      {hasBadgeSlot && (
-        <div class="hero-badge-slot mb-[var(--space-heading-gap)]">
-          <slot name="badge" />
-        </div>
+    <div
+      class={cn(
+        contentClasses,
+        'order-1 lg:order-none animate-hero-stagger',
+        showEffect1 && 'hero-effect-1-content'
       )}
+    >
+      {/* Badge Slot */}
+      {
+        hasBadgeSlot && (
+          <div class="hero-badge-slot mb-[var(--space-heading-gap)]">
+            <slot name="badge" />
+          </div>
+        )
+      }
 
       {/* Title Slot */}
-      {hasTitleSlot && (
-        <div class={cn(
-          'hero-title-slot mb-[var(--space-heading-gap)]',
-          '[&>h1]:font-display [&>h1]:text-5xl [&>h1]:leading-[1.1] [&>h1]:font-bold [&>h1]:tracking-tight [&>h1]:text-balance [&>h1]:text-foreground md:[&>h1]:text-6xl lg:[&>h1]:text-7xl',
-          '[&>h2]:font-display [&>h2]:text-4xl [&>h2]:leading-[1.1] [&>h2]:font-bold [&>h2]:tracking-tight [&>h2]:text-balance [&>h2]:text-foreground md:[&>h2]:text-5xl lg:[&>h2]:text-6xl'
-        )}>
-          <slot name="title" />
-        </div>
-      )}
+      {
+        hasTitleSlot && (
+          <div
+            class={cn(
+              'hero-title-slot mb-[var(--space-heading-gap)]',
+              '[&>h1]:font-display [&>h1]:text-foreground [&>h1]:text-5xl [&>h1]:leading-[1.1] [&>h1]:font-bold [&>h1]:tracking-tight [&>h1]:text-balance md:[&>h1]:text-6xl lg:[&>h1]:text-7xl',
+              '[&>h2]:font-display [&>h2]:text-foreground [&>h2]:text-4xl [&>h2]:leading-[1.1] [&>h2]:font-bold [&>h2]:tracking-tight [&>h2]:text-balance md:[&>h2]:text-5xl lg:[&>h2]:text-6xl'
+            )}
+          >
+            <slot name="title" />
+          </div>
+        )
+      }
 
       {/* Description Slot */}
-      {hasDescriptionSlot && (
-        <div class={cn(
-          'hero-description-slot mb-[var(--space-stack-lg)] max-w-xl text-lg leading-relaxed text-foreground-muted',
-          '[&>p]:text-lg [&>p]:leading-relaxed [&>p]:text-foreground-muted',
-          isCentered && 'mx-auto'
-        )}>
-          <slot name="description" />
-        </div>
-      )}
+      {
+        hasDescriptionSlot && (
+          <div
+            class={cn(
+              'hero-description-slot text-foreground-muted mb-[var(--space-stack-lg)] max-w-xl text-lg leading-relaxed',
+              '[&>p]:text-foreground-muted [&>p]:text-lg [&>p]:leading-relaxed',
+              isCentered && 'mx-auto'
+            )}
+          >
+            <slot name="description" />
+          </div>
+        )
+      }
 
       {/* Actions Slot */}
-      {hasActionsSlot && (
-        <div class={cn(
-          'hero-actions-slot flex w-full flex-col gap-4 sm:w-auto sm:flex-row',
-          isCentered && 'justify-center'
-        )}>
-          <slot name="actions" />
-        </div>
-      )}
+      {
+        hasActionsSlot && (
+          <div
+            class={cn(
+              'hero-actions-slot flex w-full flex-col gap-4 sm:w-auto sm:flex-row',
+              isCentered && 'justify-center'
+            )}
+          >
+            <slot name="actions" />
+          </div>
+        )
+      }
 
       {/* Default slot for additional content (social proof, etc.) */}
       <slot />
     </div>
 
     {/* Aside Column (for split layout) */}
-    {layout === 'split' && hasAsideSlot && (
-      <div class="relative z-10 w-full order-2 lg:order-none">
-        <slot name="aside" />
-      </div>
-    )}
+    {
+      layout === 'split' && hasAsideSlot && (
+        <div class="relative z-10 order-2 w-full lg:order-none">
+          <slot name="aside" />
+        </div>
+      )
+    }
   </div>
 
-  {/* Bottom slot — e.g. the homepage tech-stack marquee, in place of the scroll
+  {
+    /* Bottom slot — e.g. the homepage tech-stack marquee, in place of the scroll
       indicator. In a full-height hero it's the last flex child, pushed to the
       floor with mt-auto so the content stays at the top and leftover height opens
       up between them; the section's column `gap` guarantees a minimum gap so it
-      never crowds on short windows. Outside full-height it falls back to absolute. */}
-  {hasBottomSlot && (
-    <div class={cn(
-      'hero-bottom-slot z-10 w-full',
-      isFlooredBottom ? 'relative mt-auto' : 'absolute inset-x-0 bottom-0'
-    )}>
-      <slot name="bottom" />
-    </div>
-  )}
+      never crowds on short windows. Outside full-height it falls back to absolute. */
+  }
+  {
+    hasBottomSlot && (
+      <div
+        class={cn(
+          'hero-bottom-slot z-10 w-full',
+          isFlooredBottom ? 'relative mt-auto' : 'absolute inset-x-0 bottom-0'
+        )}
+      >
+        <slot name="bottom" />
+      </div>
+    )
+  }
 </section>
 
 <style>
-  .hero-logo-hero {
-    --hero-logo-center-y: clamp(210px, 35svh, 430px);
-    --hero-logo-size: clamp(210px, 34svh, 400px);
-    --hero-logo-content-gap: 52px;
+  .hero-effect-1-hero {
     --color-foreground: #e9f3ff;
     --color-foreground-secondary: #cedbeb;
     --color-foreground-muted: #adbfd4;
     --color-background: #000102;
     --color-ring: #d5f2ff;
 
-    min-height: calc(100svh - 32px);
-    padding-block: calc(var(--hero-logo-center-y) + var(--hero-logo-size) / 2 + var(--hero-logo-content-gap)) 88px;
+    display: grid;
+    align-items: center;
     color: var(--color-foreground);
   }
 
-  .hero-logo-content-grid {
+  .hero-effect-1-content-grid {
     width: 100%;
-    max-width: 960px;
-    gap: 32px;
+    align-self: stretch;
   }
 
-  .hero-logo-content {
+  .hero-effect-1-content {
     min-width: 0;
     width: 100%;
   }
 
-  .hero-logo-hero .hero-title-slot {
-    width: 100%;
-    margin-bottom: 24px;
-  }
-
-  .hero-logo-hero .hero-badge-slot {
-    margin-bottom: 18px;
-  }
-
-  .hero-logo-hero .hero-badge-slot > :global(span),
-  .hero-logo-hero .hero-badge-slot > :global(a) {
+  .hero-effect-1-hero .hero-badge-slot > :global(span),
+  .hero-effect-1-hero .hero-badge-slot > :global(a) {
     color: var(--color-foreground-secondary);
     letter-spacing: 0;
     filter: none;
   }
 
-  .hero-logo-hero .hero-description-slot {
-    margin-bottom: 24px;
-  }
-
-  .hero-logo-hero .hero-description-slot:last-child {
-    margin-bottom: 0;
-  }
-
-  .hero-logo-hero .hero-actions-slot {
-    align-items: center;
-    width: auto;
-    max-width: 100%;
-    gap: 12px;
-  }
-
-  .hero-logo-hero .hero-actions-slot :global(a) {
-    max-width: 100%;
-  }
-
   @media (max-width: 767px) {
-    .hero-logo-hero {
-      --hero-logo-center-y: clamp(170px, 30svh, 250px);
-      --hero-logo-size: clamp(160px, 27svh, 230px);
-      --hero-logo-content-gap: 34px;
-
-      min-height: calc(100svh - 24px);
-      padding-bottom: 64px;
-    }
-
-    .hero-logo-content-grid {
+    .hero-effect-1-content-grid {
       padding-inline: 24px;
     }
 
-    .hero-logo-hero .hero-description-slot,
-    .hero-logo-hero .hero-description-slot :global(p) {
+    .hero-effect-1-hero .hero-description-slot,
+    .hero-effect-1-hero .hero-description-slot :global(p) {
       font-size: 16px;
       line-height: 1.65;
     }
   }
 
-  @media (max-height: 540px) and (min-width: 600px) {
-    .hero-logo-hero {
-      --hero-logo-center-y: 164px;
-      --hero-logo-size: 162px;
-      --hero-logo-content-gap: 24px;
-
-      padding-bottom: 40px;
-    }
-
-  }
-
-  .hero-logo-hero.hero-logo-full-height {
+  .hero-effect-1-hero.hero-effect-1-full-height {
     min-height: 100svh;
   }
 
@@ -329,7 +332,9 @@ const gridClasses = cn(
   /* Fade in after the hero slide-up animation completes */
   .scroll-indicator {
     animation: si-fade-in 0.6s ease-out 1.4s backwards;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
   }
 
   .scroll-indicator.is-hidden {
@@ -339,8 +344,14 @@ const gridClasses = cn(
   }
 
   @keyframes si-fade-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* First chevron bounces, second follows with a slight delay */
@@ -353,15 +364,24 @@ const gridClasses = cn(
   }
 
   @keyframes si-bounce {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(5px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5px);
+    }
   }
 
-
   @media (prefers-reduced-motion: reduce) {
-    .scroll-indicator              { animation: none; opacity: 1; }
+    .scroll-indicator {
+      animation: none;
+      opacity: 1;
+    }
     .scroll-indicator-chevron,
-    .scroll-indicator-chevron-2    { animation: none; }
+    .scroll-indicator-chevron-2 {
+      animation: none;
+    }
   }
 </style>
 

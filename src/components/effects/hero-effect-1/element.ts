@@ -1,8 +1,8 @@
-import { heroLogoFieldDefaults, type HeroLogoFieldOptions } from './types';
-import type { createLogoField } from './renderer';
+import { heroEffect1Defaults, type HeroEffect1Options } from './types';
+import type { createHeroEffect1 } from './renderer';
 
-class FirestoneLogoField extends HTMLElement {
-  private scene?: ReturnType<typeof createLogoField>;
+class FirestoneHeroEffect1 extends HTMLElement {
+  private scene?: Awaited<ReturnType<typeof createHeroEffect1>>;
   private abort?: AbortController;
   private resizeObserver?: ResizeObserver;
   private intersectionObserver?: IntersectionObserver;
@@ -20,16 +20,23 @@ class FirestoneLogoField extends HTMLElement {
     this.dataset.renderer = 'fallback';
     this.dataset.running = 'false';
     try {
-      const { createLogoField } = await import('./renderer');
+      const { createHeroEffect1 } = await import('./renderer');
       if (signal.aborted) return;
-      const options: HeroLogoFieldOptions = {
-        ...heroLogoFieldDefaults,
+      const options: HeroEffect1Options = {
+        ...heroEffect1Defaults,
         ...JSON.parse(this.dataset.options || '{}'),
       };
-      this.animated = Number.isFinite(options.speed) && options.speed > 0;
-      this.scene = createLogoField(this, options);
+      this.animated = options.morphSpeed > 0 || options.rotationSpeed > 0;
+      this.scene = await createHeroEffect1(this, options, signal, () => {
+        this.stop();
+        this.dataset.renderer = 'fallback';
+      });
+      if (signal.aborted) {
+        this.scene.dispose();
+        return;
+      }
       this.scene.resize();
-      this.dataset.renderer = 'webgl';
+      this.dataset.renderer = 'webgpu';
       this.resizeObserver = new ResizeObserver(() => this.scene?.resize());
       this.resizeObserver.observe(this);
       this.intersectionObserver = new IntersectionObserver(([entry]) => {
@@ -40,45 +47,12 @@ class FirestoneLogoField extends HTMLElement {
       window.addEventListener('firestone-effects-change', this.updateMotion, { signal });
       document.addEventListener('visibilitychange', this.updateMotion, { signal });
       this.reducedMotion.addEventListener('change', this.updateMotion, { signal });
-      this.addEventListener(
-        'firestone-hero-progress',
-        (event) => {
-          const progress = (event as CustomEvent<{ progress: number }>).detail?.progress;
-          if (
-            Number.isFinite(progress) &&
-            !this.reducedMotion.matches &&
-            document.documentElement.dataset.effectHero === 'dynamic'
-          ) {
-            this.scene?.setProgress(progress);
-          }
-        },
-        { signal }
-      );
-      this.scene.canvas.addEventListener(
-        'webglcontextlost',
-        (event) => {
-          event.preventDefault();
-          this.stop();
-          this.dataset.renderer = 'fallback';
-          if (this.scene) this.scene.canvas.style.visibility = 'hidden';
-        },
-        { signal }
-      );
-      this.scene.canvas.addEventListener(
-        'webglcontextrestored',
-        () => {
-          this.scene?.resize();
-          if (this.scene) this.scene.canvas.style.visibility = '';
-          this.dataset.renderer = 'webgl';
-          this.updateMotion();
-        },
-        { signal }
-      );
       this.updateMotion();
     } catch (error) {
       this.scene?.dispose();
       this.scene = undefined;
-      console.warn('Hero light trails are using the static fallback.', error);
+      if (signal.aborted) return;
+      console.warn('Hero gradient is using the static fallback.', error);
     }
   }
 
@@ -107,7 +81,7 @@ class FirestoneLogoField extends HTMLElement {
       this.reducedMotion.matches ||
       !this.visible ||
       document.hidden ||
-      this.dataset.renderer !== 'webgl'
+      this.dataset.renderer !== 'webgpu'
     ) {
       this.stop();
       return;
@@ -118,13 +92,13 @@ class FirestoneLogoField extends HTMLElement {
   };
 
   private tick = (time: number) => {
-    const delta = this.previousTime ? Math.min((time - this.previousTime) / 1000, 0.05) : 0;
+    const delta = this.previousTime ? Math.max(0, (time - this.previousTime) / 1000) : 0;
     this.previousTime = time;
     this.scene?.advance(delta);
     this.frame = requestAnimationFrame(this.tick);
   };
 }
 
-if (!customElements.get('firestone-logo-field')) {
-  customElements.define('firestone-logo-field', FirestoneLogoField);
+if (!customElements.get('firestone-hero-effect-1')) {
+  customElements.define('firestone-hero-effect-1', FirestoneHeroEffect1);
 }

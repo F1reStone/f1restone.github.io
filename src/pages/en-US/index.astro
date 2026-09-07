@@ -8,9 +8,7 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import TypingEffect from '@/components/ui/TypingEffect.astro';
 import { getCollection } from 'astro:content';
-import {
-  getPostUrl,
-} from '@/lib/blog';
+import { getPostUrl } from '@/lib/blog';
 
 const projectItems = await getCollection('projects');
 const featuredProjects = projectItems
@@ -34,13 +32,23 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   includeProfessionalServiceSchema={true}
 >
   <!-- Hero -->
-  <Hero layout="centered" size="xl" class="invert-section" fullHeight showLogoField showScrollIndicator>
-    <h1 slot="title" class="hero-title-wrapper relative z-10 !text-4xl tracking-normal sm:!text-6xl md:!text-7xl lg:!text-8xl">
-      <span class="hero-title-text whitespace-nowrap text-[0.6em]">To the</span><br />
+  <Hero
+    layout="split"
+    size="xl"
+    class="invert-section"
+    fullHeight
+    showEffect1
+    showScrollIndicator
+  >
+    <h1
+      slot="title"
+      class="hero-title-wrapper relative z-10 !text-4xl tracking-normal sm:!text-6xl md:!text-7xl lg:!text-8xl"
+    >
+      <span class="hero-title-text text-[0.6em] whitespace-nowrap">To the</span><br />
       <span class="hero-title-text">Infinite Future</span>
     </h1>
 
-   <Fragment slot="actions">
+    <Fragment slot="actions">
       <Button size="lg" href="/about">
         About me
         <Icon name="chevron-right" size="sm" />
@@ -53,23 +61,19 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </Hero>
 
   <!-- Portfolio -->
-  <section id="work" class="relative z-10 py-[var(--space-section-md)] bg-background">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
+  <section id="work" class="bg-background relative z-10 py-[var(--space-section-md)]">
+    <div class="max-w-8xl mx-auto flex flex-col gap-8 px-6">
       <div class="flex flex-col items-center gap-4 text-center" data-reveal>
         <div class="flex flex-col items-center gap-6">
-          <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-            项目与作品
-          </h2>
+          <h2 class="font-display text-foreground text-3xl font-bold md:text-4xl">项目与作品</h2>
         </div>
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
-        {featuredProjects.map((project, i) => (
-          <ProjectCard project={project} index={i} />
-        ))}
+        {featuredProjects.map((project, i) => <ProjectCard project={project} index={i} />)}
       </div>
 
-      <div class="text-center mt-4">
+      <div class="mt-4 text-center">
         <Button variant="outline" href="/projects">
           查看更多项目
           <Icon name="chevron-right" size="sm" />
@@ -79,18 +83,34 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </section>
 
   <!-- About Teaser -->
-  <section class="relative z-10 py-[var(--space-section-md)] bg-background">
-    <div class="mx-auto max-w-8xl px-6">
+  <section class="bg-background relative z-10 py-[var(--space-section-md)]">
+    <div class="max-w-8xl mx-auto px-6">
       <div class="grid gap-12 lg:grid-cols-2">
         <div class="flex flex-col justify-center" data-reveal="right" data-reveal-ease="smooth">
-          <div class="flex flex-col gap-6 mb-6">
+          <div class="mb-6 flex flex-col gap-6">
             <Badge variant="brand" pill class="self-start">关于 FireStone</Badge>
-            <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+            <h2 class="font-display text-foreground text-3xl font-bold md:text-4xl">
               一位兴趣使然的<br />
-              <span class="text-brand-500"><TypingEffect words={["业余设计师", "业余开发者", "内容创作者", "业余技术美术师", "《THE FINALS》选手", "奇袭者", "Sensei", "豪华版《战地风云 5》预购冤种", "（前）特勤干员", "《赛博朋克 2077》预购冤种", "《边境》首发冤种"]} /></span>
+              <span class="text-brand-500"
+                ><TypingEffect
+                  words={[
+                    '业余设计师',
+                    '业余开发者',
+                    '内容创作者',
+                    '业余技术美术师',
+                    '《THE FINALS》选手',
+                    '奇袭者',
+                    'Sensei',
+                    '豪华版《战地风云 5》预购冤种',
+                    '（前）特勤干员',
+                    '《赛博朋克 2077》预购冤种',
+                    '《边境》首发冤种',
+                  ]}
+                /></span
+              >
             </h2>
           </div>
-           <Button variant="outline" href="/about" class="self-start">
+          <Button variant="outline" href="/about" class="self-start">
             进一步了解
             <Icon name="chevron-right" size="sm" />
           </Button>
@@ -100,29 +120,29 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </section>
 
   <!-- Blog -->
-  <section class="relative z-10 py-[var(--space-section-md)] bg-background">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
+  <section class="bg-background relative z-10 py-[var(--space-section-md)]">
+    <div class="max-w-8xl mx-auto flex flex-col gap-8 px-6">
       <div class="flex flex-col items-center gap-6 text-center" data-reveal>
-        <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-          推荐文章
-        </h2>
+        <h2 class="font-display text-foreground text-3xl font-bold md:text-4xl">推荐文章</h2>
       </div>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post, index) => (
-          <BlogCard
-            title={post.data.title}
-            description={post.data.description}
-            href={getPostUrl(post.id)}
-            publishedAt={post.data.publishedAt}
-            tags={post.data.tags}
-            author={post.data.author}
-            image={post.data.image}
-            svgSlug={post.data.svgSlug}
-            revealDelay={index}
-            class={index === 3 ? 'hidden sm:block lg:hidden' : undefined}
-          />
-        ))}
+        {
+          posts.map((post, index) => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              href={getPostUrl(post.id)}
+              publishedAt={post.data.publishedAt}
+              tags={post.data.tags}
+              author={post.data.author}
+              image={post.data.image}
+              svgSlug={post.data.svgSlug}
+              revealDelay={index}
+              class={index === 3 ? 'hidden sm:block lg:hidden' : undefined}
+            />
+          ))
+        }
       </div>
 
       <div class="flex justify-center">
@@ -134,36 +154,40 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </div>
   </section>
 
-<script>
-  function initCountup() {
-    const counters = document.querySelectorAll<HTMLElement>('[data-countup]:not([data-countup-init])');
-    if (counters.length === 0) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        observer.unobserve(entry.target);
-        const el = entry.target as HTMLElement;
-        const target = parseInt(el.dataset.countup ?? '0', 10);
-        const suffix = el.dataset.suffix ?? '';
-        const duration = 1200;
-        const start = performance.now();
-        const tick = (now: number) => {
-          const elapsed = now - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.round(eased * target) + suffix;
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
+  <script>
+    function initCountup() {
+      const counters = document.querySelectorAll<HTMLElement>(
+        '[data-countup]:not([data-countup-init])'
+      );
+      if (counters.length === 0) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            observer.unobserve(entry.target);
+            const el = entry.target as HTMLElement;
+            const target = parseInt(el.dataset.countup ?? '0', 10);
+            const suffix = el.dataset.suffix ?? '';
+            const duration = 1200;
+            const start = performance.now();
+            const tick = (now: number) => {
+              const elapsed = now - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              el.textContent = Math.round(eased * target) + suffix;
+              if (progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          });
+        },
+        { threshold: 0.4 }
+      );
+      counters.forEach((el) => {
+        el.dataset.countupInit = 'true';
+        observer.observe(el);
       });
-    }, { threshold: 0.4 });
-    counters.forEach((el) => {
-      el.dataset.countupInit = 'true';
-      observer.observe(el);
-    });
-  }
+    }
 
-  initCountup();
-</script>
-
+    initCountup();
+  </script>
 </LandingLayout>
