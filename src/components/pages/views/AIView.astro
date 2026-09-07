@@ -1,7 +1,8 @@
 ---
-import { defaultLocale, localizedPath } from '@/i18n';
+import { defaultLocale, localizedPath, getLocaleFromPath } from '@/i18n';
 interface Props { locale?: string; }
-const { locale = defaultLocale } = Astro.props;
+const locale = getLocaleFromPath(Astro.originPathname);
+Astro.locals.contentLocale = defaultLocale;
 /**
  * FireStone AI Page
  * URL: /ai

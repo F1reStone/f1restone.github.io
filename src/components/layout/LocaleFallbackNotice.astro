@@ -1,35 +1,63 @@
 ---
-import { getLocaleFromPath, getLocales, getLocaleName, isEnabled, localizedPath, t } from '@/i18n';
+import { getLocaleFromPath, localizedPath, t } from '@/i18n';
+import { getLocaleFallback } from '@/lib/locale-fallback';
+import Button from '@/components/ui/form/Button';
+import Icon from '@/components/ui/primitives/Icon';
+import {
+  bannerPanelClass,
+  bannerContentClass,
+  bannerHeadingClass,
+  bannerDescriptionClass,
+  bannerActionsClass,
+} from '@/components/ui/overlay/FloatingBanner/styles';
+import '@/components/ui/overlay/FloatingBanner/animation.css';
 
-const currentLocale = getLocaleFromPath(Astro.url.pathname);
-const section = Astro.url.pathname.startsWith('/blog/') ? 'blog' : Astro.url.pathname.startsWith('/projects/') ? 'projects' : null;
+const fallback = getLocaleFallback(
+  Astro.originPathname,
+  Astro.url.pathname,
+  Astro.locals.contentLocale
+);
+const locale = getLocaleFromPath(Astro.originPathname);
+const language = fallback
+  ? (new Intl.DisplayNames([locale], { type: 'language' }).of(fallback.contentLocale) ??
+    fallback.contentLocale)
+  : '';
 ---
 
-{isEnabled() && (
-  <div data-locale-fallback hidden class="fixed bottom-4 left-4 right-4 z-[70] mx-auto max-w-xl rounded-xl border border-border bg-background p-4 text-foreground shadow-xl" role="status">
-    {getLocales().filter(locale => locale !== currentLocale).map(locale => (
-      <template data-fallback-locale={locale}>
-        <div lang={locale} class="flex items-start gap-4">
-          <div class="flex-1 text-sm">
-            <p>{t(section === 'blog' ? 'localeFallback.article' : 'localeFallback.page', locale, { language: getLocaleName(currentLocale) })}</p>
-            <a class="mt-2 inline-block underline underline-offset-4 focus-visible:ring-2 focus-visible:ring-ring" href={localizedPath(section ? `/${section}` : '/', locale)}>{t(section === 'blog' ? 'localeFallback.backToBlog' : section === 'projects' ? 'localeFallback.backToProjects' : 'localeFallback.backToHome', locale)}</a>
-          </div>
-          <button type="button" data-dismiss-fallback class="rounded px-2 focus-visible:ring-2 focus-visible:ring-ring" aria-label={t('common.dismiss', locale)}>×</button>
-        </div>
-      </template>
-    ))}
-    <div data-fallback-content></div>
-    <script is:inline>
-      (() => {
-        const notice = document.querySelector('[data-locale-fallback]');
-        if (!notice) return;
-        const requested = new URLSearchParams(location.search).get('requestedLocale');
-        const template = [...notice.querySelectorAll('template')].find(item => item.dataset.fallbackLocale === requested);
-        if (!template) return;
-        notice.querySelector('[data-fallback-content]').append(template.content.cloneNode(true));
-        notice.hidden = false;
-        notice.querySelector('[data-dismiss-fallback]').addEventListener('click', () => { notice.hidden = true; });
-      })();
-    </script>
-  </div>
-)}
+{
+  fallback && (
+    <section
+      class:list={[bannerPanelClass, 'floating-banner--visible']}
+      data-locale-fallback
+      lang={locale}
+      aria-labelledby="locale-fallback-heading"
+      data-pagefind-ignore
+    >
+      <div class={bannerContentClass}>
+        <p id="locale-fallback-heading" class={bannerHeadingClass}>
+          {t('localeFallback.heading', locale)}
+        </p>
+        <p class={bannerDescriptionClass}>{t('localeFallback.page', locale, { language })}</p>
+      </div>
+      <div class={bannerActionsClass}>
+        <Button variant="primary" size="sm" data-dismiss-fallback>
+          <Icon name="check" size="sm" />
+          {t('localeFallback.confirm', locale)}
+        </Button>
+        <Button variant="secondary" size="sm" href={localizedPath('/', locale)}>
+          <Icon name="house" size="sm" />
+          {t('localeFallback.backToHome', locale)}
+        </Button>
+      </div>
+    </section>
+  )
+}
+
+<script is:inline>
+  (() => {
+    const notice = document.querySelector('[data-locale-fallback]');
+    notice?.querySelector('[data-dismiss-fallback]')?.addEventListener('click', () => {
+      notice.hidden = true;
+    });
+  })();
+</script>

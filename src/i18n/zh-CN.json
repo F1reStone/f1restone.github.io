@@ -373,11 +373,10 @@
     "contact": "联系 FireStone"
   },
   "localeFallback": {
-    "article": "该文章暂未以您的语言提供，目前显示{language}版。",
-    "page": "该页面暂未以您的语言提供，目前显示{language}版。",
-    "backToBlog": "返回中文博客列表",
-    "backToProjects": "返回中文项目列表",
-    "backToHome": "返回中文首页"
+    "heading": "暂无当前语言版本",
+    "page": "本页面没有您当前语言的版本，现显示默认语言（{language}）的内容。",
+    "confirm": "确认",
+    "backToHome": "返回首页"
   },
   "social": {
     "github": "GitHub",

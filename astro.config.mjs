@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { generateOgImages } from './scripts/og-images.mjs';
+import { indexablePages } from './scripts/indexable-pages.mjs';
 import { readdir, readFile } from 'node:fs/promises';
 import { canonicalOf, jsonLdUrlOf, siteUrlDisagreement, disagreementMessage } from './scripts/site-url-agreement.mjs';
 import { join } from 'node:path';
@@ -32,6 +33,8 @@ import { pluginFramesTexts } from '@expressive-code/plugin-frames';
  * `src/components/layout/SearchModal.astro`; `astro dev` has no index, and
  * the search modal explains that instead of erroring.
  */
+const searchablePages = indexablePages();
+
 function pagefind() {
   return {
     name: 'pagefind',
@@ -41,10 +44,14 @@ function pagefind() {
         const outputPath = join(sitePath, 'pagefind');
         const { createIndex, close } = await import('pagefind');
         const { index } = await createIndex();
-        const { page_count } = await index.addDirectory({ path: sitePath });
+        const pages = searchablePages.pages();
+        for (const page of pages) {
+          const { errors } = await index.addHTMLFile(page);
+          if (errors.length) throw new Error(errors.join('\n'));
+        }
         await index.writeFiles({ outputPath });
         await close();
-        logger.info(`indexed ${page_count} pages into ${outputPath}`);
+        logger.info(`indexed ${pages.length} canonical pages into ${outputPath}`);
       },
     },
   };
@@ -173,7 +180,8 @@ export default defineConfig({
       },
     }),
     mdx(),
-    sitemap({ filter: (page) => !['/components/', '/404/'].includes(new URL(page).pathname) }),
+    searchablePages.integration,
+    sitemap({ filter: searchablePages.filter }),
     icon(),
     pagefind(),
     { name: 'firestone-og-images', hooks: { 'astro:build:done': async ({ dir, logger }) => {

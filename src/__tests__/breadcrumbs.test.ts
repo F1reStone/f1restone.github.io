@@ -29,11 +29,12 @@ describe('page-owned breadcrumbs and language fallbacks', () => {
     expect(getPageAlternates('/legal/privacy-policy/')).toEqual([
       { locale: 'zh-CN', url: '/legal/privacy-policy/' },
     ]);
-    expect(getPageAlternates('/about/').map((alt) => alt.url)).toEqual(['/about', '/en-US/about']);
+    expect(getPageAlternates('/about/').map((alt) => alt.url)).toEqual(['/about']);
+    expect(getPageAlternates('/blog/').map((alt) => alt.url)).toEqual(['/blog', '/en-US/blog']);
   });
   it('preserves the real destination and anchors when a language is missing', () => {
     expect(withLocaleFallback('/blog/hello?ref=home#section', 'zh-CN', 'en-US')).toBe(
-      '/blog/hello?ref=home&requestedLocale=en-US#section'
+      '/en-US/blog/hello?ref=home#section'
     );
     expect(withLocaleFallback('/blog/hello', 'zh-CN', 'zh-CN')).toBe('/blog/hello');
   });

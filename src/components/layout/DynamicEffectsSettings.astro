@@ -5,7 +5,7 @@ import Dialog from '@/components/ui/overlay/Dialog/Dialog.astro';
 import { cn } from '@/lib/cn';
 import { getLocaleFromPath, t } from '@/i18n';
 
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 interface Props {
   /** Stable dialog id. Change it only when rendering more than one settings dialog. */

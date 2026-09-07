@@ -11,9 +11,10 @@ valuable: inspect them, work with them, and do not reset or discard them.
   deployed to Cloudflare; the canonical site URL is `https://fire-stone.co/`.
 - Stack: Astro 7.3, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
   Pagefind, and pnpm. Node must satisfy `>=22.12.0`.
-- The default locale is `zh-CN`. Native Astro i18n is currently disabled in
-  `src/config/i18n.config.ts`, although locale-aware routes and content support
-  are present. Do not enable it as a side effect of an unrelated change.
+- The default locale is `zh-CN`. `src/config/i18n.config.ts` controls whether
+  locale-aware routes are enabled. Preserve the configured switch during
+  unrelated work. Missing translations use prefixed fallback routes; see
+  `docs/locale-fallback.md`.
 - The visual theme is defined by `src/styles/themes/firestone.css` and shared
   styles in `src/styles/global.css`.
 

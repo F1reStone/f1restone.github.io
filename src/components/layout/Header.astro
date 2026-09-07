@@ -37,7 +37,7 @@ import ThemeSelectorDropdown from '@/components/layout/ThemeSelectorDropdown.ast
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher.astro';
 import siteConfig from '@/config/site.config';
 import { isEnabled as i18nIsEnabled, getLocaleFromPath, t, localizedPath } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 export interface NavItem {
   label: string;

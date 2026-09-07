@@ -94,7 +94,7 @@ interface Props extends HTMLAttributes<'footer'> {
 }
 
 // Resolve the current locale for i18n-aware nav/legal/group links
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 const {
   layout = 'asymmetricColumns',

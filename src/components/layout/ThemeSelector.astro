@@ -1,6 +1,6 @@
 ---
 import { getLocaleFromPath, t } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 /**
  * ThemeSelector
  * A row of twelve colour swatches that switches the active colour theme at

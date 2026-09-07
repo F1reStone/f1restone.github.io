@@ -13,7 +13,7 @@
  * instances (header pill + mobile-menu pill) and view-transition re-mounts.
  */
 import { t, getLocaleFromPath } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 const labels = { system: t('theme.systemLabel', locale), light: t('theme.lightLabel', locale), dark: t('theme.darkLabel', locale), title: t('common.themeModeTitle', locale), systemLight: t('theme.systemLight', locale), systemDark: t('theme.systemDark', locale) };
 import { cn } from '@/lib/cn';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';

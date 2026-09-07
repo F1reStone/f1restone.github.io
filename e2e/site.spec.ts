@@ -32,6 +32,7 @@ test('generated SEO describes real pages and assets', async ({ page }) => {
           canonical: attr('link[rel="canonical"]', 'href'),
           canonicals: doc.querySelectorAll('link[rel="canonical"]').length,
           language: doc.documentElement.lang,
+          fallback: doc.documentElement.hasAttribute('data-locale-fallback-source'),
           ogLocale: attr('meta[property="og:locale"]', 'content'),
           noindex: attr('meta[name="robots"]', 'content')?.includes('noindex'),
           image: attr('meta[property="og:image"]', 'content'),
@@ -62,8 +63,12 @@ test('generated SEO describes real pages and assets', async ({ page }) => {
     check(result.ogLocale === result.language.replace('-', '_'), 'wrong OG locale');
     check(result.image && exists(result.image), `missing sharing image ${result.image}`);
     check(!result.image?.endsWith('.svg'), 'sharing image must be raster');
+    const pageUrl = new URL(
+      '/' + result.file.replaceAll('\\', '/').replace(/index\.html$/, ''),
+      'https://fire-stone.co/'
+    ).href;
     if (result.noindex)
-      check(!sitemap.includes(`<loc>${result.canonical}</loc>`), 'noindex page in sitemap');
+      check(!sitemap.includes(`<loc>${pageUrl}</loc>`), 'noindex page in sitemap');
     else check(sitemap.includes(`<loc>${result.canonical}</loc>`), 'canonical absent from sitemap');
     for (const url of result.alternates) check(exists(url), `missing language alternate ${url}`);
     const crumbs = result.schemas.filter((schema) => schema['@type'] === 'BreadcrumbList');
@@ -77,7 +82,7 @@ test('generated SEO describes real pages and assets', async ({ page }) => {
         'breadcrumb ends on another page'
       );
     }
-    if (!result.noindex)
+    if (!result.noindex || result.fallback)
       for (const href of result.links) check(exists(href), `broken internal link ${href}`);
   }
   expect(failures).toEqual([]);
@@ -149,7 +154,7 @@ test('article breadcrumbs preserve CJK labels and reading time', async ({ page }
 test('English chrome and untranslated-content notice are connected', async ({ page }) => {
   test.skip(!english, 'English routes are intentionally disabled in the production config.');
   await page.goto('/en-US/');
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en-US');
+  await expect(page.locator('[data-locale-fallback]')).toHaveAttribute('lang', 'en-US');
   const chrome = await page.locator('body > header, body > footer').evaluateAll((elements) =>
     elements.map((element) => {
       const clone = element.cloneNode(true) as HTMLElement;
@@ -159,18 +164,19 @@ test('English chrome and untranslated-content notice are connected', async ({ pa
   );
   expect(chrome.join('')).not.toMatch(/[\u4e00-\u9fff]/);
   await expect(page.locator('.search-trigger').first()).toHaveAttribute('aria-label', 'Search');
-  await page.goto('/blog/open-weights-and-american-ai-leadership/?requestedLocale=en-US');
+  await page.goto('/en-US/blog/open-weights-and-american-ai-leadership/');
   await expect(page.locator('[data-locale-fallback]')).toBeVisible();
-  await expect(page.locator('[data-fallback-content]')).toContainText(
-    'not yet available in your language'
+  await expect(page.locator('[data-locale-fallback]')).toContainText(
+    'not available in your current language'
   );
-  await expect(page.locator('[data-fallback-content] a')).toHaveAttribute('href', '/en-US/blog');
+  await expect(page.locator('[data-locale-fallback] a')).toHaveAttribute('href', '/en-US');
   await page.locator('[data-dismiss-fallback]').click();
   await expect(page.locator('[data-locale-fallback]')).toBeHidden();
 });
 
 test('consent and effect settings use the active language', async ({ page }) => {
   await page.goto(english ? '/en-US/' : '/');
+  if (english) await page.locator('[data-dismiss-fallback]').click();
   const banner = page.locator('#consent-banner');
   test.skip((await banner.count()) === 0, 'Consent UI is disabled by build configuration.');
   await expect(banner).toBeVisible();
@@ -191,6 +197,140 @@ test('consent and effect settings use the active language', async ({ page }) => 
   await expect(page.locator('#dynamic-effects-settings')).toBeVisible();
   if (english)
     await expect(page.locator('#dynamic-effects-settings')).not.toContainText(/[\u4e00-\u9fff]/);
+});
+
+test('prefixed fallback pages render without JavaScript and stack above Cookie consent', async ({
+  page,
+  browser,
+}) => {
+  test.skip(!english, 'Only enabled locales receive fallback routes.');
+  for (const source of [
+    '/blog/open-weights-and-american-ai-leadership/',
+    '/projects/sparkforge/',
+    '/legal/privacy-policy/',
+    '/components/',
+    '/blog/tag/人工智能/',
+    '/about/',
+    '/ai/',
+  ]) {
+    const response = await page.goto('/en-US' + source);
+    expect(response?.status(), source).toBe(200);
+    await expect(page.locator('[data-locale-fallback]')).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      new URL(source, 'https://fire-stone.co/').href
+    );
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+    expect(new URL(page.url()).pathname).toBe(new URL('/en-US' + source, page.url()).pathname);
+    await expect(page.locator('a[href*="requestedLocale"]')).toHaveCount(0);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en-US/blog/open-weights-and-american-ai-leadership/');
+  const notice = page.locator('[data-locale-fallback]');
+  const cookie = page.locator('#consent-banner');
+  if (await cookie.count()) {
+    await expect(cookie).toBeVisible();
+    await expect
+      .poll(async () => {
+        const a = await notice.boundingBox();
+        const b = await cookie.boundingBox();
+        return !!a && !!b && a.y >= 0 && a.y + a.height < b.y && b.y + b.height <= 844;
+      })
+      .toBe(true);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: 'test-results/locale-fallback-mobile.png' });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.screenshot({ path: 'test-results/locale-fallback-desktop.png' });
+  await notice.locator('[data-dismiss-fallback]').focus();
+  await page.keyboard.press('Enter');
+  await expect(notice).toBeHidden();
+  if (await cookie.count()) {
+    await expect(cookie).toBeVisible();
+    await page.locator('#consent-decline-all').click();
+    await expect(cookie).toBeHidden();
+  }
+  const missing = await page.goto('/en-US/this-page-does-not-exist/');
+  expect(missing?.status()).toBe(404);
+
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 390, height: 844 },
+  });
+  try {
+    await context.route('**/*', (route) =>
+      new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort()
+    );
+    const staticPage = await context.newPage();
+    await staticPage.goto('http://127.0.0.1:4399/en-US/legal/privacy-policy/');
+    await expect(staticPage.locator('[data-locale-fallback]')).toBeVisible();
+    await expect(staticPage.locator('h1')).toBeVisible();
+    await expect(staticPage.locator('[data-locale-fallback] a')).toHaveAttribute('href', '/en-US');
+  } finally {
+    await context.close();
+  }
+});
+
+test('language banner makes room for delayed Cookie consent without another scrollbar', async ({
+  page,
+}) => {
+  test.skip(!english, 'Requires a locale fallback page.');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.addInitScript(() => {
+    const records: { duration: number; easing: string; overflowY: string }[] = [];
+    Object.assign(window, { bannerMovements: records });
+    new MutationObserver(() => {
+      const cookie = document.querySelector('#consent-banner:not([hidden])');
+      const notice = document.querySelector('[data-locale-fallback]');
+      const stack = document.querySelector('[data-banner-stack]');
+      if (!cookie || !notice || !stack) return;
+      for (const animation of notice.getAnimations()) {
+        const timing = animation.effect?.getTiming();
+        if (timing && typeof timing.duration === 'number' && timing.duration > 300)
+          records.push({
+            duration: timing.duration,
+            easing: timing.easing,
+            overflowY: getComputedStyle(stack).overflowY,
+          });
+      }
+    }).observe(document, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
+  });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/en-US/blog/open-weights-and-american-ai-leadership/');
+  test.skip((await page.locator('#consent-banner').count()) === 0, 'Consent UI is disabled.');
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => (window as Window & { bannerMovements?: unknown[] }).bannerMovements?.length ?? 0
+      )
+    )
+    .toBeGreaterThan(0);
+  const movements = await page.evaluate(
+    () =>
+      (
+        window as Window & {
+          bannerMovements: { duration: number; easing: string; overflowY: string }[];
+        }
+      ).bannerMovements
+  );
+  expect(movements[0]).toEqual({
+    duration: 450,
+    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    overflowY: 'visible',
+  });
+  await page
+    .locator('[data-locale-fallback]')
+    .evaluate((el) => Promise.all(el.getAnimations().map((animation) => animation.finished)));
+  const centers = await page
+    .locator('[data-locale-fallback], #consent-banner')
+    .evaluateAll((elements) =>
+      elements.map((el) => {
+        const content = el.children[0].getBoundingClientRect();
+        const actions = el.children[1].getBoundingClientRect();
+        return Math.abs(content.y + content.height / 2 - actions.y - actions.height / 2);
+      })
+    );
+  expect(centers.every((distance) => distance < 2)).toBe(true);
 });
 
 test('Umami only loads after analytics consent and stops sending after revocation', async ({

@@ -1,6 +1,6 @@
 ---
 import { getLocaleFromPath, t } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 /**
  * ThemeSelectorDropdown
  * A dropdown button for desktop that exposes the colour-theme swatches.

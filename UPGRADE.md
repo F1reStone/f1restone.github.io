@@ -10,7 +10,7 @@
 - 设计更新不跟随；组件化升级跟随并承载 FireStone 设计。不能按目录批量执行下方示例中的 `--ours` 或 `--theirs`。
 - 页面正文现位于 `src/components/pages/views`、`blog/views`、`projects/views`。薄路由负责构建时渲染和传参，并不是浏览器跳转页。
 - 正式 i18n 保持关闭，支持代码为 `zh-CN`、`en-US`。当前仅完成共用界面本地化，正文翻译另行进行。
-- 面包屑由页面/布局提供标题与层级，Footer 只渲染。禁止再次通过菜单或 URL 片段猜标题。语言链接只能指向真实目标，未翻译页面用 `requestedLocale` 提示原文回退。
+- 面包屑由页面/布局提供标题与层级，Footer 只渲染。禁止再次通过菜单或 URL 片段猜标题。缺少翻译时生成语言前缀页面，展示默认语言正文和回退横幅；不再使用 `requestedLocale` 查询参数。详见 [语言回退规则](docs/locale-fallback.md)。
 - Hero、Shader、Picture fallback、全局性能分级，以及 Header/Footer、卡片、字体和交互样式都属于定制实现；不能再按“通用未改动组件”覆盖。
 - 严格 consent 适用于新增分析服务，包括 Umami。保留静态输出；不自动加入 API、部署配置或 GitHub Actions 变更。
 

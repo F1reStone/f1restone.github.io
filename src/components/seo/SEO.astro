@@ -9,6 +9,7 @@ import {
 } from '@/i18n';
 
 interface Props {
+  canonicalPath?: string;
   title?: string;
   description?: string;
   image?: string;
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const {
+  canonicalPath = Astro.url.pathname,
   title,
   description = siteConfig.description,
   image,
@@ -45,7 +47,7 @@ const {
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
 const socialTitle = title || siteConfig.name;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = new URL(canonicalPath, Astro.site);
 
 // Process image - fall back to the static default OG image
 let ogImage: string;
@@ -63,7 +65,7 @@ const localeMap: Record<string, string> = {
   pt: 'pt_BR', nl: 'nl_NL', ja: 'ja_JP', ko: 'ko_KR', zh: 'zh_CN',
   ru: 'ru_RU', ar: 'ar_SA', hi: 'hi_IN', pl: 'pl_PL', sv: 'sv_SE',
 };
-const rawLocale = getLocaleFromPath(Astro.url.pathname);
+const rawLocale = Astro.locals.contentLocale ?? getLocaleFromPath(Astro.url.pathname);
 const locale = rawLocale.includes('_') || rawLocale.includes('-')
   ? rawLocale.replace('-', '_')
   : (localeMap[rawLocale] || `${rawLocale}_${rawLocale.toUpperCase()}`);

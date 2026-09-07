@@ -1,7 +1,9 @@
 ---
-import { defaultLocale, localizedPath } from '@/i18n';
+import { defaultLocale, localizedPath, getLocaleFromPath } from '@/i18n';
 interface Props { locale?: string; }
 const { locale = defaultLocale } = Astro.props;
+const requestedLocale = getLocaleFromPath(Astro.originPathname);
+Astro.locals.contentLocale = defaultLocale;
 import LandingLayout from '@/layouts/LandingLayout.astro';
 import { Hero } from '@/components/hero';
 import Button from '@/components/ui/form/Button/Button.astro';
@@ -51,11 +53,11 @@ const posts = blogItems
     </h1>
 
     <Fragment slot="actions">
-      <Button size="lg" href={localizedPath('/about', locale) + ''}>
+      <Button size="lg" href={localizedPath('/about', requestedLocale) + ''}>
         关于我
         <Icon name="chevron-right" size="sm" />
       </Button>
-      <Button size="lg" variant="outline" href={localizedPath('/projects', locale) + ''}>
+      <Button size="lg" variant="outline" href={localizedPath('/projects', requestedLocale) + ''}>
         探索我的项目
         <Icon name="chevron-right" size="sm" />
       </Button>
@@ -72,11 +74,11 @@ const posts = blogItems
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
-        {featuredProjects.map((project, i) => <ProjectCard locale={locale} project={project} index={i} />)}
+        {featuredProjects.map((project, i) => <ProjectCard locale={requestedLocale} project={project} index={i} />)}
       </div>
 
       <div class="mt-4 text-center">
-        <Button variant="outline" href={localizedPath('/projects', locale) + ''}>
+        <Button variant="outline" href={localizedPath('/projects', requestedLocale) + ''}>
           查看更多项目
           <Icon name="chevron-right" size="sm" />
         </Button>
@@ -114,7 +116,7 @@ const posts = blogItems
               >
             </h2>
           </div>
-          <Button variant="outline" href={localizedPath('/about', locale) + ''} class="self-start">
+          <Button variant="outline" href={localizedPath('/about', requestedLocale) + ''} class="self-start">
             进一步了解
             <Icon name="chevron-right" size="sm" />
           </Button>
@@ -138,7 +140,7 @@ const posts = blogItems
               description={post.data.description}
               body={post.body}
               locale={locale}
-              href={withLocaleFallback(getPostUrl(post.id, post.data.locale), post.data.locale, locale)}
+              href={withLocaleFallback(getPostUrl(post.id, post.data.locale), post.data.locale, requestedLocale)}
               publishedAt={post.data.publishedAt}
               tags={post.data.tags}
               author={post.data.author}
@@ -152,7 +154,7 @@ const posts = blogItems
       </div>
 
       <div class="flex justify-center">
-        <Button variant="outline" href={localizedPath('/blog', locale) + ''}>
+        <Button variant="outline" href={localizedPath('/blog', requestedLocale) + ''}>
           阅读所有文章
           <Icon name="chevron-right" size="sm" />
         </Button>

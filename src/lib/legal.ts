@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getPostSlug } from '@/lib/blog';
+import { defaultLocale } from '@/i18n';
 
 export type LegalPageEntry = CollectionEntry<'pages'>;
 
@@ -16,7 +17,7 @@ function isLegalEntry(entry: LegalPageEntry) {
   return getPostSlug(entry.id).startsWith('legal/');
 }
 
-export async function getLegalEntries(locale = 'zh-CN'): Promise<LegalPageEntry[]> {
+export async function getLegalEntries(locale = defaultLocale): Promise<LegalPageEntry[]> {
   const entries = await getCollection('pages', ({ data }) => {
     return data.locale === locale && (import.meta.env.PROD ? data.draft !== true : true);
   });
@@ -24,7 +25,7 @@ export async function getLegalEntries(locale = 'zh-CN'): Promise<LegalPageEntry[
   return entries.filter(isLegalEntry);
 }
 
-export async function getLegalPages(locale = 'zh-CN'): Promise<LegalPageSummary[]> {
+export async function getLegalPages(locale = defaultLocale): Promise<LegalPageSummary[]> {
   const entries = await getLegalEntries(locale);
 
   return entries

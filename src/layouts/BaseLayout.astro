@@ -3,6 +3,7 @@ import '@/styles/global.css';
 import type { BreadcrumbItem } from '@/lib/breadcrumbs';
 import { getRssUrl } from '@/lib/blog';
 import LocaleFallbackNotice from '@/components/layout/LocaleFallbackNotice.astro';
+import { getLocaleFallback } from '@/lib/locale-fallback';
 import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
 import Analytics from '@/components/layout/Analytics.astro';
@@ -75,11 +76,13 @@ if (breadcrumbs.length > 1) {
 }
 
 const locales = getLocales();
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = Astro.locals.contentLocale ?? getLocaleFromPath(Astro.url.pathname);
+const localeFallback = getLocaleFallback(Astro.originPathname, Astro.url.pathname, Astro.locals.contentLocale);
+const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeURI(Astro.url.pathname).replace(/\/$/, '');
 ---
 
 <!doctype html>
-<html lang={locale} class="scroll-smooth dark" data-theme="firestone" data-theme-mode="system">
+<html lang={locale} data-locale-fallback-source={localeFallback?.contentLocale} class="scroll-smooth dark" data-theme="firestone" data-theme-mode="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -127,7 +130,8 @@ const locale = getLocaleFromPath(Astro.url.pathname);
       image={image}
       imageAlt={imageAlt}
       article={article}
-      noindex={noindex}
+      noindex={noindex || !!localeFallback || rewritten}
+      canonicalPath={localeFallback?.canonicalPath}
       nofollow={nofollow}
       localeAlternates={localeAlternates}
     />
@@ -577,9 +581,10 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     </main>
 
     <slot name="footer" />
-    <LocaleFallbackNotice />
-
-    <ConsentBanner showReopener={false} />
+    <div data-banner-stack class="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-3 px-4 pb-6 pt-8 md:px-6 md:pb-8 [&_[data-dialog]]:pointer-events-auto">
+      <LocaleFallbackNotice />
+      <ConsentBanner stacked showReopener={false} />
+    </div>
     <!-- The dialog is mounted once here; Footer/Header can trigger it by id. -->
     <DynamicEffectsSettings showTrigger={false} />
 

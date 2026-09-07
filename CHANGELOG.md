@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## FireStone — 2.6.0 migration — 2026-09-08
 
+- Replaced query-based translation notices with generated locale-prefixed fallback pages; canonical, sitemap and search avoid duplicate fallback content. Removed untranslated English page stubs.
+- Shared the Cookie banner presentation with language notices, centered actions, and added staggered entrance and 450ms displacement animations without a second scrollbar. Fixed a consent-dialog close/reopen race.
 - Integrated unit and production/bilingual browser tests into CI for main/as260 pushes and pull requests; production deployment requires all checks to pass. Unified pnpm/Node versions, updated pnpm setup, and use lockfile-pinned Wrangler for deployment. See [CI guide](docs/ci.md).
 - Selectively adopted the v2.6.0 architecture and fixes while preserving FireStone page designs, content, Hero effects and static deployment.
 - Upgraded compatible dependencies first: Astro 7.3.1, MDX 8.0.0, Expressive Code 0.44.2; retained TypeScript 6.

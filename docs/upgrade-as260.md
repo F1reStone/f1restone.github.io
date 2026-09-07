@@ -14,7 +14,7 @@
 | TypeScript / Expressive Code | TS 6.0.3，暂不升 TS 7、Vitest 5；Expressive Code 三个包同步到 0.44.2                                                                            |
 | 页面共享 View                | 提取 FireStone 原页面，保留设计、正文与交互；首页、关于、AI 由共享视图服务不同语言路由；博客/项目使用统一的 FireStone 视图                      |
 | 英语发布                     | 正式配置继续关闭；完成基础设施并测试英语模式，不加入 nl，不继续声明 zh-TW 为支持语言                                                            |
-| 未翻译内容                   | 保留真实中文地址，携带 `requestedLocale` 展示提示和返回目标语言列表的链接；不伪造英文内容和 hreflang                                            |
+| 未翻译内容                   | 按后续要求改为语言前缀页面，服务端回退到配置中的默认语言；横幅提示，canonical 指向原文，回退副本不参与索引。详见 [语言回退规则](locale-fallback.md)。 |
 | 通用界面本地化               | Header、Footer、Cookie、搜索、主题、效果设置、表单、社交平台、ARIA 和错误状态使用实际字典；不替换 CSS 设计                                      |
 | 2.4.1 LetterGlitch           | 移植离屏暂停与颜色预解析，保留视觉效果                                                                                                          |
 | 2.3 新 CTA / newsletter 设计 | 不加入上游营销板块、不开启订阅。现有表单移植本地化、honeypot、可访问名称与未配置状态                                                            |

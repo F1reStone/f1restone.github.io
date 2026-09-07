@@ -13,12 +13,12 @@
  * The only script is for opening/closing the dropdown panel.
  */
 import { cn } from '@/lib/cn';
-import { getPageAlternates } from '@/lib/page-alternates';
 import {
   isEnabled as i18nIsEnabled,
   getLocales,
   getLocaleName,
   getLocaleFromPath,
+  swapLocaleInPath,
   t,
 } from '@/i18n';
 
@@ -39,9 +39,9 @@ interface Props {
 const { class: className, compact = false, alternates } = Astro.props;
 
 const enabled = i18nIsEnabled();
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.originPathname;
 const currentLocale = getLocaleFromPath(currentPath);
-const resolvedAlternates = alternates ?? Object.fromEntries(getPageAlternates(currentPath).map(alt => [alt.locale, alt.url]));
+const resolvedAlternates = alternates ?? Object.fromEntries(getLocales().map(locale => [locale, swapLocaleInPath(currentPath, locale)]));
 const locales = enabled ? getLocales().filter(locale => Boolean(resolvedAlternates[locale])) : [];
 
 const triggerLabel = t('nav.selectLanguage', currentLocale);

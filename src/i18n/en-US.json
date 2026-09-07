@@ -268,7 +268,7 @@
     "heading": "Cookie Preferences",
     "description": "FireStone use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By continuing to use this site, you consent to our use of cookies. Read our {privacyPolicy} to learn more about how we use cookies to improve your experience.",
     "acceptAll": "Accept All",
-    "declineAll": "Decline All",
+    "declineAll": "Necessary Only",
     "customize": "Customize",
     "savePreferences": "Save Preferences",
     "settingsHeading": "Cookie Preferences",
@@ -373,11 +373,10 @@
     "contact": "Contact FireStone"
   },
   "localeFallback": {
-    "article": "This article is not yet available in your language. Showing the Simplified Chinese version.",
-    "page": "This page is not yet available in your language. Showing the Simplified Chinese version.",
-    "backToBlog": "Back to the English blog",
-    "backToProjects": "Back to English projects",
-    "backToHome": "Back to the English home page"
+    "heading": "Language Unavailable",
+    "page": "This page is not available in your current language. Showing the default language ({language}).",
+    "confirm": "Got it",
+    "backToHome": "Back to home"
   },
   "social": {
     "github": "GitHub",

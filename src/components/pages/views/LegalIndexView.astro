@@ -8,7 +8,7 @@ import Footer from '@/components/layout/Footer.astro';
 import Card from '@/components/ui/data-display/Card/Card.astro';
 import { getLegalPages } from '@/lib/legal';
 
-const legalPages = await getLegalPages('zh-CN');
+const legalPages = await getLegalPages();
 
 const breadcrumbs = [
   { label: '首页', href: '/' },

@@ -14,8 +14,11 @@ import Switch from '@/components/ui/form/Switch';
 import Icon from '@/components/ui/primitives/Icon';
 import type { ConsentUIText } from '@/lib/consent.types';
 import { getLocaleFromPath, t, tData } from '@/i18n';
+import { bannerPanelClass, bannerContentClass, bannerHeadingClass, bannerDescriptionClass, bannerActionsClass } from '../FloatingBanner/styles';
+import '../FloatingBanner/animation.css';
 
 interface Props {
+  stacked?: boolean;
   position?: 'top' | 'bottom';
   ui?: Partial<ConsentUIText>;
   alwaysOnLabel?: string;
@@ -25,6 +28,7 @@ interface Props {
 }
 
 const {
+  stacked = false,
   position = 'bottom',
   ui: uiOverrides,
   alwaysOnLabel: alwaysOnLabelProp,
@@ -35,7 +39,7 @@ const {
 
 const consentEnabled = PUBLIC_CONSENT_ENABLED;
 const privacyPolicyUrl = PUBLIC_PRIVACY_POLICY_URL;
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 // Explicit component copy wins; normal copy comes from the active dictionary.
 function consentT(key: string, configValue: string | undefined, englishFallback: string): string {
@@ -106,15 +110,16 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
     <!-- 外层包装仅负责响应式定位，绝对不涉及透明度或动画 -->
     <div
       class:list={[
-        'fixed inset-x-0 z-50 px-4 md:px-6 flex justify-center pointer-events-none',
-        isTop ? 'top-4 md:top-6' : 'bottom-6 md:bottom-8',
+        stacked ? 'contents' : 'fixed inset-x-0 z-50 px-4 md:px-6 flex justify-center pointer-events-none',
+        !stacked && (isTop ? 'top-4 md:top-6' : 'bottom-6 md:bottom-8'),
         className,
       ]}
     >
       <!-- 内层主体：承载 id 供 JS 获取，同时挂载毛玻璃与 CSS 动画。节点合一，解决模糊消失 bug -->
       <div
         id="consent-banner"
-        class="consent-banner-anim pointer-events-auto w-full max-w-8xl rounded-2xl md:rounded-[2rem] border border-border/50 bg-background/50 shadow-2xl backdrop-blur-md p-5 md:p-6 lg:p-7 flex flex-col lg:flex-row items-left justify-between gap-5 md:gap-6"
+        class:list={[bannerPanelClass, 'consent-banner-anim']}
+        hidden
         role="dialog"
         aria-modal="false"
         aria-label={bannerAriaLabel}
@@ -122,15 +127,15 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
       >
         
         <!-- 左侧文案区 -->
-        <div class="flex-1 min-w-0 text-left">
-          <p class="text-md font-semibold text-foreground mb-0.5" id="consent-banner-heading">
+        <div class={bannerContentClass}>
+          <p class={bannerHeadingClass} id="consent-banner-heading">
             {heading}
           </p>
-          <p class="text-xs text-foreground-muted leading-relaxed" set:html={bannerDescHtml} />
+          <p class={bannerDescriptionClass} set:html={bannerDescHtml} />
         </div>
         
         <!-- 右侧动作按钮区 -->
-        <div class="flex flex-wrap items-center justify-start lg:justify-end gap-2.5 shrink-0">
+        <div class={bannerActionsClass}>
           <Button variant="primary" size="sm" id="consent-accept-all">
             <Icon name="check-check" size="sm" />
             {acceptAll}
@@ -200,6 +205,7 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
     <script is:inline type="application/json" id="consent-gcm-map-data" set:html={categoryGcmMapJson} />
 
     <script>
+      import { updateBannerLayout } from '../FloatingBanner/stack';
       interface ConsentWindow extends Window {
         dataLayer: Record<string, unknown>[];
         gtag: (...args: unknown[]) => void;
@@ -323,10 +329,7 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
           const banner = document.getElementById('consent-banner');
           if (!banner) return;
           
-          banner.removeAttribute('hidden');
-          
-          // 强制触发浏览器重排
-          void banner.offsetWidth; 
+          updateBannerLayout(() => banner.removeAttribute('hidden'));
           
           banner.classList.add('consent-banner--visible');
         }
@@ -340,7 +343,7 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
           if (!banner) return;
           banner.classList.remove('consent-banner--visible');
           hideBannerTimeout = setTimeout(function() {
-            banner.setAttribute('hidden', '');
+            updateBannerLayout(() => banner.setAttribute('hidden', ''));
             hideBannerTimeout = null;
           }, 300);
         }
@@ -514,22 +517,6 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
 )}
 
 <style>
-  /* ─── Banner State ─── */
-  /* 直接在包含毛玻璃的元素上施加位移与淡入，底层渲染无懈可击 */
-  .consent-banner-anim {
-    opacity: 0;
-    transition: opacity var(--transition-slow) var(--ease-default),
-                transform var(--transition-slow) var(--ease-default);
-  }
-
-  .consent-banner-anim[data-position="bottom"] { transform: translateY(2rem); }
-  .consent-banner-anim[data-position="top"] { transform: translateY(-2rem); }
-
-  .consent-banner-anim.consent-banner--visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
   /* ─── Settings (inside Dialog) ─── */
   .consent-settings-body {
     padding: 0;
