@@ -65,16 +65,35 @@ controls. See `types.ts` for defaults and the colour-stop shape.
 
 ## Lifecycle and fallback
 
-The existing global `data-effect-hero` preference controls animation. Reduced
-motion renders a still frame; hidden tabs and offscreen effects pause. Resize
-redraws static scenes. GPU resources are released when the element disconnects;
-initialisation failure or device loss reveals the static fallback.
+The existing global `data-effect-hero` preference selects the renderer. Static
+mode and reduced motion load an image without importing the renderer or
+requesting a GPU device. Dynamic mode starts WebGPU without requesting fallback
+images. Manual settings changes switch modes; returning to static releases the
+GPU device, buffers, textures and canvas. Hidden tabs and offscreen effects pause
+animation. Disconnecting releases resources and cancels pending initialisation;
+initialisation failure or device loss loads the image fallback.
 
-The default fallback images use the adjusted preset at time zero, rendered at
-1440×900 and 390×844, compressed to WebP. Unsupported WebGPU and disabled
-JavaScript use those images; a custom gradient uses a CSS gradient with the
-specified stops. Custom geometry/animation values require WebGPU. Static images
-are cropped to cover intermediate aspect ratios.
+The lossless fallback masters use the adjusted preset at time zero, rendered at
+1440×900 and 390×844 into `src/assets/index/hero-effect-1-{landscape,portrait}.png`.
+Astro's `Picture` generates AVIF sources first, followed by WebP sources and a
+WebP fallback. CSS selects the portrait composition at aspect ratios up to 1:1;
+other viewports use the landscape composition. Images cover the hero bounds.
+
+Optimised pictures are stored in inert templates. Static mode mounts only the
+matching composition, with eager loading and asynchronous decoding. Resizing
+across the 1:1 aspect-ratio boundary replaces it with the other composition.
+The component consumes the existing global performance classification and
+settings event; it does not repeat hardware detection or performance sampling.
+Mobile devices retain the global default of static mode, with a stored manual
+choice taking precedence except when reduced motion is active.
+
+A `noscript` fallback preserves both compositions with CSS selection when
+JavaScript is disabled; in that case browsers may download both images. The CSS
+gradient remains visible while the chosen image or WebGPU renderer is loading.
+
+Unsupported WebGPU and disabled JavaScript display the fallback; a custom
+gradient uses CSS with the specified stops. Custom geometry/animation values
+require WebGPU.
 
 The drawing buffer is capped at DPR 2 and 2.6 million pixels. Only raster
 resolution is bounded; the original shader and mesh are unchanged. The previous

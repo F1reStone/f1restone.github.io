@@ -4,64 +4,134 @@ import type { createHeroEffect1 } from './renderer';
 class FirestoneHeroEffect1 extends HTMLElement {
   private scene?: Awaited<ReturnType<typeof createHeroEffect1>>;
   private abort?: AbortController;
+  private sceneAbort?: AbortController;
   private resizeObserver?: ResizeObserver;
   private intersectionObserver?: IntersectionObserver;
+  private options: HeroEffect1Options = heroEffect1Defaults;
   private frame = 0;
   private previousTime = 0;
   private visible = true;
   private animated = true;
+  private dynamic?: boolean;
+  private failed = false;
   private reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  private portrait = window.matchMedia('(max-aspect-ratio: 1/1)');
 
-  async connectedCallback() {
+  connectedCallback() {
     if (this.abort) return;
-    const abort = new AbortController();
-    this.abort = abort;
-    const { signal } = abort;
-    this.dataset.renderer = 'fallback';
+    this.abort = new AbortController();
+    const { signal } = this.abort;
     this.dataset.running = 'false';
     try {
-      const { createHeroEffect1 } = await import('./renderer');
-      if (signal.aborted) return;
-      const options: HeroEffect1Options = {
+      this.options = {
         ...heroEffect1Defaults,
         ...JSON.parse(this.dataset.options || '{}'),
       };
-      this.animated = options.morphSpeed > 0 || options.rotationSpeed > 0;
-      this.scene = await createHeroEffect1(this, options, signal, () => {
-        this.stop();
-        this.dataset.renderer = 'fallback';
+    } catch {
+      this.showFallback();
+      return;
+    }
+    this.animated = this.options.morphSpeed > 0 || this.options.rotationSpeed > 0;
+    this.intersectionObserver = new IntersectionObserver(([entry]) => {
+      this.visible = entry.isIntersecting;
+      this.updateMotion();
+    });
+    this.intersectionObserver.observe(this);
+    window.addEventListener('firestone-effects-change', this.updateMode, { signal });
+    document.addEventListener('visibilitychange', this.updateMotion, { signal });
+    this.reducedMotion.addEventListener('change', this.updateMode, { signal });
+    this.portrait.addEventListener('change', this.updateFallback, { signal });
+    this.updateMode();
+  }
+
+  disconnectedCallback() {
+    this.abort?.abort();
+    this.abort = undefined;
+    this.disposeScene();
+    this.intersectionObserver?.disconnect();
+    this.removeFallback();
+    this.dynamic = undefined;
+    this.failed = false;
+    this.visible = true;
+  }
+
+  private removeFallback() {
+    this.querySelector('.hero-effect-1__fallback > picture')?.remove();
+  }
+
+  private showFallback() {
+    this.dataset.renderer = 'fallback';
+    const orientation = this.portrait.matches ? 'portrait' : 'landscape';
+    const fallback = this.querySelector('.hero-effect-1__fallback');
+    const current = fallback?.querySelector(':scope > picture');
+    if (current?.classList.contains(`hero-effect-1__picture--${orientation}`)) return;
+    const template = fallback?.querySelector<HTMLTemplateElement>(
+      `template[data-hero-fallback="${orientation}"]`
+    );
+    current?.remove();
+    // Template images stay inert until static mode or GPU failure needs them.
+    if (template) fallback?.append(template.content.cloneNode(true));
+  }
+
+  private updateFallback = () => {
+    if (this.dataset.renderer === 'fallback') this.showFallback();
+  };
+
+  private updateMode = () => {
+    const dynamic =
+      document.documentElement.dataset.effectHero === 'dynamic' && !this.reducedMotion.matches;
+    if (this.dynamic !== dynamic) this.failed = false;
+    this.dynamic = dynamic;
+    if (!dynamic || this.failed) {
+      this.disposeScene();
+      this.showFallback();
+      return;
+    }
+    this.removeFallback();
+    if (!this.sceneAbort) void this.startScene();
+    else this.updateMotion();
+  };
+
+  private async startScene() {
+    const abort = new AbortController();
+    this.sceneAbort = abort;
+    const { signal } = abort;
+    this.dataset.renderer = 'pending';
+    try {
+      if (!navigator.gpu) throw new Error('WebGPU unavailable');
+      const { createHeroEffect1 } = await import('./renderer');
+      if (signal.aborted) return;
+      const scene = await createHeroEffect1(this, this.options, signal, () => {
+        if (this.sceneAbort !== abort) return;
+        this.failed = true;
+        this.disposeScene();
+        this.showFallback();
       });
       if (signal.aborted) {
-        this.scene.dispose();
+        scene.dispose();
         return;
       }
+      this.scene = scene;
       this.scene.resize();
       this.dataset.renderer = 'webgpu';
       this.resizeObserver = new ResizeObserver(() => this.scene?.resize());
       this.resizeObserver.observe(this);
-      this.intersectionObserver = new IntersectionObserver(([entry]) => {
-        this.visible = entry.isIntersecting;
-        this.updateMotion();
-      });
-      this.intersectionObserver.observe(this);
-      window.addEventListener('firestone-effects-change', this.updateMotion, { signal });
-      document.addEventListener('visibilitychange', this.updateMotion, { signal });
-      this.reducedMotion.addEventListener('change', this.updateMotion, { signal });
       this.updateMotion();
     } catch (error) {
-      this.scene?.dispose();
-      this.scene = undefined;
       if (signal.aborted) return;
+      this.failed = true;
+      this.disposeScene();
+      this.showFallback();
       console.warn('Hero gradient is using the static fallback.', error);
     }
   }
 
-  disconnectedCallback() {
+  private disposeScene() {
     this.stop();
-    this.abort?.abort();
-    this.abort = undefined;
     this.resizeObserver?.disconnect();
-    this.intersectionObserver?.disconnect();
+    this.resizeObserver = undefined;
+    this.sceneAbort?.abort();
+    this.sceneAbort = undefined;
     this.scene?.dispose();
     this.scene = undefined;
   }
@@ -74,9 +144,8 @@ class FirestoneHeroEffect1 extends HTMLElement {
   }
 
   private updateMotion = () => {
-    const dynamic = document.documentElement.dataset.effectHero === 'dynamic';
     if (
-      !dynamic ||
+      !this.dynamic ||
       !this.animated ||
       this.reducedMotion.matches ||
       !this.visible ||

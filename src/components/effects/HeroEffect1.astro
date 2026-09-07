@@ -1,4 +1,7 @@
 ---
+import { Picture } from 'astro:assets';
+import landscapeFallback from '@/assets/index/hero-effect-1-landscape.png';
+import portraitFallback from '@/assets/index/hero-effect-1-portrait.png';
 import { heroEffect1Defaults, type HeroEffect1Options } from './hero-effect-1/types';
 
 interface Props extends Partial<HeroEffect1Options> {
@@ -13,6 +16,19 @@ const stops = options.gradient.stops
   )
   .join(', ');
 const customPalette = params.gradient !== undefined;
+const fallbackImages = [
+  { src: landscapeFallback, widths: [720, 1440], orientation: 'landscape' },
+  { src: portraitFallback, widths: [390], orientation: 'portrait' },
+];
+const fallbackProps = {
+  alt: '',
+  fallbackFormat: 'webp' as const,
+  quality: 95,
+  sizes: '100vw',
+  layout: 'none' as const,
+  loading: 'eager' as const,
+  decoding: 'async' as const,
+};
 ---
 
 <firestone-hero-effect-1
@@ -24,18 +40,29 @@ const customPalette = params.gradient !== undefined;
 >
   <div class="hero-effect-1__fallback">
     {
-      !customPalette && (
-        <picture>
-          <source media="(max-aspect-ratio: 1/1)" srcset="/images/hero-effect-1-portrait.webp" />
-          <img
-            src="/images/hero-effect-1-landscape.webp"
-            alt=""
-            width="1440"
-            height="900"
-            decoding="async"
-          />
-        </picture>
-      )
+      !customPalette &&
+        fallbackImages.map(({ src, widths, orientation }) => (
+          <Fragment>
+            <template data-hero-fallback={orientation}>
+              <Picture
+                {...fallbackProps}
+                formats={['avif', 'webp']}
+                src={src}
+                widths={widths}
+                pictureAttributes={{ class: `hero-effect-1__picture--${orientation}` }}
+              />
+            </template>
+            <noscript>
+              <Picture
+                {...fallbackProps}
+                formats={['avif', 'webp']}
+                src={src}
+                widths={widths}
+                pictureAttributes={{ class: `hero-effect-1__picture--${orientation}` }}
+              />
+            </noscript>
+          </Fragment>
+        ))
     }
   </div>
 </firestone-hero-effect-1>
@@ -52,10 +79,26 @@ const customPalette = params.gradient !== undefined;
     inset: 0;
     background: var(--hero-effect-1-fallback);
   }
-  .hero-effect-1__fallback img {
+  .hero-effect-1__fallback :global(picture) {
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+  .hero-effect-1__fallback :global(.hero-effect-1__picture--portrait) {
+    display: none;
+  }
+  .hero-effect-1__fallback :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  @media (max-aspect-ratio: 1/1) {
+    .hero-effect-1__fallback :global(.hero-effect-1__picture--landscape) {
+      display: none;
+    }
+    .hero-effect-1__fallback :global(.hero-effect-1__picture--portrait) {
+      display: block;
+    }
   }
   .hero-effect-1[data-renderer='webgpu'] .hero-effect-1__fallback {
     visibility: hidden;

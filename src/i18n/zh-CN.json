@@ -171,9 +171,9 @@
   "effects": {
     "trigger": "动态效果",
     "title": "动态效果",
-    "description": "调整网站中的动态效果。网站默认会根据设备性能为您选择合适的效果；如果浏览器限制了偏好设置存储，这些设置可能会在网站重新加载后丢失。",
-    "heroGradient": "首屏光轨动效",
-    "heroGradientDescription": "选择动态光轨或静态画面。",
+    "description": "调整网站中的动态效果。网站默认会根据设备性能为您选择合适的效果；如果浏览器限制了 Cookie 偏好存储，这些设置可能会在网站重新加载后丢失。",
+    "heroGradient": "首屏流体渐变效果",
+    "heroGradientDescription": "选择展示动态或静态流体渐变。",
     "footerGradientQuality": "页脚动态渐变质量",
     "footerGradientQualityDescription": "调整页脚动态渐变效果的质量。",
     "footerGradient": "页脚动态渐变效果",
