@@ -151,6 +151,78 @@ test('article breadcrumbs preserve CJK labels and reading time', async ({ page }
   await expect(page.locator('body')).not.toContainText('预计阅读时间 1 分钟');
 });
 
+test('footer language menu fits both layouts and variable weight keeps columns stable', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(english ? '/en-US/' : '/');
+  if (english) await page.locator('[data-dismiss-fallback]').click();
+  if (await page.locator('#consent-banner').count()) {
+    await page.locator('#consent-decline-all').click();
+    await expect(page.locator('#consent-banner')).toBeHidden();
+  }
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    document.documentElement.dataset.effectVariableFont = 'on';
+  });
+  await expect(page.locator('header .lang-wrapper')).toHaveCount(0);
+  const links = page.locator('footer .weight-shift-non-centered');
+  await links.first().scrollIntoViewIfNeeded();
+  const columns = () =>
+    links.evaluateAll((elements) =>
+      elements.map((el) => {
+        const rect = el.closest('ul')!.parentElement!.getBoundingClientRect();
+        return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+      })
+    );
+  const before = await columns();
+  const target = english ? links.filter({ hasText: 'FireStone Website' }) : links.first();
+  const baseWeight = await target.evaluate((el) => Number(getComputedStyle(el).fontWeight));
+  await target.hover();
+  await expect
+    .poll(() => target.evaluate((el) => Number(getComputedStyle(el).fontWeight)))
+    .toBeGreaterThan(baseWeight);
+  await target.evaluate((el) =>
+    Promise.all(el.getAnimations().map((animation) => animation.finished))
+  );
+  expect(await columns()).toEqual(before);
+
+  if (!english) return;
+  const trigger = page.locator('footer .lang-trigger');
+  const legal = page.locator('footer .footer-legal-links');
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await trigger.scrollIntoViewIfNeeded();
+    await expect(trigger.locator('.lang-chevron')).toHaveCSS('transform', 'matrix(-1, 0, 0, -1, 0, 0)');
+    const triggerBox = (await trigger.boundingBox())!;
+    const legalBox = (await legal.boundingBox())!;
+    if (width === 1440) expect(triggerBox.x).toBeGreaterThanOrEqual(legalBox.x + legalBox.width);
+    else expect(triggerBox.y).toBeGreaterThanOrEqual(legalBox.y + legalBox.height);
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    const panel = page.locator('footer .lang-panel');
+    await expect(panel).toBeVisible();
+    await expect(trigger.locator('.lang-chevron')).toHaveCSS('transform', 'none');
+    const panelBox = (await panel.boundingBox())!;
+    expect(panelBox.y).toBeGreaterThanOrEqual(0);
+    expect(panelBox.y + panelBox.height).toBeLessThanOrEqual(triggerBox.y);
+    expect(panelBox.x).toBeGreaterThanOrEqual(0);
+    expect(panelBox.x + panelBox.width).toBeLessThanOrEqual(width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `test-results/footer-language-${width}.png` });
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Escape');
+    await expect(panel).toBeHidden();
+    await expect(trigger).toBeFocused();
+  }
+  await trigger.click();
+  await page.locator('footer .lang-row[data-locale="zh-CN"]').click();
+  await expect(page).toHaveURL('http://127.0.0.1:4399/');
+});
+
 test('English chrome and untranslated-content notice are connected', async ({ page }) => {
   test.skip(!english, 'English routes are intentionally disabled in the production config.');
   await page.goto('/en-US/');
@@ -372,6 +444,10 @@ test('translated content resolves different slugs, preserves reading time and re
   expect(existsSync(join(root, 'en-US/blog/as260-draft/index.html'))).toBe(false);
   expect(existsSync(join(root, 'projects/en-us/as260-project/index.html'))).toBe(false);
   await page.goto('/blog/as260-check-zh/');
+  await expect(page.locator('footer .lang-row[data-locale="en-US"]')).toHaveAttribute(
+    'href',
+    '/en-US/blog/as260-check-en'
+  );
   await expect(page.locator('link[hreflang="en-US"]')).toHaveAttribute(
     'href',
     'https://fire-stone.co/en-US/blog/as260-check-en'

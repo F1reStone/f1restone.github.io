@@ -26,6 +26,8 @@ interface Props {
   class?: string;
   /** Render compact (icon-only trigger). Defaults to false. */
   compact?: boolean;
+  /** Footer menus open above the trigger to stay inside the page. */
+  placement?: 'top' | 'bottom';
   /**
    * Optional map of `locale -> URL` for "same content, other language" links.
    * When provided (e.g. by a blog post that knows its real per-locale URLs),
@@ -36,7 +38,7 @@ interface Props {
   alternates?: Record<string, string>;
 }
 
-const { class: className, compact = false, alternates } = Astro.props;
+const { class: className, compact = false, placement = 'bottom', alternates } = Astro.props;
 
 const enabled = i18nIsEnabled();
 const currentPath = Astro.originPathname;
@@ -50,7 +52,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 
 {
   enabled && (
-    <div class={cn('relative lang-wrapper', className)}>
+    <div class={cn('relative lang-wrapper', className)} data-placement={placement}>
       <button
         type="button"
         class={cn(
@@ -78,7 +80,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
           <span class="text-xs font-semibold uppercase tracking-wide">{getLocaleName(currentLocale)}</span>
         )}
         <svg
-          class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200"
+          class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200 motion-reduce:transition-none"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -94,7 +96,8 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 
       <div
         class={cn(
-          'lang-panel absolute right-0 top-full mt-2 z-50',
+          'lang-panel absolute z-50',
+          placement === 'top' ? 'left-0 bottom-full mb-2 md:left-auto md:right-0' : 'right-0 top-full mt-2',
           'w-48 rounded-xl border border-border bg-background shadow-lg',
           'p-1.5 hidden'
         )}
@@ -138,6 +141,11 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 }
 
 <style>
+  .lang-wrapper[data-placement='top'] .lang-trigger[aria-expanded='false'] .lang-chevron,
+  .lang-wrapper[data-placement='bottom'] .lang-trigger[aria-expanded='true'] .lang-chevron {
+    transform: rotate(180deg);
+  }
+
   .lang-row {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -202,7 +210,6 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     document.querySelectorAll<HTMLElement>('.lang-panel').forEach((p) => p.classList.add('hidden'));
     document.querySelectorAll<HTMLButtonElement>('.lang-trigger').forEach((t) => {
       t.setAttribute('aria-expanded', 'false');
-      t.querySelector('.lang-chevron')?.classList.remove('rotate-180');
     });
   }
 
@@ -234,7 +241,6 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         if (willOpen) {
           panel.classList.remove('hidden');
           trigger.setAttribute('aria-expanded', 'true');
-          trigger.querySelector('.lang-chevron')?.classList.add('rotate-180');
         }
       });
     });
@@ -250,7 +256,13 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeAllLangPanels();
+        if (e.key === 'Escape') {
+          const open = document.querySelector<HTMLElement>('.lang-panel:not(.hidden)');
+          if (!open) return;
+          const trigger = open.closest('.lang-wrapper')?.querySelector<HTMLButtonElement>('.lang-trigger');
+          closeAllLangPanels();
+          trigger?.focus();
+        }
       });
     }
   }

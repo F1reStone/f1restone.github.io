@@ -36,7 +36,7 @@ import ThemeSelector from '@/components/layout/ThemeSelector.astro';
 import ThemeSelectorDropdown from '@/components/layout/ThemeSelectorDropdown.astro';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher.astro';
 import siteConfig from '@/config/site.config';
-import { isEnabled as i18nIsEnabled, getLocaleFromPath, t, localizedPath } from '@/i18n';
+import { getLocaleFromPath, t, localizedPath } from '@/i18n';
 const locale = getLocaleFromPath(Astro.originPathname);
 
 export interface NavItem {
@@ -124,7 +124,7 @@ const {
   showThemeSelector = false,
   showMobileMenu = true,
   showSocialLinks = true,
-  showLanguageSwitcher = i18nIsEnabled(),
+  showLanguageSwitcher = false,
   languageAlternates,
   showActiveState = true,
   showScrollProgress = false,

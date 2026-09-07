@@ -139,7 +139,6 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
     shape="bar"
     showCta={false}
     maxWidth="8xl"
-    languageAlternates={languageAlternates}
   />
   <!-- FireStone: [Update Header maxWidth] -->
 
@@ -244,6 +243,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <Footer
     slot="footer"
+    languageAlternates={languageAlternates}
     breadcrumbs={breadcrumbs}
   />
 </BaseLayout>

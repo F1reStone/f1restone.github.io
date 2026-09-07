@@ -26,6 +26,7 @@ import {
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
@@ -78,6 +79,8 @@ interface Props extends HTMLAttributes<'footer'> {
   copyright?: string;
   /** Legal links (Privacy, Terms, etc.) */
   legalLinks?: LegalLink[];
+  /** Verified same-content links, including translations with different slugs. */
+  languageAlternates?: Record<string, string>;
   /** Hide logo */
   hideLogo?: boolean;
   /** Tagline text under logo */
@@ -107,6 +110,7 @@ const {
   showCopyright = true,
   copyright = t('footer.copyright', locale),
   legalLinks,
+  languageAlternates,
   hideLogo = false,
   tagline = '',
   maxWidth = '9xl',// FireStone: Change max width to 9xl to adapt out designs and wider footer.
@@ -331,6 +335,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                       <a
                         href={link.href}
                         class="text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover:text-foreground"
+                        data-text={link.label}
                         target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
@@ -346,7 +351,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col lg:flex-row lg:flex-wrap justify-between items-start lg:items-center gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
@@ -354,8 +359,9 @@ const footerClasses = cn(footerVariants({ background }), className);
                 {showCopyright && (
                   <p class="text-sm font-semibold text-foreground-subtle" set:html={processedCopyright} />
                 )}
+                <div class="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center">
                 {resolvedLegalLinks.length > 0 && (
-                  <div class="flex flex-wrap items-center">
+                  <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
                     {resolvedLegalLinks.map((link, index) => (
                       <div class="contents">
                         {index > 0 && (
@@ -400,6 +406,8 @@ const footerClasses = cn(footerVariants({ background }), className);
                     </button>
                   </div>
                 )}
+                <LanguageSwitcher placement="top" alternates={languageAlternates} />
+                </div>
               </>
             )}
           </div>
@@ -464,6 +472,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                         <a
                           href={link.href}
                           class="text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover:text-foreground"
+                          data-text={link.label}
                           target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                           rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         >
@@ -487,7 +496,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section (版权与合规链接，复用原有逻辑) */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-section-header)] pt-[var(--space-section-header)] flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-section-header)] flex flex-col lg:flex-row lg:flex-wrap justify-between items-start lg:items-center gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
@@ -495,8 +504,9 @@ const footerClasses = cn(footerVariants({ background }), className);
                 {showCopyright && (
                   <p class="text-sm font-medium text-foreground/60" set:html={processedCopyright} />
                 )}
+                <div class="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center">
                 {resolvedLegalLinks.length > 0 && (
-                  <div class="flex flex-wrap items-center">
+                  <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
                     {resolvedLegalLinks.map((link, index) => (
                       <div class="contents">
                         {index > 0 && (
@@ -541,6 +551,8 @@ const footerClasses = cn(footerVariants({ background }), className);
                     </button>
                   </div>
                 )}
+                <LanguageSwitcher placement="top" alternates={languageAlternates} />
+                </div>
               </>
             )}
           </div>
