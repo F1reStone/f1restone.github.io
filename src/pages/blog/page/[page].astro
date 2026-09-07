@@ -80,6 +80,7 @@ const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
           <BlogCard
             title={post.data.title}
             description={post.data.description}
+            body={post.body}
             href={getPostUrl(post.id)}
             publishedAt={post.data.publishedAt}
             tags={post.data.tags}

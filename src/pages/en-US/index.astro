@@ -132,6 +132,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
             <BlogCard
               title={post.data.title}
               description={post.data.description}
+              body={post.body}
               href={getPostUrl(post.id)}
               publishedAt={post.data.publishedAt}
               tags={post.data.tags}

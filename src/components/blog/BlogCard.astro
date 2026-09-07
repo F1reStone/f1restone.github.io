@@ -17,7 +17,7 @@ interface Props {
   image?: ImageMetadata;
   svgSlug?: string;
   /** Raw post body, used to estimate reading time (CJK-aware). */
-  body?: string;
+  body: string | undefined;
   /** Active locale for i18n labels. */
   locale?: Locale;
   /**

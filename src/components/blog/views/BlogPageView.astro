@@ -90,6 +90,7 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
           <BlogCard
             title={post.data.title}
             description={post.data.description}
+            body={post.body}
             href={getPostUrl(post.id, locale)}
             publishedAt={post.data.publishedAt}
             tags={post.data.tags}
