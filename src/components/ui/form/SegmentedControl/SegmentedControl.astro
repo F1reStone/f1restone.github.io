@@ -76,7 +76,7 @@ const optionSizes: Record<SegmentedControlSize, string> = {
         class={cn(
           'text-foreground-muted relative z-10 rounded-full font-medium',
           optionSizes[size],
-          'hover:text-foreground transition-colors duration-300 weight-shift ease-[var(--ease-fluid)]',
+          'hover:text-foreground focus-visible:text-foreground transition-colors duration-300 weight-shift ease-[var(--ease-fluid)]',
           'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
           'data-[selected=true]:text-background data-[selected=true]:font-extrabold data-[selected=true]:hover:text-background motion-reduce:transition-none'
         )}

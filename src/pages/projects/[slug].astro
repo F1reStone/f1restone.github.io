@@ -1,12 +1,11 @@
 ---
 import ProjectLayout from '@/layouts/ProjectLayout.astro';
 import type { GallerySlide } from '@/lib/gallery';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getVisibleProjects, getProjectSlug } from '@/lib/projects';
 
 export async function getStaticPaths() {
-  const visibleProjects = await getCollection('projects', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
-  });
+  const visibleProjects = await getVisibleProjects();
 
   // Filter out placeholder entries and solo-page projects.
   // Solo-page projects have their own dedicated .astro file (e.g.
@@ -17,7 +16,7 @@ export async function getStaticPaths() {
   );
 
   return routableProjects.map((project) => ({
-    params: { slug: project.id.replace(/\.mdx?$/, '') },
+    params: { slug: getProjectSlug(project.id, project.data.locale) },
     props: {
       project,
       related: visibleProjects

@@ -10,7 +10,9 @@ export const GET: APIRoute = ({ site }) => {
   # Block API routes
   Disallow: /api/
 
-  Sitemap: ${siteUrl}sitemap-index.xml
+Sitemap: ${new URL('sitemap-index.xml', siteUrl)}
+
+# Site overview for language models: ${new URL('llms.txt', siteUrl)}
   `.trim();
 
   return new Response(robotsTxt, {

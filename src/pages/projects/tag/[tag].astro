@@ -1,15 +1,6 @@
 ---
-/**
- * Project tag archive
- * URL: /projects/tag/<slug>
- */
-import PageLayout from '@/layouts/PageLayout.astro';
-import ProjectCard from '@/components/projects/ProjectCard.astro';
-import ProjectTagList from '@/components/projects/ProjectTagList.astro';
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
-import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import Button from '@/components/ui/form/Button/Button.astro';
-import { Hero } from '@/components/hero';
+import ProjectsTagView from '@/components/projects/views/ProjectsTagView.astro';
+import { defaultLocale } from '@/i18n';
 import {
   collectProjectTags,
   collectTopProjectTags,
@@ -39,65 +30,6 @@ export async function getStaticPaths() {
     };
   });
 }
-
-const { tag, projects, visibleTags } = Astro.props;
 ---
 
-<PageLayout
-  title={`#${tag} — Projects`}
-  description={`Projects tagged "${tag}".`}
-  eagerReveal
-  footerBackground="secondary"
->
-  <Hero layout="centered" size="sm">
-    <Badge slot="badge" variant="brand" pill>
-      <Icon name="tag" size="sm" />
-      Tag
-    </Badge>
-
-    <h1
-      slot="title"
-      class="!text-4xl sm:!text-5xl md:!text-6xl lg:!text-7xl break-words [overflow-wrap:anywhere]"
-    >#{tag}</h1>
-
-    <p slot="description">
-      {projects.length} project{projects.length === 1 ? '' : 's'} tagged "{tag}".
-    </p>
-  </Hero>
-
-  <section class="bg-background py-[var(--space-section-md)]">
-    <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
-      <div class="flex flex-col items-center gap-4" data-reveal>
-        <Button variant="outline" href="/projects/" data-reveal>
-          <Icon name="chevron-left" size="sm" />
-          返回「全部项目」
-        </Button>
-
-        {visibleTags.length > 0 && (
-          <ProjectTagList tags={visibleTags} active={tag} class="justify-center" />
-        )}
-      </div>
-
-      {projects.length > 0 ? (
-        <div class="grid gap-6 md:grid-cols-2">
-          {projects.map((project, i) => (
-            <ProjectCard project={project} index={i} />
-          ))}
-        </div>
-      ) : (
-        <div class="py-16 text-center">
-          <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
-            <Icon name="layers" size="lg" class="text-foreground-muted" />
-          </div>
-          <p class="text-foreground-muted text-lg">No projects found for this tag.</p>
-          <div class="mt-6">
-            <Button href="/projects" variant="outline" size="sm">
-              <Icon name="arrow-left" size="sm" />
-              Back to all projects
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  </section>
-</PageLayout>
+<ProjectsTagView locale={defaultLocale} {...Astro.props} />

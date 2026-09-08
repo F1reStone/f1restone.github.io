@@ -1,4 +1,9 @@
 ---
+import { defaultLocale, localizedPath, getLocaleFromPath } from '@/i18n';
+interface Props { locale?: string; }
+const { locale = defaultLocale } = Astro.props;
+const requestedLocale = getLocaleFromPath(Astro.originPathname);
+Astro.locals.contentLocale = defaultLocale;
 import LandingLayout from '@/layouts/LandingLayout.astro';
 import { Hero } from '@/components/hero';
 import Button from '@/components/ui/form/Button/Button.astro';
@@ -7,16 +12,17 @@ import ProjectCard from '@/components/projects/ProjectCard.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import TypingEffect from '@/components/ui/TypingEffect.astro';
-import { getCollection } from 'astro:content';
+import { getFeaturedContent } from '@/lib/page-content';
+import { withLocaleFallback } from '@/lib/locale-fallback';
 import { getPostUrl } from '@/lib/blog';
 
-const projectItems = await getCollection('projects');
+const { projects: projectItems, posts: blogItems } = await getFeaturedContent(locale);
 const featuredProjects = projectItems
   .filter((p) => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 4);
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
+const posts = blogItems
   .sort((a, b) => {
     if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
     return b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
@@ -27,9 +33,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 <LandingLayout
   title="首页"
   description="兴趣使然的业余开发者 / 设计师 / 内容创作者「FireStone 火石」的个人网站。在这里分享一些我的有趣作品和技术心得。"
-  image="/og-default.svg"
   includePersonSchema={true}
-  includeProfessionalServiceSchema={true}
 >
   <!-- Hero -->
   <Hero
@@ -49,19 +53,19 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     </h1>
 
     <Fragment slot="actions">
-      <Button size="lg" href="/about">
-        About me
+      <Button size="lg" href={localizedPath('/about', requestedLocale) + ''}>
+        关于我
         <Icon name="chevron-right" size="sm" />
       </Button>
-      <Button size="lg" variant="link" href="/projects">
-        Explore my projects
+      <Button size="lg" variant="outline" href={localizedPath('/projects', requestedLocale) + ''}>
+        探索我的项目
         <Icon name="chevron-right" size="sm" />
       </Button>
     </Fragment>
   </Hero>
 
   <!-- Portfolio -->
-  <section id="work" class="bg-background relative z-10 py-[var(--space-section-md)]">
+  <section id="work" class="bg-background border-border relative z-10 py-[var(--space-section-md)]">
     <div class="max-w-8xl mx-auto flex flex-col gap-8 px-6">
       <div class="flex flex-col items-center gap-4 text-center" data-reveal>
         <div class="flex flex-col items-center gap-6">
@@ -70,11 +74,11 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
-        {featuredProjects.map((project, i) => <ProjectCard project={project} index={i} />)}
+        {featuredProjects.map((project, i) => <ProjectCard locale={requestedLocale} project={project} index={i} />)}
       </div>
 
       <div class="mt-4 text-center">
-        <Button variant="outline" href="/projects">
+        <Button variant="outline" href={localizedPath('/projects', requestedLocale) + ''}>
           查看更多项目
           <Icon name="chevron-right" size="sm" />
         </Button>
@@ -83,7 +87,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </section>
 
   <!-- About Teaser -->
-  <section class="bg-background relative z-10 py-[var(--space-section-md)]">
+  <section
+    class="bg-background-secondary border-border relative z-10 border-t py-[var(--space-section-md)]"
+  >
     <div class="max-w-8xl mx-auto px-6">
       <div class="grid gap-12 lg:grid-cols-2">
         <div class="flex flex-col justify-center" data-reveal="right" data-reveal-ease="smooth">
@@ -110,7 +116,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               >
             </h2>
           </div>
-          <Button variant="outline" href="/about" class="self-start">
+          <Button variant="outline" href={localizedPath('/about', requestedLocale) + ''} class="self-start">
             进一步了解
             <Icon name="chevron-right" size="sm" />
           </Button>
@@ -120,7 +126,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
   </section>
 
   <!-- Blog -->
-  <section class="bg-background relative z-10 py-[var(--space-section-md)]">
+  <section class="bg-background border-border relative z-10 border-t py-[var(--space-section-md)]">
     <div class="max-w-8xl mx-auto flex flex-col gap-8 px-6">
       <div class="flex flex-col items-center gap-6 text-center" data-reveal>
         <h2 class="font-display text-foreground text-3xl font-bold md:text-4xl">推荐文章</h2>
@@ -133,7 +139,8 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
               title={post.data.title}
               description={post.data.description}
               body={post.body}
-              href={getPostUrl(post.id)}
+              locale={locale}
+              href={withLocaleFallback(getPostUrl(post.id, post.data.locale), post.data.locale, requestedLocale)}
               publishedAt={post.data.publishedAt}
               tags={post.data.tags}
               author={post.data.author}
@@ -147,7 +154,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       </div>
 
       <div class="flex justify-center">
-        <Button variant="outline" href="/blog">
+        <Button variant="outline" href={localizedPath('/blog', requestedLocale) + ''}>
           阅读所有文章
           <Icon name="chevron-right" size="sm" />
         </Button>

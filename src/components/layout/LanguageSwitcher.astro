@@ -21,27 +21,31 @@ import {
   swapLocaleInPath,
   t,
 } from '@/i18n';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
 interface Props {
   class?: string;
   /** Render compact (icon-only trigger). Defaults to false. */
   compact?: boolean;
+  /** Footer menus open above the trigger to stay inside the page. */
+  placement?: 'top' | 'bottom';
   /**
    * Optional map of `locale -> URL` for "same content, other language" links.
    * When provided (e.g. by a blog post that knows its real per-locale URLs),
    * it overrides the default behaviour of swapping the locale segment of the
    * current path — which is wrong when a translation lives at a different slug.
-   * Locales missing from the map fall back to the path swap.
+   * Locales missing from the map are omitted.
    */
   alternates?: Record<string, string>;
 }
 
-const { class: className, compact = false, alternates } = Astro.props;
+const { class: className, compact = false, placement = 'bottom', alternates } = Astro.props;
 
 const enabled = i18nIsEnabled();
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.originPathname;
 const currentLocale = getLocaleFromPath(currentPath);
-const locales = enabled ? getLocales() : [];
+const resolvedAlternates = alternates ?? Object.fromEntries(getLocales().map(locale => [locale, swapLocaleInPath(currentPath, locale)]));
+const locales = enabled ? getLocales().filter(locale => Boolean(resolvedAlternates[locale])) : [];
 
 const triggerLabel = t('nav.selectLanguage', currentLocale);
 const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
@@ -49,7 +53,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 
 {
   enabled && (
-    <div class={cn('relative lang-wrapper', className)}>
+    <div class={cn('relative lang-wrapper', className)} data-placement={placement}>
       <button
         type="button"
         class={cn(
@@ -61,23 +65,14 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         aria-expanded="false"
         aria-label={`${currentLanguageLabel}: ${getLocaleName(currentLocale)}. ${triggerLabel}.`}
       >
-        <svg
-          class="h-4 w-4"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path stroke-linecap="round" d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
-        </svg>
+        <span class="ttg-icon ttg-icon-light h-4 w-4" aria-hidden="true">
+          <Icon name="languages" size="sm" />
+        </span>
         {!compact && (
           <span class="text-xs font-semibold uppercase tracking-wide">{getLocaleName(currentLocale)}</span>
         )}
         <svg
-          class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200"
+          class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200 motion-reduce:transition-none"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -93,7 +88,8 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 
       <div
         class={cn(
-          'lang-panel absolute right-0 top-full mt-2 z-50',
+          'lang-panel absolute z-50',
+          placement === 'top' ? 'left-0 bottom-full mb-2 md:left-auto md:right-0' : 'right-0 top-full mt-2',
           'w-48 rounded-xl border border-border bg-background shadow-lg',
           'p-1.5 hidden'
         )}
@@ -101,7 +97,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         aria-label={triggerLabel}
       >
         {locales.map((locale) => {
-          const href = alternates?.[locale] ?? swapLocaleInPath(currentPath, locale);
+          const href = resolvedAlternates[locale];
           const isActive = locale === currentLocale;
           return (
             <a
@@ -137,6 +133,11 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 }
 
 <style>
+  .lang-wrapper[data-placement='top'] .lang-trigger[aria-expanded='false'] .lang-chevron,
+  .lang-wrapper[data-placement='bottom'] .lang-trigger[aria-expanded='true'] .lang-chevron {
+    transform: rotate(180deg);
+  }
+
   .lang-row {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -201,7 +202,6 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     document.querySelectorAll<HTMLElement>('.lang-panel').forEach((p) => p.classList.add('hidden'));
     document.querySelectorAll<HTMLButtonElement>('.lang-trigger').forEach((t) => {
       t.setAttribute('aria-expanded', 'false');
-      t.querySelector('.lang-chevron')?.classList.remove('rotate-180');
     });
   }
 
@@ -213,7 +213,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
       row.addEventListener('click', () => {
         const locale = row.getAttribute('data-locale');
         if (locale) {
-          localStorage.setItem('preferred_locale', locale);
+          try { localStorage.setItem('preferred_locale', locale); } catch { /* Storage may be unavailable. */ }
         }
       });
     });
@@ -233,7 +233,6 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         if (willOpen) {
           panel.classList.remove('hidden');
           trigger.setAttribute('aria-expanded', 'true');
-          trigger.querySelector('.lang-chevron')?.classList.add('rotate-180');
         }
       });
     });
@@ -249,7 +248,13 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeAllLangPanels();
+        if (e.key === 'Escape') {
+          const open = document.querySelector<HTMLElement>('.lang-panel:not(.hidden)');
+          if (!open) return;
+          const trigger = open.closest('.lang-wrapper')?.querySelector<HTMLButtonElement>('.lang-trigger');
+          closeAllLangPanels();
+          trigger?.focus();
+        }
       });
     }
   }

@@ -1,5 +1,9 @@
 ---
 import '@/styles/global.css';
+import type { BreadcrumbItem } from '@/lib/breadcrumbs';
+import { getRssUrl } from '@/lib/blog';
+import LocaleFallbackNotice from '@/components/layout/LocaleFallbackNotice.astro';
+import { getLocaleFallback } from '@/lib/locale-fallback';
 import SEO from '@/components/seo/SEO.astro';
 import JsonLd from '@/components/seo/JsonLd.astro';
 import Analytics from '@/components/layout/Analytics.astro';
@@ -7,12 +11,13 @@ import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
 import DynamicEffectsSettings from '@/components/layout/DynamicEffectsSettings.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 //import CursorTrail from '@/components/effects/CursorTrail.astro';
-import { createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
+import { createBreadcrumbSchema, createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
 import type { Thing, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
-import { t, getLocaleFromPath, getLocales, defaultLocale } from '@/i18n';
+import { t, getLocaleFromPath, getLocales, defaultLocale, isEnabled, i18nConfig } from '@/i18n';
 
 interface Props {
+  breadcrumbs?: BreadcrumbItem[];
   title?: string;
   description?: string;
   image?: string;
@@ -46,6 +51,7 @@ const {
   includePersonSchema = false,
   includeProfessionalServiceSchema = false,
   extraSchemas = [],
+  breadcrumbs = [],
   eagerReveal = false,
   localeAlternates,
 } = Astro.props;
@@ -62,13 +68,21 @@ if (includeProfessionalServiceSchema) {
   schemas.push(createProfessionalServiceSchema());
 }
 schemas.push(...extraSchemas);
+if (breadcrumbs.length > 1) {
+  schemas.push(createBreadcrumbSchema(breadcrumbs.map(item => ({
+    name: item.label,
+    url: new URL(item.href ?? Astro.url.pathname, Astro.site).toString(),
+  }))));
+}
 
 const locales = getLocales();
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = Astro.locals.contentLocale ?? getLocaleFromPath(Astro.url.pathname);
+const localeFallback = getLocaleFallback(Astro.originPathname, Astro.url.pathname, Astro.locals.contentLocale);
+const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeURI(Astro.url.pathname).replace(/\/$/, '');
 ---
 
 <!doctype html>
-<html lang={locale} class="scroll-smooth dark" data-theme="firestone" data-theme-mode="system">
+<html lang={locale} data-locale-fallback-source={localeFallback?.contentLocale} class="scroll-smooth dark" data-theme="firestone" data-theme-mode="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -116,13 +130,14 @@ const locale = getLocaleFromPath(Astro.url.pathname);
       image={image}
       imageAlt={imageAlt}
       article={article}
-      noindex={noindex}
+      noindex={noindex || !!localeFallback || rewritten}
+      canonicalPath={localeFallback?.canonicalPath}
       nofollow={nofollow}
       localeAlternates={localeAlternates}
     />
 
     <!-- RSS Feed -->
-    <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS Feed`} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS Feed`} href={getRssUrl(locale)} />
 
     <!-- JSON-LD Structured Data -->
     <JsonLd schema={schemas} />
@@ -181,7 +196,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     </script>
 
     <!-- Auto-redirect based on browser locale -->
-    <script is:inline define:vars={{ defaultLocale, locales }}>
+    {isEnabled() && i18nConfig.detectBrowserLocale && Astro.url.pathname === '/' && <script is:inline define:vars={{ defaultLocale, locales }}>
       (function() {
         try {
           // 1. 如果用户已经手动选过语言，尊重用户选择，不再自动跳转
@@ -242,6 +257,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
       })();
     </script>
 
+    }
     <!-- Client-side view transitions disabled: animations run cleanly from frame 0 on normal page loads. -->
 
     <!-- Theme bootstrap: localStorage.theme in {system, light, dark}. Default system. Resolves to dark class on html element. -->
@@ -565,8 +581,10 @@ const locale = getLocaleFromPath(Astro.url.pathname);
     </main>
 
     <slot name="footer" />
-
-    <ConsentBanner showReopener={false} />
+    <div data-banner-stack class="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-3 px-4 pb-6 pt-8 md:px-6 md:pb-8 [&_[data-dialog]]:pointer-events-auto">
+      <LocaleFallbackNotice />
+      <ConsentBanner stacked showReopener={false} />
+    </div>
     <!-- The dialog is mounted once here; Footer/Header can trigger it by id. -->
     <DynamicEffectsSettings showTrigger={false} />
 

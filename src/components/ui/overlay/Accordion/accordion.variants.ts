@@ -19,7 +19,7 @@ export const accordionTriggerVariants = cva(
   [
     'flex w-full items-center justify-between py-4 text-left',
     'font-medium text-foreground',
-    'transition-colors hover:text-foreground-secondary',
+    'transition-colors hover:text-foreground-secondary focus-visible:text-foreground-secondary',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded-sm',
   ],
   {

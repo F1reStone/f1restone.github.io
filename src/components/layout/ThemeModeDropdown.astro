@@ -12,6 +12,9 @@
  * Idempotent init via a wrapper-level dataset flag — supports multiple
  * instances (header pill + mobile-menu pill) and view-transition re-mounts.
  */
+import { t, getLocaleFromPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.originPathname);
+const labels = { system: t('theme.systemLabel', locale), light: t('theme.lightLabel', locale), dark: t('theme.darkLabel', locale), title: t('common.themeModeTitle', locale), systemLight: t('theme.systemLight', locale), systemDark: t('theme.systemDark', locale) };
 import { cn } from '@/lib/cn';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
@@ -22,7 +25,7 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<div class={cn('relative ttg-wrapper', className)}>
+<div class={cn('relative ttg-wrapper', className)} data-labels={JSON.stringify(labels)}>
   <!-- Trigger pill -->
   <button
     type="button"
@@ -33,7 +36,7 @@ const { class: className } = Astro.props;
     )}
     aria-haspopup="menu"
     aria-expanded="false"
-    aria-label="深浅模式：跟随系统。单击以切换。"
+    aria-label={t('common.themeModeTitle', locale, { mode: labels.system })}
   >
     <!-- Sun-Moon — shown when data-theme-mode="system" (also pre-bootstrap fallback) -->
     <span class="ttg-icon ttg-icon-system h-4 w-4" aria-hidden="true">
@@ -57,15 +60,15 @@ const { class: className } = Astro.props;
       'p-1.5 hidden'
     )}
     role="menu"
-    aria-label="Colour mode"
+    aria-label={t('theme.modeLabel', locale)}
   >
     <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="system">
       <span class="ttg-row-icon">
         <Icon name="sun-moon" size="sm" />
       </span>
       <span class="ttg-row-label">
-        <span class="ttg-row-title">跟随系统</span>
-        <span class="ttg-system-sub">当前为浅色模式</span>
+        <span class="ttg-row-title">{labels.system}</span>
+        <span class="ttg-system-sub">{labels.systemLight}</span>
       </span>
       <svg class="ttg-check h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M20 6L9 17l-5-5"/>
@@ -77,7 +80,7 @@ const { class: className } = Astro.props;
         <Icon name="sun" size="sm" />
       </span>
       <span class="ttg-row-label">
-        <span class="ttg-row-title">浅色模式（Beta）</span>
+        <span class="ttg-row-title">{labels.light}</span>
       </span>
       <svg class="ttg-check h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M20 6L9 17l-5-5"/>
@@ -89,7 +92,7 @@ const { class: className } = Astro.props;
         <Icon name="moon" size="sm" />
       </span>
       <span class="ttg-row-label">
-        <span class="ttg-row-title">深色模式</span>
+        <span class="ttg-row-title">{labels.dark}</span>
       </span>
       <svg class="ttg-check h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M20 6L9 17l-5-5"/>
@@ -212,14 +215,15 @@ const { class: className } = Astro.props;
 
   function syncAllTriggerLabels(mode: Mode): void {
     document.querySelectorAll<HTMLButtonElement>('.ttg-trigger').forEach((btn) => {
-      btn.setAttribute('aria-label', `深浅模式：${mode}。单击以切换。`);
+      const labels = JSON.parse(btn.closest<HTMLElement>('.ttg-wrapper')!.dataset.labels!);
+      btn.setAttribute('aria-label', labels.title.replace('{mode}', labels[mode]));
     });
   }
 
   function syncSystemSubLine(): void {
-    const text = osIsDark() ? '当前为深色模式' : '当前为浅色模式';
     document.querySelectorAll<HTMLElement>('.ttg-system-sub').forEach((el) => {
-      el.textContent = text;
+      const labels = JSON.parse(el.closest<HTMLElement>('.ttg-wrapper')!.dataset.labels!);
+      el.textContent = osIsDark() ? labels.systemDark : labels.systemLight;
     });
   }
 

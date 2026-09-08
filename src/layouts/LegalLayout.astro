@@ -1,5 +1,8 @@
 ---
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
 import type { MarkdownHeading } from 'astro';
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 import BaseLayout from './BaseLayout.astro';
 import { Hero } from '@/components/hero';
 import { formatDate } from '@/lib/utils';
@@ -28,9 +31,8 @@ const {
   description,
   updatedAt,
   headings = [],
-  sectionLabel = '法律信息',
   backHref = '/legal',
-  backLabel = '返回「法律信息」',
+  backLabel = t('legal.back', locale),
 } = Astro.props;
 
 const displayTitleEn = titleEn ?? title;
@@ -42,21 +44,18 @@ const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto
 const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
 const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
 
-const breadcrumbs = [
-  { label: '首页', href: '/' },
-  { label: sectionLabel, href: '/legal' },
-  { label: title },
-];
+const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'legal');
 
 const localizedHeadings = headings.map((heading) =>
   heading.slug === 'footnote-label'
-    ? { ...heading, text: '尾注' }
+    ? { ...heading, text: t('common.footnotes', locale) }
     : heading
 );
 ---
 
 <BaseLayout
-  title={`${title} | 法律信息`}
+  breadcrumbs={breadcrumbs}
+  title={`${title} | ${t('legal.title', locale)}`}
   description={description}
   article={undefined}
 >
@@ -88,7 +87,7 @@ const localizedHeadings = headings.map((heading) =>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
               <time datetime={updatedAt.toISOString()}>
-                最后更新于 {formatDate(updatedAt)}
+                {t('blog.updatedOn', locale, { date: formatDate(updatedAt, locale) })}
               </time>
             </div>
           </>
@@ -103,7 +102,7 @@ const localizedHeadings = headings.map((heading) =>
           : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
       ]}>
         {sidebarActive && sidebarOnLeft && (
-          <aside class="hidden xl:block" aria-label="Table of contents">
+          <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
             <TableOfContents
               headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}
@@ -141,14 +140,14 @@ const localizedHeadings = headings.map((heading) =>
 
               <Button href={`mailto:contact@fire-stone.co`} variant="outline" size="sm">
                 <Icon name="mail" size="sm" />
-                联系 FireStone
+                {t('legal.contact', locale)}
               </Button>
             </div>
           </footer>
         </div>
 
         {sidebarActive && !sidebarOnLeft && (
-          <aside class="hidden xl:block" aria-label="Table of contents">
+          <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
             <TableOfContents
               headings={localizedHeadings}
               maxDepth={tocConfig?.maxDepth ?? 3}

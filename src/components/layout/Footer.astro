@@ -19,20 +19,21 @@
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
 import {
-  getNavItems,
   getFooterNavItems,
   getLegalLinks,
   getFooterLinkGroups, // FireStone: Import the new global getter
   type ResolvedNavItem,
+  type LegalLink as ConfigLegalLink,
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 import Logo from '@/components/ui/marketing/Logo/Logo.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
 import giantLogoRaw from '@/assets/firestone-text-gradient.svg?raw'; // FireStone: Import the giant logo SVG as raw string
-import { getLocaleFromPath, t } from '@/i18n';
+import { getLocaleFromPath, t, localizedPath } from '@/i18n';
 
 export interface NavItem {
   label: string;
@@ -51,12 +52,7 @@ export interface FooterLinkGroup {
   label?: string;
 }*/
 
-export interface LegalLink {
-  label: string;
-  href?: string;
-  icon?: string;
-  action?: 'openConsentSettings';
-}
+export type LegalLink = ConfigLegalLink;
 
 interface Props extends HTMLAttributes<'footer'> {
   /** Layout style */
@@ -79,6 +75,8 @@ interface Props extends HTMLAttributes<'footer'> {
   copyright?: string;
   /** Legal links (Privacy, Terms, etc.) */
   legalLinks?: LegalLink[];
+  /** Verified same-content links, including translations with different slugs. */
+  languageAlternates?: Record<string, string>;
   /** Hide logo */
   hideLogo?: boolean;
   /** Tagline text under logo */
@@ -86,7 +84,7 @@ interface Props extends HTMLAttributes<'footer'> {
   // FireStone: [Add '8xl' and '9xl' to the props interface]
   maxWidth?: '4xl' | '5xl' | '6xl' | '7xl' | '8xl' | '9xl' | 'full';
   // FireStone: Added explicit props for the Smart Breadcrumb Engine
-  /** 如果传入，将覆盖自动生成的面包屑 */
+  /** Page-owned breadcrumb hierarchy. No automatic URL inference. */
   breadcrumbs?: { label: string; href?: string }[];
   /** 强制隐藏面包屑（如首页默认隐藏） */
   hideBreadcrumbs?: boolean;
@@ -95,7 +93,7 @@ interface Props extends HTMLAttributes<'footer'> {
 }
 
 // Resolve the current locale for i18n-aware nav/legal/group links
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 const {
   layout = 'asymmetricColumns',
@@ -103,11 +101,12 @@ const {
   background = 'glow',
   nav,
   linkGroups = getFooterLinkGroups(locale),// FireStone: Fallback to global link groups instead of an empty array
-  socialLinks = resolveSocialLinks(siteConfig.socialLinks),
+  socialLinks = resolveSocialLinks(siteConfig.socialLinks, locale),
   showSocial = true,
   showCopyright = true,
-  copyright = 'Copyright © {year} FireStone. All Rights Reserved.',
+  copyright = t('footer.copyright', locale),
   legalLinks,
+  languageAlternates,
   hideLogo = false,
   tagline = '',
   maxWidth = '9xl',// FireStone: Change max width to 9xl to adapt out designs and wider footer.
@@ -149,9 +148,12 @@ const processedCopyright = copyright
 
 // FireStone: Added class names for legal links and separators for better styling control
 const legalLinkClass =
-  'inline-flex items-center gap-2 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover:text-foreground';
+  'inline-flex items-center gap-1 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground';
 
 const legalSeparatorClass = 'mx-3 h-4 w-[1.5px] bg-foreground-subtle/30';
+
+// External arrows share the separator tone; SVG strokes use color, not background-color.
+const externalArrowClass = 'text-foreground-muted/60 hover:text-foreground focus-visible:text-foreground';
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -169,58 +171,8 @@ const cleanGiantLogoSvg = safeGiantLogoStr
       .replace(/^<svg/, '<svg class="w-full h-auto text-foreground" fill="currentColor"')
   : null;
 
-// =========================================================================
-// Auto-Routing Breadcrumb
-// =========================================================================
-const currentPath = Astro.url.pathname;
-const isHomePage = currentPath === '/' || currentPath === '/en-US' || currentPath === '/en-US/';
-
-let resolvedBreadcrumbs = explicitBreadcrumbs;
-
-// 如果没有手动传入，且不是首页，且没有被强制隐藏，则开启自动生成
-if (!resolvedBreadcrumbs && !hideBreadcrumbs && !isHomePage) {
-  // 1. 构建全局路由字典 (合并头部导航和底部导航)
-  const dict: Record<string, string> = { '/': '首页', '/en-US': 'Home', '/en-US/': 'Home' };
-  const allNavs = [...getNavItems(locale), ...getFooterLinkGroups(locale).flatMap(g => g.links)];
-  allNavs.forEach(item => {
-    const normalized = item.href.replace(/\/$/, ''); // 去除末尾斜杠以统配
-    dict[normalized] = item.label;
-  });
-
-  // 2. 切分当前路径
-  const segments = currentPath.replace(/\/$/, '').split('/').filter(Boolean);
-  
-  // 3. 处理多语言前缀基准
-  let basePath = '';
-  let startIndex = 0;
-  if (segments[0] === 'en-US') {
-    basePath = '/en-US';
-    startIndex = 1;
-    resolvedBreadcrumbs = [{ label: 'Home', href: '/en-US' }];
-  } else {
-    resolvedBreadcrumbs = [{ label: '首页', href: '/' }];
-  }
-
-  // 4. 逐级生成层级
-  let pathAcc = basePath;
-  for (let i = startIndex; i < segments.length; i++) {
-    const seg = segments[i];
-    pathAcc += '/' + seg;
-    
-    // 查字典，如果字典里没有（比如动态页面的最后一级），则首字母大写作为 fallback
-    let label = dict[pathAcc];
-    if (!label) {
-      label = seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ');
-    }
-    
-    resolvedBreadcrumbs.push({
-      label,
-      href: i === segments.length - 1 ? undefined : pathAcc // 最后一级没有链接
-    });
-  }
-}
-
-// 最终判定是否渲染：有数据且至少有两级（排除只有"首页"的情况）
+// Page layouts own the hierarchy; Footer only renders it.
+const resolvedBreadcrumbs = explicitBreadcrumbs;
 const showBreadcrumbs = resolvedBreadcrumbs && resolvedBreadcrumbs.length > 1 && !hideBreadcrumbs;
 
 // Compute footer classes
@@ -272,7 +224,7 @@ const footerClasses = cn(footerVariants({ background }), className);
             {hasLogoSlot ? (
               <slot name="logo" />
             ) : (
-              <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+              <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
                 <Logo size="md" class="text-foreground hdr-logo-glow" />
               </a>
             )}
@@ -289,11 +241,12 @@ const footerClasses = cn(footerVariants({ background }), className);
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class="transition-colors hover:text-foreground"
+              class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
               {item.label}
+              {item.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
             </a>
           ))}
         </nav>
@@ -307,10 +260,10 @@ const footerClasses = cn(footerVariants({ background }), className);
               {socialLinks.map((social) => (
                 <a
                   href={social.href}
-                  class="transition-colors text-foreground-muted hover:text-foreground"
+                  class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={social.label || `在 ${social.key} 上关注我`}
+                  aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
                 >
                   <Icon name={social.icon} size="md" />
                 </a>
@@ -336,7 +289,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+                <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
                   <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
@@ -348,15 +301,15 @@ const footerClasses = cn(footerVariants({ background }), className);
               {/* Social Links in columns layout */}
               {showSocial && socialLinks.length > 0 && (
                 <div class="flex flex-col gap-2.5 pt-2">
-                  <p class="footer-social-link-intro">社交媒体</p>
+                  <p class="footer-social-link-intro">{t('footer.socialMedia', locale)}</p>
                   <div class="flex items-center gap-[var(--space-stack-md)]">
                     {socialLinks.map((social) => (
                       <a
                         href={social.href}
-                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
+                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={social.label || `Follow us on ${social.key}`}
+                        aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
                       >
                         <Icon name={social.icon} size="md" />
                       </a>
@@ -381,11 +334,13 @@ const footerClasses = cn(footerVariants({ background }), className);
                     <li>
                       <a
                         href={link.href}
-                        class="text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover:text-foreground"
+                        class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                        data-text={link.label}
                         target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
-                        {link.label}
+                        <span>{link.label}</span>
+                        {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                       </a>
                     </li>
                   ))}
@@ -397,7 +352,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border flex flex-col lg:flex-row lg:flex-wrap justify-between items-start lg:items-center gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
@@ -405,19 +360,23 @@ const footerClasses = cn(footerVariants({ background }), className);
                 {showCopyright && (
                   <p class="text-sm font-semibold text-foreground-subtle" set:html={processedCopyright} />
                 )}
+                <div class="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center">
                 {resolvedLegalLinks.length > 0 && (
-                  <div class="flex flex-wrap items-center">
+                  <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
                     {resolvedLegalLinks.map((link, index) => (
                       <div class="contents">
                         {index > 0 && (
                           <span aria-hidden="true" class={legalSeparatorClass} />
                         )}
 
-                        {link.action === 'openConsentSettings' ? (
+                        {link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
                           <button
                             type="button"
                             class={legalLinkClass}
-                            data-consent-settings-trigger
+                            data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
+                            data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                            aria-haspopup={link.action === 'openDynamicEffects' ? 'dialog' : undefined}
+                            aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
@@ -428,29 +387,22 @@ const footerClasses = cn(footerVariants({ background }), className);
                           <a
                             href={link.href}
                             class={legalLinkClass}
-                            target={link.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                            target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                            rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
                             )}
                             <span>{link.label}</span>
+                            {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                           </a>
                         )}
                       </div>
                       ))}
-                    <span aria-hidden="true" class={legalSeparatorClass} />
-                    <button
-                      type="button"
-                      class={legalLinkClass}
-                      data-dynamic-effects-trigger="dynamic-effects-settings"
-                      aria-haspopup="dialog"
-                      aria-controls="dynamic-effects-settings"
-                    >
-                      <span>{t('effects.trigger', locale)}</span>
-                    </button>
                   </div>
                 )}
+                <LanguageSwitcher placement="top" alternates={languageAlternates} />
+                </div>
               </>
             )}
           </div>
@@ -468,7 +420,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+                <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
                   <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
@@ -480,15 +432,15 @@ const footerClasses = cn(footerVariants({ background }), className);
               {/* 社交媒体：加入 flex-wrap 保证极端 4:3 屏幕下自动折行不溢出 */}
               {showSocial && socialLinks.length > 0 && (
                 <div class="flex flex-col gap-3 pt-2">
-                  <p class="footer-social-link-intro">社交媒体</p>
+                  <p class="footer-social-link-intro">{t('footer.socialMedia', locale)}</p>
                   <div class="flex flex-wrap items-center gap-[var(--space-stack-md)]">
                     {socialLinks.map((social) => (
                       <a
                         href={social.href}
-                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
+                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={social.label || `在 ${social.key} 上关注 FireStone`}
+                        aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
                       >
                         <Icon name={social.icon} size="md" />
                       </a>
@@ -514,11 +466,13 @@ const footerClasses = cn(footerVariants({ background }), className);
                       <li>
                         <a
                           href={link.href}
-                          class="text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover:text-foreground"
+                          class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                          data-text={link.label}
                           target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                           rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         >
-                          {link.label}
+                          <span>{link.label}</span>
+                          {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                         </a>
                       </li>
                     ))}
@@ -538,7 +492,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 
         {/* Bottom section (版权与合规链接，复用原有逻辑) */}
         {(showCopyright || resolvedLegalLinks.length > 0) && (
-          <div class="mt-[var(--space-section-header)] pt-[var(--space-section-header)] flex flex-col md:flex-row justify-between items-left gap-[var(--space-stack-md)]">
+          <div class="mt-[var(--space-section-header)] pt-[var(--space-section-header)] flex flex-col lg:flex-row lg:flex-wrap justify-between items-start lg:items-center gap-[var(--space-stack-md)]">
             {hasBottomSlot ? (
               <slot name="bottom" />
             ) : (
@@ -546,19 +500,23 @@ const footerClasses = cn(footerVariants({ background }), className);
                 {showCopyright && (
                   <p class="text-sm font-medium text-foreground/60" set:html={processedCopyright} />
                 )}
+                <div class="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center">
                 {resolvedLegalLinks.length > 0 && (
-                  <div class="flex flex-wrap items-center">
+                  <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
                     {resolvedLegalLinks.map((link, index) => (
                       <div class="contents">
                         {index > 0 && (
                           <span aria-hidden="true" class={legalSeparatorClass} />
                         )}
 
-                        {link.action === 'openConsentSettings' ? (
+                        {link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
                           <button
                             type="button"
                             class={legalLinkClass}
-                            data-consent-settings-trigger
+                            data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
+                            data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                            aria-haspopup={link.action === 'openDynamicEffects' ? 'dialog' : undefined}
+                            aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
@@ -569,29 +527,22 @@ const footerClasses = cn(footerVariants({ background }), className);
                           <a
                             href={link.href}
                             class={legalLinkClass}
-                            target={link.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                            target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                            rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
                             )}
                             <span>{link.label}</span>
+                            {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                           </a>
                         )}
                       </div>
                       ))}
-                    <span aria-hidden="true" class={legalSeparatorClass} />
-                    <button
-                      type="button"
-                      class={legalLinkClass}
-                      data-dynamic-effects-trigger="dynamic-effects-settings"
-                      aria-haspopup="dialog"
-                      aria-controls="dynamic-effects-settings"
-                    >
-                      <span>{t('effects.trigger', locale)}</span>
-                    </button>
                   </div>
                 )}
+                <LanguageSwitcher placement="top" alternates={languageAlternates} />
+                </div>
               </>
             )}
           </div>
@@ -614,7 +565,7 @@ const footerClasses = cn(footerVariants({ background }), className);
           hasLogoSlot ? (
             <slot name="logo" />
           ) : (
-            <a href="/" class="flex items-center w-fit justify-self-start" aria-label="FireStone Logo">
+            <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
               <Logo size="md" class="text-foreground hdr-logo-glow" />
             </a>
           )
@@ -632,11 +583,12 @@ const footerClasses = cn(footerVariants({ background }), className);
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class="transition-colors hover:text-foreground"
+              class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
               {item.label}
+              {item.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
             </a>
           ))}
         </nav>
@@ -647,10 +599,10 @@ const footerClasses = cn(footerVariants({ background }), className);
             {socialLinks.map((social) => (
               <a
                 href={social.href}
-                class="transition-colors text-foreground-muted hover:text-foreground"
+                class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={social.label || `Follow us on ${social.key}`}
+                aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
               >
                 <Icon name={social.icon} size="md" />
               </a>
@@ -665,13 +617,29 @@ const footerClasses = cn(footerVariants({ background }), className);
               <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
             )}
             {resolvedLegalLinks.length > 0 && (
-              <div class="flex items-center gap-[var(--space-inline-lg)]">
-                {resolvedLegalLinks.map((link) => (
+              <div class="flex flex-wrap justify-center items-center gap-[var(--space-inline-lg)]">
+                {resolvedLegalLinks.map((link) => link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                    data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
+                    data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                    aria-haspopup="dialog"
+                    aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                  >
+                    {link.icon && <Icon name={link.icon} size="sm" />}
+                    <span>{link.label}</span>
+                  </button>
+                ) : (
                   <a
                     href={link.href}
-                    class="text-sm transition-colors text-foreground-muted hover:text-foreground"
+                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                    target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                    rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                   >
-                    {link.label}
+                    {link.icon && <Icon name={link.icon} size="sm" />}
+                    <span>{link.label}</span>
+                    {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                   </a>
                 ))}
               </div>
@@ -777,6 +745,22 @@ const footerClasses = cn(footerVariants({ background }), className);
   </script>
   
   <style is:global>
+  /* Reserve the heaviest label width independently of the trailing icon. */
+  footer .footer-group-link {
+    display: inline-grid !important;
+    grid-template-columns: auto max-content;
+    align-items: center;
+  }
+
+  footer .footer-group-link > span,
+  footer .footer-group-link::after {
+    grid-area: 1 / 1;
+  }
+
+  footer .footer-group-link > svg {
+    grid-area: 1 / 2;
+  }
+
     /* FireStone: Social links follow text*/
     .footer-social-link-intro {
       font-size: 0.65rem;

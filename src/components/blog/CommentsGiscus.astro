@@ -1,23 +1,18 @@
 ---
 /**
- * Comments — Giscus provider
+ * Comments — Giscus integration
  *
  * Renders nothing on the server except a placeholder section with a
  * reserved height (prevents CLS). The Giscus script is only loaded when
  * the user actually scrolls toward the comments — readers who never
  * scroll that far pay zero network cost.
  *
- * Theme and language follow the site by default: leave `theme`/`lang`
- * empty in `site.config.ts` and the embed mirrors the visitor's light/dark
- * mode (live) and the page's locale. Set either to a specific value to
- * override.
- *
- * Selected via `site.config.ts` → articleFeatures.comments.provider: 'giscus'
- * and configured under articleFeatures.comments.giscus.
+ * Configure in `site.config.ts` → articleFeatures.comments.giscus.
  * Set up your repo at https://giscus.app to get the IDs.
  */
 import siteConfig from '@/config/site.config';
-import { t, getLocaleFromPath } from '@/i18n';
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 const giscus = siteConfig.articleFeatures?.comments?.giscus;
 
@@ -28,19 +23,6 @@ const isConfigured =
   giscus.repoId &&
   giscus.category &&
   giscus.categoryId;
-
-const locale = getLocaleFromPath(Astro.url.pathname);
-const commentsTitle = t('comments.title', locale);
-
-// An empty (or unset) `theme` means "follow the site's light/dark mode":
-// the client resolves it from the DOM before loading Giscus and keeps it in
-// sync as the visitor toggles. A non-empty value is passed through verbatim.
-const adaptiveTheme = !giscus?.theme;
-
-// An empty (or unset) `lang` means "follow the site's current locale".
-// Navigation is a full page load, so the server-resolved locale is always
-// correct — no client-side language swap needed.
-const lang = giscus?.lang && giscus.lang.length > 0 ? giscus.lang : locale;
 
 const dataAttrs = isConfigured
   ? {
@@ -53,9 +35,8 @@ const dataAttrs = isConfigured
       reactionsEnabled: giscus!.reactionsEnabled !== false ? '1' : '0',
       emitMetadata: giscus!.emitMetadata ? '1' : '0',
       inputPosition: giscus!.inputPosition ?? 'bottom',
-      // Placeholder for adaptive mode; the client computes the real theme.
-      theme: adaptiveTheme ? 'light' : giscus!.theme!,
-      lang,
+      theme: giscus!.theme ?? 'preferred_color_scheme',
+      lang: locale === 'en-US' ? 'en' : (giscus!.lang ?? 'zh-CN'),
     }
   : null;
 ---
@@ -63,10 +44,10 @@ const dataAttrs = isConfigured
 {isConfigured && dataAttrs && (
   <section
     id="comments"
-    class="mx-auto max-w-4xl px-6 mt-12"
-    aria-label={commentsTitle}
+    class="mx-auto max-w-8xl px-6 mt-12"
+    aria-label={t('blog.comments', locale)}
   >
-    <h2 class="text-xl font-semibold mb-4 text-foreground">{commentsTitle}</h2>
+    <h2 class="text-xl font-semibold mb-4 text-foreground">{t('blog.comments', locale)}</h2>
     <div
       class="giscus-mount"
       data-giscus
@@ -80,10 +61,9 @@ const dataAttrs = isConfigured
       data-emit-metadata={dataAttrs.emitMetadata}
       data-input-position={dataAttrs.inputPosition}
       data-theme={dataAttrs.theme}
-      data-adaptive-theme={String(adaptiveTheme)}
       data-lang={dataAttrs.lang}
     >
-      <noscript>Comments require JavaScript to load.</noscript>
+      <noscript>{t('blog.commentsRequiresJs', locale)}</noscript>
     </div>
   </section>
 )}
@@ -96,15 +76,28 @@ const dataAttrs = isConfigured
 </style>
 
 <script>
+  // FireStone: Dynamic Giscus Theme Management
+  function getGiscusTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    // 使用我们在 public 目录下自定义的独立主题文件
+    return isDark ? `https://raw.githubusercontent.com/F1reStone/f1restone.github.io/refs/heads/main/public/giscus/firestone-dark.css` : `https://raw.githubusercontent.com/F1reStone/f1restone.github.io/refs/heads/main/public/giscus/firestone-light.css`;
+  }
+
+  function updateGiscusTheme() {
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    if (!iframe || !iframe.contentWindow) return;
+    // 跨域 postMessage 通知 iframe 无缝切换 CSS
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: getGiscusTheme() } } },
+      'https://giscus.app'
+    );
+  }
+
   // Lazy-load Giscus only when the comments area scrolls into view.
   // Until then, zero network requests are made — keeps article pages fast
   // for readers who don't scroll all the way to the bottom.
   const mount = document.querySelector<HTMLElement>('[data-giscus]');
   if (mount && !mount.dataset.loaded) {
-    const adaptiveTheme = mount.dataset.adaptiveTheme === 'true';
-    const resolveTheme = () =>
-      document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-
     const load = () => {
       if (mount.dataset.loaded) return;
       mount.dataset.loaded = 'true';
@@ -122,25 +115,12 @@ const dataAttrs = isConfigured
       s.setAttribute('data-reactions-enabled', mount.dataset.reactionsEnabled!);
       s.setAttribute('data-emit-metadata', mount.dataset.emitMetadata!);
       s.setAttribute('data-input-position', mount.dataset.inputPosition!);
-      s.setAttribute('data-theme', adaptiveTheme ? resolveTheme() : mount.dataset.theme!);
       s.setAttribute('data-lang', mount.dataset.lang!);
-      mount.appendChild(s);
 
-      // When following the site theme, push updates into the Giscus iframe
-      // whenever the visitor toggles light/dark (the <html> `dark` class).
-      if (adaptiveTheme) {
-        const sendTheme = () => {
-          const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
-          iframe?.contentWindow?.postMessage(
-            { giscus: { setConfig: { theme: resolveTheme() } } },
-            'https://giscus.app',
-          );
-        };
-        new MutationObserver(sendTheme).observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['class'],
-        });
-      }
+      // FireStone: 注入实时计算的动态主题 URL，取代写死配置
+      s.setAttribute('data-theme', getGiscusTheme());
+
+      mount.appendChild(s);
     };
 
     if ('IntersectionObserver' in window) {
@@ -158,5 +138,24 @@ const dataAttrs = isConfigured
       // Old browsers — just load it.
       load();
     }
+  }
+
+  // FireStone: [Cast window safely to bypass the no-explicit-any rule, keeping consistency with Astro Rocket's patterns]
+  const w = window as unknown as { __giscusThemeObserverInit?: boolean };
+
+  // 挂载 MutationObserver 监听 <html> 上 .dark 类名的改变
+  if (!w.__giscusThemeObserverInit) {
+    w.__giscusThemeObserverInit = true;
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          updateGiscusTheme();
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+
+    // 兼容 Astro 的 View Transitions 无刷新路由
+    document.addEventListener('astro:after-swap', updateGiscusTheme);
   }
 </script>

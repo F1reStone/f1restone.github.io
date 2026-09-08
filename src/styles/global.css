@@ -1553,12 +1553,9 @@ input[type='reset'] {
 
 /* =========================================================================
    FireStone SparkFlow UI 交互与材质
-   ========================================================================= */
-
-/* 
-   全局过渡动画处理
-   将所有交互引擎触发的动画属性并在一起。
-   修复多个原子类叠加在同一元素上时，transition 互相覆写导致动画失效的 Bug
+   =========================================================================
+   全局过渡动画处理，将所有交互引擎触发的动画属性并在一起。
+   以避免多个原子类叠加在同一元素上时，transition 互相覆写导致动画失效的 Bug
 */
 :root {
   --engine-transition:
@@ -1639,23 +1636,42 @@ input[type='reset'] {
   transform: scale(0.97);
 }
 
-/* 4. 图标发光 */
-.hover-glow-icon {
-  will-change: transform, filter;
-  transform: translateZ(0) scale(1);
-  color: var(--color-foreground-muted);
-  background-color: transparent !important;
+/* 4. Icon glow: apply the class to a control, an icon wrapper, or the SVG itself.
+   Filter only SVGs so filled buttons retain their background and text styling. */
+:is(svg.hover-glow-icon, .hover-glow-icon svg) {
+  scale: 1;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
-  transition: var(--engine-transition) !important;
+  transition: color 200ms linear, filter 400ms var(--ease-fluid), scale 500ms var(--ease-fluid);
 }
-.hover-glow-icon:hover,
-.hover-glow-icon:focus-visible {
-  color: var(--color-foreground);
+
+/* Parent interaction also reaches icons with pointer-events: none. Keyboard focus
+   uses focus-visible to avoid keeping the glow active after a pointer click. */
+:is(
+  svg.hover-glow-icon:is(:hover, :focus-visible),
+  .hover-glow-icon:is(:hover, :focus-visible) svg,
+  :where(button, a[href], [role='button'], .group):is(:hover, :focus-visible)
+    :is(svg.hover-glow-icon, .hover-glow-icon svg)
+):not(:disabled, [aria-disabled='true'], :where(:disabled, [aria-disabled='true']) *) {
+  color: var(--color-foreground) !important;
   filter: drop-shadow(0 0 10px currentColor);
-  transform: translateZ(0) scale(1.03);
+  scale: 1.03;
 }
-.hover-glow-icon:active {
-  transform: translateZ(0) scale(0.97);
+
+/* Independent scale preserves existing SVG transforms and loading spinners. */
+:is(
+  svg.hover-glow-icon:active,
+  .hover-glow-icon:active svg,
+  :where(button, a[href], [role='button'], .group):active
+    :is(svg.hover-glow-icon, .hover-glow-icon svg)
+):not(:disabled, [aria-disabled='true'], :where(:disabled, [aria-disabled='true']) *) {
+  scale: 0.97;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(svg.hover-glow-icon, .hover-glow-icon svg) {
+    scale: none !important;
+    transition: none !important;
+  }
 }
 
 /* 5. 纯文本发光 (Text Glow) */
@@ -1666,7 +1682,8 @@ input[type='reset'] {
 .hover-glow-text:active,
 .hover-glow-text:focus-visible,
 .hover-glow-text.active,
-.group:hover .hover-glow-text {
+.group:hover .hover-glow-text,
+.group:focus-visible .hover-glow-text {
   text-shadow: 0 0 10px currentColor !important;
 }
 
@@ -1693,7 +1710,8 @@ input[type='reset'] {
 .weight-shift:active,
 .weight-shift:focus-visible,
 .weight-shift.active,
-.group:hover .weight-shift {
+.group:hover .weight-shift,
+.group:focus-visible .weight-shift {
   font-weight: var(--ws-target, 900);
 }
 
@@ -1719,7 +1737,8 @@ input[type='reset'] {
 .weight-shift-non-centered:active,
 .weight-shift-non-centered:focus-visible,
 .weight-shift-non-centered.active,
-.group:hover .weight-shift-non-centered {
+.group:hover .weight-shift-non-centered,
+.group:focus-visible .weight-shift-non-centered {
   font-weight: var(--ws-target, 900);
 }
 

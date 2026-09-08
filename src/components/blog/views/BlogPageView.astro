@@ -1,43 +1,30 @@
 ---
-/**
- * BlogPageView — a paginated blog index page (page 2..N).
- *
- * Shared body for the default-locale route (`/blog/page/N`) and the
- * locale-prefixed route (`/<locale>/blog/page/N`). The page number and total
- * are resolved in each route's `getStaticPaths` and passed in; URLs are built
- * locale-aware via `lib/blog`.
- */
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
+import { t } from '@/i18n';
+import { defaultLocale, localizedPath } from '@/i18n';
+interface Props { locale?: string; page: number; totalPages: number; }
+const { locale = defaultLocale } = Astro.props;
 import PageLayout from '@/layouts/PageLayout.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import Pagination from '@/components/blog/Pagination.astro';
 import TagList from '@/components/blog/TagList.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import CTA from '@/components/ui/marketing/CTA/CTA.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
-import siteConfig from '@/config/site.config';
-import { resolveSocialLinks } from '@/lib/utils';
-import { defaultLocale } from '@/i18n';
 import {
   BLOG_POSTS_PER_PAGE,
-  BLOG_TAG_CLOUD_LIMIT,
   collectTopTags,
-  getBlogBaseUrl,
-  getBlogPageUrl,
   getPostUrl,
   getPublishedPosts,
 } from '@/lib/blog';
 
-interface Props {
-  /** Locale whose posts this page renders. Defaults to the site default. */
-  locale?: string;
-  /** 1-based page number (always >= 2 for this view). */
-  page: number;
-  /** Total number of index pages for this locale. */
-  totalPages: number;
-}
+/** How many of the most-used tags to surface in the cloud. */
+const TAG_CLOUD_LIMIT = 10;
 
-const { locale = defaultLocale, page, totalPages } = Astro.props;
+
+
+const { page, totalPages } = Astro.props;
 
 const posts = await getPublishedPosts(locale);
 const nonFeatured = posts.filter((p) => !p.data.featured);
@@ -46,48 +33,45 @@ const regularPostsAll = nonFeatured.length > 0 ? nonFeatured : posts;
 const start = (page - 1) * BLOG_POSTS_PER_PAGE;
 const pagePosts = regularPostsAll.slice(start, start + BLOG_POSTS_PER_PAGE);
 
-const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
-
-const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
+const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
 ---
 
 <PageLayout
-  title={`Blog — Page ${page}`}
-  description={`Page ${page} of ${totalPages} — articles on Astro, web performance, design, and the web.`}
-  showScrollProgress
+  breadcrumbs={buildBreadcrumbs(t('pagination.pageLabel', locale, { page }), Astro.url.pathname, locale, 'blog')}
+  title={`博客 | 第 ${page} 页`}
+  description={`第 ${page} 页，共 ${totalPages} 页 - 有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。`}
   eagerReveal
   footerBackground="secondary"
 >
-  <Hero layout="centered" size="sm">
+  <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="book" size="sm" />
-      Page {page} of {totalPages}
+      博客
     </Badge>
 
-    <h1 slot="title">Blog</h1>
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">Blog</span>
+    </h1>
 
-    <p slot="description">Articles on Astro, web performance, design systems, and building with Astro Rocket.</p>
+    <p slot="description" class="hero-description-text">有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。</p>
   </Hero>
 
   <section class="bg-background py-[var(--space-section-md)]">
-    <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
+    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-4" data-reveal>
-        <a
-          href={getBlogBaseUrl(locale)}
-          class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
-        >
-          <Icon name="arrow-left" size="sm" />
-          Newest posts
-        </a>
+        <Button variant="outline" href={localizedPath('/blog/', locale)} data-reveal>
+          <Icon name="chevron-left" size="sm" />
+          {t('blog.tagBackToAll', locale)}
+        </Button>
 
         {topTags.length > 0 && (
-          <TagList tags={topTags} locale={locale} class="justify-center" />
+          <TagList locale={locale} tags={topTags} class="justify-center" />
         )}
       </div>
 
       <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {pagePosts.map((post, index) => (
-          <BlogCard
+          <BlogCard locale={locale}
             title={post.data.title}
             description={post.data.description}
             body={post.body}
@@ -106,41 +90,9 @@ const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
       <Pagination
         currentPage={page}
         totalPages={totalPages}
-        href={(p) => getBlogPageUrl(p, locale)}
+        href={(p) => localizedPath(p === 1 ? '/blog' : `/blog/page/${p}`, locale)}
       />
     </div>
   </section>
 
-  <CTA variant="default" size="md" maxWidth="lg" glow={false} data-reveal>
-    <h2 slot="heading" class="!text-4xl">Follow along</h2>
-    <p slot="description" class="!text-lg text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
-
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a
-        href="/rss.xml"
-        class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
-      >
-        <Icon name="rss" size="sm" />
-        RSS Feed
-      </a>
-      {socialLinks.map((link) => (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
-        >
-          <Icon name={link.icon} size="sm" />
-          {link.label}
-        </a>
-      ))}
-      <a
-        href={`mailto:${siteConfig.email}`}
-        class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
-      >
-        <Icon name="mail" size="sm" />
-        Email
-      </a>
-    </div>
-  </CTA>
 </PageLayout>

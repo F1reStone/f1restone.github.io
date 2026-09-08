@@ -1,13 +1,12 @@
 /**
  * Build-time OG (Open Graph) image generator.
  *
- * Produces 1200x630 SVG images matching the look of `public/og-default.svg`
- * (brand-color background, corner marks, wordmark, site name). The theme
- * already ships SVG as its default OG format — keeping per-page OGs as SVG
- * means zero new build dependencies, zero runtime work, and zero Lighthouse
- * impact (OG images are only fetched by social crawlers, never by the page).
+ * Produces 1200x630 SVG sources with the site's brand layout. The build hook
+ * in scripts/og-images.mjs creates PNG sharing images using bundled fonts;
+ * SVG endpoints remain available for compatibility.
  */
 import siteConfig from '@/config/site.config';
+import { defaultLocale } from '@/i18n';
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -138,16 +137,16 @@ function safeHost(url: string): string {
 }
 
 /** Path (relative to site root) for a blog post's dynamic OG image. */
-export function getBlogOgPath(slug: string): string {
-  return `/og/blog/${slug}.svg`;
+export function getBlogOgPath(slug: string, locale: string = defaultLocale): string {
+  return `/og/blog/${locale === defaultLocale ? '' : `${locale}/`}${slug}.png`;
 }
 
 /** Path (relative to site root) for a project's dynamic OG image. */
-export function getProjectOgPath(slug: string): string {
-  return `/og/projects/${slug}.svg`;
+export function getProjectOgPath(slug: string, locale: string = defaultLocale): string {
+  return `/og/projects/${locale === defaultLocale ? '' : `${locale}/`}${slug}.png`;
 }
 
 /** Path for a generic dynamic OG image (used for tag/page archives). */
 export function getGenericOgPath(slug: string): string {
-  return `/og/${slug}.svg`;
+  return `/og/${slug}.png`;
 }

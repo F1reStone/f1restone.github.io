@@ -1,21 +1,10 @@
 ---
-import PageLayout from '@/layouts/PageLayout.astro';
-import BlogCard from '@/components/blog/BlogCard.astro';
-import Pagination from '@/components/blog/Pagination.astro';
-import TagList from '@/components/blog/TagList.astro';
-import Badge from '@/components/ui/data-display/Badge/Badge.astro';
-import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import Button from '@/components/ui/form/Button/Button.astro';
-import { Hero } from '@/components/hero';
+import BlogPageView from '@/components/blog/views/BlogPageView.astro';
+import { defaultLocale } from '@/i18n';
 import {
   BLOG_POSTS_PER_PAGE,
-  collectTopTags,
-  getPostUrl,
   getPublishedPosts,
 } from '@/lib/blog';
-
-/** How many of the most-used tags to surface in the cloud. */
-const TAG_CLOUD_LIMIT = 10;
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -30,75 +19,6 @@ export async function getStaticPaths() {
   }
   return pages;
 }
-
-const { page, totalPages } = Astro.props;
-
-const posts = await getPublishedPosts();
-const nonFeatured = posts.filter((p) => !p.data.featured);
-const regularPostsAll = nonFeatured.length > 0 ? nonFeatured : posts;
-
-const start = (page - 1) * BLOG_POSTS_PER_PAGE;
-const pagePosts = regularPostsAll.slice(start, start + BLOG_POSTS_PER_PAGE);
-
-const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
 ---
 
-<PageLayout
-  title={`博客 | 第 ${page} 页`}
-  description={`第 ${page} 页，共 ${totalPages} 页 - 有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。`}
-  eagerReveal
-  footerBackground="secondary"
->
-  <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
-    <Badge slot="badge" variant="brand" pill>
-      <Icon name="book" size="sm" />
-      博客
-    </Badge>
-    
-    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
-      <span class="hero-title-text">Blog</span>
-    </h1>
-
-    <p slot="description" class="hero-description-text">有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。</p>
-  </Hero>
-
-  <section class="bg-background py-[var(--space-section-md)]">
-    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-      <div class="flex flex-col items-center gap-4" data-reveal>
-        <Button variant="outline" href="/blog/" data-reveal>
-          <Icon name="chevron-left" size="sm" />
-          返回「全部文章」
-        </Button>
-
-        {topTags.length > 0 && (
-          <TagList tags={topTags} class="justify-center" />
-        )}
-      </div>
-
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {pagePosts.map((post, index) => (
-          <BlogCard
-            title={post.data.title}
-            description={post.data.description}
-            body={post.body}
-            href={getPostUrl(post.id)}
-            publishedAt={post.data.publishedAt}
-            tags={post.data.tags}
-            author={post.data.author}
-            image={post.data.image}
-            svgSlug={post.data.svgSlug}
-            revealDelay={index % 3}
-            eager={index === 0}
-          />
-        ))}
-      </div>
-
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        href={(p) => (p === 1 ? '/blog' : `/blog/page/${p}`)}
-      />
-    </div>
-  </section>
-
-</PageLayout>
+<BlogPageView locale={defaultLocale} {...Astro.props} />

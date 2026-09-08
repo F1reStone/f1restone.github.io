@@ -17,6 +17,9 @@
  */
 import { cn } from '@/lib/cn';
 import Icon from '../../primitives/Icon/Icon.astro';
+import { t, getLocaleFromPath } from '@/i18n';
+
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 interface Tab {
   id: string;
@@ -147,7 +150,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
                     size="md"
                     class={cn(
                       'vtab-icon transition-all duration-200',
-                      isActive ? 'text-brand-600 dark:text-brand-400 scale-105' : 'text-foreground-muted group-hover:text-foreground-secondary'
+                      isActive ? 'text-brand-600 dark:text-brand-400 scale-105' : 'text-foreground-muted group-hover:text-foreground-secondary group-focus-visible:text-foreground-secondary'
                     )}
                   />
                 </div>
@@ -173,7 +176,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
                 <span
                   class={cn(
                     'vtab-label block font-medium transition-colors duration-150',
-                    isActive ? 'text-foreground' : 'text-foreground-secondary group-hover:text-foreground'
+                    isActive ? 'text-foreground' : 'text-foreground-secondary group-hover:text-foreground group-focus-visible:text-foreground'
                   )}
                 >
                   {tab.label}
@@ -182,7 +185,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
                   <span
                     class={cn(
                       'vtab-desc block text-sm mt-0.5 transition-colors duration-150',
-                      isActive ? 'text-foreground-muted' : 'text-foreground-subtle group-hover:text-foreground-muted'
+                      isActive ? 'text-foreground-muted' : 'text-foreground-subtle group-hover:text-foreground-muted group-focus-visible:text-foreground-muted'
                     )}
                   >
                     {tab.description}
@@ -263,7 +266,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
                     size="md"
                     class={cn(
                       'vtab-icon transition-all duration-200',
-                      isActive ? 'text-brand-600 dark:text-brand-400 scale-105' : 'text-foreground-muted group-hover:text-foreground-secondary'
+                      isActive ? 'text-brand-600 dark:text-brand-400 scale-105' : 'text-foreground-muted group-hover:text-foreground-secondary group-focus-visible:text-foreground-secondary'
                     )}
                   />
                 </div>
@@ -290,7 +293,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
                 <span
                   class={cn(
                     'vtab-label block font-medium transition-colors duration-150',
-                    isActive ? 'text-foreground' : 'text-foreground-secondary group-hover:text-foreground'
+                    isActive ? 'text-foreground' : 'text-foreground-secondary group-hover:text-foreground group-focus-visible:text-foreground'
                   )}
                 >
                   {tab.label}
@@ -299,7 +302,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
                   <span
                     class={cn(
                       'vtab-desc block text-sm mt-0.5 transition-colors duration-150',
-                      isActive ? 'text-foreground-muted' : 'text-foreground-subtle group-hover:text-foreground-muted'
+                      isActive ? 'text-foreground-muted' : 'text-foreground-subtle group-hover:text-foreground-muted group-focus-visible:text-foreground-muted'
                     )}
                   >
                     {tab.description}
@@ -333,7 +336,7 @@ const defaultTab = tabs.find(t => t.id === defaultValue);
       class="lg:col-span-4 flex flex-col gap-1"
       role="tablist"
       aria-orientation="vertical"
-      aria-label="Vertical tabs"
+      aria-label={t('common.verticalTabs', locale)}
     >
       {tabs.map((tab: Tab) => {
         const isActive = tab.id === defaultValue;

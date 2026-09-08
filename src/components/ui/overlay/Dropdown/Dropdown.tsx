@@ -233,7 +233,7 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
                 'focus-visible:ring-2 focus-visible:ring-ring',
                 item.disabled
                   ? 'opacity-50 cursor-not-allowed pointer-events-none text-foreground-muted'
-                  : 'hover:bg-secondary focus:bg-secondary text-foreground-secondary hover:text-foreground'
+                  : 'hover:bg-secondary focus:bg-secondary text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
               )}
               role="menuitem"
               tabIndex={item.disabled ? -1 : 0}
@@ -261,7 +261,7 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
                 'focus-visible:ring-2 focus-visible:ring-ring',
                 item.disabled
                   ? 'opacity-50 cursor-not-allowed pointer-events-none text-foreground-muted'
-                  : 'hover:bg-secondary focus:bg-secondary text-foreground-secondary hover:text-foreground'
+                  : 'hover:bg-secondary focus:bg-secondary text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
               )}
               role="menuitem"
               tabIndex={item.disabled ? -1 : 0}

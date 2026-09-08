@@ -8,6 +8,8 @@ export const buttonVariants = cva(
     'cursor-pointer',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
+    // Decorative SVGs defer pointer targeting to the button, avoiding path-level
+    // event targets. Icon glow follows the control's hover/focus state in CSS.
     '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   ],
   {
@@ -27,7 +29,7 @@ export const buttonVariants = cva(
           'bg-destructive text-destructive-foreground hover-glow-box hover-glow-outline hover:bg-destructive/80',
         link: 
           /* FireStone: 文本按钮仅使用发光，不能使用 weight-shift，防止破坏内部 Icon Flex 布局 */
-          'text-foreground-secondary hover:text-foreground hover-glow-text',
+          'text-foreground-secondary hover:text-foreground focus-visible:text-foreground hover-glow-text',
       },
       size: {
         sm: 'h-8 px-3 text-xs [&_svg]:h-4 [&_svg]:w-4',

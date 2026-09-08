@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, createContext, useContext, type React
 import { cn } from '@/lib/cn';
 import { toastVariants, toastIconColors } from './toast.variants';
 import { Icon } from '@/components/ui/primitives/Icon/Icon';
+import { t, defaultLocale, type Locale } from '@/i18n';
 
 type ToastVariant = 'default' | 'success' | 'error' | 'warning' | 'info';
 
@@ -38,7 +39,7 @@ const icons: Record<ToastVariant, ReactNode> = {
   info:    <Icon name="info"          size="md" />,
 };
 
-function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string) => void }) {
+function ToastItem({ toast, onDismiss, locale }: { toast: Toast; onDismiss: (id: string) => void; locale: Locale }) {
   const [isExiting, setIsExiting] = useState(false);
   const variant = toast.variant || 'default';
 
@@ -83,9 +84,9 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
       </div>
       <button
         type="button"
-        className="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground transition-colors"
+        className="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground focus-visible:text-foreground transition-colors"
         onClick={handleDismiss}
-        aria-label="Dismiss"
+        aria-label={t('common.dismiss', locale)}
       >
         <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="18" y1="6" x2="6" y2="18" />
@@ -96,7 +97,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
   );
 }
 
-export function ToastProvider({ children }: { children: ReactNode }) {
+export function ToastProvider({ children, locale = defaultLocale }: { children: ReactNode; locale?: Locale }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const toast = useCallback((options: Omit<Toast, 'id'>) => {
@@ -111,14 +112,23 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ toast, dismiss }}>
       {children}
-      {/* Toast container */}
+      {/*
+        Toast container.
+
+        ARIA prohibits `aria-label` on a plain div: with no role there is
+        nothing for the name to belong to, so the label was being dropped.
+        `role="region"` gives the live area an identity, which makes the label
+        legal and turns the container into a landmark that screen-reader users
+        can jump to.
+      */}
       <div
         className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 max-w-[420px] w-full pointer-events-none"
+        role="region"
         aria-live="polite"
-        aria-label="Notifications"
+        aria-label={t('common.notifications', locale)}
       >
-        {toasts.map((t) => (
-          <ToastItem key={t.id} toast={t} onDismiss={dismiss} />
+        {toasts.map((item) => (
+          <ToastItem key={item.id} toast={item} onDismiss={dismiss} locale={locale} />
         ))}
       </div>
     </ToastContext.Provider>

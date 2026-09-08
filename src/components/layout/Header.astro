@@ -24,6 +24,7 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { ImageMetadata } from 'astro';
 import { cn } from '@/lib/cn';
+import { resolveSocialLinks } from '@/lib/utils';
 import { getNavItems, type ResolvedNavItem } from '@/config/nav.config';
 import { headerVariants, headerInnerVariants } from './header.variants';
 import Button from '@/components/ui/form/Button/Button.astro';
@@ -35,7 +36,8 @@ import ThemeSelector from '@/components/layout/ThemeSelector.astro';
 import ThemeSelectorDropdown from '@/components/layout/ThemeSelectorDropdown.astro';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher.astro';
 import siteConfig from '@/config/site.config';
-import { isEnabled as i18nIsEnabled, getLocaleFromPath } from '@/i18n';
+import { getLocaleFromPath, t, localizedPath, stripLocaleFromPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.originPathname);
 
 export interface NavItem {
   label: string;
@@ -115,14 +117,14 @@ const {
   nav,
   extraNav = [],
   showCta = false,
-  cta = { label: '探索我的项目', href: '/projects' },
+  cta = { label: t('header.exploreProjects', locale), href: localizedPath('/projects', locale), icon: undefined, trailingIcon: undefined },
   actions = [],
   showSearch = true,
   showThemeToggle = true,
   showThemeSelector = false,
   showMobileMenu = true,
   showSocialLinks = true,
-  showLanguageSwitcher = i18nIsEnabled(),
+  showLanguageSwitcher = false,
   languageAlternates,
   showActiveState = true,
   showScrollProgress = false,
@@ -159,7 +161,6 @@ const maxWidthClass = {
 const effectiveShowScrollProgress = showScrollProgress || (isFloating && !autoHide);
 const isInvert = colorScheme === 'invert';
 
-const locale = getLocaleFromPath(Astro.url.pathname);
 
 const defaultNav = getNavItems(locale).map((item: ResolvedNavItem) => ({
   label: item.label,
@@ -206,17 +207,11 @@ function isActive(href: string): boolean {
 }
 
 function getSocialIconData(url: string): { icon: string; label: string } {
-  if (url.includes('github.com'))    return { icon: 'github',    label: 'GitHub' };
-  if (url.includes('bilibili.com'))   return { icon: 'bilibili',   label: '哔哩哔哩' };
-  if (url.includes('zhihu.com'))   return { icon: 'zhihu',   label: '知乎' };
-  if (url.includes('music.163.com'))  return { icon: 'neteasecloudmusic', label: '网易云音乐' };
-  if (url.includes('weibo.com'))   return { icon: 'weibo',   label: '微博' };
-  if (url.includes('youtube.com'))   return { icon: 'youtube',   label: 'YouTube' };
-  if (url.includes('x.com') || url.includes('twitter.com')) return { icon: 'x-twitter', label: 'X' };
-  return { icon: 'link', label: 'Social' };
+  return resolveSocialLinks([url], locale)[0];
 }
 
 function getNavIcon(href: string): string {
+  if (href.startsWith('/')) href = stripLocaleFromPath(href);
   if (href === '/' || href === '') return 'home';
   if (href.startsWith('/blog'))     return 'pen-line';
   if (href.startsWith('/projects')) return 'layers';
@@ -257,6 +252,9 @@ const buttonId = `${menuId}-button`;
       ))}
     </div>
   )}
+  {(showSearch || (showMobileMenu && layout !== 'minimal')) && (
+    <div class="hdr-menu-surface" aria-hidden="true" />
+  )}
   <div class={cn(innerClasses, 'hdr-inner')}>
     {
       !hideLogo && (
@@ -273,7 +271,7 @@ const buttonId = `${menuId}-button`;
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href="/" class="flex items-center w-fit" aria-label="FireStone Logo">
+                <a href={localizedPath('/', locale)} class="flex items-center w-fit" aria-label={t('common.logo', locale)}>
                   <Logo
                     size={size === 'sm' ? 'md' : 'lg'}
                     class="text-foreground hdr-logo-glow"
@@ -351,11 +349,11 @@ const buttonId = `${menuId}-button`;
     {
       layout !== 'minimal' &&
         (hasNavSlot ? (
-          <nav class="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+          <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
             <slot name="nav" />
           </nav>
         ) : (
-          <nav class="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+          <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
             {navItems.map(({ label, href }) => (
               <a
                 href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
@@ -367,7 +365,7 @@ const buttonId = `${menuId}-button`;
                     ? (isActive(href) ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' : 'text-foreground-muted font-medium')
                     : (isActive(href) 
                         ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' 
-                        : 'text-foreground-muted hover:text-foreground font-medium')
+                        : 'text-foreground-muted hover:text-foreground focus-visible:text-foreground font-medium')
                 )}
                 aria-current={isActive(href) ? 'page' : undefined}
                 data-text={label}
@@ -425,7 +423,7 @@ const buttonId = `${menuId}-button`;
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                         isFloating
                           ? 'hdr-invert-text'
-                          : 'text-foreground-muted hover:text-foreground'
+                          : 'text-foreground-muted hover:text-foreground focus-visible:text-foreground'
                       )}
                     >
                       <Icon name={icon} size="md" />
@@ -481,7 +479,7 @@ const buttonId = `${menuId}-button`;
             )}
             aria-expanded="false"
             aria-controls={menuId}
-            aria-label="Toggle menu"
+            aria-label={t('nav.toggleMenu', locale)}
           >
             <span class="menu-icon">
               <Icon name="menu" size="md" />
@@ -523,13 +521,14 @@ const buttonId = `${menuId}-button`;
           id={menuId}
           class={cn(
             'mobile-menu-panel', // FireStone: Target class for theme protection
-            'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
+            'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
             isFloating
               ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
               : 'border-border bg-background border-t'
           )}
           role="navigation"
-          aria-label="Mobile navigation"
+          inert
+          aria-label={t('nav.mobileNav', locale)}
         >
           <slot name="mobile-menu" />
         </div>
@@ -538,20 +537,21 @@ const buttonId = `${menuId}-button`;
           id={menuId}
           class={cn(
             'mobile-menu-panel', // FireStone: Target class for theme protection
-            'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
+            'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
             isFloating
               ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
               : 'border-border bg-background border-t'
           )}
           role="navigation"
-          aria-label="Mobile navigation"
+          inert
+          aria-label={t('nav.mobileNav', locale)}
         >
           <div class={cn(
             'mobile-menu-body py-3',
             isFloating ? 'px-3' : cn('mx-auto px-4', maxWidthClass)
           )}>
             <section class="mobile-menu-section">
-              <p class="mobile-menu-label">导航</p>
+              <p class="mobile-menu-label">{t('nav.sectionNavigate', locale)}</p>
               <ul class="space-y-0.5">
                 {navItems.map(({ label, href }, idx) => {
                   const active = isActive(href);
@@ -583,12 +583,12 @@ const buttonId = `${menuId}-button`;
 
             {showThemeSelector && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">主题</p>
+                <p class="mobile-menu-label">{t('nav.sectionTheme', locale)}</p>
                 <div
                   class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
                   style={`--stagger-index: ${navItems.length}`}
                 >
-                  <span class="text-sm text-foreground-muted">颜色主题</span>
+                  <span class="text-sm text-foreground-muted">{t('theme.colourTheme', locale)}</span>
                   <ThemeSelector />
                 </div>
               </section>
@@ -596,12 +596,12 @@ const buttonId = `${menuId}-button`;
 
             {showLanguageSwitcher && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">语言</p>
+                <p class="mobile-menu-label">{t('nav.sectionLanguage', locale)}</p>
                 <div
                   class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
                   style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0)}`}
                 >
-                  <span class="text-sm text-foreground-muted">语言</span>
+                  <span class="text-sm text-foreground-muted">{t('nav.sectionLanguage', locale)}</span>
                   <LanguageSwitcher alternates={languageAlternates} />
                 </div>
               </section>
@@ -609,22 +609,26 @@ const buttonId = `${menuId}-button`;
 
             {mobileSocialLinks.length > 0 && (
               <section class="mobile-menu-section">
-                <p class="mobile-menu-label">社交媒体</p>
+                <p class="mobile-menu-label">{t('footer.socialMedia', locale)}</p>
                 <div class="flex flex-wrap items-center gap-2 px-2 pt-1 pb-2">
                   {mobileSocialLinks.map((url, sIdx) => {
                     const { icon, label } = getSocialIconData(url);
                     return (
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={label}
-                        title={label}
-                        class="mobile-menu-social mobile-menu-stagger inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-foreground-muted transition-colors"
+                      <span
+                        class="mobile-menu-stagger mobile-menu-social inline-flex"
                         style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0) + (showLanguageSwitcher ? 1 : 0) + sIdx}`}
                       >
-                        <Icon name={icon} size="md" />
-                      </a>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={label}
+                          title={label}
+                          class="glass-panel hover-glow-box hover-solid-fill inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-foreground-muted transition-colors"
+                        >
+                          <Icon name={icon} size="md" />
+                        </a>
+                      </span>
                     );
                   })}
                 </div>
@@ -653,13 +657,15 @@ const buttonId = `${menuId}-button`;
   showMobileMenu && layout !== 'minimal' && (
     <div
       id={`${menuId}-backdrop`}
-      class="pointer-events-none fixed inset-0 z-40 opacity-0 transition-opacity duration-200 lg:hidden"
+      class="mobile-menu-backdrop pointer-events-none fixed inset-0 z-40 bg-background/40 backdrop-blur-md lg:hidden"
       aria-hidden="true"
     />
   )
 }
 
 <script>
+  import { animateHeaderSurface, headerMotionTiming } from '@/lib/headerMotion';
+
   function initMobileMenu() {
     const menuHeaders = document.querySelectorAll<HTMLElement>('header[data-menu-id]');
     menuHeaders.forEach((header) => {
@@ -678,12 +684,38 @@ const buttonId = `${menuId}-button`;
       button.dataset.menuInit = 'true';
 
       let isOpen = false;
-      let isAnimating = false;
+      let menuAnimation: Animation | undefined;
+      let socialExits: Animation[] = [];
+
+      function fitMenu() {
+        const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+        menu!.style.setProperty('--mobile-menu-height', `${Math.max(0, viewportHeight - header.getBoundingClientRect().bottom - 12)}px`);
+      }
+
+      function animateMenu(opening: boolean) {
+        const wasHidden = menu!.classList.contains('hidden');
+        const style = getComputedStyle(menu!);
+        const from = wasHidden
+          ? { opacity: '0', clipPath: 'inset(0 0 100% 0)' }
+          : { opacity: style.opacity, clipPath: style.clipPath === 'none' ? 'inset(0 0 0% 0)' : style.clipPath };
+        menuAnimation?.cancel();
+        menu!.classList.remove('hidden');
+        animateHeaderSurface(header, 'data-menu-expanded', opening);
+        const timing = headerMotionTiming();
+        // Reveal the panel without scaling its text or changing the page layout.
+        menuAnimation = menu!.animate([
+          from,
+          opening ? { opacity: '1', clipPath: 'inset(0 0 0% 0)' } : { opacity: '0', clipPath: 'inset(0 0 100% 0)' },
+        ], timing);
+        return menuAnimation.finished;
+      }
 
       function open() {
-        if (isOpen || isAnimating) return;
-        isAnimating = true;
+        if (isOpen) return;
+        header.dispatchEvent(new Event('header:menu-open'));
         isOpen = true;
+        socialExits.forEach((animation) => animation.cancel());
+        socialExits = [];
 
         button!.setAttribute('aria-expanded', 'true');
         menuIcon!.classList.add('hidden');
@@ -693,53 +725,59 @@ const buttonId = `${menuId}-button`;
         header.setAttribute('data-menu-open', 'true');
 
         if (isFloating) {
-          header.setAttribute('data-scrolled', '');
           header.classList.remove('rounded-2xl');
           header.classList.add('rounded-t-2xl');
-        } else {
-          header.classList.add('!bg-background');
         }
 
-        const mainContent = document.querySelector('main');
-        const footer = document.querySelector('footer');
-        if (mainContent) mainContent.classList.add('mobile-menu-blur');
-        if (footer) footer.classList.add('mobile-menu-blur');
-
-        menu!.classList.remove('hidden', 'animate-menu-up', 'opacity-0', 'scale-y-0');
-        menu!.classList.add('animate-menu-down');
+        fitMenu();
+        menu!.inert = false;
+        menu!.dataset.menuState = 'open';
+        void animateMenu(true).then(() => {
+          if (isOpen) {
+            menuAnimation?.cancel();
+          }
+        }, () => {});
+        // A reversed close keeps the same DOM/CSS state; restart each stagger explicitly.
+        menu!.getAnimations({ subtree: true }).forEach(animation => {
+          if (animation instanceof CSSAnimation && animation.animationName === 'mobileMenuItemIn') {
+            animation.currentTime = 0;
+            animation.play();
+          }
+        });
         if (backdrop) {
-          backdrop.classList.remove('pointer-events-none', 'animate-backdrop-out');
-          backdrop.classList.add('animate-backdrop');
+          backdrop.classList.remove('pointer-events-none');
+          backdrop.setAttribute('data-open', '');
         }
-
-        isAnimating = false;
       }
 
       function close() {
-        if (!isOpen || isAnimating) return;
-        isAnimating = true;
+        if (!isOpen) return;
+        isOpen = false;
 
         button!.setAttribute('aria-expanded', 'false');
         menuIcon!.classList.remove('hidden');
         closeIcon!.classList.add('hidden');
 
-        // FireStone: [Remove state attribute on header when menu closes]
-        header.removeAttribute('data-menu-open');
-
-        menu!.classList.remove('animate-menu-down');
-        menu!.classList.add('animate-menu-up');
-        if (backdrop) {
-          backdrop.classList.remove('animate-backdrop');
-          backdrop.classList.add('animate-backdrop-out');
+        if (menu!.contains(document.activeElement)) button!.focus();
+        menu!.inert = true;
+        backdrop?.removeAttribute('data-open');
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          socialExits = [...menu!.querySelectorAll<HTMLElement>('.mobile-menu-social')].reverse().map((item, index) => {
+            const style = getComputedStyle(item);
+            return item.animate([
+              { opacity: style.opacity, transform: style.transform },
+              { opacity: 0, transform: 'translateY(6px)' },
+            ], { duration: 600, delay: index * 75, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
+          });
         }
-
-        const mainContent = document.querySelector('main');
-        const footer = document.querySelector('footer');
-        if (mainContent) mainContent.classList.remove('mobile-menu-blur');
-        if (footer) footer.classList.remove('mobile-menu-blur');
-
-        setTimeout(() => {
-          menu!.classList.add('hidden', 'opacity-0', 'scale-y-0');
+        void Promise.all([animateMenu(false), ...socialExits.map((animation) => animation.finished)]).then(() => {
+          if (isOpen) return;
+          menu!.classList.add('hidden');
+          delete menu!.dataset.menuState;
+          menuAnimation?.cancel();
+          socialExits.forEach((animation) => animation.cancel());
+          socialExits = [];
+          header.removeAttribute('data-menu-open');
           if (backdrop) {
             backdrop.classList.add('pointer-events-none');
           }
@@ -750,13 +788,9 @@ const buttonId = `${menuId}-button`;
             if (window.scrollY <= 60) {
               header.removeAttribute('data-scrolled');
             }
-          } else {
-            header.classList.remove('!bg-background');
           }
 
-          isOpen = false;
-          isAnimating = false;
-        }, 200);
+        }, () => {});
       }
 
       function toggle() {
@@ -768,6 +802,13 @@ const buttonId = `${menuId}-button`;
       }
 
       button.addEventListener('click', toggle);
+      header.addEventListener('header:search-open', close);
+      window.addEventListener('resize', () => {
+        if (!isOpen) return;
+        if (matchMedia('(min-width: 1024px)').matches) close();
+        else fitMenu();
+      });
+      window.visualViewport?.addEventListener('resize', () => { if (isOpen) fitMenu(); });
 
       if (backdrop) {
         backdrop.addEventListener('click', close);
@@ -844,7 +885,7 @@ const buttonId = `${menuId}-button`;
           const currentScrollY = window.scrollY;
           const menuId = header.dataset.menuId;
           const menu = menuId ? document.getElementById(menuId) : null;
-          const menuOpen = menu && !menu.classList.contains('hidden');
+          const menuOpen = header.hasAttribute('data-search-active') || (menu && !menu.classList.contains('hidden'));
           const wasHidden = header.hasAttribute('data-header-hidden');
 
           // ── WRITES ──
@@ -947,14 +988,30 @@ const buttonId = `${menuId}-button`;
 /* =========================================================================
     FireStone: Progressive Background Blur (渐进式毛玻璃)
     ========================================================================= */
-/* FireStone: [Only apply transparent overrides when the mobile menu is NOT open to prevent layout conflicts] */
-header:not([data-menu-open]).hdr-progressive-glass {
+/* Keep the original glass stable beneath the independently animated menu surface. */
+header.hdr-progressive-glass {
   background-color: transparent !important;
   border: none !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   box-shadow: none !important;
 }
+
+/* One solid surface fades over the existing transparent/glass header. */
+.hdr-menu-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--background);
+  opacity: 0;
+}
+header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface { opacity: 1; }
+header[data-search-active] { z-index: 101; }
+header[data-search-active] > .hdr-inner { pointer-events: auto; }
+header > .hdr-inner { position: relative; z-index: 1; }
+header > .mobile-menu-panel { z-index: 2; }
 
 .hdr-progressive-blur {
   position: absolute;
@@ -963,6 +1020,11 @@ header:not([data-menu-open]).hdr-progressive-glass {
   z-index: -1;
   pointer-events: none;
   border-radius: inherit;
+}
+
+/* Menu contrast changes must not recolour the glass being revealed underneath. */
+header.invert-section > .hdr-progressive-blur {
+  --color-background: var(--surface-invert);
 }
 
 /* Keep opacity and masks on individual layers: a faded wrapper would become
@@ -1033,8 +1095,8 @@ header:not([data-menu-open]).hdr-progressive-glass {
 }
 
 /* 当页面发生滚动时，渐进式模糊平滑显现 */
-header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-progressive-blur > .hdr-progressive-blur-layer,
-header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-progressive-blur::after {
+header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur > .hdr-progressive-blur-layer,
+header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur::after {
   opacity: 1;
   visibility: visible;
 }
@@ -1046,11 +1108,25 @@ header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-pro
   }
 }
 
-.mobile-menu-blur {
-    opacity: 0.3;
-    filter: blur(4px);
-    transition: opacity 200ms, filter 200ms;
-  }
+.mobile-menu-panel {
+  max-height: var(--mobile-menu-height, calc(100svh - 6rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mobile-menu-backdrop {
+  opacity: 0;
+  transition: opacity 800ms var(--ease-default);
+  touch-action: none;
+}
+
+.mobile-menu-backdrop[data-open] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-backdrop { transition: none; }
+}
 
   [data-header-shape="floating"] {
     transition-property: translate, background, border-color, box-shadow, width, max-width, border-radius, margin-top;
@@ -1397,29 +1473,12 @@ header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-pro
     border-top: 1px solid color-mix(in oklch, var(--color-border) 60%, transparent);
   }
 
-  .mobile-menu-social {
-    border-color: var(--color-border-strong);
-  }
-  html:not(.dark) .mobile-menu-social:hover {
-    color: var(--color-foreground);
-    border-color: var(--color-border-strong);
-    background-color: color-mix(in oklch, var(--color-secondary) 60%, transparent);
-  }
-  html.dark .mobile-menu-social:hover {
-    color: var(--color-brand-300);
-    border-color: var(--color-brand-400);
-    background-color: color-mix(in oklch, var(--color-brand-400) 12%, transparent);
-  }
-  .mobile-menu-social:focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
-  }
 
   @media (prefers-reduced-motion: no-preference) {
-    .animate-menu-down .mobile-menu-stagger {
+    [data-menu-state='open'] .mobile-menu-stagger {
       opacity: 0;
-      animation: mobileMenuItemIn 340ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-      animation-delay: calc(var(--stagger-index, 0) * 38ms + 90ms);
+      animation: mobileMenuItemIn 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: calc(var(--stagger-index, 0) * 75ms + 75ms);
     }
   }
 
@@ -1501,7 +1560,7 @@ header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-pro
      ========================================================================= */
 
   /* 1. 菜单激活时：重置 Header 的所有局部 CSS 变量，关闭反色逻辑 (de-invert) */
-  header.invert-section[data-menu-open] {
+  header.invert-section:is([data-menu-expanded], [data-search-expanded]) {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-foreground-secondary: var(--foreground-secondary);
@@ -1524,17 +1583,31 @@ header[data-scrolled]:not([data-menu-open]):not([data-header-hidden]) > .hdr-pro
     color: var(--color-foreground) !important;
   }
 
-  /* 2. 菜单激活时：强行让 Header 整体呈现带有毛玻璃的实色背景，并以 var(--ease-fluid) 速度丝滑过渡 */
+  /* Keep colour adaptation separate from the animated solid surface. */
   header[data-menu-open] {
-    background-color: var(--color-background) !important;
-    border-bottom: 1.25px solid var(--color-border) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    backdrop-filter: blur(24px) !important;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
-    transition: 
-      background-color 400ms var(--ease-fluid), 
-      border-color 400ms var(--ease-fluid),
-      color 400ms var(--ease-fluid) !important;
+    border-bottom-color: var(--color-border) !important;
+  }
+
+  @media screen {
+    header > .hdr-inner :is(.search-trigger, .ttg-trigger, .hdr-hamburger, .hdr-invert-text) {
+      transition: var(--engine-transition), color 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    header > .hdr-inner .hdr-hamburger { color: var(--color-foreground); }
+    /* Match the layer of the shared logo's important transition. */
+    @layer utilities {
+      header > .hdr-inner .hdr-logo-glow {
+        transition: filter 400ms var(--ease-fluid), transform 400ms var(--ease-fluid),
+          color 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        header > .hdr-inner .hdr-logo-glow { transition: none !important; }
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      header > .hdr-inner :is(.search-trigger, .ttg-trigger, .hdr-hamburger, .hdr-invert-text, .hdr-logo-glow) {
+        transition: none !important;
+      }
+    }
   }
 
   /* =======================================================================

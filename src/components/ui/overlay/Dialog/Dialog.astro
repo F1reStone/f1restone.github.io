@@ -1,4 +1,6 @@
 ---
+import { t, getLocaleFromPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.originPathname);
 /**
  * Dialog Component
  * Accessible modal dialog with focus trap and keyboard navigation
@@ -61,7 +63,7 @@ const sizes = {
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
         )}
         data-dialog-close
-        aria-label="关闭对话框"
+        aria-label={t('common.closeDialog', locale)}
       >
         <Icon name="x" class="w-5 h-5" />
       </button>
@@ -111,6 +113,7 @@ const sizes = {
       const closeButtons = dialog.querySelectorAll('[data-dialog-close]');
 
       let previousActiveElement: HTMLElement | null = null;
+      let closeTimeout: ReturnType<typeof setTimeout> | undefined;
 
       function getFocusableElements(): HTMLElement[] {
         return Array.from(
@@ -143,6 +146,10 @@ const sizes = {
       }
 
       function open() {
+        if (closeTimeout !== undefined) {
+          clearTimeout(closeTimeout);
+          closeTimeout = undefined;
+        }
         previousActiveElement = document.activeElement as HTMLElement;
         dialog.classList.remove('hidden');
 
@@ -163,12 +170,14 @@ const sizes = {
       }
 
       function close() {
+        if (dialog.classList.contains('hidden') || closeTimeout !== undefined) return;
         backdrop?.classList.remove('opacity-100');
         panel?.classList.add('scale-95', 'opacity-0');
         panel?.classList.remove('scale-100', 'opacity-100');
 
         // FireStone: [Matched the close timeout to 300ms to perfectly align with transition duration]
-        setTimeout(() => {
+        closeTimeout = setTimeout(() => {
+          closeTimeout = undefined;
           dialog.classList.add('hidden');
           document.body.classList.remove('overflow-hidden');
           previousActiveElement?.focus();

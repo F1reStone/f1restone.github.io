@@ -18,8 +18,11 @@
       "legal": "法律",
       "blog": "博客",
       "about": "关于",
-      "ai": "FireStone AI"
-    }
+      "ai": "FireStone AI",
+      "firestone-website": "FireStone Website",
+      "sparkforge": "SparkForge"
+    },
+    "searchSite": "搜索本站"
   },
   "common": {
     "readMore": "阅读更多",
@@ -30,7 +33,29 @@
     "cancel": "取消",
     "next": "下一页",
     "previous": "上一页",
-    "home": "首页"
+    "home": "首页",
+    "map": "地图",
+    "googleMaps": "Google 地图",
+    "mapConsentPrompt": "允许 Cookie 后即可加载交互式地图。",
+    "viewOnGoogleMaps": "在 Google 地图中查看",
+    "progress": "进度",
+    "browseByTag": "按标签浏览",
+    "techStack": "技术栈",
+    "togglePassword": "切换密码可见性",
+    "breadcrumb": "面包屑导航",
+    "copyCode": "复制代码到剪贴板",
+    "dismiss": "关闭",
+    "notifications": "通知",
+    "closeDialog": "关闭对话框",
+    "tabs": "标签页",
+    "verticalTabs": "纵向标签页",
+    "themeMode": "深浅模式：{mode}",
+    "themeModeTitle": "深浅模式：{mode}。单击以切换。",
+    "logo": "FireStone 标志",
+    "footnotes": "尾注",
+    "loadMap": "加载地图",
+    "mapSetup": "请配置 PUBLIC_GOOGLE_MAPS_API_KEY 以启用地图。",
+    "mapUnavailable": "互动地图暂时不可用。"
   },
   "blog": {
     "title": "博客",
@@ -72,7 +97,12 @@
     "followAlong": "保持关注",
     "followAlongLead": "不错过新文章、思考与更新。",
     "rssFeed": "RSS 订阅",
-    "emailLabel": "电子邮件"
+    "emailLabel": "电子邮件",
+    "tocShow": "展开",
+    "tocHide": "收起",
+    "toc": "本页目录",
+    "comments": "评论",
+    "commentsRequiresJs": "评论需要启用 JavaScript 以加载。"
   },
   "comments": {
     "title": "评论",
@@ -83,7 +113,7 @@
     "title": "项目",
     "description": "一些由我制作的有趣作品",
     "viewProject": "查看项目",
-    "viewSource": "查看源码",
+    "viewSource": "访问源代码",
     "noProjectsFound": "未找到相关项目。",
     "metaTitle": "项目",
     "metaDescription": "精选作品 — 由 FireStone 制作的网站、工具与开源项目。",
@@ -108,13 +138,27 @@
     "ctaPrimary": "发起项目",
     "ctaSecondary": "了解更多",
     "closingHeading": "有项目想聊聊？",
-    "closingLead": "无论是全新构建还是需要焕然一新——我很乐意了解你的想法。"
+    "closingLead": "无论是全新构建还是需要焕然一新——我很乐意了解你的想法。",
+    "carouselChooseSlide": "选择幻灯片",
+    "carouselNextSlide": "下一张",
+    "carouselPreviousSlide": "上一张",
+    "galleryLabel": "媒体灯箱",
+    "galleryClose": "关闭灯箱",
+    "galleryNextImage": "下一张图片",
+    "galleryPreviousImage": "上一张图片",
+    "goToSlide": "转到第 {number} 张",
+    "slideOf": "第 {number} 张，共 {total} 张",
+    "carousel": "轮播",
+    "slide": "幻灯片",
+    "visitWebsite": "访问网站"
   },
   "pagination": {
     "page": "第 {current} 页，共 {total} 页",
     "label": "分页导航",
     "previousPage": "上一页",
-    "nextPage": "下一页"
+    "nextPage": "下一页",
+    "morePages": "更多页面",
+    "pageLabel": "第 {page} 页"
   },
   "errors": {
     "pageNotFound": "页面未找到",
@@ -142,7 +186,9 @@
     "subscribing": "订阅中…",
     "success": "感谢订阅！",
     "genericError": "出错了",
-    "error": "订阅失败，请稍后重试。"
+    "error": "订阅失败，请稍后重试。",
+    "notConfigured": "请通过 action 指定已配置的订阅接口。",
+    "unavailable": "暂时无法订阅。"
   },
   "contact": {
     "heading": "联系我",
@@ -154,11 +200,13 @@
     "sending": "发送中…",
     "success": "留言发送成功！",
     "genericError": "出错了",
-    "error": "留言发送失败，请稍后重试。"
+    "error": "留言发送失败，请稍后重试。",
+    "notConfigured": "请通过 action 指定已配置的联系表单接口。",
+    "unavailable": "此表单暂不可用。"
   },
   "theme": {
     "selectColourTheme": "选择配色主题",
-    "colourTheme": "配色主题",
+    "colourTheme": "颜色主题",
     "colourMode": "色彩模式",
     "modeTrigger": "当前主题: {mode}。点击切换。",
     "system": "跟随系统",
@@ -166,7 +214,15 @@
     "dark": "深色",
     "currentlyLight": "当前为浅色模式",
     "currentlyDark": "当前为深色模式",
-    "swatchLabel": "{name} 主题"
+    "swatchLabel": "{name} 主题",
+    "modeLabel": "深浅模式",
+    "systemLabel": "跟随系统",
+    "lightLabel": "浅色模式（Beta）",
+    "darkLabel": "深色模式",
+    "systemLight": "当前为浅色模式",
+    "systemDark": "当前为深色模式",
+    "selectColour": "选择颜色主题",
+    "namedTheme": "{name} 主题"
   },
   "effects": {
     "trigger": "动态效果",
@@ -193,12 +249,14 @@
     "ariaLabel": "动态效果设置"
   },
   "search": {
-    "placeholder": "搜索文章、项目和页面…",
+    "placeholder": "搜索…",
     "inputLabel": "搜索内容",
     "resultsLabel": "搜索结果",
-    "hint": "输入关键词搜索本站内容。",
-    "noResults": "未找到与「{query}」相关的结果",
-    "unavailable": "搜索索引在构建时生成，在 <code class=\"rounded bg-secondary px-1.5 py-0.5 text-xs\">astro dev</code> 模式下不可用。<br />运行 <code class=\"rounded bg-secondary px-1.5 py-0.5 text-xs\">pnpm build &amp;&amp; pnpm preview</code> 来本地体验搜索功能。"
+    "hint": "输入关键字以开始在网站上搜索。",
+    "noResults": "没有找到关于「{query}」的结果。",
+    "unavailable": "搜索暂时不可用，请稍后重试。",
+    "results": "搜索结果",
+    "devNotice": "搜索索引在构建时生成。请运行 pnpm build 和 pnpm preview 后尝试。"
   },
   "video": {
     "playLabel": "播放视频: {title}",
@@ -238,11 +296,12 @@
   },
   "footer": {
     "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
-    "credit": "主题来自 <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
+    "credit": "主题来自 <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground focus-visible:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
     "builtWith": "使用 Astro Rocket 构建",
-    "followOn": "在 {platform} 上关注我们",
+    "followOn": "在 {platform} 上关注 FireStone",
     "socialMedia": "社交媒体",
     "privacyPolicy": "隐私政策",
+    "serviceStatus": "服务状态",
     "cookiePreferences": "Cookie 首选项",
     "groups": {
       "explore": "探索",
@@ -259,7 +318,10 @@
         "aboutFirestone": "关于 FireStone",
         "legalInfo": "法律信息",
         "privacyPolicy": "隐私政策"
-      }
+      },
+      "site": "网站",
+      "topics": "话题",
+      "questions": "有疑问？"
     }
   },
   "pages": {
@@ -278,7 +340,11 @@
           "业余技术美术师",
           "THE FINALS 选手"
         ],
-        "typingWordsMobile": ["业余设计师", "业余开发者", "内容创作者"],
+        "typingWordsMobile": [
+          "业余设计师",
+          "业余开发者",
+          "内容创作者"
+        ],
         "description": "一名兴趣使然的业余开发者、设计师与内容创作者的个人网站。"
       }
     },
@@ -298,5 +364,28 @@
         "getStarted": "了解更多"
       }
     }
+  },
+  "header": {
+    "exploreProjects": "探索我的项目"
+  },
+  "legal": {
+    "title": "法律信息",
+    "back": "返回「法律信息」",
+    "contact": "联系 FireStone"
+  },
+  "localeFallback": {
+    "heading": "暂无当前语言版本",
+    "page": "本页面没有您当前语言的版本，现显示默认语言（{language}）的内容。",
+    "confirm": "确认",
+    "backToHome": "返回首页"
+  },
+  "social": {
+    "github": "GitHub",
+    "x-twitter": "X",
+    "bilibili": "哔哩哔哩",
+    "zhihu": "知乎",
+    "neteasecloudmusic": "网易云音乐",
+    "weibo": "微博",
+    "youtube": "YouTube"
   }
 }

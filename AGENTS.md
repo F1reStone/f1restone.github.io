@@ -9,11 +9,12 @@ valuable: inspect them, work with them, and do not reset or discard them.
 - FireStone 火石 is a Chinese portfolio, project showcase, and technical blog.
 - It is a customized Astro Rocket fork. The site is statically built and
   deployed to Cloudflare; the canonical site URL is `https://fire-stone.co/`.
-- Stack: Astro 7.1, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
+- Stack: Astro 7.3, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
   Pagefind, and pnpm. Node must satisfy `>=22.12.0`.
-- The default locale is `zh-CN`. Native Astro i18n is currently disabled in
-  `src/config/i18n.config.ts`, although locale-aware routes and content support
-  are present. Do not enable it as a side effect of an unrelated change.
+- The default locale is `zh-CN`. `src/config/i18n.config.ts` controls whether
+  locale-aware routes are enabled. Preserve the configured switch during
+  unrelated work. Missing translations use prefixed fallback routes; see
+  `docs/locale-fallback.md`.
 - The visual theme is defined by `src/styles/themes/firestone.css` and shared
   styles in `src/styles/global.css`.
 
@@ -26,9 +27,11 @@ pnpm dev             # local development server, usually http://localhost:4321
 pnpm check           # Astro and TypeScript diagnostics
 pnpm lint            # ESLint
 pnpm test            # Vitest
+pnpm test:run        # Vitest, one run without watch mode
+pnpm test:i18n       # isolated bilingual build and browser checks; restores config
 pnpm test:e2e        # Playwright
 pnpm build           # production build plus Pagefind index
-pnpm validate        # lint, check, and build
+pnpm validate        # lint, check, unit tests, and build
 pnpm format:check    # Prettier verification
 ```
 
@@ -55,8 +58,10 @@ watch process running when the task is complete.
 5. Explain assumptions in the final response. Do not hide uncertainty by
    changing unrelated code or weakening types/checks.
 
-Use `apply_patch` for hand edits. Keep comments short and only where they
-explain a non-obvious decision. Do not print or commit values from `.env` or
+Use `apply_patch` for hand edits. Add concise English comments when implementing
+features to explain their purpose, configuration flow, and non-obvious decisions.
+Match the style and frequency of nearby original-project and FireStone comments;
+avoid narrating every line or restating obvious code. Do not print or commit values from `.env` or
 other secrets. Do not push, publish, deploy, alter GitHub Actions, or create a
 remote side effect unless the user explicitly requests it.
 

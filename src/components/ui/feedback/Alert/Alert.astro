@@ -1,4 +1,6 @@
 ---
+import { t, getLocaleFromPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 /**
  * Alert Component
  * Contextual feedback messages with refined design system integration
@@ -54,8 +56,8 @@ const icons: Record<string, 'info' | 'check-circle' | 'alert-triangle' | 'x-circ
   {dismissible && (
     <button
       type="button"
-      class="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground hover:bg-secondary transition-colors"
-      aria-label="Dismiss"
+      class="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground focus-visible:text-foreground hover:bg-secondary transition-colors"
+      aria-label={t('common.dismiss', locale)}
       data-dismiss-alert
     >
       <Icon name="x" class="w-4 h-4" />

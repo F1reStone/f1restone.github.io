@@ -1,0 +1,52 @@
+.floating-banner {
+  --banner-offset: 1rem;
+  --banner-reflow-duration: 450ms;
+  opacity: 0;
+  transform: translate3d(0, var(--banner-offset), 0);
+  transition:
+    opacity var(--transition-slow) var(--ease-default),
+    transform var(--transition-slow) var(--ease-default);
+}
+
+.floating-banner[data-position='top'] {
+  --banner-offset: -1rem;
+}
+
+.floating-banner.floating-banner--visible,
+.floating-banner.consent-banner--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  animation: floating-banner-enter var(--transition-slow) var(--ease-default) both;
+}
+
+@keyframes floating-banner-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--banner-offset), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (max-height: 40rem) {
+  [data-banner-stack] {
+    max-height: 100svh;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  [data-banner-stack]::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-banner,
+  .floating-banner.floating-banner--visible,
+  .floating-banner.consent-banner--visible {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}

@@ -10,6 +10,8 @@
 import type { HTMLAttributes } from 'astro/types';
 import { PUBLIC_GOOGLE_MAPS_API_KEY, PUBLIC_CONSENT_ENABLED } from 'astro:env/client';
 import siteConfig from '@/config/site.config';
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 import { cn } from '@/lib/cn';
 import { googleMapVariants } from './googleMap.variants';
 
@@ -37,10 +39,10 @@ const {
   mode = 'place',
   mapType = 'roadmap',
   consentCategory = 'marketing',
-  ariaLabel = 'Google 地图',
-  placeholderTitle = 'Google 地图',
-  placeholderDescription = '同意 Cookie 以加载交互式地图。',
-  externalLinkText = '在 Google 地图上查看',
+  ariaLabel = t('common.googleMaps', locale),
+  placeholderTitle = t('common.googleMaps', locale),
+  placeholderDescription = t('common.mapConsentPrompt', locale),
+  externalLinkText = t('common.viewOnGoogleMaps', locale),
   class: className,
   ...rest
 } = Astro.props;
@@ -103,9 +105,9 @@ const id = `google-map-${Math.random().toString(36).slice(2, 9)}`;
           <path d="M14.9 9.25a3 3 0 0 0-2.15-2.16" />
           <line x1="2" x2="22" y1="2" y2="22" />
         </svg>
-        <p class="google-map-setup__title">Google Maps</p>
+        <p class="google-map-setup__title">{t('common.googleMaps', locale)}</p>
         <p class="google-map-setup__desc">
-          Add <code>PUBLIC_GOOGLE_MAPS_API_KEY</code> to your <code>.env</code> file to enable the map.
+          {t(import.meta.env.DEV ? 'common.mapSetup' : 'common.mapUnavailable', locale)}
         </p>
       </div>
     </div>
@@ -127,7 +129,7 @@ const id = `google-map-${Math.random().toString(36).slice(2, 9)}`;
         <p class="google-map-placeholder__desc">{placeholderDescription}</p>
 
         <button class="google-map-placeholder__btn" data-map-load={id} type="button">
-          加载地图
+          {t('common.loadMap', locale)}
         </button>
 
         <a

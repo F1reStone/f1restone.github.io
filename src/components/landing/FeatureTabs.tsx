@@ -367,7 +367,7 @@ function CodeBlock({ code, filename, lang }: { code: string; filename: string; l
         </div>
         <button
           onClick={handleCopy}
-          className="text-foreground-muted hover:bg-secondary hover:text-foreground flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-medium transition-colors"
+          className="text-foreground-muted hover:bg-secondary hover:text-foreground focus-visible:text-foreground flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-medium transition-colors"
         >
           {copied ? (
             <>

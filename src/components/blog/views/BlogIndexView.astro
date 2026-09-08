@@ -1,41 +1,23 @@
 ---
-/**
- * BlogIndexView — the blog landing page (page 1).
- *
- * Shared body for the default-locale route (`/blog`) and the locale-prefixed
- * route (`/<locale>/blog`). All post/pagination/tag URLs are built locale-aware
- * via the helpers in `lib/blog`, so rendering with the default locale produces
- * exactly the same markup the route did before this was extracted.
- */
+import { defaultLocale, localizedPath } from '@/i18n';
+interface Props { locale?: string;  }
+const { locale = defaultLocale } = Astro.props;
 import PageLayout from '@/layouts/PageLayout.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import Pagination from '@/components/blog/Pagination.astro';
 import TagList from '@/components/blog/TagList.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import CTA from '@/components/ui/marketing/CTA/CTA.astro';
-import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
 import { Hero } from '@/components/hero';
-import siteConfig from '@/config/site.config';
-import { resolveSocialLinks } from '@/lib/utils';
-import { defaultLocale } from '@/i18n';
 import {
   BLOG_POSTS_PER_PAGE,
-  BLOG_TAG_CLOUD_LIMIT,
   collectTopTags,
-  getBlogPageUrl,
   getPostUrl,
   getPublishedPosts,
 } from '@/lib/blog';
 
-interface Props {
-  /** Locale whose posts this index renders. Defaults to the site default. */
-  locale?: string;
-}
-
-const { locale = defaultLocale } = Astro.props;
-
-const socialLinks = resolveSocialLinks(siteConfig.socialLinks);
+/** How many of the most-used tags to surface in the cloud. */
+const TAG_CLOUD_LIMIT = 10;
 
 const posts = await getPublishedPosts(locale);
 
@@ -49,33 +31,35 @@ const regularPostsAll = nonFeaturedPosts.length > 0 ? nonFeaturedPosts : posts;
 const totalPages = Math.max(1, Math.ceil(regularPostsAll.length / BLOG_POSTS_PER_PAGE));
 const regularPosts = regularPostsAll.slice(0, BLOG_POSTS_PER_PAGE);
 
-const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
+const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
 ---
 
-<PageLayout title="Blog — Astro Rocket" description="Articles on web design, development, and the web by Astro Rocket." showScrollProgress eagerReveal footerBackground={featuredPosts.length > 0 ? 'default' : 'secondary'}>
-  <Hero layout="centered" size="sm" class="isolate" showHeroHalo>
+<PageLayout title="博客" description="有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。" eagerReveal>
+  <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="book" size="sm" />
-      All posts
+      博客
     </Badge>
 
-    <h1 slot="title">Blog</h1>
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">Blog</span>
+    </h1>
 
-    <p slot="description">Articles on Astro, web performance, design systems, and building with Astro Rocket.</p>
+    <p slot="description" class="hero-description-text">有关于我在平面设计、前端开发、游戏开发领域相关的技术心得。</p>
   </Hero>
 
   <!-- Featured Posts Section -->
   {
     featuredPosts.length > 0 && (
       <section id="featured-section" class="bg-background py-[var(--space-section-md)]">
-        <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
+        <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
           <h2 class="font-display text-foreground text-3xl md:text-4xl font-bold text-center" data-reveal>
-            Featured
+            推荐
           </h2>
 
-          <div class="grid gap-6 sm:grid-cols-2">
-            {featuredPosts.map((post, index) => (
-              <BlogCard
+          <div class="grid gap-6 md:grid-cols-2">
+            {featuredPosts.map((post) => (
+              <BlogCard locale={locale}
                 title={post.data.title}
                 description={post.data.description}
                 body={post.body}
@@ -85,8 +69,6 @@ const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
                 author={post.data.author}
                 image={post.data.image}
                 svgSlug={post.data.svgSlug}
-                revealDelay={index % 2}
-                eager={index === 0}
               />
             ))}
           </div>
@@ -96,25 +78,25 @@ const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
   }
 
   <!-- All Posts Section -->
-  <section class:list={[featuredPosts.length > 0 ? 'bg-background' : 'bg-background-secondary', 'py-[var(--space-section-md)] border-t border-border']}>
-    <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
+  <section class:list={['bg-background', 'py-[var(--space-section-md)]']}>
+    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-4" data-reveal>
         {
-          featuredPosts.length > 0 && nonFeaturedPosts.length > 0 && (
-            <h2 class="font-display text-foreground text-3xl md:text-4xl font-bold text-center">All posts</h2>
+          regularPostsAll.length > 0 && (
+            <h2 class="font-display text-foreground text-3xl md:text-4xl font-bold text-center">所有文章</h2>
           )
         }
 
         {topTags.length > 0 && (
-          <TagList tags={topTags} locale={locale} class="justify-center" />
+          <TagList locale={locale} tags={topTags} class="justify-center" />
         )}
       </div>
 
       {
         regularPosts.length > 0 ? (
-          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {regularPosts.map((post, index) => (
-              <BlogCard
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {regularPosts.map((post) => (
+              <BlogCard locale={locale}
                 title={post.data.title}
                 description={post.data.description}
                 body={post.body}
@@ -124,8 +106,6 @@ const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
                 author={post.data.author}
                 image={post.data.image}
                 svgSlug={post.data.svgSlug}
-                revealDelay={index % 3}
-                eager={featuredPosts.length === 0 && index === 0}
               />
             ))}
           </div>
@@ -134,7 +114,7 @@ const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
             <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
               <Icon name="file-text" size="lg" class="text-foreground-muted" />
             </div>
-            <p class="text-foreground-muted text-lg">No posts found</p>
+            <p class="text-foreground-muted text-lg">未找到文章</p>
           </div>
         )
       }
@@ -142,79 +122,8 @@ const topTags = collectTopTags(posts, BLOG_TAG_CLOUD_LIMIT);
       <Pagination
         currentPage={1}
         totalPages={totalPages}
-        href={(page) => getBlogPageUrl(page, locale)}
+        href={(page) => localizedPath(page === 1 ? '/blog' : `/blog/page/${page}`, locale)}
       />
     </div>
-  </section>
-
-  <!-- Follow CTA Section -->
-  <!-- Mobile: standard CTA, no LetterGlitch -->
-  <CTA variant="default" size="md" maxWidth="lg" glow={false} data-reveal class:list={['glitch:hidden', featuredPosts.length > 0 && '!bg-background-secondary']}>
-    <h2 slot="heading" class="!text-4xl">Follow along</h2>
-    <p slot="description" class="!text-lg text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
-
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a
-        href="/rss.xml"
-        class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
-      >
-        <Icon name="rss" size="sm" />
-        RSS Feed
-      </a>
-      {socialLinks.map((link) => (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
-        >
-          <Icon name={link.icon} size="sm" />
-          {link.label}
-        </a>
-      ))}
-      <a
-        href={`mailto:${siteConfig.email}`}
-        class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-500 hover:text-brand-500"
-      >
-        <Icon name="mail" size="sm" />
-        Email
-      </a>
-    </div>
-  </CTA>
-
-  <!-- Desktop: contained LetterGlitch band with glass card -->
-  <section class:list={['hidden glitch:block relative z-10 py-[var(--space-section-md)]', featuredPosts.length > 0 ? 'bg-background-secondary' : 'bg-background']}>
-    <LetterGlitchBand>
-      <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">Follow along</h2>
-      <p class="text-lg text-foreground-muted mb-8 text-balance">Stay in the loop — new articles, thoughts, and updates.</p>
-
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <a
-          href="/rss.xml"
-          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
-        >
-          <Icon name="rss" size="sm" />
-          RSS Feed
-        </a>
-        {socialLinks.map((link) => (
-          <a
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
-          >
-            <Icon name={link.icon} size="sm" />
-            {link.label}
-          </a>
-        ))}
-        <a
-          href={`mailto:${siteConfig.email}`}
-          class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-400 hover:bg-brand-500/20 hover:text-foreground"
-        >
-          <Icon name="mail" size="sm" />
-          Email
-        </a>
-      </div>
-    </LetterGlitchBand>
   </section>
 </PageLayout>

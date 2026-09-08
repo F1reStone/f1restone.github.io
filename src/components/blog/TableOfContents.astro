@@ -6,6 +6,8 @@
  * fewer than `minHeadings` headings — keeps short posts uncluttered.
  */
 import type { MarkdownHeading } from 'astro';
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 
 interface Props {
   headings: MarkdownHeading[];
@@ -19,7 +21,7 @@ const {
   headings,
   maxDepth = 3,
   minHeadings = 3,
-  title = '本页目录',
+  title = t('blog.toc', locale),
   sticky = false,
 } = Astro.props;
 
@@ -42,8 +44,8 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     </p>
     <ul class="space-y-1.5 text-sm border-l border-border relative">
       <!-- FireStone: 永久常驻的双节点设计，解决 appendChild 导致的滚动锚定 Bug，支持硬件加速 -->
-      <div class="toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-ghost aria-hidden="true"></div>
-      <div class="toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-main aria-hidden="true"></div>
+      <li class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-ghost aria-hidden="true"></li>
+      <li class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-main aria-hidden="true"></li>
       
       {items.map((h) => (
         <li

@@ -15,7 +15,7 @@ interface Props {
 const locale = getLocaleFromPath(Astro.url.pathname);
 
 const {
-  action = '/api/newsletter',
+  action,
   placeholder = t('newsletter.emailPlaceholder', locale),
   buttonText = t('newsletter.subscribe', locale),
   successMessage = t('newsletter.success', locale),
@@ -36,18 +36,21 @@ const {
     <div class="flex-1">
       <Input
         name="email"
+        aria-label={t('contact.email', locale)}
         type="email"
         placeholder={placeholder}
         required
         autocomplete="email"
       />
     </div>
-    <Button type="submit" class="newsletter-submit">
+    <Button type="submit" class="newsletter-submit" disabled={!action}>
       {buttonText}
     </Button>
   </div>
 
-  <p class="newsletter-message hidden mt-3 text-sm"></p>
+  <div class="hidden" aria-hidden="true"><input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></div>
+  {!action && <p class="mt-3 text-sm text-foreground-muted">{t(import.meta.env.DEV ? 'newsletter.notConfigured' : 'newsletter.unavailable', locale)}</p>}
+  <p class="newsletter-message hidden mt-3 text-sm" role="status"></p>
 </form>
 
 <script>
@@ -61,10 +64,13 @@ const {
       if (!button || !message) return;
 
       const successMessage = form.dataset.successMessage || 'Thanks for subscribing!';
+      if (form.dataset.initialized) return;
+      form.dataset.initialized = 'true';
       const originalText = button.textContent || 'Subscribe';
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!form.getAttribute('action')) return;
 
         button.disabled = true;
         button.textContent = form.dataset.subscribing || 'Subscribing…';

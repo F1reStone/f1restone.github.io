@@ -2,10 +2,15 @@
 import BlogLayout from '@/layouts/BlogLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { getPostSlug } from '@/lib/blog';
+import { defaultLocale } from '@/i18n';
+import { assertNoSlugCollisions } from '@/lib/content-validation';
+import { assertValidPostUids } from '@/lib/post-links';
+import PostLink from '@/components/blog/PostLink.astro';
 
 export async function getStaticPaths() {
+  await Promise.all([assertNoSlugCollisions(), assertValidPostUids()]);
   const posts = await getCollection('blog', ({ data }) => {
-    return data.locale === 'zh-CN' && (import.meta.env.PROD ? data.draft !== true : true);
+    return data.locale === defaultLocale && (import.meta.env.PROD ? data.draft !== true : true);
   });
 
   return posts.map((post) => ({
@@ -32,10 +37,11 @@ const { Content, headings } = await render(post);
   body={post.body}
   tags={post.data.tags}
   slug={post.id}
+  uid={post.data.uid}
   faqs={post.data.faqs}
   headings={headings}
   toc={post.data.toc}
   comments={post.data.comments}
 >
-  <Content />
+  <Content components={{ PostLink }} />
 </BlogLayout>

@@ -1,13 +1,9 @@
 ---
-/**
- * BlogTagView — a tag archive page.
- *
- * Shared body for the default-locale route (`/blog/tag/<tag>`) and the
- * locale-prefixed route (`/<locale>/blog/tag/<tag>`). The matching posts and
- * the visible tag cloud are resolved in each route's `getStaticPaths` and
- * passed in; URLs are built locale-aware via `lib/blog`.
- */
-import type { CollectionEntry } from 'astro:content';
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
+import { t } from '@/i18n';
+import { defaultLocale, localizedPath } from '@/i18n';
+interface Props { locale?: string; tag: string; posts: import('astro:content').CollectionEntry<'blog'>[]; visibleTags: string[]; }
+const { locale = defaultLocale } = Astro.props;
 import PageLayout from '@/layouts/PageLayout.astro';
 import BlogCard from '@/components/blog/BlogCard.astro';
 import TagList from '@/components/blog/TagList.astro';
@@ -15,66 +11,51 @@ import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
-import { defaultLocale } from '@/i18n';
-import { getBlogBaseUrl, getPostUrl } from '@/lib/blog';
+import {
+  getPostUrl,
+} from '@/lib/blog';
 
-interface Props {
-  /** Locale whose posts this archive renders. Defaults to the site default. */
-  locale?: string;
-  /** The active tag (display form). */
-  tag: string;
-  /** Posts carrying this tag, in the locale. */
-  posts: CollectionEntry<'blog'>[];
-  /** Tags to render in the cloud (always includes the active tag). */
-  visibleTags: string[];
-}
 
-const { locale = defaultLocale, tag, posts, visibleTags } = Astro.props;
 
-const blogHref = getBlogBaseUrl(locale);
+const { tag, posts, visibleTags } = Astro.props;
 ---
 
 <PageLayout
-  title={`#${tag} — Blog`}
-  description={`Posts tagged "${tag}".`}
+  breadcrumbs={buildBreadcrumbs(tag, Astro.url.pathname, locale, 'blog')}
+  title={`#${tag} 相关文章 | 博客`}
+  description={`带有 #${tag} 标签的文章。`}
   eagerReveal
 >
-  <Hero layout="centered" size="sm">
+  <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="tag" size="sm" />
-      Tag
+      标签
     </Badge>
 
-    <h1
-      slot="title"
-      class="!text-4xl sm:!text-5xl md:!text-6xl lg:!text-7xl break-words [overflow-wrap:anywhere]"
-    >#{tag}</h1>
+    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <span class="hero-title-text">#{tag}</span>
+    </h1>
 
-    <p slot="description">
-      {posts.length} post{posts.length === 1 ? '' : 's'} tagged "{tag}".
-    </p>
+    <p slot="description" class="hero-description-text">{posts.length} 篇文章带有 #{tag} 标签。</p>
   </Hero>
 
   <section class="bg-background py-[var(--space-section-md)]">
-    <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
+    <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-4" data-reveal>
-        <a
-          href={blogHref}
-          class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
-        >
-          <Icon name="arrow-left" size="sm" />
-          All posts
-        </a>
+        <Button variant="outline" href={localizedPath('/blog/', locale)} data-reveal>
+          <Icon name="chevron-left" size="sm" />
+          {t('blog.tagBackToAll', locale)}
+        </Button>
 
         {visibleTags.length > 0 && (
-          <TagList tags={visibleTags} active={tag} locale={locale} class="justify-center" />
+          <TagList locale={locale} tags={visibleTags} active={tag} class="justify-center" />
         )}
       </div>
 
       {posts.length > 0 ? (
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post, index) => (
-            <BlogCard
+            <BlogCard locale={locale}
               title={post.data.title}
               description={post.data.description}
               body={post.body}
@@ -94,11 +75,11 @@ const blogHref = getBlogBaseUrl(locale);
           <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
             <Icon name="file-text" size="lg" class="text-foreground-muted" />
           </div>
-          <p class="text-foreground-muted text-lg">No posts found for this tag.</p>
+          <p class="text-foreground-muted text-lg">未找到带有此标签的文章。</p>
           <div class="mt-6">
-            <Button href={blogHref} variant="outline" size="sm">
-              <Icon name="arrow-left" size="sm" />
-              Back to all posts
+            <Button href={localizedPath('/blog', locale)} variant="outline" size="sm">
+              <Icon name="chevron-left" size="sm" />
+              返回「全部文章」
             </Button>
           </div>
         </div>

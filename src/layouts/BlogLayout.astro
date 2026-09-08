@@ -1,4 +1,6 @@
 ---
+import { withLocaleFallback } from '@/lib/locale-fallback';
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
 import type { ImageMetadata, MarkdownHeading } from 'astro';
 import siteConfig from '@/config/site.config';
 import BaseLayout from './BaseLayout.astro';
@@ -13,8 +15,8 @@ import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import { createBlogPostSchema, createFAQSchema } from '@/lib/schema';
 import { getBlogOgPath } from '@/lib/og';
-import { getLocaleFromPath, localizedPath, getLocales } from '@/i18n';
-import { getPostSlug, getBlogBaseUrl } from '@/lib/blog';
+import { getLocaleFromPath, localizedPath, getLocales, t } from '@/i18n';
+import { getPostSlug } from '@/lib/blog';
 import { getPostTranslations } from '@/lib/post-links';
 
 const locale = getLocaleFromPath(Astro.url.pathname);
@@ -82,24 +84,20 @@ const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
 // Prefer the post's own image; otherwise serve the per-post dynamic OG image
 // generated at build time (see src/pages/og/blog/[slug].svg.ts). Falls back to
 // the site-wide default only when slug is missing.
-const ogImage = image?.src || (slug ? getBlogOgPath(getPostSlug(slug, locale)) : siteConfig.ogImage);
+const ogImage = (image && image.format !== 'svg' ? image.src : undefined) || (slug ? getBlogOgPath(getPostSlug(slug, locale), locale) : siteConfig.ogImage);
 
-const breadcrumbs = [
-  { label: '首页', href: localizedPath('/', locale) },
-  { label: '博客', href: getBlogBaseUrl(locale) },
-  { label: title },
-];
+const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'blog');
 
 // Resolve this post's real per-locale URLs for hreflang tags and the LanguageSwitcher.
 const postTranslations = await getPostTranslations(slug, locale, uid);
 const translationByLocale = new Map(postTranslations.map((tr) => [tr.locale, tr.url]));
 const languageAlternates = Object.fromEntries(
-  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? getBlogBaseUrl(loc)])
+  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? withLocaleFallback(Astro.url.pathname, locale, loc)])
 );
 
 const localizedHeadings = headings.map((heading) =>
   heading.slug === 'footnote-label'
-    ? { ...heading, text: '尾注' }
+    ? { ...heading, text: t('common.footnotes', locale) }
     : heading
 );
 
@@ -121,7 +119,8 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 ---
 
 <BaseLayout
-  title={`${title} | 博客`}
+  breadcrumbs={breadcrumbs}
+  title={`${title} | ${t('blog.title', locale)}`}
   description={description}
   image={ogImage}
   imageAlt={imageAlt || title}
@@ -140,7 +139,6 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
     shape="bar"
     showCta={false}
     maxWidth="8xl"
-    languageAlternates={languageAlternates}
   />
   <!-- FireStone: [Update Header maxWidth] -->
 
@@ -169,7 +167,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
         : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
     ]}>
       {sidebarActive && sidebarOnLeft && (
-        <aside class="hidden xl:block" aria-label="Table of contents">
+        <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
           <TableOfContents
             headings={localizedHeadings}
             maxDepth={tocConfig?.maxDepth ?? 3}
@@ -206,9 +204,9 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
       <footer class="border-border mt-12 border-t pt-8" data-reveal>
         <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <!-- Back link -->
-          <Button href="/blog" variant="secondary" size="sm">
+          <Button href={localizedPath('/blog', locale)} variant="secondary" size="sm">
             <Icon name="chevron-left" size="sm" />
-            返回「博客」
+            {t('blog.backToBlog', locale)}
           </Button>
 
           <!-- Share buttons -->
@@ -218,7 +216,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
       </div>
 
       {sidebarActive && !sidebarOnLeft && (
-        <aside class="hidden xl:block" aria-label="Table of contents">
+        <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
           <TableOfContents
             headings={localizedHeadings}
             maxDepth={tocConfig?.maxDepth ?? 3}
@@ -245,6 +243,7 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
 
   <Footer
     slot="footer"
+    languageAlternates={languageAlternates}
     breadcrumbs={breadcrumbs}
   />
 </BaseLayout>

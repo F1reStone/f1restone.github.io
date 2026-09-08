@@ -5,8 +5,9 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { t, defaultLocale, type Locale } from '@/i18n';
 import { cn } from '@/lib/cn';
-import Icon from '../../primitives/Icon/Icon.astro';
+import { Icon } from '../../primitives/Icon/Icon';
 
 const sizes = {
   sm: 'max-w-sm',
@@ -16,6 +17,7 @@ const sizes = {
 } as const;
 
 interface DialogProps {
+  locale?: Locale;
   open: boolean;
   onClose: () => void;
   title?: string;
@@ -29,7 +31,7 @@ interface DialogProps {
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-export function Dialog({
+export function Dialog({ locale = defaultLocale,
   open,
   onClose,
   title,
@@ -149,7 +151,7 @@ export function Dialog({
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
             )}
             onClick={onClose}
-            aria-label="关闭对话框"
+            aria-label={t('common.closeDialog', locale)}
           >
             <Icon name="x" class="w-5 h-5" />
           </button>

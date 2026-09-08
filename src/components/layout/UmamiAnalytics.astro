@@ -1,0 +1,39 @@
+---
+import { PUBLIC_UMAMI_WEBSITE_ID, PUBLIC_UMAMI_SRC, PUBLIC_CONSENT_ENABLED } from 'astro:env/client';
+import consent from '@/config/consent.config';
+
+const category = Object.entries(consent.categories).find(([, value]) => value.gcmTypes.includes('analytics_storage'))?.[0] ?? 'analytics';
+const settings = { websiteId: PUBLIC_UMAMI_WEBSITE_ID, src: PUBLIC_UMAMI_SRC, storageKey: consent.storageKey, version: consent.version, category };
+---
+
+{PUBLIC_UMAMI_WEBSITE_ID && PUBLIC_CONSENT_ENABLED && (
+  <script is:inline define:vars={{ settings }}>
+    (() => {
+      let allowed = false;
+      let loaded = false;
+      try {
+        const saved = JSON.parse(localStorage.getItem(settings.storageKey) || 'null');
+        allowed = saved?.version === settings.version && saved?.categories?.[settings.category] === true;
+      } catch { /* Consent must be explicit. */ }
+      window.firestoneUmamiBeforeSend = (_type, payload) => allowed ? payload : false;
+      function load() {
+        if (!allowed || loaded) return;
+        loaded = true;
+        const script = document.createElement('script');
+        script.src = settings.src;
+        script.async = true;
+        script.dataset.websiteId = settings.websiteId;
+        script.dataset.beforeSend = 'firestoneUmamiBeforeSend';
+        script.dataset.doNotTrack = 'true';
+        script.dataset.excludeSearch = 'true';
+        script.onerror = () => { loaded = false; script.remove(); };
+        document.head.append(script);
+      }
+      window.addEventListener('consent-updated', event => {
+        allowed = event.detail?.categories?.[settings.category] === true;
+        load();
+      });
+      load();
+    })();
+  </script>
+)}

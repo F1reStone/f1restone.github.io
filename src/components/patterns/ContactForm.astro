@@ -1,4 +1,6 @@
 ---
+import { getLocaleFromPath, t } from '@/i18n';
+const locale = getLocaleFromPath(Astro.url.pathname);
 import Input from '@/components/ui/form/Input/Input.astro';
 import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
@@ -12,8 +14,8 @@ interface Props {
 }
 
 const {
-  action = '/api/contact',
-  successMessage = 'Message sent successfully!',
+  action,
+  successMessage = t('contact.success', locale),
   class: className,
 } = Astro.props;
 ---
@@ -24,18 +26,21 @@ const {
   method="POST"
   class={cn('space-y-6', className)}
   data-success-message={successMessage}
+  data-sending={t('contact.sending', locale)}
+  data-generic-error={t('contact.genericError', locale)}
+  data-error-message={t('contact.error', locale)}
 >
   <!-- Name + Email side by side on sm+ -->
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <Input
-      label="Name"
+      label={t('contact.name', locale)}
       name="name"
       type="text"
       required
       autocomplete="name"
     />
     <Input
-      label="Email"
+      label={t('contact.email', locale)}
       name="email"
       type="email"
       required
@@ -44,13 +49,13 @@ const {
   </div>
 
   <Input
-    label="Subject"
+    label={t('contact.subject', locale)}
     name="subject"
     type="text"
   />
 
   <Textarea
-    label="Message"
+    label={t('contact.message', locale)}
     name="message"
     required
     rows={5}
@@ -61,11 +66,12 @@ const {
     <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
   </div>
 
-  <div id="form-message" class="hidden text-sm"></div>
+  <div id="form-message" class="hidden text-sm" role="status"></div>
+  {!action && <p class="text-sm text-foreground-muted">{t(import.meta.env.DEV ? 'contact.notConfigured' : 'contact.unavailable', locale)}</p>}
 
   <div class="flex justify-center">
-    <Button type="submit" id="submit-button" class="gap-2" variant="primary">
-      Send message
+    <Button type="submit" id="submit-button" disabled={!action} class="gap-2" variant="primary">
+      {t('contact.send', locale)}
       <Icon name="chevron-right" size="sm" />
     </Button>
   </div>
@@ -80,13 +86,16 @@ const {
     if (!form || !button || !message) return;
 
     const successMessage = form.dataset.successMessage || 'Message sent successfully!';
+    if (form.dataset.initialized) return;
+    form.dataset.initialized = 'true';
     const originalButtonHTML = button.innerHTML;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!form.getAttribute('action')) return;
 
       button.disabled = true;
-      button.textContent = 'Sending…';
+      button.textContent = form.dataset.sending!;
       message.classList.add('hidden');
 
       try {
@@ -105,12 +114,12 @@ const {
         } else {
           const errors = data.errors
             ? Object.values(data.errors).flat().join(', ')
-            : 'Something went wrong';
+            : form.dataset.genericError;
           message.textContent = errors as string;
           message.className = 'text-sm text-destructive';
         }
       } catch {
-        message.textContent = 'Failed to send message. Please try again.';
+        message.textContent = form.dataset.errorMessage!;
         message.className = 'text-sm text-destructive';
       } finally {
         button.disabled = false;

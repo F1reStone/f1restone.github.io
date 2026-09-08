@@ -1,11 +1,15 @@
 ---
+import { buildBreadcrumbs } from '@/lib/breadcrumbs';
+import siteConfig from '@/config/site.config';
+import { t } from '@/i18n';
+import { defaultLocale, localizedPath } from '@/i18n';
+interface Props { locale?: string; page: number; totalPages: number; }
+const { locale = defaultLocale } = Astro.props;
 /**
- * ProjectsPageView — a paginated projects index page (page 2..N).
+ * Paginated projects listing
+ * URL: /projects/page/<n> (page 1 lives at /projects)
  *
- * Shared body for the default-locale route (`/projects/page/N`) and the
- * locale-prefixed route (`/<locale>/projects/page/N`). The page number and
- * total are resolved in each route's `getStaticPaths` and passed in; URLs are
- * built locale-aware via `lib/projects`.
+ * Mirrors the blog pagination so the two listings behave identically.
  */
 import PageLayout from '@/layouts/PageLayout.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
@@ -16,37 +20,26 @@ import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
 import ProjectCard from '@/components/projects/ProjectCard.astro';
 import ProjectTagList from '@/components/projects/ProjectTagList.astro';
 import Pagination from '@/components/blog/Pagination.astro';
-import { defaultLocale } from '@/i18n';
 import {
   collectTopProjectTags,
-  getProjectsBaseUrl,
-  getProjectsPageUrl,
   getVisibleProjects,
   PROJECT_TAG_CLOUD_LIMIT,
   PROJECTS_PER_PAGE,
 } from '@/lib/projects';
 
-interface Props {
-  /** Locale whose projects this page renders. Defaults to the site default. */
-  locale?: string;
-  /** 1-based page number (always >= 2 for this view). */
-  page: number;
-  /** Total number of index pages for this locale. */
-  totalPages: number;
-}
 
-const { locale = defaultLocale, page, totalPages } = Astro.props;
+
+const { page, totalPages } = Astro.props;
 
 const projects = await getVisibleProjects(locale);
 const start = (page - 1) * PROJECTS_PER_PAGE;
 const pageProjects = projects.slice(start, start + PROJECTS_PER_PAGE);
 
 const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
-
-const projectsHref = getProjectsBaseUrl(locale);
 ---
 
 <PageLayout
+  breadcrumbs={buildBreadcrumbs(t('pagination.pageLabel', locale, { page }), Astro.url.pathname, locale, 'projects')}
   title={`Projects — Page ${page}`}
   description={`Page ${page} of ${totalPages} — selected work, tools, and open-source projects by Astro Rocket.`}
   eagerReveal
@@ -68,29 +61,26 @@ const projectsHref = getProjectsBaseUrl(locale);
   <section class="bg-background py-[var(--space-section-md)]">
     <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
       <div class="flex flex-col items-center gap-4" data-reveal>
-        <a
-          href={projectsHref}
-          class="group inline-flex items-center gap-2 rounded-lg border border-border-strong bg-transparent px-4 py-2 text-sm font-medium text-foreground-muted hover:border-brand-500 hover:text-brand-500 transition-colors"
-        >
-          <Icon name="arrow-left" size="sm" />
-          All projects
-        </a>
+        <Button variant="outline" href={localizedPath('/projects/', locale)} data-reveal>
+          <Icon name="chevron-left" size="sm" />
+          {t('projects.tagBackToAll', locale)}
+        </Button>
 
         {topTags.length > 0 && (
-          <ProjectTagList tags={topTags} locale={locale} class="justify-center" />
+          <ProjectTagList locale={locale} tags={topTags} class="justify-center" />
         )}
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
         {pageProjects.map((project, i) => (
-          <ProjectCard project={project} index={i} locale={locale} />
+          <ProjectCard locale={locale} project={project} index={i} />
         ))}
       </div>
 
       <Pagination
         currentPage={page}
         totalPages={totalPages}
-        href={(p) => getProjectsPageUrl(p, locale)}
+        href={(p) => localizedPath(p === 1 ? '/projects' : `/projects/page/${p}`, locale)}
       />
     </div>
   </section>
@@ -107,11 +97,11 @@ const projectsHref = getProjectsBaseUrl(locale);
         I build with the same care and craft you see here. If you've got a project, let's see what we can make together.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button size="lg" href="/contact" variant="primary">
+        <Button size="lg" href={`mailto:${siteConfig.email}`} variant="primary">
           Start a project
           <Icon name="arrow-right" size="sm" />
         </Button>
-        <Button size="lg" variant="outline" href="/about">
+        <Button size="lg" variant="outline" href={localizedPath('/about', locale)}>
           More about me
           <Icon name="arrow-right" size="sm" />
         </Button>
@@ -127,11 +117,11 @@ const projectsHref = getProjectsBaseUrl(locale);
         I build with the same care and craft you see here. If you've got a project, let's see what we can make together.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button size="lg" href="/contact" variant="primary">
+        <Button size="lg" href={`mailto:${siteConfig.email}`} variant="primary">
           Start a project
           <Icon name="arrow-right" size="sm" />
         </Button>
-        <Button size="lg" variant="outline" href="/about">
+        <Button size="lg" variant="outline" href={localizedPath('/about', locale)}>
           More about me
           <Icon name="arrow-right" size="sm" />
         </Button>
