@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { generateOgImages } from './scripts/og-images.mjs';
+import { generateFaviconImages } from './scripts/favicon-images.mjs';
 import { indexablePages } from './scripts/indexable-pages.mjs';
 import { readdir, readFile } from 'node:fs/promises';
 import { canonicalOf, jsonLdUrlOf, siteUrlDisagreement, disagreementMessage } from './scripts/site-url-agreement.mjs';
@@ -186,6 +187,7 @@ export default defineConfig({
     pagefind(),
     { name: 'firestone-og-images', hooks: { 'astro:build:done': async ({ dir, logger }) => {
       logger.info(`generated ${await generateOgImages(fileURLToPath(dir))} PNG sharing images`);
+      await generateFaviconImages(fileURLToPath(dir));
     } } },
     verifySiteUrl(),
   ],

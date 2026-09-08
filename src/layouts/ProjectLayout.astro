@@ -80,7 +80,7 @@ const showToc = !!tocConfig?.enabled && tocOverride !== false;
 const tocLayout = tocConfig?.layout ?? 'auto';
 const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
 const inlineActive = showToc && tocLayout === 'inline';
-const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 
 const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'projects');
 
@@ -155,9 +155,21 @@ const localizedHeadings = headings.map((heading) =>
         )}
 
         <div class:list={['min-w-0 max-w-8xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
+          {sidebarActive && (
+            <div class="mb-10 xl:hidden">
+              <TableOfContents
+                headings={localizedHeadings}
+                maxDepth={tocConfig?.maxDepth ?? 3}
+                minHeadings={tocConfig?.minHeadings ?? 3}
+                collapsible
+              />
+            </div>
+          )}
+
           {inlineActive && (
             <div class="mb-10 rounded-xl border border-border bg-background-secondary p-5">
               <TableOfContents
+                collapsible
                 headings={localizedHeadings}
                 maxDepth={tocConfig?.maxDepth ?? 3}
                 minHeadings={tocConfig?.minHeadings ?? 3}
@@ -206,7 +218,7 @@ const localizedHeadings = headings.map((heading) =>
                 <div class="flex flex-1 flex-col p-6">
                   <div class="mb-3 flex items-start justify-between gap-4">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
-                      <Icon name="layers" size="sm" />
+                      <Icon name={project.data.icon ?? 'layers'} size="sm" />
                     </div>
                     <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
                   </div>

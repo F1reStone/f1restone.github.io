@@ -23,15 +23,15 @@ const { tag, projects, visibleTags } = Astro.props;
 
 <PageLayout
   breadcrumbs={buildBreadcrumbs(tag, Astro.url.pathname, locale, 'projects')}
-  title={`#${tag} — Projects`}
-  description={`Projects tagged "${tag}".`}
+  title={t('projects.tagMetaTitle', locale, { tag })}
+  description={t('projects.tagMetaDescription', locale, { tag })}
   eagerReveal
   footerBackground="secondary"
 >
   <Hero layout="centered" size="sm">
     <Badge slot="badge" variant="brand" pill>
       <Icon name="tag" size="sm" />
-      Tag
+      {t('projects.tagBadge', locale)}
     </Badge>
 
     <h1
@@ -40,7 +40,7 @@ const { tag, projects, visibleTags } = Astro.props;
     >#{tag}</h1>
 
     <p slot="description">
-      {projects.length} project{projects.length === 1 ? '' : 's'} tagged "{tag}".
+      {t(projects.length === 1 ? 'projects.tagCountOne' : 'projects.tagCountOther', locale, { count: projects.length, tag })}
     </p>
   </Hero>
 
@@ -68,11 +68,11 @@ const { tag, projects, visibleTags } = Astro.props;
           <div class="bg-background mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
             <Icon name="layers" size="lg" class="text-foreground-muted" />
           </div>
-          <p class="text-foreground-muted text-lg">No projects found for this tag.</p>
+          <p class="text-foreground-muted text-lg">{t('projects.tagEmpty', locale)}</p>
           <div class="mt-6">
             <Button href={localizedPath('/projects', locale)} variant="outline" size="sm">
               <Icon name="arrow-left" size="sm" />
-              Back to all projects
+              {t('projects.tagBackToAll', locale)}
             </Button>
           </div>
         </div>

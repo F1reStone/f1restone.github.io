@@ -109,6 +109,8 @@ const projects = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
+      /** Optional project identity for compact cards; custom image/logo cards keep priority. */
+      icon: z.string().optional(),
       url: z.string().url().optional(),
       repo: z.string().url().optional(),
       image: image().optional(),

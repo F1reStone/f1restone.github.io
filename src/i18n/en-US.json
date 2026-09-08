@@ -58,6 +58,11 @@
     "mapUnavailable": "The interactive map is currently unavailable."
   },
   "blog": {
+    "cta": {
+      "heading": "Explore the project",
+      "description": "Find the source code and follow the development of FireStone.",
+      "button": "View on GitHub"
+    },
     "title": "Blog",
     "description": "Latest articles and updates",
     "readingTime": "{minutes} min read",

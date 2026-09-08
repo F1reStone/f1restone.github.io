@@ -1,0 +1,22 @@
+---
+/** One opt-in closing block for blog indexes, archives, and articles. */
+import CTA from '@/components/ui/marketing/CTA/CTA.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import siteConfig from '@/config/site.config';
+import { getLocaleFromPath, t } from '@/i18n';
+
+interface Props { locale?: string; class?: string }
+const { locale = getLocaleFromPath(Astro.originPathname), class: className } = Astro.props;
+const config = siteConfig.blogCta;
+---
+{config?.enabled && (
+  <CTA variant="default" size="md" maxWidth="lg" glow={false} class={className} data-reveal>
+    <h2 slot="heading">{t('blog.cta.heading', locale)}</h2>
+    <p slot="description">{t('blog.cta.description', locale)}</p>
+    <Button slot="actions" href={config.href} size="lg">
+      {config.icon && <Icon name={config.icon} size="sm" />}
+      {t('blog.cta.button', locale)}
+    </Button>
+  </CTA>
+)}

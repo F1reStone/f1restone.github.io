@@ -58,7 +58,7 @@ export function Alert({ locale = defaultLocale, ref, variant = 'info', title, di
 
       <div className="flex-1 min-w-0 pl-1">
         {title && (
-          <h5 className="font-bold text-lg mb-1 text-foreground">{title}</h5>
+          <div className="font-bold text-lg mb-1 text-foreground">{title}</div>
         )}
         <div className="text-sm leading-relaxed text-foreground-muted">{children}</div>
       </div>

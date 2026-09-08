@@ -4,6 +4,8 @@ import { spawnSync } from 'node:child_process';
 
 const configPath = 'src/config/i18n.config.ts';
 const original = readFileSync(configPath, 'utf8');
+const siteConfigPath = 'src/config/site.config.ts';
+const originalSiteConfig = readFileSync(siteConfigPath, 'utf8');
 const created = [];
 const fixture = (file, body) => {
   if (existsSync(file)) throw new Error(`Refusing to replace an existing fixture: ${file}`);
@@ -24,6 +26,14 @@ const run = (args, env = {}) => {
 try {
   if (!/enabled: (?:false|true),/.test(original)) throw new Error('Cannot locate the i18n switch');
   writeFileSync(configPath, original.replace(/enabled: (?:false|true),/, 'enabled: true,'));
+  // Exercise opt-in UI without leaving it enabled in the production configuration.
+  let fixtureSiteConfig = originalSiteConfig;
+  for (const name of ['newsletter', 'blogCta']) {
+    const pattern = new RegExp(`(${name}:\\s*\\{\\s*enabled:)\\s*(?:false|true)`);
+    if (!pattern.test(fixtureSiteConfig)) throw new Error(`Cannot locate the ${name} switch`);
+    fixtureSiteConfig = fixtureSiteConfig.replace(pattern, '$1 true');
+  }
+  writeFileSync(siteConfigPath, fixtureSiteConfig);
   for (const [locale, slug] of [
     ['zh-CN', 'as260-check-zh'],
     ['en-US', 'as260-check-en'],
@@ -41,6 +51,26 @@ try {
     'src/content/blog/en-US/as260-draft.mdx',
     '---\ntitle: Draft must not publish\ndescription: Temporary draft\nlocale: en-US\npublishedAt: 2026-01-01\ndraft: true\n---\nDraft.\n'
   );
+  // Exercise globally injected MDX helpers and mixed galleries on a rewritten fallback page.
+  fixture('src/content/blog/zh-CN/as260-patterns.mdx', `---
+title: Migration content patterns
+description: Temporary MDX integration coverage
+locale: zh-CN
+publishedAt: 2026-01-01
+comments: false
+---
+import ProjectGallery from '@/components/projects/ProjectGallery.astro';
+import screenshot from '@/assets/projects/firestone-website/website-screenshot-1.png';
+
+## Links
+<PostLink uid="as260-translation-fixture" class="test-post-link" />
+
+## Video
+<YouTube id="QONgJurkigk" title="MDX video fixture" />
+
+## Gallery
+<ProjectGallery images={[{ src: screenshot, alt: 'Fixture screenshot' }, { video: '/videos/as260-fixture.mp4', poster: screenshot, alt: 'Fixture video' }]} />
+`);
   const env = {
     PUBLIC_CONSENT_ENABLED: 'true',
     PUBLIC_UMAMI_WEBSITE_ID: 'as260-test',
@@ -51,4 +81,5 @@ try {
 } finally {
   for (const file of created) unlinkSync(file);
   writeFileSync(configPath, original);
+  writeFileSync(siteConfigPath, originalSiteConfig);
 }

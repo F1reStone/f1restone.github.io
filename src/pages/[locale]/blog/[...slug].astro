@@ -1,8 +1,8 @@
 ---
+import { mdxComponents } from '@/components/content/mdx-components';
 import BlogLayout from '@/layouts/BlogLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { getPostSlug, getSecondaryLocales } from '@/lib/blog';
-import PostLink from '@/components/blog/PostLink.astro';
 
 // Locale-prefixed blog posts (`/<locale>/blog/<slug>`). One page per
 // (non-default locale × published post in that locale). Emits nothing when
@@ -52,5 +52,5 @@ const { Content, headings } = await render(post);
   toc={post.data.toc}
   comments={post.data.comments}
 >
-  <Content components={{ PostLink }} />
+  <Content components={mdxComponents} />
 </BlogLayout>

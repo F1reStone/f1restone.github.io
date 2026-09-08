@@ -24,6 +24,10 @@ export interface SiteConfig {
     country: string;
   };
   socialLinks: string[];
+  /** Optional footer signup. Static deployments must supply their own endpoint. */
+  newsletter?: { enabled: boolean; action?: string };
+  /** Shared closing block for every blog surface; off to preserve FireStone's layout. */
+  blogCta?: { enabled: boolean; href: string; icon?: string };
   /**
    * Header options. Set `showSocialLinks: true` to render an icon link in the
    * top-right for each entry in `socialLinks` (GitHub, X, etc. — the icon is
@@ -77,7 +81,7 @@ export interface SiteConfig {
        * - 'inline'  → card at the top of every post (default; preserves
        *               full reading width on desktop)
        * - 'sidebar' → sticky sidebar on `xl+` viewports (≥1280px),
-       *               hidden on smaller screens
+       *               collapsible card on smaller screens
        * - 'auto'    → sidebar on `xl+`, inline card below `xl` so phone
        *               and tablet readers still get the navigation
        */
@@ -340,6 +344,8 @@ const siteConfig: SiteConfig = {
     postsPerPage: 12,
     tagCloudLimit: 10,
   },
+  newsletter: { enabled: false },
+  blogCta: { enabled: false, href: 'https://github.com/f1restone/f1restone.github.io', icon: 'github' },
   projects: {
     perPage: 12,
     tagCloudLimit: 10,

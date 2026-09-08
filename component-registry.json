@@ -1,6 +1,6 @@
 {
   "$schema": "./component-registry.schema.json",
-  "version": "2.0.0",
+  "version": "2.6.0",
   "categories": {
     "ui": {
       "name": "UI Components",
@@ -62,6 +62,35 @@
     }
   },
   "components": {
+    "blog-cta": {
+      "name": "BlogCta",
+      "category": "patterns",
+      "files": ["src/components/blog/BlogCta.astro"],
+      "dependencies": { "utilities": [], "components": ["cta", "button", "icon"] },
+      "premium": false
+    },
+    "project-image-svg": {
+      "name": "ProjectImageSVG",
+      "category": "patterns",
+      "files": ["src/components/projects/ProjectImageSVG.astro"],
+      "dependencies": { "utilities": [], "components": [] },
+      "premium": false
+    },
+    "youtube": {
+      "name": "YouTube",
+      "category": "patterns",
+      "files": ["src/components/patterns/YouTube.astro"],
+      "dependencies": { "utilities": [], "components": [] },
+      "premium": false
+    },
+    "proof-tile": {
+      "name": "ProofTile",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": ["src/components/ui/data-display/ProofTile/ProofTile.astro", "src/components/ui/data-display/ProofTile/ProofTile.tsx", "src/components/ui/data-display/ProofTile/proof-tile.variants.ts", "src/components/ui/data-display/ProofTile/index.ts"],
+      "dependencies": { "utilities": ["cn"], "components": ["icon"] },
+      "premium": false
+    },
     "button": {
       "name": "Button",
       "category": "ui",

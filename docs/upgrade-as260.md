@@ -1,5 +1,7 @@
 # Astro Rocket 2.6.0 迁移记录
 
+> 本文记录首次迁移时的状态；后续已合并 main。2026-09-09 的功能补齐、当前开关与明确差异见 [v2.6.0 对齐审计](upgrade-v260-audit.md)。BlogCta / Newsletter 现已移植能力，默认关闭。
+
 日期：2026-09-08。工作分支 `as260`；本地起点 `main` / `8c7ee4d`；备份分支 `backup-before-as260-upgrade`。上游参考 [`v2.6.0`](https://github.com/hansmartensdev/Astro-Rocket/tree/v2.6.0)，提交 `d356f0e347209c7de5962c0f5991d8d1d96384ed`。
 
 ## 方法与主要抉择

@@ -5,18 +5,19 @@
 ## 2.6.0 起的现行约定（优先于下方历史操作示例）
 
 本次采用逐项移植，详见 [as260 迁移记录](docs/upgrade-as260.md)。用户的当次要求始终优先。
+后续补齐以 **v2.6.0 tag** 为准，逐项结果见 [功能对齐审计](docs/upgrade-v260-audit.md)；不要因为上游 README 的描述而重复移植已经存在的功能。
 
 - 先升级、验证本地依赖，再移植源码。优先最新兼容稳定版本；源码移植后依赖以本地为准，只补必要的新增依赖。高风险主版本单独评估，当前 TS 保持 6，暂不使用 TS 7。
 - 设计更新不跟随；组件化升级跟随并承载 FireStone 设计。不能按目录批量执行下方示例中的 `--ours` 或 `--theirs`。
 - 页面正文现位于 `src/components/pages/views`、`blog/views`、`projects/views`。薄路由负责构建时渲染和传参，并不是浏览器跳转页。
-- 正式 i18n 保持关闭，支持代码为 `zh-CN`、`en-US`。当前仅完成共用界面本地化，正文翻译另行进行。
+- i18n 开关和默认语言以 `src/config/i18n.config.ts` 为准；支持代码为 `zh-CN`、`en-US`。当前仅完成共用界面本地化，正文翻译另行进行。
 - 面包屑由页面/布局提供标题与层级，Footer 只渲染。禁止再次通过菜单或 URL 片段猜标题。缺少翻译时生成语言前缀页面，展示默认语言正文和回退横幅；不再使用 `requestedLocale` 查询参数。详见 [语言回退规则](docs/locale-fallback.md)。
 - Hero、Shader、Picture fallback、全局性能分级，以及 Header/Footer、卡片、字体和交互样式都属于定制实现；不能再按“通用未改动组件”覆盖。
 - 严格 consent 适用于新增分析服务，包括 Umami。保留静态输出；不自动加入 API、部署配置或 GitHub Actions 变更。
 
 完整检查使用 `pnpm validate`（lint、check、单元测试、build）及 `pnpm test:e2e`。开发中的单元测试用 `pnpm test`，一次性执行用 `pnpm test:run`。
 
-`pnpm test:i18n` 临时开启英语、创建测试内容，输出到 `test-results/i18n-dist`，验证完毕或失败时恢复原配置并移除测试内容。运行期间不要编辑语言配置；强制杀死进程后应检查语言开关及 `as260-*` 临时内容。它不会修改正式环境文件。
+`pnpm test:i18n` 临时开启英语、BlogCta 和 Newsletter，创建测试内容，输出到 `test-results/i18n-dist`，验证完毕或失败时恢复原配置并移除测试内容。运行期间不要编辑语言或站点配置；强制杀死进程后应检查这两个配置文件及 `as260-*` 临时内容。它不会修改正式环境文件。
 
 浏览器测试自动启停仅监听本机的服务器，默认使用已安装的 Edge，可用 `PLAYWRIGHT_CHANNEL=chrome` 改用 Chrome。输出限定到 `test-results/playwright`，避免清理其他诊断资料。先 build 再测试搜索，因为 dev 没有 Pagefind 索引。
 

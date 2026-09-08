@@ -6,8 +6,9 @@
  * fewer than `minHeadings` headings — keeps short posts uncluttered.
  */
 import type { MarkdownHeading } from 'astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import { getLocaleFromPath, t } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 interface Props {
   headings: MarkdownHeading[];
@@ -15,6 +16,8 @@ interface Props {
   minHeadings?: number;
   title?: string;
   sticky?: boolean;
+  /** Native disclosure for the inline/mobile TOC; sidebar behavior is unchanged. */
+  collapsible?: boolean;
 }
 
 const {
@@ -23,26 +26,37 @@ const {
   minHeadings = 3,
   title = t('blog.toc', locale),
   sticky = false,
+  collapsible = false,
 } = Astro.props;
 
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= maxDepth);
 const shouldRender = items.length >= minHeadings;
 const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
+const Wrapper = collapsible ? 'details' : 'nav';
 ---
 
 {shouldRender && (
-  <nav
+  <Wrapper
     class:list={['toc not-prose', sticky && 'toc-sticky']}
-    aria-labelledby={headingId}
+    aria-labelledby={collapsible ? undefined : headingId}
     data-toc
   >
-    <p
+    {collapsible ? (
+      <summary class="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden">
+        {title}
+        <span class="ml-auto flex items-center gap-1 text-xs text-foreground-muted">
+          <span class="toc-show">{t('blog.tocShow', locale)}</span>
+          <span class="toc-hide">{t('blog.tocHide', locale)}</span>
+          <Icon name="chevron-down" class="toc-chevron h-4 w-4" />
+        </span>
+      </summary>
+    ) : <p
       id={headingId}
       class="text-xs font-semibold uppercase tracking-[0.15em] text-foreground-muted mb-3"
     >
       {title}
-    </p>
-    <ul class="space-y-1.5 text-sm border-l border-border relative">
+    </p>}
+    <ul class:list={['space-y-1.5 text-sm border-l border-border relative', collapsible && 'mt-4']}>
       <!-- FireStone: 永久常驻的双节点设计，解决 appendChild 导致的滚动锚定 Bug，支持硬件加速 -->
       <li class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-ghost aria-hidden="true"></li>
       <li class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-main aria-hidden="true"></li>
@@ -64,10 +78,18 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
         </li>
       ))}
     </ul>
-  </nav>
+  </Wrapper>
 )}
 
 <style>
+  .toc-hide, details[open] .toc-show { display: none; }
+  details[open] .toc-hide { display: inline; }
+  .toc-chevron { transition: transform 300ms var(--ease-default); }
+  details[open] .toc-chevron { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .toc-chevron { transition: none; }
+    .toc-indicator { transition: none !important; }
+  }
   .toc-sticky {
     position: sticky;
     top: 6rem;
@@ -79,7 +101,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     font-weight: 400;
   }
 
-  .toc-link:hover {
+  .toc-link:hover, .toc-link:focus-visible {
     color: var(--color-foreground);
     font-weight: 550;
     text-shadow: 0 0 5px currentColor;
@@ -120,6 +142,12 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 
   const tocs = document.querySelectorAll<HTMLElement>('[data-toc]');
   for (const toc of tocs) {
+    // Close a mobile disclosure after choosing a section, retaining native anchor navigation.
+    toc.addEventListener('click', (event) => {
+      if (toc instanceof HTMLDetailsElement && (event.target as Element).closest('[data-toc-link]')) {
+        toc.open = false;
+      }
+    });
     const links = Array.from(
       toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'),
     );
@@ -212,11 +240,23 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
             delta = linkRect.bottom - tocRect.bottom + padding;
           }
           if (delta !== 0) {
-            toc.scrollBy({ top: delta, behavior: 'smooth' });
+            toc.scrollBy({ top: delta, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
           }
         }
       }
     };
+
+    // Closed disclosures have no measurable link geometry; refresh after opening.
+    if (toc instanceof HTMLDetailsElement) {
+      toc.addEventListener('toggle', () => {
+        if (!toc.open) return;
+        const slug = activeSlug || slugs[0];
+        activeSlug = '';
+        currentLink = null;
+        if (ghostInd) ghostInd.style.opacity = '0';
+        setActive(slug);
+      });
+    }
 
     // 点击锁定逻辑 (恢复！)
     links.forEach(link => {

@@ -1,5 +1,5 @@
 ---
-import { defaultLocale } from '@/i18n';
+import { defaultLocale, localizedPath } from '@/i18n';
 interface Props { locale?: string;  }
 const { locale = defaultLocale } = Astro.props;
 /**
@@ -11,10 +11,15 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import ProjectCard from '@/components/projects/ProjectCard.astro';
 import { Hero } from '@/components/hero';
-import { getCollection } from 'astro:content';
+import Pagination from '@/components/blog/Pagination.astro';
+import ProjectTagList from '@/components/projects/ProjectTagList.astro';
+import { getVisibleProjects, PROJECTS_PER_PAGE, collectTopProjectTags, PROJECT_TAG_CLOUD_LIMIT } from '@/lib/projects';
 
-const items = await getCollection('projects', ({ data }) => data.locale === locale && (import.meta.env.PROD ? !data.draft : true));
-const projects = items.sort((a, b) => a.data.order - b.data.order);
+const projects = await getVisibleProjects(locale);
+// Use the same page size as /projects/page/N so page one does not repeat every entry.
+const pageProjects = projects.slice(0, PROJECTS_PER_PAGE);
+const totalPages = Math.max(1, Math.ceil(projects.length / PROJECTS_PER_PAGE));
+const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
 ---
 
 <PageLayout
@@ -39,12 +44,14 @@ const projects = items.sort((a, b) => a.data.order - b.data.order);
   {projects.length > 0 && (
     <section class="py-[var(--space-section-md)] bg-background">
       <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
+        {topTags.length > 0 && <ProjectTagList tags={topTags} locale={locale} class="justify-center" />}
 
         <div class="grid gap-6 md:grid-cols-2">
-          {projects.map((project, i) => (
+          {pageProjects.map((project, i) => (
             <ProjectCard locale={locale} project={project} index={i} />
           ))}
         </div>
+        <Pagination currentPage={1} totalPages={totalPages} href={(page) => localizedPath(page === 1 ? '/projects' : `/projects/page/${page}`, locale)} />
       </div>
     </section>
   )}

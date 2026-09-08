@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## FireStone — v2.6.0 alignment follow-up — 2026-09-09
+
+### Added
+
+- Added the privacy-friendly `YouTube` MDX component with click-to-load `youtube-nocookie.com` playback and a no-JavaScript fallback link; it is available in blog, project, legal, and other MDX surfaces through one shared mapping.
+- Added the reusable `ProofTile` data-display component and a component-library preview.
+- Added the missing project-index tag cloud and pagination wiring, stable UIDs to the existing posts, a responsive collapsible table of contents, and optimized gallery video posters.
+- Added opt-in `BlogCta` across blog views and an opt-in Footer newsletter; both default to disabled, with shared Chinese/English copy and explicit newsletter endpoint configuration.
+- Added `ProjectImageSVG`, favicon/Apple touch/PWA raster generation from FireStone's SVG, and browser coverage for the new content patterns.
+
+### Changed
+
+- Project single-image heroes preserve their natural aspect ratio; only multi-slide carousels use the shared video frame crop.
+- Footer fallback groups now derive from routable projects and never create links for placeholder projects.
+- Connected existing translations in project pagination/tag views, corrected sidebar-side configuration, exposed the existing Astro `brand-outline` button variant, and removed misleading Alert heading semantics.
+- The v2.6.0 Docker preview/export feature is intentionally not included, per the owner's decision; it is recorded as an explicit difference rather than an unimplemented requirement.
+- Astro ClientRouter remains disabled: the v2.6.0 release code itself documents that it conflicts with the theme's page entrance animations and causes mobile aftershakes.
+- Updated the original-project README for actual FireStone behavior and recorded the source baseline, verified equivalents, and explicit exclusions in [the alignment audit](docs/upgrade-v260-audit.md).
+
 ## FireStone — 2.6.0 migration — 2026-09-08
 
 - Replaced query-based translation notices with generated locale-prefixed fallback pages; canonical, sitemap and search avoid duplicate fallback content. Removed untranslated English page stubs.

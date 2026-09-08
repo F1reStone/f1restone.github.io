@@ -34,6 +34,8 @@ import siteConfig from '@/config/site.config';
 import { resolveSocialLinks, type ResolvedSocialLink } from '@/lib/utils'; // FireStone: Import the central resolver
 import giantLogoRaw from '@/assets/firestone-text-gradient.svg?raw'; // FireStone: Import the giant logo SVG as raw string
 import { getLocaleFromPath, t, localizedPath } from '@/i18n';
+import { getDerivedFooterGroups } from '@/lib/footer';
+import NewsletterForm from '@/components/patterns/NewsletterForm.astro';
 
 export interface NavItem {
   label: string;
@@ -94,13 +96,16 @@ interface Props extends HTMLAttributes<'footer'> {
 
 // Resolve the current locale for i18n-aware nav/legal/group links
 const locale = getLocaleFromPath(Astro.originPathname);
+const configuredGroups = getFooterLinkGroups(locale);
+// Explicit props (including an empty list) override both configured and derived groups.
+const defaultGroups = Astro.props.linkGroups ?? (configuredGroups.length ? configuredGroups : await getDerivedFooterGroups(locale));
 
 const {
   layout = 'asymmetricColumns',
   columns = 5,
   background = 'glow',
   nav,
-  linkGroups = getFooterLinkGroups(locale),// FireStone: Fallback to global link groups instead of an empty array
+  linkGroups = defaultGroups,
   socialLinks = resolveSocialLinks(siteConfig.socialLinks, locale),
   showSocial = true,
   showCopyright = true,
@@ -650,6 +655,12 @@ const footerClasses = cn(footerVariants({ background }), className);
     )}
   </div>
 
+  {/* Opt-in signup stays inside the footer's mobile gutters. */}
+  {siteConfig.newsletter?.enabled && (
+    <div class="mx-auto mt-8 w-full max-w-lg px-6 pb-8">
+      <NewsletterForm action={siteConfig.newsletter.action} heading={t('newsletter.heading', locale)} description={t('newsletter.description', locale)} layout="stacked" />
+    </div>
+  )}
   {/* Default slot for additional content */}
   <slot />
   <script is:inline>

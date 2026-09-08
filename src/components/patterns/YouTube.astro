@@ -1,0 +1,43 @@
+---
+/**
+ * Privacy-friendly YouTube facade for MDX. The iframe is created only after
+ * an explicit click. Only the thumbnail CDN is contacted before playback.
+ */
+import { t, getLocaleFromPath } from '@/i18n';
+
+interface Props { id: string; title: string; class?: string }
+const { id, title, class: className } = Astro.props;
+const locale = getLocaleFromPath(Astro.originPathname);
+const thumbnail = `https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg`;
+---
+<div class:list={['yt-embed not-prose relative my-8 aspect-video overflow-hidden rounded-xl border border-border bg-background-secondary', className]} data-yt-id={id} data-yt-title={title}>
+  <img src={thumbnail} alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover" />
+  <button type="button" class="yt-play group absolute inset-0 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={t('video.playLabel', locale, { title })}>
+    <span class="flex h-16 w-16 items-center justify-center rounded-full border border-border-strong bg-background/90 text-brand-500 shadow-lg backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 group-focus-visible:scale-110 motion-reduce:transform-none motion-reduce:transition-none" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72c0 .82.9 1.32 1.6.89l10.98-6.86a1.05 1.05 0 0 0 0-1.78L9.6 4.25c-.7-.43-1.6.07-1.6.89Z" /></svg>
+    </span>
+  </button>
+  <noscript><a href={`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer" class="absolute bottom-3 right-3 rounded-full border border-border-strong bg-background/90 px-3 py-1.5 text-sm font-medium text-foreground">{t('video.watchOn', locale)}</a></noscript>
+</div>
+<script>
+  function initYouTubeEmbeds() {
+    document.querySelectorAll<HTMLElement>('.yt-embed:not([data-yt-init])').forEach((embed) => {
+      embed.dataset.ytInit = 'true';
+      embed.querySelector<HTMLButtonElement>('.yt-play')?.addEventListener('click', () => {
+        const id = embed.dataset.ytId;
+        if (!id) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1`;
+        iframe.title = embed.dataset.ytTitle || 'YouTube video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.className = 'absolute inset-0 h-full w-full';
+        iframe.style.border = '0';
+        embed.replaceChildren(iframe);
+        iframe.focus();
+      }, { once: true });
+    });
+  }
+  initYouTubeEmbeds();
+  document.addEventListener('astro:page-load', initYouTubeEmbeds);
+</script>

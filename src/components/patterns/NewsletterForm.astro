@@ -9,16 +9,23 @@ interface Props {
   placeholder?: string;
   buttonText?: string;
   successMessage?: string;
+  heading?: string;
+  description?: string;
+  note?: string;
+  size?: 'sm' | 'md' | 'lg';
+  layout?: 'auto' | 'stacked';
+  buttonClass?: string;
   class?: string;
 }
 
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 
 const {
   action,
   placeholder = t('newsletter.emailPlaceholder', locale),
   buttonText = t('newsletter.subscribe', locale),
   successMessage = t('newsletter.success', locale),
+  heading, description, note, size = 'md', layout = 'auto', buttonClass,
   class: className,
 } = Astro.props;
 ---
@@ -32,25 +39,30 @@ const {
   data-generic-error={t('newsletter.genericError', locale)}
   data-error-message={t('newsletter.error', locale)}
 >
-  <div class="flex flex-col sm:flex-row gap-3">
-    <div class="flex-1">
+  {heading && <p class="mb-1 text-base font-semibold text-foreground">{heading}</p>}
+  {description && <p class="mb-4 text-sm text-foreground-muted">{description}</p>}
+  <div class:list={['flex flex-col gap-3', layout === 'auto' && 'sm:flex-row sm:items-start']}>
+    <div class="min-w-0 flex-1">
       <Input
         name="email"
         aria-label={t('contact.email', locale)}
         type="email"
+        size={size}
         placeholder={placeholder}
         required
         autocomplete="email"
       />
     </div>
-    <Button type="submit" class="newsletter-submit" disabled={!action}>
+    <Button type="submit" size={size} class={cn('newsletter-submit shrink-0', buttonClass)} disabled={!action}>
       {buttonText}
     </Button>
   </div>
 
   <div class="hidden" aria-hidden="true"><input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></div>
   {!action && <p class="mt-3 text-sm text-foreground-muted">{t(import.meta.env.DEV ? 'newsletter.notConfigured' : 'newsletter.unavailable', locale)}</p>}
-  <p class="newsletter-message hidden mt-3 text-sm" role="status"></p>
+  <!-- Reserve space so feedback does not move adjacent controls or footer links. -->
+  <p class="newsletter-message mt-3 min-h-5 text-sm" role="status"></p>
+  {note && <p class="mt-2 text-xs text-foreground-muted">{note}</p>}
 </form>
 
 <script>
@@ -74,7 +86,8 @@ const {
 
         button.disabled = true;
         button.textContent = form.dataset.subscribing || 'Subscribing…';
-        message.classList.add('hidden');
+        message.textContent = '';
+        message.classList.remove('text-success', 'text-destructive');
 
         try {
           const formData = new FormData(form);
@@ -87,19 +100,18 @@ const {
 
           if (data.success) {
             message.textContent = successMessage;
-            message.className = 'newsletter-message mt-3 text-sm text-success';
+            message.classList.add('text-success');
             form.reset();
           } else {
             message.textContent = data.error || form.dataset.genericError || 'Something went wrong';
-            message.className = 'newsletter-message mt-3 text-sm text-destructive';
+            message.classList.add('text-destructive');
           }
         } catch {
           message.textContent = form.dataset.errorMessage || 'Subscription failed. Please try again.';
-          message.className = 'newsletter-message mt-3 text-sm text-destructive';
+          message.classList.add('text-destructive');
         } finally {
           button.disabled = false;
           button.textContent = originalText;
-          message.classList.remove('hidden');
         }
       });
     });

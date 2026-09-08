@@ -1,4 +1,5 @@
 ---
+import BlogCta from '@/components/blog/BlogCta.astro';
 import { buildBreadcrumbs } from '@/lib/breadcrumbs';
 import { t } from '@/i18n';
 import { defaultLocale, localizedPath } from '@/i18n';
@@ -86,4 +87,5 @@ const { tag, posts, visibleTags } = Astro.props;
       )}
     </div>
   </section>
+  <BlogCta />
 </PageLayout>

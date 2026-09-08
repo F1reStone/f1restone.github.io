@@ -7,9 +7,9 @@
 </p>
 
 <p align="center">
-  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.0-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
-  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.0-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
-  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.3.1-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.3.3-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e" alt="License" /></a>
   <a href="https://github.com/hansmartensdev/astro-rocket"><img src="https://img.shields.io/github/stars/hansmartensdev/astro-rocket?style=flat&label=%E2%AD%90%20Star%20on%20GitHub&color=f59e0b" alt="Star on GitHub" /></a>
   <a href="https://github.com/hansmartensdev/astro-rocket"><img src="https://visitor-badge.laobi.icu/badge?page_id=hansmartensdev.astro-rocket" alt="Visitors" /></a>
@@ -20,11 +20,21 @@
 </p>
 
 <p align="center">
-  <em>Perfect Lighthouse scores.</em>
+  <em>Upstream demo result; this is not a measurement of the customized FireStone site.</em>
 </p>
 
 
 ---
+
+## FireStone adaptation — v2.6.0
+
+This document retains the original project's attribution and usage guide, adapted
+for this fork. The source baseline is upstream **v2.6.0**, not upstream main.
+See [the alignment audit](docs/upgrade-v260-audit.md) for capabilities, retained
+customizations, and explicit exclusions. FireStone uses its own theme, logos,
+Header dropdown search, Footer language switcher, SparkFlow interactions and
+WebGPU Hero. Upstream demo screenshots and performance scores are not FireStone
+measurements. No Docker or server API endpoints are included.
 
 ## Overview
 
@@ -67,128 +77,72 @@ The following changes were made to the free Velocity theme to create Astro Rocke
 | **12 Colour Themes** | All 12 colour swatches are shown in the header dropdown — click one and the logo badge, blog image gradients, and every brand color update live instantly. No file edits, no rebuilds. The selector can be removed from the header once you've settled on a color. |
 | **Scroll Progress Bar** | A thin 2px brand-coloured bar on the header edge that fills as you scroll. Enabled on the homepage (above the floating header), blog index, and post pages (below the solid header). Controlled via `showScrollProgress` and `scrollProgressPosition` props on the Header component. |
 | **Design Tokens** | Three-tier token architecture (reference → semantic → component) |
-| **57 Components** | 33 UI, 7 patterns, 1 hero, 4 layout, 4 blog, 7 landing, 3 SEO — all accessible with TypeScript |
-| **Auto Logo & Favicon** | First letter of your site name on brand color — generated automatically from `site.config.ts`, no design tools needed. Prefer your own logo? Set `branding.logo.image` to a file in `public/`. |
+| **Component Library** | Astro primitives and optional React islands; the registry lists reusable files, including ProofTile and YouTube |
+| **Branding & Favicon** | FireStone custom SVG logos; ICO, Apple touch and manifest PNG variants generated from its favicon SVG during build |
 | **Icon System** | Unified `Icon` component (Astro + React) — 350+ [Lucide](https://lucide.dev) UI icons and 3000+ [Simple Icons](https://simpleicons.org) brand icons via Iconify |
 | **Typing Effect** | Animated typing effect in the hero section |
-| **Page Animations** | Smooth page transitions via Astro View Transitions, scroll-triggered counter and score animations, scroll-reactive header, card hover effects, and a full suite of UI micro-animations — all with reduced-motion support |
+| **Page Animations** | Scroll-triggered reveals, counters, score animations, scroll-reactive Header, and SparkFlow interactions with reduced-motion support. ClientRouter is disabled, matching the v2.6.0 release code |
 | **SEO Toolkit** | Meta tags, JSON-LD structured data, sitemap, and robots.txt |
-| **Static OG Image** | A polished default Open Graph image serves as social preview for all pages — no build-time generation required |
+| **OG Images** | Default and content-specific sharing images, with CJK-aware font outlines and PNG output generated during build |
 | **Colour Mode** | 3-state picker — **System / Light / Dark** with `localStorage` persistence and live OS-preference tracking under 'System'; surfaced as a pill dropdown in the header (and inside the mobile menu) |
 | **Content Collections** | Type-safe blog, pages, authors, and FAQs with Zod validation |
-| **API Routes** | Contact form and newsletter endpoints with validation |
+| **Forms** | Reusable contact/newsletter forms require an explicitly configured external endpoint; no server API is shipped |
 | **Table of Contents** | Optional table of contents on blog posts, auto-generated from MDX headings, with three layouts: inline card, sticky desktop sidebar, or `auto` (sidebar on `xl+`, inline card below). Includes `IntersectionObserver` scroll-spy. Off by default; per-post `toc: false` in frontmatter hides on a single post |
 | **Blog Comments (Giscus / Cusdis)** | Optional comments at the bottom of blog posts via a pluggable provider — [Giscus](https://giscus.app) (GitHub Discussions) or the privacy-friendly [Cusdis](https://cusdis.com) (hosted or self-hosted). Choose with `comments.provider`. **Lazy-loaded** so readers who don't scroll to comments pay zero network cost; reserved `min-height` prevents CLS. Theme follows the site's light/dark mode. Off by default; per-post `comments: false` in frontmatter hides on a single post |
-| **Durable Internal Links** | Link between posts by a stable canonical id with `<PostLink uid="…">` instead of a slug, so renaming a post never breaks inbound links. Ids resolve to the correct locale-aware URL at build time, and a broken reference **fails the build** rather than shipping a 404. Add an optional `uid` to a post's frontmatter to make it linkable |
+| **Durable Internal Links** | Link between posts by a stable canonical id with `<PostLink uid="…">` instead of a slug, so changing its filename does not break references authored with PostLink. Public URLs still use slugs; old external URLs require explicit redirects. Ids resolve to the correct locale-aware URL at build time, and a broken reference **fails the build** rather than shipping a 404. Add an optional `uid` to a post's frontmatter to make it linkable |
 | **Build-Time Content Validation** | The build fails with a clear error if two pieces of content resolve to the same URL within a locale (duplicate slugs across posts, projects, and pages), or if two posts claim the same canonical id — catching silent content mistakes before they ship |
 | **Independent Footer Menu** | Header and footer navigation configured separately in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`) — add a Privacy or Imprint link to the footer without cluttering the main nav |
-| **Static Search (Pagefind)** | Site-wide search in the header — a ⌘K / Ctrl+K modal powered by a [Pagefind](https://pagefind.app) index generated at build time. Zero JS until the modal opens; works on every deploy target. Hide it with `showSearch={false}` on the Header |
+| **Static Search (Pagefind)** | Site-wide search in the header — a ⌘K / Ctrl+K Header dropdown powered by a [Pagefind](https://pagefind.app) index generated at build time. Pagefind loads when search opens; works on every deploy target. Hide it with `showSearch={false}` on the Header |
 | **Project Galleries** | Multiple images per project: a `gallery` array in frontmatter swaps the hero image for a swipeable carousel, and the `<ProjectGallery>` MDX component renders an in-body carousel with a click-to-zoom lightbox. See [Project Galleries](#project-galleries) |
 | **React Islands** | Optional client-side interactivity where needed |
 
 ### Internationalization (i18n)
 
-Astro Rocket ships with **native, opt-in i18n** since 1.3.0. When the flag is off (the default) the build is byte-for-byte identical to a single-locale Astro Rocket site — no `/en/` prefix, no `LanguageSwitcher`, no `hreflang`, no JS for locale routing. Turn it on and you get locale-prefixed routes, an accessible `LanguageSwitcher` dropdown in the header (and mobile menu), `hreflang` SEO tags, and a `t()` translation helper backed by JSON dictionaries.
+`src/config/i18n.config.ts` is the source of truth for `enabled`, `defaultLocale`
+and supported locale codes. FireStone uses **zh-CN** and **en-US**. The default
+locale is served without a prefix; secondary locales use `/<locale>/...`.
+Preserve the configured switch when upgrading.
 
-#### Enabling i18n
-
-Open `src/config/i18n.config.ts` and flip the flag:
-
-```ts
-const i18nConfig: I18nConfig = {
-  enabled: true,                     // master switch
-  defaultLocale: 'en',               // stays at the site root (/about)
-  locales: ['en', 'nl'],             // additional locales live at /nl/about
-  localeNames: {
-    en: 'English',
-    nl: 'Nederlands',
-    // …add more as needed; any BCP 47 code works
-  },
-  detectBrowserLocale: false,
-};
-```
-
-Astro's native i18n is wired up automatically when `enabled: true` AND `locales.length > 1`. With `prefixDefaultLocale: false`, the default locale stays at the site root and additional locales live under `/<locale>/`.
-
-#### Adding a page in another language
-
-Astro is filesystem-routed, so a Dutch "About" page is just a new file:
-
-```
-src/pages/about.astro          →  /about      (English, default)
-src/pages/nl/about.astro       →  /nl/about   (Dutch — you create this)
-```
-
-The simplest approach is to import a shared template component and pass the locale as a prop:
+Thin route files render shared `**View.astro` components at build time; they are
+not redirect pages. Shared UI strings are in `src/i18n/zh-CN.json` and
+`src/i18n/en-US.json`. Add matching dictionary keys and use `t()` in the consuming
+component. For rewritten fallback routes, use `getLocaleFromPath(Astro.originPathname)`
+to retain the requested UI language.
 
 ```astro
 ---
-// src/pages/nl/about.astro
-import AboutPage from '@/components/pages/AboutPage.astro';
+import { t, getLocaleFromPath, localizedPath } from '@/i18n';
+const locale = getLocaleFromPath(Astro.originPathname);
 ---
-
-<AboutPage locale="nl" />
+<a href={localizedPath('/blog', locale)}>{t('common.readMore', locale)}</a>
 ```
 
-…or just write a Dutch version of the page directly. The `LanguageSwitcher` automatically builds links to `/nl/<current-path>` for every configured locale, so as soon as the file exists, visitors can switch to it.
+Header/Footer items are defined once in `nav.config.ts`. `labelKey` translates
+labels, `href` handles navigation, and legal-link `action` opens local dialogs.
+The language switcher is in the Footer, including mobile.
 
-#### Translating UI strings
+Content lives in `src/content/blog/<locale>/` and
+`src/content/projects/<locale>/`. Blog translations can be paired by `uid`;
+project translations share their filename. Missing translations produce a
+prefixed fallback page with default-language content and a localized notice.
+Canonical, sitemap, hreflang and Pagefind avoid treating duplicate fallback
+content as a genuine translation. See [locale fallback rules](docs/locale-fallback.md).
+Changing the default locale does not translate content: the matching content
+and locale metadata must exist before changing the routing configuration.
 
-UI strings (button labels, "Read more", "Published on", etc.) live in `src/i18n/<locale>.json`. Astro Rocket ships English (`en.json`) and Dutch (`nl.json`) out of the box. Use the `t()` helper in any `.astro` file:
+### Durable Internal Links
 
-```astro
----
-import { t, getLocaleFromPath } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
----
+Assign a stable `uid` to a blog post's frontmatter, then reference it from MDX:
 
-<a href="/blog">{t('common.readMore', locale)}</a>
+```mdx
+<PostLink uid="new-firestone-website">Read about the site</PostLink>
 ```
 
-To add another language, drop a new `src/i18n/<code>.json` mirroring the structure of `en.json` — it's loaded automatically, with no edits to `src/i18n/index.ts`. Just add the locale code to `locales` in `src/config/i18n.config.ts` so it gets served. Missing keys fall back to the default locale's value, then to the key itself — so partial translations are safe.
-
-#### Navigation, legal links & the logo
-
-You write each navigation entry once in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`); the Header and Footer localize it for the active locale automatically, so the nav and logo keep visitors inside their locale:
-
-- **Paths** are locale-prefixed via `localizedPath` — `/blog` stays `/blog` on the default locale and becomes `/<locale>/blog` elsewhere. External, `mailto:`/`tel:`, and `#anchor` hrefs are left untouched, and the logo points at the locale's home (`/` or `/<locale>`).
-- **Labels** are translated when an item carries a `labelKey` pointing at a string in `src/i18n/<locale>.json` (the bundled items use `nav.items.*`). Without a `labelKey`, the literal `label` is used as-is.
-
-For the rare case where a locale needs a structurally different label or path (e.g. a localized slug like `/over-ons`), add a per-locale `locales` override to the item:
-
-```ts
-{ label: 'About', href: '/about', order: 4, labelKey: 'nav.items.about',
-  locales: { nl: { href: '/over-ons' } } },
-```
-
-With i18n off, none of this runs and the nav renders exactly as written.
-
-#### Content collections
-
-Blog posts, projects, and pages already carry a `locale` field on their schema (`src/content.config.ts`), validated against the `locales` you list in `src/config/i18n.config.ts` — register a locale there and the content schema accepts it automatically, with no enum to edit. Organize translated content by locale folder:
-
-```
-src/content/blog/en/hello-world.mdx
-src/content/blog/nl/hallo-wereld.mdx
-src/content/projects/en/studio-portfolio.mdx
-src/content/projects/nl/studio-portfolio.mdx
-```
-
-> **Switching the default locale.** Changing `defaultLocale` in `i18n.config.ts` is a routing label — it controls which locale serves at the site root, not which content folder gets read. To make a different language the default, also rename the matching content folder (e.g. `src/content/blog/en/` → `src/content/blog/zh-CN/`) so the root URL resolves to the right posts. The locale code in `i18n.config.ts` and the folder name under `src/content/blog/` must match.
-
-> **Localized blog routing is automatic.** Enable a locale in `i18n.config.ts`, drop posts under its folder (e.g. `src/content/blog/nl/`), and the whole blog is served at that locale's prefix with no extra wiring: the index (`/nl/blog`), individual posts (`/nl/blog/<slug>`), pagination (`/nl/blog/page/N`) and tag archives (`/nl/blog/tag/<tag>`) are all generated, and every in-locale link — cards, tag chips, pagination, breadcrumbs, related posts — stays inside that locale. The `defaultLocale` keeps its prefix-free URLs (`/blog`). A locale with no posts yet still gets a `/<locale>/blog` index that shows the empty state, so the `LanguageSwitcher` never lands on a 404. You do **not** create `src/pages/<locale>/blog*` files yourself — remove any you added previously, as they would collide with the generated routes. (Static pages like `/nl/about` are still yours to create, as shown above.)
->
-> On blog posts, the `LanguageSwitcher` and the `hreflang` tags link to each translation's **real** URL — paired by canonical `uid` when the posts declare one (so a translation can live at a different slug, `/blog/hello` ↔ `/nl/blog/hallo`), otherwise by an identical slug. A locale with no translation of the current post is dropped from `hreflang`, and the switcher falls back to that locale's blog index instead of a dead URL. (Other page types resolve alternates by swapping the locale segment, which is correct when slugs match across locales.)
->
-> **Projects are localized the same way.** Drop translations under `src/content/projects/<locale>/` and the whole projects section is served at that locale's prefix — index (`/nl/projects`), each project (`/nl/projects/<slug>`), pagination (`/nl/projects/page/N`), and tag archives (`/nl/projects/tag/<tag>`), with every in-locale link, `hreflang`, and the `LanguageSwitcher` resolving inside that locale. Projects share one slug across locales: keep the same filename in each locale folder (e.g. `en/studio-portfolio.mdx` ↔ `nl/studio-portfolio.mdx`) and the theme pairs them automatically. As with the blog, you do **not** create `src/pages/<locale>/projects*` files yourself.
-
-#### Performance
-
-The whole system is build-time. No client-side routing, no framework hydration for the `LanguageSwitcher` — just static HTML and a tiny vanilla-JS open/close handler for the dropdown panel. Verified zero output-size delta on the disabled path between 1.2.1 and 1.3.0.
-
-#### Comparing to Southwell Media's CLI
-
-[`create-velocity-astro`](https://github.com/southwellmedia/create-velocity-astro) is the upstream Velocity CLI for scaffolding a fresh project with i18n. **It is not needed for Astro Rocket** — the equivalent feature is built in here. If you ever do run it, run it in an **empty directory**: it scaffolds a fresh Velocity project and will overwrite an existing directory (including a cloned Astro Rocket repo) if you confirm the "Directory already exists" prompt.
+`PostLink` is injected by the shared MDX mapping in blog, project, legal and
+SparkForge content renderers. The optional `post:` prefix is accepted; an empty
+slot uses the post title. Resolution happens at build time in the requested
+locale. Duplicate UIDs and unresolved references fail validation. Keep the UID
+when renaming a file; public slug URLs themselves are not replaced by UIDs.
 
 ---
 
@@ -197,7 +151,7 @@ The whole system is build-time. No client-side routing, no framework hydration f
 ### Prerequisites
 
 - **Node.js 22.12.0+** (required for Astro 7)
-- **pnpm 9.x** (recommended) or npm/yarn
+- **pnpm 11.25.0** (pinned in `packageManager`)
 
 ### Installation
 
@@ -249,7 +203,7 @@ astro-rocket/
 │   │   └── faqs/            # FAQ entries
 │   ├── layouts/             # Page layouts
 │   ├── lib/                 # Utilities (schema, cn)
-│   ├── pages/               # Routes and API endpoints
+│   ├── pages/               # Static routes and metadata endpoints
 │   │   ├── api/             # Contact, newsletter endpoints
 │   │   └── blog/            # Blog routes
 │   ├── styles/              # Global CSS and design tokens
@@ -275,7 +229,10 @@ astro-rocket/
 | `pnpm lint:fix` | Fix ESLint issues |
 | `pnpm format` | Format code with Prettier |
 | `pnpm format:check` | Check code formatting |
-| `pnpm test` | Run Vitest tests |
+| `pnpm test` | Run Vitest in watch mode |
+| `pnpm test:run` | Run Vitest once |
+| `pnpm test:i18n` | Build bilingual fixtures and run browser checks, then restore config |
+| `pnpm validate` | Lint, type-check, unit tests, then production build |
 | `pnpm test:e2e` | Run Playwright E2E tests |
 
 ---
@@ -345,9 +302,12 @@ Astro Rocket uses a three-tier design token system with OKLCH colors for percept
 
 ### Switching Themes
 
-Astro Rocket ships with 12 colour themes, all based on Tailwind's color palette. All 12 are shown as colour swatches in the header dropdown (`ThemeSelectorDropdown`) on desktop and in the mobile menu (`ThemeSelector`). Clicking a swatch applies the theme instantly — the logo badge, blog image gradients, and every brand color on the page update live. No file edits, no rebuilds. This is the key difference from Velocity, where switching theme requires editing a CSS import file and rebuilding.
+Astro Rocket ships with 12 colour themes, all based on Tailwind's color palette. Picker visibility is controlled by `colourThemes` in `src/lib/themes.ts`; FireStone currently exposes its own palette. Clicking a swatch applies the theme instantly — the logo badge, blog image gradients, and every brand color on the page update live. No file edits, no rebuilds. This is the key difference from Velocity, where switching theme requires editing a CSS import file and rebuilding.
 
-The 12 themes in order: Orange, Amber, Lime, Emerald, Teal, Cyan, Sky, Blue (default), Indigo, Violet, Purple, and Magenta. The `themes` array in `src/components/layout/ThemeSelector.astro` controls which swatches are shown and in what order. You can also **remove the selector from the header entirely** once you've settled on a color — just remove `showThemeSelector` from the layout file.
+`colourThemes` in `src/lib/themes.ts` is the source of truth for order and
+`showInSelector`. Hiding a palette does not remove its CSS or invalidate saved
+preferences. FireStone's configured branding and Header controls take precedence
+over the upstream demo's palette picker.
 
 The theme files live in `src/styles/themes/`:
 
@@ -471,7 +431,7 @@ Foreground tokens are documented with their contrast ratios inline. When customi
 
 Astro Rocket includes 57 components across 7 categories. All UI components use [class-variance-authority (CVA)](https://cva.style) for type-safe variant management.
 
-### UI Components (31)
+### UI Components
 
 #### Form (`ui/form/`)
 
@@ -544,12 +504,16 @@ Astro Rocket includes 57 components across 7 categories. All UI components use [
 | SocialProof | Testimonial and trust indicator cards |
 | TerminalDemo | Animated terminal demonstration (React) |
 
-### Pattern Components (7)
+### Patterns and Content Components
 
 | Component | Description |
 |-----------|-------------|
 | ContactForm | Complete contact form with validation |
-| NewsletterForm | Email subscription form |
+| ProofTile | Compact icon/number/title fact tile; Astro and React variants |
+| BlogCta | Shared opt-in closing block on blog indexes, archives and articles |
+| NewsletterForm | Configurable email signup block with heading, description, note, size, stacked layout, custom submit classes, honeypot and reserved status line; requires an explicit endpoint in this static fork |
+| YouTube | Click-to-play thumbnail facade with localized labels and a no-JavaScript link |
+| ProjectImageSVG | Inline, theme-aware project artwork loaded from `src/assets/projects/<slug>.svg`; import explicitly and provide `slug` and accessible `title` |
 | FormField | Reusable form field wrapper |
 | SearchInput | Search input with icon |
 | PasswordInput | Password input with visibility toggle |
@@ -558,13 +522,15 @@ Astro Rocket includes 57 components across 7 categories. All UI components use [
 
 ### Other Categories
 
-| Category | Count | Components |
-|----------|-------|------------|
-| Hero | 1 | Hero section with centered/split layouts, grid pattern, and typing effect |
-| Layout | 6 | Header (with scroll progress bar), Footer, ThemeModeDropdown, ThemeSelector, ThemeSelectorDropdown, Analytics |
-| Blog | 4 | ArticleHero, BlogCard, ShareButtons, RelatedPosts |
-| Landing | 5 | Credibility, LighthouseScores, TechStack, FeatureTabs, and more |
-| SEO | 3 | SEO, JsonLd, Breadcrumbs |
+The following is a selection, not a count of all exported components.
+
+| Category | Components |
+|----------|------------|
+| Hero | Hero section with centered/split layouts, grid pattern, and typing effect |
+| Layout | Header (with scroll progress bar), Footer, ThemeModeDropdown, ThemeSelector, ThemeSelectorDropdown, Analytics |
+| Blog | ArticleHero, BlogCard, ShareButtons, RelatedPosts |
+| Landing | Credibility, LighthouseScores, TechStack, FeatureTabs, and more |
+| SEO | SEO, JsonLd, Breadcrumbs |
 
 ### Usage Example
 
@@ -674,9 +640,9 @@ gallery:
     alt: "Dashboard view"
 ```
 
-The same shape works in `<ProjectGallery>` (`{ video, poster, alt, caption? }`). Video slides render the poster with `preload="none"`, so **zero video bytes are downloaded until the visitor presses play** — the poster goes through the regular image pipeline and the Lighthouse scores stay intact. Swiping away from a playing video pauses it. YouTube/Vimeo embeds are deliberately not supported: third-party iframes drag in scripts, cookies, and consent requirements that this theme avoids.
+The same shape works in `<ProjectGallery>` (`{ video, poster, alt, caption? }`). Video slides use optimized posters and `preload="none"`; navigating away pauses playback. A single project-hero image keeps its natural aspect ratio. Multiple images and videos keep a shared 16:9 frame. YouTube is available separately through the click-to-play facade; Vimeo embeds are not built in.
 
-Both carousels are dependency-free (native scroll-snap plus a small vanilla script) and lazy-load every slide after the first, so they don't cost you the Lighthouse score. `src/content/projects/ecommerce-store.mdx` demonstrates both in one file.
+Both carousels are dependency-free (native scroll-snap plus a small vanilla script) and lazy-load every slide after the first, to limit initial media work. The isolated bilingual test fixture exercises a mixed image/video gallery.
 
 ### Querying Content
 
@@ -721,19 +687,19 @@ import SEO from '@/components/seo/SEO.astro';
 
 ### OG Image
 
-A static default OG image (`public/og-default.svg`) serves as the social preview for all pages. The path is set via `ogImage` in `src/config/site.config.ts`. To use a custom image for a specific page, pass it as the `image` prop to the layout component.
+Default and per-content OG SVG endpoints are rasterized to PNG during the build, preserving CJK title rendering. The default is configured through `ogImage` in `src/config/site.config.ts`; layouts can supply a specific sharing image. Canonical and JSON-LD site addresses are checked against each other during build.
 
 ---
 
 ## Search
 
-Site-wide static search is powered by [Pagefind](https://pagefind.app) and surfaced as a search button in the header that opens a command-palette style modal (also bound to <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd>).
+Site-wide static search is powered by [Pagefind](https://pagefind.app) and surfaced as a search button in the header that expands a search panel below the Header (also bound to <kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd>).
 
 **How it works**
 
-- The index is generated automatically at the end of every `astro build` by the `pagefind()` hook in `astro.config.mjs`. It indexes the real output directory on every deploy target (Vercel, Netlify, Cloudflare) — no extra build command needed.
+- The index is generated automatically at the end of every `astro build` by the `pagefind()` hook in `astro.config.mjs`. It indexes the real output directory for this static Cloudflare build — no extra build command needed.
 - The header and footer carry `data-pagefind-ignore`, so navigation chrome never pollutes results.
-- The modal lazy-loads the Pagefind bundle on first open, so search adds **zero JavaScript** to the initial page load and doesn't touch the Lighthouse score.
+- The Header search lazy-loads the Pagefind bundle on first open; its small trigger and interaction controller load separately.
 
 **Trying it locally**
 
@@ -753,73 +719,38 @@ The search button shows by default. Hide it per header instance:
 
 ---
 
-## API Routes
+## Optional Blog CTA and Newsletter
 
-### Contact Form
+Both capabilities are installed but **disabled by default** in
+`src/config/site.config.ts`:
 
-**POST** `/api/contact`
-
-```typescript
-// Request (FormData)
-{
-  name: string,      // 2-100 chars
-  email: string,     // Valid email
-  subject: string,   // Required
-  message: string,   // 10-5000 chars
-  honeypot: string   // Must be empty (spam check)
-}
-
-// Response
-{ success: true }
-// or
-{ success: false, errors: { field: ["message"] } }
+```ts
+newsletter: { enabled: false },
+blogCta: {
+  enabled: false,
+  href: 'https://github.com/f1restone/f1restone.github.io',
+  icon: 'github',
+},
 ```
 
-### Newsletter
+Enable `blogCta` to add the same localized closing block to all blog views and
+articles. Copy lives in `blog.cta.*`. Enable `newsletter` to render the Footer
+signup block; set its `action` to a real newsletter service endpoint before
+accepting submissions. Without an endpoint its submit control stays disabled.
+`NewsletterForm` also supports heading, description, note, size, stacked layout,
+and custom button classes. Form feedback reserves space to avoid layout jumps.
 
-**POST** `/api/newsletter`
+## Forms and Deployment
 
-```typescript
-// Request (FormData)
-{ email: string }
+FireStone is statically built for Cloudflare. Contact and newsletter components
+require an explicit endpoint with a JSON response (`{ success: true }` or
+`{ success: false, error: "..." }`). This repository does not ship `/api/contact`
+or `/api/newsletter`; adding a server adapter is a separate architecture change.
 
-// Response
-{ success: true }
-// or
-{ success: false, error: "message" }
-```
-
----
-
-## Deployment
-
-Configuration files included for major platforms.
-
-### Vercel (Recommended)
-
-```bash
-vercel
-```
-
-### Netlify
-
-```bash
-netlify deploy --prod
-```
-
-### Cloudflare Pages
-
-```bash
-wrangler pages deploy dist
-```
-
-### Static Export
-
-Build outputs to `dist/` for any static host:
-
-```bash
-pnpm build
-```
+`pnpm build` outputs `dist/`, including Pagefind, sharing images and favicon
+variants. The existing Cloudflare workflow handles deployment; see
+[the CI guide](docs/ci.md). Docker preview/export and alternative-host deployment
+workflows are deliberately outside this migration.
 
 ---
 
@@ -836,11 +767,11 @@ pnpm build
 
 Astro Rocket is optimized for Core Web Vitals:
 
-- **Lighthouse Score**: 100/100/100/100 on both mobile and desktop
-- **Zero JavaScript** by default (islands architecture)
+- **Lighthouse scores**: upstream demo scores do not establish FireStone scores; measure the deployed site separately
+- **Selective JavaScript** for search, consent, effects and interactive controls
 - **Optimized fonts** with `font-display: swap`
 - **Image optimization** via Astro's built-in processing
-- **Prefetching** for instant page transitions
+- **Normal page navigation**, with reduced-motion-aware entrance effects
 
 ---
 
@@ -850,7 +781,14 @@ Every page in Astro Rocket includes purposeful animations that make the site fee
 
 ### Page transitions
 
-Astro Rocket uses Astro's built-in `<ClientRouter />` (View Transitions API) to animate between pages. Instead of a full browser reload, content fades smoothly from one page to the next. This is enabled globally in `BaseLayout.astro` and requires no per-page configuration.
+The upstream v2.6.0 release documents Astro's `<ClientRouter />` (View Transitions API), but its release code keeps it disabled because it conflicts with the existing entrance animations and can produce a visible mobile aftershake. FireStone follows the release code: navigation is a normal page load, while scroll and component animations run cleanly from the first frame.
+
+### MDX embeds
+
+The thumbnail contacts YouTube’s image CDN before activation; the player iframe
+and its scripts are deferred until the visitor chooses to play.
+
+Blog, project, legal, and other rendered MDX content can use the built-in `<YouTube id="…" title="…" />` component. It renders a lightweight thumbnail first and creates a `youtube-nocookie.com` iframe only after activation; without JavaScript it links to YouTube directly.
 
 ### Scroll-triggered animations
 

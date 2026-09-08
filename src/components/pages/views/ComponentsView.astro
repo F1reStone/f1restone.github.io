@@ -44,6 +44,9 @@ import SearchInput from '@/components/patterns/SearchInput.astro';
 import PasswordInput from '@/components/patterns/PasswordInput.astro';
 import StatCard from '@/components/patterns/StatCard.astro';
 import EmptyState from '@/components/patterns/EmptyState.astro';
+import YouTube from '@/components/patterns/YouTube.astro';
+import NewsletterForm from '@/components/patterns/NewsletterForm.astro';
+import ProofTile from '@/components/ui/data-display/ProofTile/ProofTile.astro';
 // Landing Components
 import StackMarquee from '@/components/landing/StackMarquee.astro';
 ---
@@ -137,8 +140,39 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
       </div>
     </section>
 
-    <!-- Hero Section -->
-    <section id="hero" class="scroll-mt-32 flex flex-col gap-10">
+    <!-- Content patterns are demonstrated near the top so MDX authors can
+         verify the privacy-friendly embed and data-display primitive quickly. -->
+    <section class="component-showcase">
+      <div class="showcase-header flex-wrap gap-2">
+        <span class="showcase-label">Content Patterns</span>
+        <span class="showcase-hint">交互内容组件按需加载，并保持可访问的无脚本降级。</span>
+      </div>
+      <div class="showcase-content grid gap-8 lg:grid-cols-2">
+        <div>
+          <h3 class="mb-3 font-semibold text-foreground">YouTube Embed</h3>
+          <YouTube id="QONgJurkigk" title="YouTube embed preview" />
+        </div>
+          <div class="flex flex-col">
+            <h3 class="mb-3 font-semibold text-foreground">Proof Tile</h3>
+          <ProofTile icon="sparkles" title="Proof tile">A compact, reusable fact tile.</ProofTile>
+        </div>
+      </div>
+    </section>
+
+      <!-- Showcase both authoring layouts without configuring a live signup endpoint. -->
+      <section class="component-showcase">
+        <div class="showcase-header">
+          <span class="showcase-label">Newsletter</span>
+          <span class="showcase-hint">Auto / Stacked</span>
+        </div>
+        <div class="showcase-content grid gap-8 lg:grid-cols-2">
+          <NewsletterForm heading="Auto layout" description="Responsive inline signup form." />
+          <NewsletterForm heading="Stacked layout" layout="stacked" description="For narrow columns and footers." size="sm" />
+        </div>
+      </section>
+
+      <!-- Hero Section -->
+      <section id="hero" class="scroll-mt-32 flex flex-col gap-10">
       <div class="flex items-start gap-5">
         <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500/10 text-brand-500 shrink-0">
           <Icon name="star" size="lg" />

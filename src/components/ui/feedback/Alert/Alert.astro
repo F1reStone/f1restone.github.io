@@ -42,10 +42,11 @@ const icons: Record<string, 'info' | 'check-circle' | 'alert-triangle' | 'x-circ
 
   {/* Content */}
   <div class="flex-1 min-w-0 pl-1">
+    {/* An alert title labels feedback; it must not insert an arbitrary heading level. */}
     {title && (
-      <h5 class="font-bold text-lg mb-1 text-foreground">
+      <div class="font-bold text-lg mb-1 text-foreground">
         {title}
-      </h5>
+      </div>
     )}
     <div class="text-sm leading-relaxed text-foreground-muted">
       <slot />

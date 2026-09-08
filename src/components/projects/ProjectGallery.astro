@@ -1,14 +1,9 @@
 ---
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import { getLocaleFromPath, t } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
-import type { ImageMetadata } from 'astro';
-
-interface GalleryImage {
-  src: ImageMetadata;
-  alt: string;
-  caption?: string;
-}
+const locale = getLocaleFromPath(Astro.originPathname);
+import { isVideoSlide, type GallerySlide } from '@/lib/gallery';
+type GalleryImage = GallerySlide & { caption?: string };
 
 interface Props {
   images: GalleryImage[];
@@ -16,6 +11,14 @@ interface Props {
 
 const { images } = Astro.props;
 const id = Math.random().toString(36).slice(2, 8);
+// Posters use the same build-time optimization as images; video bytes stay deferred.
+const posters = await Promise.all(images.map(item =>
+  isVideoSlide(item) ? getImage({ src: item.poster, width: 1280 }) : null
+));
+const slideData = images.map((item, i) => isVideoSlide(item)
+  ? { type: 'video', src: item.video, poster: posters[i]?.src ?? '', alt: item.alt, caption: item.caption ?? '' }
+  : { type: 'image', src: item.src.src, poster: '', alt: item.alt, caption: item.caption ?? '' }
+);
 
 // FireStone: 画廊精确防抖计算
 const dotsWidth = 12 * (images.length - 1) + 24;
@@ -31,17 +34,23 @@ const dotsWidth = 12 * (images.length - 1) + 24;
     >
       {images.map((img, i) => (
         <div
-          class="shrink-0 w-full snap-start cursor-zoom-in"
+          class:list={['shrink-0 w-full snap-start', !isVideoSlide(img) && 'cursor-zoom-in']}
+          data-slide-type={isVideoSlide(img) ? 'video' : 'image'}
+          tabindex={isVideoSlide(img) ? undefined : 0}
+          role={isVideoSlide(img) ? undefined : 'button'}
+          aria-label={isVideoSlide(img) ? undefined : img.alt}
           data-index={i}
           data-gallery-slide={`gallery-${id}`}
         >
-          <Picture
+          {isVideoSlide(img) ? (
+            <video class="aspect-video w-full object-cover" src={img.video} poster={posters[i]?.src} controls playsinline preload="none" aria-label={img.alt} />
+          ) : <Picture
             src={img.src}
             alt={img.alt}
             formats={['avif', 'webp']}
             class="aspect-video w-full object-cover"
             loading="lazy"
-          />
+          />}
         </div>
       ))}
     </div>
@@ -72,19 +81,20 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
   <!-- Dots + counter -->
   <div class="mt-4 flex flex-col items-center gap-2">
-    <div class="flex items-center justify-center rounded-full bg-secondary/50 px-1.5 py-1.5 backdrop-blur-md ring-1 ring-inset ring-border/50 shadow-sm"></div>
-      <div id={`dots-${id}`} class="relative h-1.5" role="tablist" style={`width: ${dotsWidth}px;`}>
+    <div class="flex items-center justify-center rounded-full bg-secondary/50 px-1.5 py-1.5 backdrop-blur-md ring-1 ring-inset ring-border/50 shadow-sm">
+      <div id={`dots-${id}`} class="relative h-1.5" role="group" aria-label={t('projects.carouselChooseSlide', locale)} style={`width: ${dotsWidth}px;`}>
         {images.map((_, i) => {
           const x = i === 0 ? 0 : i * 12 + 18;
           return (
             <button
-              role="tab"
+              type="button"
+              aria-pressed={i === 0}
               aria-label={t('projects.goToSlide', locale, { number: i + 1 })}
               data-dot={i}
               data-dots-gallery={`gallery-${id}`}
               data-active={i === 0 ? 'true' : 'false'}
               style={`transform: translate3d(${x}px, 0, 0);`}
-              class="h-1.5 w-1.5 rounded-full bg-foreground-subtle/50 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
+              class="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-foreground-subtle/50 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
             ></button>
         );
         })}
@@ -94,6 +104,8 @@ const dotsWidth = 12 * (images.length - 1) + 24;
       {String(1).padStart(String(images.length).length, '0')} / {images.length}
     </span>
   </div>
+
+</div>
 
 <!-- Lightbox -->
 <div
@@ -125,6 +137,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
   <div class="mx-16 flex flex-col items-center gap-3 max-w-5xl w-full px-4">
     <img id={`lb-img-${id}`} src="" alt="" class="max-h-[80vh] w-auto rounded-lg object-contain" />
+    <video id={`lb-video-${id}`} class="hidden max-h-[80vh] w-auto rounded-lg object-contain" controls playsinline preload="none"></video>
     <p id={`lb-caption-${id}`} class="text-sm text-white/70 text-center"></p>
   </div>
 
@@ -139,7 +152,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
   </button>
 </div>
 
-<script define:vars={{ id, imageData: images.map(img => ({ src: img.src.src, alt: img.alt, caption: img.caption ?? '' })) }}>
+<script is:inline define:vars={{ id, imageData: slideData }}>
 (function () {
   const galleryId = id;
   const track = document.getElementById('track-' + galleryId);
@@ -149,6 +162,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
   const dotsContainer = document.getElementById('dots-' + galleryId);
   const lightbox = document.getElementById('lightbox-' + galleryId);
   const lbImg = document.getElementById('lb-img-' + galleryId);
+  const lbVideo = document.getElementById('lb-video-' + galleryId);
   const lbCaption = document.getElementById('lb-caption-' + galleryId);
   const lbClose = document.getElementById('lb-close-' + galleryId);
   const lbPrev = document.getElementById('lb-prev-' + galleryId);
@@ -161,10 +175,12 @@ const dotsWidth = 12 * (images.length - 1) + 24;
   const total = slides.length;
   let current = 0;
   let lbCurrent = 0;
+  let previousFocus = null;
+  let previousOverflow = '';
 
   function scrollTo(index) {
     current = Math.max(0, Math.min(index, total - 1));
-    slides[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    track.scrollTo({ left: slides[current].offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
     sync(current);
   }
 
@@ -172,6 +188,9 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
   function sync(index, immediate = false) {
     current = index;
+    slides.forEach((slide, i) => {
+      if (i !== index) slide.querySelector('video')?.pause();
+    });
     // 动态补零
     counter.textContent = String(index + 1).padStart(padLen, '0') + ' / ' + total;
     prevBtn.disabled = index === 0;
@@ -184,6 +203,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
     dots.forEach((dot, j) => {
       dot.dataset.active = (j === index) ? 'true' : 'false';
+      dot.setAttribute('aria-pressed', String(j === index));
       const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
       dot.style.transform = `translate3d(${x}px, 0, 0)`;
     });
@@ -221,28 +241,51 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
   // Click to open lightbox
   slides.forEach(function (slide, i) {
+    if (slide.dataset.slideType === 'video') return;
     slide.addEventListener('click', function () { openLightbox(i); });
+    slide.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openLightbox(i);
+      }
+    });
   });
 
   function openLightbox(index) {
+    previousFocus = document.activeElement;
+    previousOverflow = document.body.style.overflow;
+    slides.forEach(slide => slide.querySelector('video')?.pause());
     lbCurrent = index;
     lbSync(index);
     lightbox.classList.remove('hidden');
     lightbox.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    lbClose.focus();
   }
 
   function closeLightbox() {
     lightbox.classList.add('hidden');
     lightbox.classList.remove('flex');
-    document.body.style.overflow = '';
+    lbVideo.pause();
+    document.body.style.overflow = previousOverflow;
+    previousFocus?.focus();
   }
 
   function lbSync(index) {
     lbCurrent = index;
     const img = imageData[index];
-    lbImg.src = img.src;
-    lbImg.alt = img.alt;
+    lbVideo.pause();
+    const isVideo = img.type === 'video';
+    lbVideo.classList.toggle('hidden', !isVideo);
+    lbImg.classList.toggle('hidden', isVideo);
+    if (isVideo) {
+      lbVideo.src = img.src;
+      lbVideo.poster = img.poster;
+      lbVideo.setAttribute('aria-label', img.alt);
+    } else {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+    }
     lbCaption.textContent = img.caption || '';
     lbPrev.disabled = index === 0;
     lbNext.disabled = index === total - 1;
@@ -258,6 +301,13 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
   document.addEventListener('keydown', function (e) {
     if (!lightbox.classList.contains('flex')) return;
+    if (e.key === 'Tab') {
+      const controls = Array.from(lightbox.querySelectorAll('button:not(:disabled), video[controls]')).filter(el => el.getClientRects().length);
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
     if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft' && lbCurrent > 0) lbSync(lbCurrent - 1);
     if (e.key === 'ArrowRight' && lbCurrent < total - 1) lbSync(lbCurrent + 1);

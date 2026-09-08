@@ -1,4 +1,5 @@
 ---
+import BlogCta from '@/components/blog/BlogCta.astro';
 import { defaultLocale, localizedPath } from '@/i18n';
 interface Props { locale?: string;  }
 const { locale = defaultLocale } = Astro.props;
@@ -126,4 +127,5 @@ const topTags = collectTopTags(posts, TAG_CLOUD_LIMIT);
       />
     </div>
   </section>
+  <BlogCta />
 </PageLayout>

@@ -58,6 +58,11 @@
     "mapUnavailable": "互动地图暂时不可用。"
   },
   "blog": {
+    "cta": {
+      "heading": "了解这个项目",
+      "description": "查看源代码，关注 FireStone 的开发进展。",
+      "button": "在 GitHub 上查看"
+    },
     "title": "博客",
     "description": "最新文章与动态",
     "readingTime": "预计阅读时间 {minutes} 分钟",

@@ -7,9 +7,9 @@
  * - Keyboard: arrow keys move slides when any nav control has focus
  * - First slide loads eagerly, the rest lazy — Lighthouse-friendly on mobile
  */
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import { getLocaleFromPath, t } from '@/i18n';
-const locale = getLocaleFromPath(Astro.url.pathname);
+const locale = getLocaleFromPath(Astro.originPathname);
 import { isVideoSlide, type GallerySlide } from '@/lib/gallery';
 
 interface Props {
@@ -21,6 +21,11 @@ interface Props {
 const { slides, label = t('projects.galleryLabel', locale) } = Astro.props;
 const carouselId = `carousel-${Math.random().toString(36).slice(2, 9)}`;
 const hasMultiple = slides.length > 1;
+// Single screenshots keep their full frame; only swipeable galleries share a crop.
+const imageClass = hasMultiple ? 'aspect-video w-full object-cover' : 'w-full h-auto';
+const posters = await Promise.all(slides.map(slide =>
+  isVideoSlide(slide) ? getImage({ src: slide.poster, width: 1280 }) : null
+));
 const dotsWidth = 12 * (slides.length - 1) + 24;
 ---
 
@@ -52,7 +57,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
             <video
               class="aspect-video w-full object-cover"
               src={slide.video}
-              poster={typeof slide.poster === 'object' && 'src' in slide.poster ? (slide.poster as unknown as { src: string }).src : undefined}
+              poster={posters[i]?.src}
               controls
               playsinline
               preload="none"
@@ -65,7 +70,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
               widths={[640, 960, 1280]}
               formats={['avif', 'webp']}
               sizes="(max-width: 1024px) 100vw, 640px"
-              class="aspect-video w-full object-cover"
+              class={imageClass}
               loading={i === 0 ? 'eager' : 'lazy'}
             />
           )}
@@ -170,6 +175,10 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
 
       // FireStone: 加入 immediate 标记，用于首屏瞬移无动画同步
       const updateUI = (index: number, immediate = false) => {
+        // Leaving a video slide must not leave invisible playback running.
+        slides.forEach((slide, i) => {
+          if (i !== index) slide.querySelector('video')?.pause();
+        });
         if (immediate) {
           dots.forEach(dot => dot.style.transition = 'none');
         }
@@ -199,7 +208,7 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
       const scrollToIndex = (index: number) => {
         const slide = slides[index];
         if (!slide) return;
-        track.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+        track.scrollTo({ left: slide.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
         updateUI(index);
       };
 

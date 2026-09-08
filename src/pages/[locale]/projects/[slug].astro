@@ -1,4 +1,5 @@
 ---
+import { mdxComponents } from '@/components/content/mdx-components';
 import ProjectLayout from '@/layouts/ProjectLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { getProjectSlug, getSecondaryLocales, getVisibleProjects } from '@/lib/projects';
@@ -57,5 +58,5 @@ const { Content, headings } = await render(project);
   headings={headings}
   toc={project.data.toc}
 >
-  <Content />
+  <Content components={mdxComponents} />
 </ProjectLayout>

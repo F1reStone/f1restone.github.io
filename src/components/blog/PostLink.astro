@@ -2,7 +2,7 @@
 /**
  * Resolve a stable canonical id to a real internal link at build time.
  *
- * Usage in MDX (the component is provided globally to blog content, so no
+ * Usage in MDX (the shared collection renderers provide this component, so no
  * import is needed):
  *
  *   the <PostLink uid="configuration-guide">configuration guide</PostLink> covers…
@@ -12,7 +12,7 @@
  * internal links can never ship.
  */
 import { resolvePostUrl } from '@/lib/post-links';
-import { defaultLocale } from '@/i18n';
+import { getLocaleFromPath } from '@/i18n';
 
 interface Props {
   /** Canonical id of the target post (a leading `post:` is allowed and ignored). */
@@ -24,7 +24,8 @@ interface Props {
 }
 
 const { uid, locale, class: className } = Astro.props;
-const targetLocale = locale ?? Astro.currentLocale ?? defaultLocale;
+// Rewritten fallback pages retain the requested language in originPathname.
+const targetLocale = locale ?? getLocaleFromPath(Astro.originPathname);
 const { url, title } = await resolvePostUrl(uid, targetLocale);
 ---
 
