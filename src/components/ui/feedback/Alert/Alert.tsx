@@ -66,7 +66,7 @@ export function Alert({ locale = defaultLocale, ref, variant = 'info', title, di
       {dismissible && (
         <button
           type="button"
-          className="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground hover:bg-secondary transition-colors"
+        className="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground focus-visible:text-foreground hover:bg-secondary transition-colors"
           aria-label={t('common.dismiss', locale)}
           onClick={handleDismiss}
         >

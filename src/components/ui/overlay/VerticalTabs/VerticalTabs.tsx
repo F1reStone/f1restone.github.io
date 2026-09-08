@@ -281,7 +281,7 @@ export function VerticalTabs({ locale = defaultLocale,
                 'h-5 w-5 transition-all duration-200',
                 isActive
                   ? 'text-brand-600 dark:text-brand-400 scale-105'
-                  : 'text-foreground-muted group-hover:text-foreground-secondary'
+                  : 'text-foreground-muted group-hover:text-foreground-secondary group-focus-visible:text-foreground-secondary'
               )}
               strokeWidth={isActive ? 2.25 : 1.75}
             />
@@ -317,7 +317,7 @@ export function VerticalTabs({ locale = defaultLocale,
               'block font-medium transition-colors duration-150',
               isActive
                 ? 'text-foreground'
-                : 'text-foreground-secondary group-hover:text-foreground'
+                : 'text-foreground-secondary group-hover:text-foreground group-focus-visible:text-foreground'
             )}
           >
             {tab.label}
@@ -328,7 +328,7 @@ export function VerticalTabs({ locale = defaultLocale,
                 'block text-sm mt-0.5 transition-colors duration-150',
                 isActive
                   ? 'text-foreground-muted'
-                  : 'text-foreground-subtle group-hover:text-foreground-muted'
+                  : 'text-foreground-subtle group-hover:text-foreground-muted group-focus-visible:text-foreground-muted'
               )}
             >
               {tab.description}

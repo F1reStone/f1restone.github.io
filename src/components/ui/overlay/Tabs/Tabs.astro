@@ -44,7 +44,7 @@ const { tabs, defaultValue = tabs[0]?.id, class: className } = Astro.props;
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           tab.id === defaultValue
             ? 'border-foreground text-foreground'
-            : 'border-transparent text-foreground-muted hover:text-foreground hover:border-border'
+            : 'border-transparent text-foreground-muted hover:text-foreground focus-visible:text-foreground hover:border-border focus-visible:border-border'
         )}
         data-tab-trigger={tab.id}
       >

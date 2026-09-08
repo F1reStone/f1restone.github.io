@@ -13,6 +13,9 @@ FireStone's personal website built on [Astro Rocket](https://astrorocket.dev/), 
 
 Upgrade decisions and testing: [2.6.0 migration](docs/upgrade-as260.md), [upgrade and verification guide](UPGRADE.md).
 
+Interaction design: [SparkFlow utilities and keyboard states](docs/sparkflow.md).
+Live examples lead the component library at `/components/#sparkflow`.
+
 Use Node.js 24 LTS (`.nvmrc`) and the pnpm version pinned in `package.json`.
 `pnpm validate` runs lint, type checking and unit tests before building. CI also
 runs production and bilingual browser checks; only a successful push to `main`

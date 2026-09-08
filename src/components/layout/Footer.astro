@@ -148,12 +148,12 @@ const processedCopyright = copyright
 
 // FireStone: Added class names for legal links and separators for better styling control
 const legalLinkClass =
-  'inline-flex items-center gap-1 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover:text-foreground';
+  'inline-flex items-center gap-1 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground';
 
 const legalSeparatorClass = 'mx-3 h-4 w-[1.5px] bg-foreground-subtle/30';
 
 // External arrows share the separator tone; SVG strokes use color, not background-color.
-const externalArrowClass = 'text-foreground-muted/60';
+const externalArrowClass = 'text-foreground-muted/60 hover:text-foreground focus-visible:text-foreground';
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -241,7 +241,7 @@ const footerClasses = cn(footerVariants({ background }), className);
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class="inline-flex items-center gap-2 transition-colors hover:text-foreground"
+              class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
@@ -260,7 +260,7 @@ const footerClasses = cn(footerVariants({ background }), className);
               {socialLinks.map((social) => (
                 <a
                   href={social.href}
-                  class="transition-colors text-foreground-muted hover:text-foreground"
+                  class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
@@ -306,7 +306,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                     {socialLinks.map((social) => (
                       <a
                         href={social.href}
-                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
+                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
@@ -334,7 +334,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                     <li>
                       <a
                         href={link.href}
-                        class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover:text-foreground"
+                        class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         data-text={link.label}
                         target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
@@ -437,7 +437,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                     {socialLinks.map((social) => (
                       <a
                         href={social.href}
-                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground"
+                        class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
@@ -466,7 +466,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                       <li>
                         <a
                           href={link.href}
-                          class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover:text-foreground"
+                          class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                           data-text={link.label}
                           target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                           rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
@@ -583,7 +583,7 @@ const footerClasses = cn(footerVariants({ background }), className);
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class="inline-flex items-center gap-2 transition-colors hover:text-foreground"
+              class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
@@ -599,7 +599,7 @@ const footerClasses = cn(footerVariants({ background }), className);
             {socialLinks.map((social) => (
               <a
                 href={social.href}
-                class="transition-colors text-foreground-muted hover:text-foreground"
+                class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
@@ -621,7 +621,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                 {resolvedLegalLinks.map((link) => link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
                   <button
                     type="button"
-                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover:text-foreground"
+                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                     data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
                     data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
                     aria-haspopup="dialog"
@@ -633,7 +633,7 @@ const footerClasses = cn(footerVariants({ background }), className);
                 ) : (
                   <a
                     href={link.href}
-                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover:text-foreground"
+                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                     target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
                     rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                   >

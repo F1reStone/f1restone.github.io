@@ -68,7 +68,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
     </p>
 
     <Fragment slot="actions">
-      <Button href="#hero" variant="primary">
+      <Button href="#sparkflow" variant="primary">
         浏览组件
         <Icon name="chevron-right" size="sm" />
       </Button>
@@ -84,6 +84,58 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
 
   <!-- Components Showcase -->
   <div class="mx-auto max-w-8xl px-6 py-20 space-y-32">
+
+    <!-- SparkFlow interaction primitives are shown first because they power the site-wide motion language. -->
+    <section id="sparkflow" class="component-showcase scroll-mt-32">
+      <div class="showcase-header flex-wrap gap-2">
+        <span class="showcase-label">SparkFlow Interactions</span>
+        <span class="showcase-hint">网站的核心交互效果。字重示例遵循“动态效果”设置；减少运动时停用位移和字重动画。</span>
+      </div>
+      <div class="showcase-content grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Icon</p>
+          <code class="block text-xs text-foreground-muted">hover-glow-icon</code>
+          <button type="button" aria-label="体验图标发光" class="inline-flex items-center text-foreground-muted hover:text-foreground focus-visible:text-foreground hover-glow-icon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">
+            <Icon name="sparkles" size="lg" />
+          </button>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Text</p>
+          <code class="block text-xs text-foreground-muted">hover-glow-text</code>
+          <button type="button" class="inline-flex text-foreground-muted hover-glow-text hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">Text glow</button>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Box</p>
+          <code class="block text-xs text-foreground-muted">hover-glow-box</code>
+          <Button type="button" class="hover-glow-box">Box glow</Button>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Outline</p>
+          <code class="block text-xs text-foreground-muted">hover-glow-outline</code>
+          <!-- Isolate outline glow from the solid fill bundled with the outline Button variant. -->
+          <button type="button" class="glass-panel hover-glow-outline rounded-full px-5 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Outline glow</button>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Solid fill</p>
+          <code class="block text-xs text-foreground-muted">hover-solid-fill</code>
+          <button type="button" class="glass-panel hover-solid-fill rounded-full px-5 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Solid fill</button>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Weight shift</p>
+          <code class="block text-xs text-foreground-muted">weight-shift</code>
+          <div class="flex justify-center border-y border-border/50 py-3">
+            <button type="button" data-text="Centered weight shift" class="text-foreground-muted weight-shift hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">Centered weight shift</button>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Non-centered</p>
+          <code class="block text-xs text-foreground-muted">weight-shift-non-centered</code>
+          <div class="flex justify-start border-l border-border/50 py-3">
+            <button type="button" data-text="Left aligned weight shift" class="text-foreground-muted weight-shift-non-centered hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">Left aligned weight shift</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Hero Section -->
     <section id="hero" class="scroll-mt-32 flex flex-col gap-10">
@@ -1666,7 +1718,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               {['menu', 'x', 'chevron-down', 'arrow-right', 'search', 'plus', 'check', 'mail', 'phone', 'github', 'twitter', 'linkedin', 'sun', 'moon', 'zap', 'globe', 'shield', 'code', 'heart', 'star', 'alert-circle', 'check-circle', 'info', 'loader'].map((icon) => (
                 <Tooltip content={icon} position="top">
                   <div class="flex items-center justify-center w-10 h-10 rounded-lg border border-border bg-background hover:bg-secondary hover:border-border-strong transition-all cursor-pointer group">
-                    <Icon name={icon} size="md" class="text-foreground-muted group-hover:text-foreground transition-colors" />
+                    <Icon name={icon} size="md" class="text-foreground-muted group-hover:text-foreground group-focus-visible:text-foreground transition-colors" />
                   </div>
                 </Tooltip>
               ))}

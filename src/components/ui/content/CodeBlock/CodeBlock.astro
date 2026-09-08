@@ -40,7 +40,7 @@ const codeId = `code-${Math.random().toString(36).slice(2, 9)}`;
     </div>
     <button
       type="button"
-      class="copy-button flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium text-foreground-muted transition-colors hover:bg-secondary hover:text-foreground focus:outline-none"
+      class="copy-button flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium text-foreground-muted transition-colors hover:bg-secondary focus-visible:bg-secondary hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       data-code-id={codeId}
       aria-label={t('common.copyCode', locale)}
     >

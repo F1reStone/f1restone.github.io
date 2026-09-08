@@ -31,7 +31,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
             </svg>
           )}
           {item.href && index !== items.length - 1 ? (
-            <a href={item.href} class="text-foreground-muted hover-glow-text weight-shift hover:text-foreground transition-colors duration-200">
+            <a href={item.href} class="text-foreground-muted hover-glow-text weight-shift hover:text-foreground focus-visible:text-foreground transition-colors duration-200">
               {item.label}
             </a>
           ) : (

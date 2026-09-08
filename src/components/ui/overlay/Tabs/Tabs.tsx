@@ -162,7 +162,7 @@ export function Tabs({ locale = defaultLocale,
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                 isActive
                   ? 'border-foreground text-foreground'
-                  : 'border-transparent text-foreground-muted hover:text-foreground hover:border-border',
+                  : 'border-transparent text-foreground-muted hover:text-foreground focus-visible:text-foreground hover:border-border focus-visible:border-border',
               )}
             >
               {tab.label}

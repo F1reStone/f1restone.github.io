@@ -296,7 +296,7 @@
   },
   "footer": {
     "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
-    "credit": "Theme by <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
+    "credit": "Theme by <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground focus-visible:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
     "builtWith": "Built with Astro Rocket",
     "followOn": "Follow FireStone on {platform}",
     "socialMedia": "Social media",

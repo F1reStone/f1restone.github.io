@@ -296,7 +296,7 @@
   },
   "footer": {
     "copyright": "Copyright © {year} FireStone. All Rights Reserved.",
-    "credit": "主题来自 <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
+    "credit": "主题来自 <a href=\"https://hansmartens.dev\" class=\"transition-colors hover:text-foreground focus-visible:text-foreground\" target=\"_blank\" rel=\"noopener noreferrer\">Hans Martens Dev</a>",
     "builtWith": "使用 Astro Rocket 构建",
     "followOn": "在 {platform} 上关注 FireStone",
     "socialMedia": "社交媒体",

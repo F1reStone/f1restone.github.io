@@ -84,7 +84,7 @@ const favoriteGames = [
           </p>
           <p class="text-[18px] text-foreground-muted leading-relaxed">
             平日里最大的兴趣就是打打游戏，有时也会在 Figma 里 <span class="text-foreground-subtle/50"><s>梦到啥做啥</s></span> 做一些有趣的设计、拿 DaVinci Resolve 剪一些有的没的、Vibe Coding 并落地一些脑中的奇思妙想（比如说这个网站或者 <a href={withLocaleFallback('/projects/sparkforge', defaultLocale, locale)} rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-te
-            xt hover:text-brand-500 font-medium transition-colors">SparkForge 项目</a>）、用 ComfyUI 创作一些符合自己审美的 AI 绘画作品。
+            xt hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors">SparkForge 项目</a>）、用 ComfyUI 创作一些符合自己审美的 AI 绘画作品。
           </p>
           <p class="text-[18px] text-foreground-muted leading-relaxed">
             也许样样都会，但样样都不太精，因此，无论在哪个领域，都还请多指教。
@@ -129,7 +129,7 @@ const favoriteGames = [
         </div>
         <!-- Right: intro -->
         <p class="text-lg text-foreground-muted leading-relaxed" data-reveal="left" data-reveal-ease="smooth">
-          平时常玩的游戏类型包括但不限于 FPS、TPS、沙盒、开放世界、动作、竞速、策略等，对于科幻风格情有独钟。是个 <a href="https://www.embark-studios.com/" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 font-medium transition-colors">Embark</a> 批。喜欢冲动消费，游戏品味时神时鬼，经常会仅仅因为美术 / 音乐 / 剧情就为一款游戏买单（例如《ARC Raiders》、《THE FINALS》和《伊克西翁》）。
+          平时常玩的游戏类型包括但不限于 FPS、TPS、沙盒、开放世界、动作、竞速、策略等，对于科幻风格情有独钟。是个 <a href="https://www.embark-studios.com/" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors">Embark</a> 批。喜欢冲动消费，游戏品味时神时鬼，经常会仅仅因为美术 / 音乐 / 剧情就为一款游戏买单（例如《ARC Raiders》、《THE FINALS》和《伊克西翁》）。
         </p>
       </div>
     </div>
@@ -187,10 +187,10 @@ const favoriteGames = [
               />
             )}
               <!-- 渐进式毛玻璃遮罩 (底层背景) 扩大覆盖范围 (将 inset-0 改为 -inset-4) 以解决模糊覆盖缝隙 -->
-              <div class="game-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-active:opacity-100 pointer-events-none" />
+              <div class="game-card-overlay absolute -inset-4 opacity-0 transition-opacity duration-500 ease-[var(--ease-fluid)] group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100 pointer-events-none" />
 
               <!-- 右上角悬浮跳转图标 (调用全局 glass-panel 与 hover-glow-icon/box) -->
-              <!-- <div class="absolute top-2.5 right-2.5 opacity-0 scale-75 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:opacity-100 group-hover:scale-100 group-active:opacity-100 group-active:scale-100"> -->
+              <!-- <div class="absolute top-2.5 right-2.5 opacity-0 scale-75 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:opacity-100 group-focus-visible:opacity-100 group-hover:scale-100 group-focus-visible:scale-100 group-active:opacity-100 group-active:scale-100"> -->
                 <!-- <span class="flex items-center justify-center w-8 h-8 rounded-full glass-panel hover-glow-box hover-solid-fill text-white shadow-lg"> -->
                   <!-- <Icon name="arrow-up-right" size="sm" class="w-4 h-4" /> -->
                 <!-- </span> -->
@@ -200,7 +200,7 @@ const favoriteGames = [
               </span>
 
               <!-- 底部游戏名称 (悬停向上滑入) -->
-              <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:translate-y-0 group-hover:opacity-100 group-active:translate-y-0 group-active:opacity-100 pointer-events-none">
+              <div class="absolute bottom-0 left-0 right-0 p-4 translate-y-4 opacity-0 transition-all duration-500 ease-[var(--ease-bouncy)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:translate-y-0 group-active:opacity-100 pointer-events-none">
                 <h3 class="font-display font-bold text-xl sm:text-lg md:text-md lg:text-xl xl:text-lg 2xl:text-xl text-foreground tracking-tight leading-tight">
                   {game.name}
                 </h3>

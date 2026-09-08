@@ -21,12 +21,12 @@ const Element = href ? 'a' : 'span';
 
 // FireStone: [Dynamically apply hover color & STRONGER glow ONLY if the badge is an active link]
 const interactiveClasses = href ? {
-  default: 'hover:text-foreground hover:drop-shadow-[0_0_12px_currentColor]',
-  success: 'hover:brightness-125 hover:drop-shadow-[0_0_12px_currentColor]',
-  warning: 'hover:brightness-125 hover:drop-shadow-[0_0_12px_currentColor]',
-  error: 'hover:brightness-125 hover:drop-shadow-[0_0_12px_currentColor]',
-  info: 'hover:brightness-125 hover:drop-shadow-[0_0_12px_currentColor]',
-  brand: 'hover:text-brand-500 dark:hover:text-brand-300 hover:drop-shadow-[0_0_12px_currentColor]',
+  default: 'hover:text-foreground focus-visible:text-foreground hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+  success: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+  warning: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+  error: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+  info: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+  brand: 'hover:text-brand-500 focus-visible:text-brand-500 dark:hover:text-brand-300 dark:focus-visible:text-brand-300 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
 }[variant] : '';
 ---
 

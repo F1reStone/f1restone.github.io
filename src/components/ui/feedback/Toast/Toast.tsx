@@ -84,7 +84,7 @@ function ToastItem({ toast, onDismiss, locale }: { toast: Toast; onDismiss: (id:
       </div>
       <button
         type="button"
-        className="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground transition-colors"
+        className="shrink-0 p-1 -mr-1 -mt-1 rounded-md text-foreground-muted hover:text-foreground focus-visible:text-foreground transition-colors"
         onClick={handleDismiss}
         aria-label={t('common.dismiss', locale)}
       >
