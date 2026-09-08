@@ -252,7 +252,7 @@ const buttonId = `${menuId}-button`;
       ))}
     </div>
   )}
-  {showMobileMenu && layout !== 'minimal' && (
+  {(showSearch || (showMobileMenu && layout !== 'minimal')) && (
     <div class="hdr-menu-surface" aria-hidden="true" />
   )}
   <div class={cn(innerClasses, 'hdr-inner')}>
@@ -614,17 +614,21 @@ const buttonId = `${menuId}-button`;
                   {mobileSocialLinks.map((url, sIdx) => {
                     const { icon, label } = getSocialIconData(url);
                     return (
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={label}
-                        title={label}
-                        class="glass-panel hover-glow-box hover-solid-fill inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-foreground-muted transition-colors"
+                      <span
+                        class="mobile-menu-stagger mobile-menu-social inline-flex"
                         style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0) + (showLanguageSwitcher ? 1 : 0) + sIdx}`}
                       >
-                        <Icon name={icon} size="md" />
-                      </a>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={label}
+                          title={label}
+                          class="glass-panel hover-glow-box hover-solid-fill inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-foreground-muted transition-colors"
+                        >
+                          <Icon name={icon} size="md" />
+                        </a>
+                      </span>
                     );
                   })}
                 </div>
@@ -660,6 +664,8 @@ const buttonId = `${menuId}-button`;
 }
 
 <script>
+  import { animateHeaderSurface, headerMotionTiming } from '@/lib/headerMotion';
+
   function initMobileMenu() {
     const menuHeaders = document.querySelectorAll<HTMLElement>('header[data-menu-id]');
     menuHeaders.forEach((header) => {
@@ -679,8 +685,7 @@ const buttonId = `${menuId}-button`;
 
       let isOpen = false;
       let menuAnimation: Animation | undefined;
-      let surfaceAnimation: Animation | undefined;
-      const surface = header.querySelector<HTMLElement>('.hdr-menu-surface');
+      let socialExits: Animation[] = [];
 
       function fitMenu() {
         const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
@@ -693,30 +698,24 @@ const buttonId = `${menuId}-button`;
         const from = wasHidden
           ? { opacity: '0', clipPath: 'inset(0 0 100% 0)' }
           : { opacity: style.opacity, clipPath: style.clipPath === 'none' ? 'inset(0 0 0% 0)' : style.clipPath };
-        const surfaceOpacity = surface ? getComputedStyle(surface).opacity : '0';
         menuAnimation?.cancel();
-        surfaceAnimation?.cancel();
         menu!.classList.remove('hidden');
-        header.toggleAttribute('data-menu-expanded', opening);
-        const timing: KeyframeAnimationOptions = {
-          duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          fill: 'both',
-        };
+        animateHeaderSurface(header, 'data-menu-expanded', opening);
+        const timing = headerMotionTiming();
         // Reveal the panel without scaling its text or changing the page layout.
         menuAnimation = menu!.animate([
           from,
           opening ? { opacity: '1', clipPath: 'inset(0 0 0% 0)' } : { opacity: '0', clipPath: 'inset(0 0 100% 0)' },
-        ], timing);
-        surfaceAnimation = surface?.animate([
-          { opacity: surfaceOpacity }, { opacity: opening ? '1' : '0' },
         ], timing);
         return menuAnimation.finished;
       }
 
       function open() {
         if (isOpen) return;
+        header.dispatchEvent(new Event('header:menu-open'));
         isOpen = true;
+        socialExits.forEach((animation) => animation.cancel());
+        socialExits = [];
 
         button!.setAttribute('aria-expanded', 'true');
         menuIcon!.classList.add('hidden');
@@ -736,7 +735,6 @@ const buttonId = `${menuId}-button`;
         void animateMenu(true).then(() => {
           if (isOpen) {
             menuAnimation?.cancel();
-            surfaceAnimation?.cancel();
           }
         }, () => {});
         // A reversed close keeps the same DOM/CSS state; restart each stagger explicitly.
@@ -763,13 +761,22 @@ const buttonId = `${menuId}-button`;
         if (menu!.contains(document.activeElement)) button!.focus();
         menu!.inert = true;
         backdrop?.removeAttribute('data-open');
-
-        void animateMenu(false).then(() => {
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          socialExits = [...menu!.querySelectorAll<HTMLElement>('.mobile-menu-social')].reverse().map((item, index) => {
+            const style = getComputedStyle(item);
+            return item.animate([
+              { opacity: style.opacity, transform: style.transform },
+              { opacity: 0, transform: 'translateY(6px)' },
+            ], { duration: 600, delay: index * 75, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
+          });
+        }
+        void Promise.all([animateMenu(false), ...socialExits.map((animation) => animation.finished)]).then(() => {
           if (isOpen) return;
           menu!.classList.add('hidden');
           delete menu!.dataset.menuState;
           menuAnimation?.cancel();
-          surfaceAnimation?.cancel();
+          socialExits.forEach((animation) => animation.cancel());
+          socialExits = [];
           header.removeAttribute('data-menu-open');
           if (backdrop) {
             backdrop.classList.add('pointer-events-none');
@@ -795,6 +802,7 @@ const buttonId = `${menuId}-button`;
       }
 
       button.addEventListener('click', toggle);
+      header.addEventListener('header:search-open', close);
       window.addEventListener('resize', () => {
         if (!isOpen) return;
         if (matchMedia('(min-width: 1024px)').matches) close();
@@ -877,7 +885,7 @@ const buttonId = `${menuId}-button`;
           const currentScrollY = window.scrollY;
           const menuId = header.dataset.menuId;
           const menu = menuId ? document.getElementById(menuId) : null;
-          const menuOpen = menu && !menu.classList.contains('hidden');
+          const menuOpen = header.hasAttribute('data-search-active') || (menu && !menu.classList.contains('hidden'));
           const wasHidden = header.hasAttribute('data-header-hidden');
 
           // ── WRITES ──
@@ -999,7 +1007,9 @@ header.hdr-progressive-glass {
   background: var(--background);
   opacity: 0;
 }
-header[data-menu-expanded] > .hdr-menu-surface { opacity: 1; }
+header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface { opacity: 1; }
+header[data-search-active] { z-index: 101; }
+header[data-search-active] > .hdr-inner { pointer-events: auto; }
 header > .hdr-inner { position: relative; z-index: 1; }
 header > .mobile-menu-panel { z-index: 2; }
 
@@ -1550,7 +1560,7 @@ header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur::after {
      ========================================================================= */
 
   /* 1. 菜单激活时：重置 Header 的所有局部 CSS 变量，关闭反色逻辑 (de-invert) */
-  header.invert-section[data-menu-expanded] {
+  header.invert-section:is([data-menu-expanded], [data-search-expanded]) {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-foreground-secondary: var(--foreground-secondary);
@@ -1578,7 +1588,7 @@ header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur::after {
     border-bottom-color: var(--color-border) !important;
   }
 
-  @media (max-width: 1023px) {
+  @media screen {
     header > .hdr-inner :is(.search-trigger, .ttg-trigger, .hdr-hamburger, .hdr-invert-text) {
       transition: var(--engine-transition), color 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
