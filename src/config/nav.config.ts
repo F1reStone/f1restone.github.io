@@ -60,7 +60,8 @@ export interface LegalLink {
   href?: string;
   external?: boolean;
   icon?: string;
-  action?: 'openConsentSettings';
+  /** Open an on-page dialog; use href for navigation. */
+  action?: 'openConsentSettings' | 'openDynamicEffects';
   /** i18n dictionary key for the label. Falls back to `label`. */
   labelKey?: string;
   /** Per-locale label/path overrides, keyed by locale code. */
@@ -98,7 +99,9 @@ export const footerNavItems: NavItem[] = [
 
 export const legalLinks: LegalLink[] = [
   { label: 'Cookie 首选项', action: 'openConsentSettings', labelKey: 'footer.cookiePreferences' },
+  { label: '动态效果', action: 'openDynamicEffects', labelKey: 'effects.trigger' },
   { label: '隐私政策', href: '/legal/privacy-policy/', availableLocales: ['zh-CN'], labelKey: 'footer.privacyPolicy' },
+  { label: '服务状态', href: 'https://www.cloudflarestatus.com/services?group=cdn-performance', external: true, labelKey: 'footer.serviceStatus' },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [
@@ -138,14 +141,14 @@ export const footerLinkGroups: FooterLinkGroup[] = [
     title: 'Powered by',
     titleKey: 'footer.groups.poweredBy',
     links: [
-      { label: 'Astro', href: 'https://astro.build/', order: 1 },
-      { label: 'Astro Rocket', href: 'https://astrorocket.dev/', order: 2 },
-      { label: 'Cloudflare', href: 'https://cloudflare.com/', order: 3 },
-      { label: 'Google Fonts', href: 'https://fonts.google.com/', order: 4 },
-      { label: 'Lucide', href: 'https://lucide.dev/', order: 5 },
-      { label: 'React', href: 'https://react.dev/', order: 6 },
-      { label: 'Simple Icons', href: 'https://simpleicons.org/', order: 7 },
-      { label: 'Tailwind CSS', href: 'https://tailwindcss.com/', order: 8 },
+      { label: 'Astro', href: 'https://astro.build/', external: true, order: 1 },
+      { label: 'Astro Rocket', href: 'https://astrorocket.dev/', external: true, order: 2 },
+      { label: 'Cloudflare', href: 'https://cloudflare.com/', external: true, order: 3 },
+      { label: 'Google Fonts', href: 'https://fonts.google.com/', external: true, order: 4 },
+      { label: 'Lucide', href: 'https://lucide.dev/', external: true, order: 5 },
+      { label: 'React', href: 'https://react.dev/', external: true, order: 6 },
+      { label: 'Simple Icons', href: 'https://simpleicons.org/', external: true, order: 7 },
+      { label: 'Tailwind CSS', href: 'https://tailwindcss.com/', external: true, order: 8 },
     ],
   },
 ];
@@ -203,7 +206,7 @@ export function getFooterNavItems(locale: Locale = defaultLocale): ResolvedNavIt
 /**
  * Get configured legal links (Privacy, Terms, etc.), localized for `locale`.
  * Preserves `icon` and `action` properties from the original LegalLink items
- * so the Footer can render icons and wire up cookie-consent triggers.
+ * so the Footer can render icons and wire up on-page dialog triggers.
  * Returned in declaration order.
  */
 export function getLegalLinks(locale: Locale = defaultLocale): LegalLink[] {

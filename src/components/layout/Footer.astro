@@ -23,6 +23,7 @@ import {
   getLegalLinks,
   getFooterLinkGroups, // FireStone: Import the new global getter
   type ResolvedNavItem,
+  type LegalLink as ConfigLegalLink,
 } from '@/config/nav.config';
 import { footerVariants, footerColumnGridVariants } from './footer.variants';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
@@ -51,12 +52,7 @@ export interface FooterLinkGroup {
   label?: string;
 }*/
 
-export interface LegalLink {
-  label: string;
-  href?: string;
-  icon?: string;
-  action?: 'openConsentSettings';
-}
+export type LegalLink = ConfigLegalLink;
 
 interface Props extends HTMLAttributes<'footer'> {
   /** Layout style */
@@ -152,9 +148,12 @@ const processedCopyright = copyright
 
 // FireStone: Added class names for legal links and separators for better styling control
 const legalLinkClass =
-  'inline-flex items-center gap-2 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover:text-foreground';
+  'inline-flex items-center gap-1 text-sm font-medium transition-colors text-foreground/60 hover-glow-text hover:text-foreground';
 
 const legalSeparatorClass = 'mx-3 h-4 w-[1.5px] bg-foreground-subtle/30';
+
+// External arrows share the separator tone; SVG strokes use color, not background-color.
+const externalArrowClass = 'text-foreground-muted/60';
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -242,11 +241,12 @@ const footerClasses = cn(footerVariants({ background }), className);
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class="transition-colors hover:text-foreground"
+              class="inline-flex items-center gap-2 transition-colors hover:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
               {item.label}
+              {item.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
             </a>
           ))}
         </nav>
@@ -334,12 +334,13 @@ const footerClasses = cn(footerVariants({ background }), className);
                     <li>
                       <a
                         href={link.href}
-                        class="text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover:text-foreground"
+                        class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover:text-foreground"
                         data-text={link.label}
                         target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                         rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
-                        {link.label}
+                        <span>{link.label}</span>
+                        {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                       </a>
                     </li>
                   ))}
@@ -368,11 +369,14 @@ const footerClasses = cn(footerVariants({ background }), className);
                           <span aria-hidden="true" class={legalSeparatorClass} />
                         )}
 
-                        {link.action === 'openConsentSettings' ? (
+                        {link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
                           <button
                             type="button"
                             class={legalLinkClass}
-                            data-consent-settings-trigger
+                            data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
+                            data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                            aria-haspopup={link.action === 'openDynamicEffects' ? 'dialog' : undefined}
+                            aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
@@ -383,27 +387,18 @@ const footerClasses = cn(footerVariants({ background }), className);
                           <a
                             href={link.href}
                             class={legalLinkClass}
-                            target={link.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                            target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                            rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
                             )}
                             <span>{link.label}</span>
+                            {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                           </a>
                         )}
                       </div>
                       ))}
-                    <span aria-hidden="true" class={legalSeparatorClass} />
-                    <button
-                      type="button"
-                      class={legalLinkClass}
-                      data-dynamic-effects-trigger="dynamic-effects-settings"
-                      aria-haspopup="dialog"
-                      aria-controls="dynamic-effects-settings"
-                    >
-                      <span>{t('effects.trigger', locale)}</span>
-                    </button>
                   </div>
                 )}
                 <LanguageSwitcher placement="top" alternates={languageAlternates} />
@@ -471,12 +466,13 @@ const footerClasses = cn(footerVariants({ background }), className);
                       <li>
                         <a
                           href={link.href}
-                          class="text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover:text-foreground"
+                          class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover:text-foreground"
                           data-text={link.label}
                           target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
                           rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                         >
-                          {link.label}
+                          <span>{link.label}</span>
+                          {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                         </a>
                       </li>
                     ))}
@@ -513,11 +509,14 @@ const footerClasses = cn(footerVariants({ background }), className);
                           <span aria-hidden="true" class={legalSeparatorClass} />
                         )}
 
-                        {link.action === 'openConsentSettings' ? (
+                        {link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
                           <button
                             type="button"
                             class={legalLinkClass}
-                            data-consent-settings-trigger
+                            data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
+                            data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                            aria-haspopup={link.action === 'openDynamicEffects' ? 'dialog' : undefined}
+                            aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
@@ -528,27 +527,18 @@ const footerClasses = cn(footerVariants({ background }), className);
                           <a
                             href={link.href}
                             class={legalLinkClass}
-                            target={link.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                            target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                            rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                           >
                             {link.icon && (
                               <Icon name={link.icon} size="sm" />
                             )}
                             <span>{link.label}</span>
+                            {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                           </a>
                         )}
                       </div>
                       ))}
-                    <span aria-hidden="true" class={legalSeparatorClass} />
-                    <button
-                      type="button"
-                      class={legalLinkClass}
-                      data-dynamic-effects-trigger="dynamic-effects-settings"
-                      aria-haspopup="dialog"
-                      aria-controls="dynamic-effects-settings"
-                    >
-                      <span>{t('effects.trigger', locale)}</span>
-                    </button>
                   </div>
                 )}
                 <LanguageSwitcher placement="top" alternates={languageAlternates} />
@@ -593,11 +583,12 @@ const footerClasses = cn(footerVariants({ background }), className);
           {allNavItems.map((item) => (
             <a
               href={item.href}
-              class="transition-colors hover:text-foreground"
+              class="inline-flex items-center gap-2 transition-colors hover:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
               rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             >
               {item.label}
+              {item.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
             </a>
           ))}
         </nav>
@@ -626,13 +617,29 @@ const footerClasses = cn(footerVariants({ background }), className);
               <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
             )}
             {resolvedLegalLinks.length > 0 && (
-              <div class="flex items-center gap-[var(--space-inline-lg)]">
-                {resolvedLegalLinks.map((link) => (
+              <div class="flex flex-wrap justify-center items-center gap-[var(--space-inline-lg)]">
+                {resolvedLegalLinks.map((link) => link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
+                  <button
+                    type="button"
+                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover:text-foreground"
+                    data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
+                    data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                    aria-haspopup="dialog"
+                    aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
+                  >
+                    {link.icon && <Icon name={link.icon} size="sm" />}
+                    <span>{link.label}</span>
+                  </button>
+                ) : (
                   <a
                     href={link.href}
-                    class="text-sm transition-colors text-foreground-muted hover:text-foreground"
+                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover:text-foreground"
+                    target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                    rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                   >
-                    {link.label}
+                    {link.icon && <Icon name={link.icon} size="sm" />}
+                    <span>{link.label}</span>
+                    {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
                   </a>
                 ))}
               </div>
@@ -738,6 +745,22 @@ const footerClasses = cn(footerVariants({ background }), className);
   </script>
   
   <style is:global>
+  /* Reserve the heaviest label width independently of the trailing icon. */
+  footer .footer-group-link {
+    display: inline-grid !important;
+    grid-template-columns: auto max-content;
+    align-items: center;
+  }
+
+  footer .footer-group-link > span,
+  footer .footer-group-link::after {
+    grid-area: 1 / 1;
+  }
+
+  footer .footer-group-link > svg {
+    grid-area: 1 / 2;
+  }
+
     /* FireStone: Social links follow text*/
     .footer-social-link-intro {
       font-size: 0.65rem;

@@ -58,8 +58,10 @@ watch process running when the task is complete.
 5. Explain assumptions in the final response. Do not hide uncertainty by
    changing unrelated code or weakening types/checks.
 
-Use `apply_patch` for hand edits. Keep comments short and only where they
-explain a non-obvious decision. Do not print or commit values from `.env` or
+Use `apply_patch` for hand edits. Add concise English comments when implementing
+features to explain their purpose, configuration flow, and non-obvious decisions.
+Match the style and frequency of nearby original-project and FireStone comments;
+avoid narrating every line or restating obvious code. Do not print or commit values from `.env` or
 other secrets. Do not push, publish, deploy, alter GitHub Actions, or create a
 remote side effect unless the user explicitly requests it.
 

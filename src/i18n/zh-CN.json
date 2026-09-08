@@ -301,6 +301,7 @@
     "followOn": "在 {platform} 上关注 FireStone",
     "socialMedia": "社交媒体",
     "privacyPolicy": "隐私政策",
+    "serviceStatus": "服务状态",
     "cookiePreferences": "Cookie 首选项",
     "groups": {
       "explore": "探索",
