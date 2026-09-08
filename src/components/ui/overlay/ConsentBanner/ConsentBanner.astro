@@ -205,7 +205,7 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
     <script is:inline type="application/json" id="consent-gcm-map-data" set:html={categoryGcmMapJson} />
 
     <script>
-      import { updateBannerLayout } from '../FloatingBanner/stack';
+      import { showFloatingBanner, hideFloatingBanner } from '../FloatingBanner/visibility';
       interface ConsentWindow extends Window {
         dataLayer: Record<string, unknown>[];
         gtag: (...args: unknown[]) => void;
@@ -229,7 +229,6 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
         const VERSION = config.version;
         const MODE = config.mode;
         const DELAY = config.showDelay;
-        let hideBannerTimeout: ReturnType<typeof setTimeout> | null = null;
         let currentDialogObserver: MutationObserver | null = null;
         let bindController: AbortController | null = null;
 
@@ -322,30 +321,15 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
 
         // ── Banner show/hide ──
         function showBanner() {
-          if (hideBannerTimeout) {
-            clearTimeout(hideBannerTimeout);
-            hideBannerTimeout = null;
-          }
           const banner = document.getElementById('consent-banner');
           if (!banner) return;
-          
-          updateBannerLayout(() => banner.removeAttribute('hidden'));
-          
-          banner.classList.add('consent-banner--visible');
+          showFloatingBanner(banner);
         }
 
         function hideBanner() {
-          if (hideBannerTimeout) {
-            clearTimeout(hideBannerTimeout);
-            hideBannerTimeout = null;
-          }
           const banner = document.getElementById('consent-banner');
           if (!banner) return;
-          banner.classList.remove('consent-banner--visible');
-          hideBannerTimeout = setTimeout(function() {
-            updateBannerLayout(() => banner.setAttribute('hidden', ''));
-            hideBannerTimeout = null;
-          }, 300);
+          void hideFloatingBanner(banner);
         }
 
         // ── Reopener ──

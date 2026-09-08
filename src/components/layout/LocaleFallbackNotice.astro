@@ -53,11 +53,24 @@ const language = fallback
   )
 }
 
-<script is:inline>
-  (() => {
-    const notice = document.querySelector('[data-locale-fallback]');
+<script>
+  import { hideFloatingBanner } from '@/components/ui/overlay/FloatingBanner/visibility';
+  function initFallbackNotice() {
+    const notice = document.querySelector<HTMLElement>('[data-locale-fallback]');
+    if (!notice || notice.dataset.dismissInit) return;
+    notice.dataset.dismissInit = 'true';
     notice?.querySelector('[data-dismiss-fallback]')?.addEventListener('click', () => {
-      notice.hidden = true;
+      void hideFloatingBanner(notice);
     });
-  })();
+    notice.querySelector('a')?.addEventListener('click', async (event) => {
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
+        return;
+      event.preventDefault();
+      const href = (event.currentTarget as HTMLAnchorElement).href;
+      await hideFloatingBanner(notice);
+      window.location.assign(href);
+    });
+  }
+  initFallbackNotice();
+  document.addEventListener('astro:page-load', initFallbackNotice);
 </script>

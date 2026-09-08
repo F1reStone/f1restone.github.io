@@ -151,6 +151,268 @@ test('article breadcrumbs preserve CJK labels and reading time', async ({ page }
   await expect(page.locator('body')).not.toContainText('预计阅读时间 1 分钟');
 });
 
+test('banners slide and fade out before being hidden', async ({ page }) => {
+  test.skip(!english, 'Requires a language fallback notice.');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/en-US/blog/open-weights-and-american-ai-leadership/');
+  for (const [panel, button] of [
+    ['#consent-banner', '#consent-decline-all'],
+    ['[data-locale-fallback]', '[data-dismiss-fallback]'],
+  ]) {
+    const banner = page.locator(panel);
+    if (!(await banner.count())) continue;
+    await expect(banner).toBeVisible();
+    await banner.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+    const halfway = await page.evaluate(
+      ({ panel, button }) => {
+        const banner = document.querySelector<HTMLElement>(panel)!;
+        document.querySelector<HTMLElement>(button)!.click();
+        const animation = banner
+          .getAnimations()
+          .find((a) => !(a instanceof CSSAnimation) && !(a instanceof CSSTransition))!;
+        const timing = animation.effect!.getTiming();
+        animation.pause();
+        animation.currentTime = 150;
+        const style = getComputedStyle(banner);
+        const result = {
+          duration: timing.duration,
+          opacity: Number(style.opacity),
+          y: new DOMMatrix(style.transform).m42,
+          hidden: banner.hidden,
+        };
+        animation.play();
+        return result;
+      },
+      { panel, button }
+    );
+    expect(halfway.duration).toBe(300);
+    expect(halfway.hidden).toBe(false);
+    expect(halfway.opacity).toBeGreaterThan(0);
+    expect(halfway.opacity).toBeLessThan(1);
+    expect(halfway.y).toBeGreaterThan(0);
+    await expect(banner).toBeHidden();
+  }
+});
+
+test('mobile menu overlays sticky content, restores localized icons and animates both ways', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ['/', '/projects/sparkforge/', ...(english ? ['/en-US/'] : [])]) {
+    await page.goto(path);
+    if (await page.locator('[data-dismiss-fallback]').count())
+      await page.locator('[data-dismiss-fallback]').click();
+    if (await page.locator('#consent-banner:not([hidden])').count()) {
+      await page.locator('#consent-decline-all').click();
+      await expect(page.locator('#consent-banner')).toBeHidden();
+    }
+    const before = await page
+      .locator('main')
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().top);
+    const button = page.locator('body > header .hdr-hamburger');
+    const menu = page.locator('body > header .mobile-menu-panel');
+    const opening = await button.evaluate((button) => {
+      (button as HTMLElement).click();
+      const menu = document.getElementById(button.getAttribute('aria-controls')!)!;
+      const animation = menu.getAnimations()[0];
+      const surface = button.closest('header')!.querySelector('.hdr-menu-surface')!;
+      const surfaceAnimation = surface.getAnimations()[0];
+      animation.pause();
+      animation.currentTime = 150;
+      surfaceAnimation.pause();
+      surfaceAnimation.currentTime = 150;
+      const style = getComputedStyle(menu);
+      const result = {
+        opacity: Number(style.opacity),
+        clippedBottom: parseFloat(style.clipPath.slice(6, -1).split(/\s+/)[2]),
+        transform: style.transform,
+        surfaceOpacity: Number(getComputedStyle(surface).opacity),
+        duration: animation.effect!.getTiming().duration,
+        easing: animation.effect!.getTiming().easing,
+      };
+      animation.play();
+      surfaceAnimation.play();
+      return result;
+    });
+    expect(opening.opacity).toBeGreaterThan(0);
+    expect(opening.opacity).toBeLessThan(1);
+    expect(opening.clippedBottom).toBeGreaterThan(0);
+    expect(opening.clippedBottom).toBeLessThan(100);
+    expect(opening.transform).toBe('none');
+    expect(opening.surfaceOpacity).toBeCloseTo(opening.opacity, 3);
+    expect(opening.duration).toBe(800);
+    expect(opening.easing).toBe('cubic-bezier(0.16, 1, 0.3, 1)');
+    expect(
+      await page
+        .locator('main')
+        .first()
+        .evaluate((el) => el.getBoundingClientRect().top)
+    ).toBe(before);
+    await expect(menu.locator('.mobile-menu-tile [data-icon]')).toHaveCount(4);
+    expect(
+      await menu
+        .locator('.mobile-menu-tile [data-icon]')
+        .evaluateAll((els) => els.map((el) => el.getAttribute('data-icon')))
+    ).toEqual(['layers', 'pen-line', 'sparkles', 'user']);
+    const backdrop = page.locator('body > .mobile-menu-backdrop');
+    await expect(backdrop).toHaveCSS('opacity', '1');
+    await expect(backdrop).toHaveCSS('transition-duration', '0.8s');
+    await expect(backdrop).toHaveCSS('backdrop-filter', 'blur(12px)');
+    await menu.evaluate((el) =>
+      Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished))
+    );
+    await page.screenshot({
+      path: `test-results/menu-${path.includes('sparkforge') ? 'sticky' : path.includes('en-US') ? 'english' : 'fixed'}.png`,
+    });
+    const closing = await button.evaluate((button) => {
+      (button as HTMLElement).click();
+      const header = button.closest('header')!;
+      const menu = header.querySelector('.mobile-menu-panel')!;
+      const surface = header.querySelector('.hdr-menu-surface')!;
+      for (const el of [menu, surface]) {
+        const animation = el.getAnimations()[0];
+        animation.pause();
+        animation.currentTime = 150;
+      }
+      const result = {
+        menu: Number(getComputedStyle(menu).opacity),
+        surface: Number(getComputedStyle(surface).opacity),
+      };
+      for (const el of [menu, surface]) el.getAnimations()[0].play();
+      return result;
+    });
+    expect(closing.surface).toBeGreaterThan(0);
+    expect(closing.surface).toBeLessThan(1);
+    expect(closing.surface).toBeCloseTo(closing.menu, 3);
+    await expect(menu).toBeHidden();
+    await expect(page.locator('body > header .hdr-menu-surface')).toHaveCSS('opacity', '0');
+    await expect(backdrop).toHaveCSS('opacity', '0');
+    expect(
+      await page
+        .locator('main')
+        .first()
+        .evaluate((el) => el.getBoundingClientRect().top)
+    ).toBe(before);
+    // Closing can be reversed without a stale completion hiding the reopened menu.
+    await button.evaluate((button) => {
+      (button as HTMLElement).click();
+      (button as HTMLElement).click();
+      (button as HTMLElement).click();
+    });
+    await expect(menu).toBeVisible();
+    await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await page.setViewportSize({ width: 390, height: 420 });
+    await expect
+      .poll(async () => {
+        const box = (await menu.boundingBox())!;
+        return box.y + box.height;
+      })
+      .toBeLessThanOrEqual(420);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await expect(menu).toBeHidden();
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await page.setViewportSize({ width: 390, height: 844 });
+  }
+});
+
+test('menu replay restarts stagger and invert colours transition with stable progressive tint', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference', colorScheme: 'light' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  if (await page.locator('#consent-banner').count()) {
+    await page.locator('#consent-decline-all').click();
+    await expect(page.locator('#consent-banner')).toBeHidden();
+  }
+  await page.evaluate(() => window.scrollTo({ top: 180, behavior: 'instant' }));
+  const header = page.locator('body > header');
+  const button = header.locator('.hdr-hamburger');
+  const menu = header.locator('.mobile-menu-panel');
+  const tint = () =>
+    header
+      .locator('.hdr-progressive-blur')
+      .evaluate((el) => getComputedStyle(el, '::after').backgroundImage);
+  const originalTint = await tint();
+  for (const opening of [true, false]) {
+    const transitions = await header.evaluate((header) => {
+      const elements = [
+        ...header.querySelectorAll<HTMLElement>(
+          '.hdr-inner .hdr-logo-glow, .hdr-inner .search-trigger, .hdr-inner .ttg-trigger, .hdr-inner .hdr-hamburger'
+        ),
+      ].filter((el) => el.getClientRects().length);
+      const before = elements.map((el) => getComputedStyle(el).color);
+      header.querySelector<HTMLElement>('.hdr-hamburger')!.click();
+      return elements.map((el, index) => {
+        const animation = el
+          .getAnimations()
+          .find((a) => a instanceof CSSTransition && a.transitionProperty === 'color');
+        if (!animation) return { before: before[index], missing: el.className };
+        animation.pause();
+        animation.currentTime = 200;
+        const middle = getComputedStyle(el).color;
+        animation.currentTime = 800;
+        const end = getComputedStyle(el).color;
+        animation.currentTime = 200;
+        animation.play();
+        return {
+          before: before[index],
+          middle,
+          end,
+          duration: animation.effect!.getTiming().duration,
+          delay: animation.effect!.getTiming().delay,
+        };
+      });
+    });
+    expect(transitions.length).toBeGreaterThanOrEqual(4);
+    for (const transition of transitions) {
+      expect(transition.missing).toBeUndefined();
+      expect(transition.duration).toBe(800);
+      expect(transition.delay).toBe(0);
+      expect(transition.middle).not.toBe(transition.before);
+      expect(transition.middle).not.toBe(transition.end);
+    }
+    expect(await tint()).toBe(originalTint);
+    if (opening)
+      await header.evaluate((el) =>
+        Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})))
+      );
+    else await expect(menu).toBeHidden();
+  }
+  await button.click();
+  await menu.evaluate((el) =>
+    Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})))
+  );
+  const replay = await button.evaluate((button) => {
+    (button as HTMLElement).click();
+    const menu = button.closest('header')!.querySelector('.mobile-menu-panel')!;
+    const closing = menu.getAnimations()[0];
+    closing.pause();
+    closing.currentTime = 250;
+    (button as HTMLElement).click();
+    return menu
+      .getAnimations({ subtree: true })
+      .filter((a) => a instanceof CSSAnimation && a.animationName === 'mobileMenuItemIn')
+      .map((a) => ({
+        time: Number(a.currentTime),
+        duration: a.effect!.getTiming().duration,
+        delay: a.effect!.getTiming().delay,
+      }));
+  });
+  expect(replay.length).toBeGreaterThanOrEqual(10);
+  replay.forEach((animation, index) => {
+    expect(animation.time).toBeLessThan(30);
+    expect(animation.duration).toBe(600);
+    expect(Number(animation.delay)).toBeCloseTo(75 + index * 75);
+  });
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  expect(await tint()).toBe(originalTint);
+});
+
 test('footer language menu fits both layouts and variable weight keeps columns stable', async ({
   page,
 }) => {
@@ -194,7 +456,10 @@ test('footer language menu fits both layouts and variable weight keeps columns s
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await trigger.scrollIntoViewIfNeeded();
-    await expect(trigger.locator('.lang-chevron')).toHaveCSS('transform', 'matrix(-1, 0, 0, -1, 0, 0)');
+    await expect(trigger.locator('.lang-chevron')).toHaveCSS(
+      'transform',
+      'matrix(-1, 0, 0, -1, 0, 0)'
+    );
     const triggerBox = (await trigger.boundingBox())!;
     const legalBox = (await legal.boundingBox())!;
     if (width === 1440) expect(triggerBox.x).toBeGreaterThanOrEqual(legalBox.x + legalBox.width);
