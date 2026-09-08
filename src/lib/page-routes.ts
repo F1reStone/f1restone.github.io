@@ -2,7 +2,13 @@ import { defaultLocale, getLocaleFromPath, getSecondaryLocales, localizedPath } 
 
 type StaticPath = { params: Record<string, string | number | undefined> };
 type PageModule = { getStaticPaths?: () => StaticPath[] | Promise<StaticPath[]> };
-const modules = import.meta.glob<PageModule>('/src/pages/**/*.astro');
+// Exclude the fallback dispatcher before Vite builds the import graph, not just
+// while iterating: it imports this module and must never import itself back.
+const modules = import.meta.glob<PageModule>([
+  '/src/pages/**/*.astro',
+  '!/src/pages/\\[locale\\]/\\[...path\\].astro',
+  '!/src/pages/404.astro',
+]);
 
 export function resolvePagePath(pattern: string, params: StaticPath['params']): string {
   const path = pattern.replace(/\[(?:\.\.\.)?(\w+)\]/g, (_, key: string) => {
@@ -19,7 +25,6 @@ export async function getFallbackPages() {
   if (!locales.length) return [];
   const paths = new Set<string>();
   for (const [file, load] of Object.entries(modules)) {
-    if (file.endsWith('/[locale]/[...path].astro') || file.endsWith('/404.astro')) continue;
     const pattern =
       file
         .slice('/src/pages'.length)
