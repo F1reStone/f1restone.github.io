@@ -1,7 +1,7 @@
 /* =============================================================================
-   Astro Rocket Theme - FireStone Cyan
+   Astro Rocket Theme - FireStone Design System
    =============================================================================
-   FireStone Cyan
+   FireStone Design System
 
    Dark mode: near-black with a rich cyan tint and vivid glow.
    Light mode: clean neutral whites with cyan as the single accent.
@@ -9,8 +9,7 @@
 
 html[data-theme="firestone"] {
   /* -------------------------------------------------------------------------
-     Brand Scale Override — Cyan (hue 180)
-     Inspired by Tailwind cyan-*. Fresh, modern, and versatile.
+     Brand Scale Override — Purple
      ------------------------------------------------------------------------- */
   --brand-50:  oklch(97.5% 0.02  289.4473);
   --brand-100: oklch(94.5% 0.05  289.4473);
