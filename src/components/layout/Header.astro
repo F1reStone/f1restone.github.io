@@ -362,10 +362,10 @@ const buttonId = `${menuId}-button`;
                   'hover-glow-text weight-shift',
                   isFloating && 'hdr-invert-text',
                   isFloating
-                    ? (isActive(href) ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' : 'text-foreground-muted font-medium')
+                    ? (isActive(href) ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' : 'text-foreground-secondary font-medium')
                     : (isActive(href) 
                         ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' 
-                        : 'text-foreground-muted hover:text-foreground focus-visible:text-foreground font-medium')
+                        : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground font-medium')
                 )}
                 aria-current={isActive(href) ? 'page' : undefined}
                 data-text={label}
@@ -423,7 +423,7 @@ const buttonId = `${menuId}-button`;
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                         isFloating
                           ? 'hdr-invert-text'
-                          : 'text-foreground-muted hover:text-foreground focus-visible:text-foreground'
+                          : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
                       )}
                     >
                       <Icon name={icon} size="md" />
@@ -1009,6 +1009,13 @@ header.hdr-progressive-glass {
 }
 header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface { opacity: 1; }
 header[data-search-active] { z-index: 101; }
+/* A body scroll lock can move a sticky header out of its scroll container.
+   Keep it attached to the viewport while its search dialog is open so the
+   dialog backdrop never replaces the header during a scroll. */
+header[data-search-active][data-header-position='sticky'] {
+  position: fixed;
+  inset-inline: 0;
+}
 header[data-search-active] > .hdr-inner { pointer-events: auto; }
 header > .hdr-inner { position: relative; z-index: 1; }
 header > .mobile-menu-panel { z-index: 2; }

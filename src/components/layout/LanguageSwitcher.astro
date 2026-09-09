@@ -90,7 +90,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         class={cn(
           'lang-panel absolute z-50',
           placement === 'top' ? 'left-0 bottom-full mb-2 md:left-auto md:right-0' : 'right-0 top-full mt-2',
-          'w-48 rounded-xl border border-border bg-background shadow-lg',
+          'w-48 rounded-3xl border border-border/10 bg-background/30 backdrop-blur-sm shadow-lg',
           'p-1.5 hidden'
         )}
         role="menu"
@@ -146,7 +146,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     width: 100%;
     text-align: left;
     padding: 0.5rem 0.625rem;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     color: var(--color-foreground-muted);
     cursor: pointer;
     text-decoration: none;
@@ -156,7 +156,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
   }
 
   .lang-row:hover {
-    background-color: var(--color-secondary);
+    background-color: color-mix(in oklab, var(--color-foreground-muted) 15%, transparent);
     color: var(--color-foreground);
   }
 
@@ -166,7 +166,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
   }
 
   .lang-row[aria-checked='true'] {
-    background-color: var(--color-secondary);
+    background-color: color-mix(in oklab, var(--color-foreground-muted) 15%, transparent);
     color: var(--color-foreground);
   }
 
@@ -179,7 +179,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
   }
 
   .lang-row[aria-checked='true'] .lang-row-code {
-    color: var(--color-brand-500);
+    color: var(--color-foreground);
   }
 
   .lang-row-name {
@@ -189,7 +189,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 
   .lang-check {
     display: none;
-    color: var(--color-brand-500);
+    color: var(--color-foreground);
   }
 
   .lang-row[aria-checked='true'] .lang-check {
