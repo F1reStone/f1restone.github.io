@@ -14,6 +14,7 @@
 - 面包屑由页面/布局提供标题与层级，Footer 只渲染。禁止再次通过菜单或 URL 片段猜标题。缺少翻译时生成语言前缀页面，展示默认语言正文和回退横幅；不再使用 `requestedLocale` 查询参数。详见 [语言回退规则](docs/locale-fallback.md)。
 - Hero、Shader、Picture fallback、全局性能分级，以及 Header/Footer、卡片、字体和交互样式都属于定制实现；不能再按“通用未改动组件”覆盖。
 - 严格 consent 适用于新增分析服务，包括 Umami。保留静态输出；不自动加入 API、部署配置或 GitHub Actions 变更。
+- Favicon 需要保持单一的 SVG 浏览器候选：`src/layouts/BaseLayout.astro` 中的 SVG 含系统深浅模式媒体查询，并由内联脚本同步；PNG/ICO 仅用于 manifest、Apple Touch Icon 和旧消费者。上游对齐若把构建生成的 PNG/ICO 重新注册为 `rel="icon"`，Cloudflare 的生产构建会让浏览器选中固定的深色栅格图（并可能带白底），导致本地 dev 正常而线上深色模式失效。修改 `scripts/favicon-images.mjs` 时也必须保留透明背景，禁止 `flatten({ background: '#ffffff' })`，并在 `pnpm build` 后检查 `dist` 图像的 alpha 通道。
 
 完整检查使用 `pnpm validate`（lint、check、单元测试、build）及 `pnpm test:e2e`。开发中的单元测试用 `pnpm test`，一次性执行用 `pnpm test:run`。
 

@@ -47,7 +47,7 @@ not a migration source.
 | 2.5 test enforcement / documentation guards | Existing CI and `validate` already execute tests; Actions were manually committed and are untouched. Added adapted README version/script and registry-file guards. Upstream tutorial fixtures are not copied because their demo articles are absent. |
 | 2.5 Docker, including 2.5.2–2.5.3 fixes | Explicitly excluded by owner decision, not a missing port. |
 | 2.6 Astro / MDX upgrade | Local Astro 7.3.1 and MDX 8.0.0 already match the tag; newer local dependencies and Expressive Code integration retained. |
-| OG / logo / favicon | Keep custom logos and CJK font-outline sharing images; generate missing raster favicon variants from the real FireStone vector. |
+| OG / logo / favicon | Keep custom logos and CJK font-outline sharing images; generate missing raster favicon variants from the real FireStone vector. Register only the media-aware SVG as the browser favicon: fixed PNG/ICO fallbacks can be selected by Cloudflare deployments and lose system dark/light adaptation. Raster generation must preserve alpha and must not flatten onto white. |
 | Demo views and UI visual revisions | Preserve custom home/about/AI/SparkForge and card/Header/Footer designs. Thin shared views remain build-time rendering boundaries, not redirects. |
 | ClientRouter | README claim conflicts with release implementation; follow the disabled release code, not the claim. |
 | llms.txt | Existing navigation-derived links, routable projects and published posts retained. The internal component playground is intentionally noindex and is not added to the public content map. |
