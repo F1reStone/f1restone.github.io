@@ -10,11 +10,12 @@ const { locale = defaultLocale } = Astro.props;
  */
 import PageLayout from '@/layouts/PageLayout.astro';
 import ProjectCard from '@/components/projects/ProjectCard.astro';
-import ProjectTagList from '@/components/projects/ProjectTagList.astro';
+import TagList from '@/components/blog/TagList.astro';
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
+import { getProjectTagUrl } from '@/lib/projects';
 
 
 
@@ -53,7 +54,7 @@ const { tag, projects, visibleTags } = Astro.props;
         </Button>
 
         {visibleTags.length > 0 && (
-          <ProjectTagList locale={locale} tags={visibleTags} active={tag} class="justify-center" />
+          <TagList locale={locale} tags={visibleTags} active={tag} hrefForTag={getProjectTagUrl} class="justify-center" />
         )}
       </div>
 

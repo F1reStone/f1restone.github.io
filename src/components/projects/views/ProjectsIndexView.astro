@@ -12,8 +12,8 @@ import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import ProjectCard from '@/components/projects/ProjectCard.astro';
 import { Hero } from '@/components/hero';
 import Pagination from '@/components/blog/Pagination.astro';
-import ProjectTagList from '@/components/projects/ProjectTagList.astro';
-import { getVisibleProjects, PROJECTS_PER_PAGE, collectTopProjectTags, PROJECT_TAG_CLOUD_LIMIT } from '@/lib/projects';
+import TagList from '@/components/blog/TagList.astro';
+import { getVisibleProjects, PROJECTS_PER_PAGE, collectTopProjectTags, PROJECT_TAG_CLOUD_LIMIT, getProjectTagUrl } from '@/lib/projects';
 
 const projects = await getVisibleProjects(locale);
 // Use the same page size as /projects/page/N so page one does not repeat every entry.
@@ -44,7 +44,7 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
   {projects.length > 0 && (
     <section class="py-[var(--space-section-md)] bg-background">
       <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-        {topTags.length > 0 && <ProjectTagList tags={topTags} locale={locale} class="justify-center" />}
+        {topTags.length > 0 && <TagList tags={topTags} locale={locale} hrefForTag={getProjectTagUrl} class="justify-center" />}
 
         <div class="grid gap-6 md:grid-cols-2">
           {pageProjects.map((project, i) => (

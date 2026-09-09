@@ -21,9 +21,17 @@ interface Props {
   locale?: string;
   /** Optional class extension. */
   class?: string;
+  /** Build an archive URL for each tag; blog archives remain the default. */
+  hrefForTag?: (tag: string, locale: string) => string;
 }
 
-const { tags, active, locale = defaultLocale, class: extraClass } = Astro.props;
+const {
+  tags,
+  active,
+  locale = defaultLocale,
+  class: extraClass,
+  hrefForTag = getTagUrl,
+} = Astro.props;
 ---
 
 {tags.length > 0 && (
@@ -35,7 +43,7 @@ const { tags, active, locale = defaultLocale, class: extraClass } = Astro.props;
           {index > 0 && <li class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
           <li>
             <Badge
-              href={getTagUrl(tag, locale)}
+              href={hrefForTag(tag, locale)}
               variant={isActive ? 'default' : 'brand'}
               aria-current={isActive ? 'page' : undefined}
               class={isActive ? 'drop-shadow-[0_0_12px_currentColor] text-foreground' : ''}

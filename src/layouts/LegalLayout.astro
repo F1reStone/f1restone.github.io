@@ -42,7 +42,7 @@ const showToc = !!tocConfig?.enabled && headings.length >= (tocConfig?.minHeadin
 const tocLayout = tocConfig?.layout ?? 'inline';
 const sidebarActive = showToc && (tocLayout === 'sidebar' || tocLayout === 'auto');
 const inlineActive = showToc && (tocLayout === 'inline' || tocLayout === 'auto');
-const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'right';
+const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 
 const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'legal');
 

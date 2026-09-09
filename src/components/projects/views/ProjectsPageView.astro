@@ -18,11 +18,12 @@ import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
 import LetterGlitchBand from '@/components/patterns/LetterGlitchBand.astro';
 import ProjectCard from '@/components/projects/ProjectCard.astro';
-import ProjectTagList from '@/components/projects/ProjectTagList.astro';
+import TagList from '@/components/blog/TagList.astro';
 import Pagination from '@/components/blog/Pagination.astro';
 import {
   collectTopProjectTags,
   getVisibleProjects,
+  getProjectTagUrl,
   PROJECT_TAG_CLOUD_LIMIT,
   PROJECTS_PER_PAGE,
 } from '@/lib/projects';
@@ -67,7 +68,7 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
         </Button>
 
         {topTags.length > 0 && (
-          <ProjectTagList locale={locale} tags={topTags} class="justify-center" />
+          <TagList locale={locale} tags={topTags} hrefForTag={getProjectTagUrl} class="justify-center" />
         )}
       </div>
 

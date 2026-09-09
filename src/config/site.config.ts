@@ -293,7 +293,7 @@ const siteConfig: SiteConfig = {
     toc: {
       enabled: true,
       layout: 'auto',
-      sidebarPosition: 'left',
+      sidebarPosition: 'right',
       minHeadings: 3,
       maxDepth: 3,
     },
