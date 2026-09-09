@@ -254,7 +254,7 @@
     "ariaLabel": "动态效果设置"
   },
   "search": {
-    "placeholder": "搜索…",
+    "placeholder": "搜索 FireStone…",
     "inputLabel": "搜索内容",
     "resultsLabel": "搜索结果",
     "hint": "输入关键字以开始在网站上搜索。",
