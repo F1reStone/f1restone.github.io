@@ -58,7 +58,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         type="button"
         class={cn(
           'lang-trigger inline-flex items-center gap-1.5 rounded-full border border-border-strong px-2.5 py-1.5',
-          'text-foreground-muted glass-panel hover-glow-box hover-solid-fill',
+          'text-foreground-secondary glass-panel hover-glow-box hover-solid-fill',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         )}
         aria-haspopup="menu"
@@ -90,7 +90,7 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         class={cn(
           'lang-panel absolute z-50',
           placement === 'top' ? 'left-0 bottom-full mb-2 md:left-auto md:right-0' : 'right-0 top-full mt-2',
-          'w-48 rounded-3xl border border-border/10 bg-background/30 backdrop-blur-sm shadow-lg',
+          'w-48 rounded-3xl border border-border/10 bg-background/50 backdrop-blur-md shadow-xl',
           'p-1.5 hidden'
         )}
         role="menu"
@@ -174,11 +174,22 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.05em;
-    color: var(--color-foreground-subtle);
+    color: var(--color-foreground-muted);
     min-width: 1.75rem;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
   }
 
   .lang-row[aria-checked='true'] .lang-row-code {
+    color: var(--color-foreground);
+  }
+
+  .lang-row:hover .lang-row-code {
+    color: var(--color-foreground);
+  }
+
+  .lang-row:focus-visible .lang-row-code {
     color: var(--color-foreground);
   }
 

@@ -1,90 +1,107 @@
 /* =============================================================================
    Astro Rocket Theme - FireStone Design System
    =============================================================================
-   FireStone Design System
+   FireStone Design System (Refined & Neutral-Clean Edition)
 
-   Dark mode: near-black with a rich cyan tint and vivid glow.
-   Light mode: clean neutral whites with cyan as the single accent.
+   Brand Identity:
+   - Primary Brand Theme: 燧光紫 (FireStone Violet) #7832FF
+   - Dark Mode Anchor:    玄铁黑 (Shadowsteel Black) #222526
+   - Light Neutral:       月岩白 (Lunarite White) #F3F3F3
+   - Accent Spectrum:     赤晶红 #E83B4E / 天穹蓝 #00C3FF / 晶透青 #0EA6B1 / 
+                         霓焰粉 #FD579C / 熔界橙 #FF752B / 耀日黄 #F8D762
    ============================================================================= */
 
 html[data-theme="firestone"] {
   /* -------------------------------------------------------------------------
-     Brand Scale Override — Purple
+     Brand Scale Override — 燧光紫 (Flint Violet / Firestone Purple #7832FF)
      ------------------------------------------------------------------------- */
-  --brand-50:  oklch(97.5% 0.02  289.4473);
-  --brand-100: oklch(94.5% 0.05  289.4473);
-  --brand-200: oklch(86%   0.12  289.4473);
-  --brand-300: oklch(76%   0.20  289.4473);
-  --brand-400: oklch(68%   0.24  289.4473);
-  --brand-500: oklch(62.5% 0.26  289.4473);
-  --brand-600: oklch(53%   0.23  289.4473);
-  --brand-700: oklch(45%   0.19  289.4473);
-  --brand-800: oklch(36.5% 0.14  289.4473);
-  --brand-900: oklch(26%   0.09  289.4473);
+  --brand-50:  oklch(97.8% 0.018 289.5); /* #F5F1FF - 极淡薰衣草紫 */
+  --brand-100: oklch(94.2% 0.048 289.5); /* #EDE3FF - 浅柔紫 */
+  --brand-200: oklch(86.8% 0.105 289.5); /* #D8C3FF - 亮淡紫 */
+  --brand-300: oklch(76.5% 0.170 289.5); /* #BE9AFF - 柔和丁香紫 */
+  --brand-400: oklch(66.2% 0.230 289.5); /* #9D64FF - 电光亮紫 */
+  --brand-500: oklch(55.0% 0.280 289.5); /* #7832FF - 燧光紫 (基准品牌色) */
+  --brand-600: oklch(48.5% 0.260 289.5); /* #631CE7 - 高交互深度紫 */
+  --brand-700: oklch(40.2% 0.215 289.5); /* #5010BF - 皇家浓紫 */
+  --brand-800: oklch(32.5% 0.165 289.5); /* #3E0A97 - 深邃暮紫 */
+  --brand-900: oklch(24.5% 0.115 289.5); /* #2C066F - 暗夜紫 */
 
   /* -------------------------------------------------------------------------
-     Semantic Tokens - Light Mode
+     Optional Brand Extended Spectrum (新增辅助色，不破坏既有变量)
      ------------------------------------------------------------------------- */
-  --background: var(--gray-0);
-  --background-secondary: oklch(97.5% 0.010 289.4473);
-  --background-tertiary: oklch(95% 0.018 289.4473);
-  --background-elevated: var(--gray-0);
+  --color-flint-violet:      oklch(55.0% 0.280 289.5); /* #7832FF - 燧光紫 */
+  --color-shadowsteel-black: oklch(26.2% 0.006 219.5); /* #222526 - 玄铁黑 */
+  --color-lunarite-white:    oklch(96.4% 0.000 0.0);   /* #F3F3F3 - 月岩白 */
+  --color-crystal-crimson:   oklch(58.5% 0.225 18.5);  /* #E83B4E - 赤晶红 */
+  --color-aquatronix-cyan:   oklch(67.3% 0.125 203.6); /* #0EA6B1 - 晶透青 */
+  --color-skyburst-blue:     oklch(76.5% 0.151 229.4); /* #00C3FF - 天穹蓝 */
+  --color-neonspark-pink:    oklch(68.5% 0.220 352.5); /* #FD579C - 霓焰粉 */
+  --color-thermaburst-orange:oklch(71.7% 0.187 43.5);  /* #FF752B - 熔界橙 */
+  --color-solarflare-yellow: oklch(88.5% 0.155 88.0);  /* #F8D762 - 耀日黄 */
 
-  --foreground: var(--gray-900);           /* 18.3:1 on white — WCAG AAA */
-  --foreground-secondary: var(--gray-700); /* 12.7:1 on white — WCAG AAA */
-  --foreground-muted: var(--gray-600);     /* 10.0:1 on white — WCAG AA  */
-  --foreground-subtle: var(--gray-500);    /*  5.5:1 on white — WCAG AA  */
+  /* -------------------------------------------------------------------------
+     Semantic Tokens - Light Mode (清爽纯净，消除紫色浑浊感)
+     ------------------------------------------------------------------------- */
+  --background:           var(--gray-0, oklch(100% 0 0));          /* #FFFFFF - 纯净白 */
+  --background-secondary: oklch(98.5% 0.002 240);                  /* #FAFAFB - 超净冷白 */
+  --background-tertiary:  oklch(96.4% 0.000 0.0);                  /* #F3F3F3 - 月岩白 */
+  --background-elevated:  var(--gray-0, oklch(100% 0 0));          /* #FFFFFF */
 
-  --border: var(--gray-200);
-  --border-strong: var(--gray-300);
-  --border-subtle: var(--gray-100);
+  --foreground:           oklch(0% 0 0);                           /* #000000 - 纯净黑 (16:1 AAA) */
+  --foreground-secondary: oklch(40.0% 0.008 240);                  /* #474A4F - 雅灰 (7.8:1 AAA) */
+  --foreground-muted:     oklch(56.0% 0.008 240);                  /* #6E7278 - 辅文灰 (4.8:1 AA) */
+  --foreground-subtle:    oklch(68.0% 0.006 240);                  /* #8E9298 - 浅注释灰 */
 
-  --primary: var(--gray-900);
-  --primary-hover: var(--gray-800);
-  --primary-foreground: var(--gray-0);
+  --border:               oklch(91.5% 0.002 240);                  /* #E5E7EB - 纯净边框 */
+  --border-strong:        oklch(82.0% 0.004 240);                  /* #CBD0D6 - 强化边框 */
+  --border-subtle:        oklch(95.5% 0.001 240);                  /* #F1F2F4 - 微分割线 */
 
-  --secondary: var(--gray-100);
-  --secondary-hover: var(--gray-200);
-  --secondary-foreground: var(--gray-900);
+  --primary:              oklch(18.0% 0.006 240);                  /* #151719 */
+  --primary-hover:        oklch(28.0% 0.006 240);                  /* #2F3338 */
+  --primary-foreground:   var(--gray-0, oklch(100% 0 0));          /* #FFFFFF */
 
-  --accent: var(--brand-500);
-  --accent-hover: var(--brand-600);
-  --accent-light: var(--brand-100);
+  --secondary:            oklch(96.4% 0.000 0.0);                  /* #F3F3F3 - 月岩白 */
+  --secondary-hover:      oklch(92.0% 0.003 240);                  /* #E4E5E8 */
+  --secondary-foreground: oklch(18.0% 0.006 240);                  /* #151719 */
 
-  --muted: var(--gray-100);
-  --muted-foreground: var(--gray-500);     /*  5.5:1 on white — WCAG AA  */
+  --accent:               var(--brand-500);                          /* #7832FF - 燧光紫核心交互色 */
+  --accent-hover:         var(--brand-600);                          /* #631CE7 */
+  --accent-light:         var(--brand-100);                          /* #EDE3FF */
 
-  --card: var(--gray-0);
-  --card-border: var(--gray-200);
+  --muted:                oklch(96.4% 0.000 0.0);                  /* #F3F3F3 */
+  --muted-foreground:     oklch(56.0% 0.008 240);                  /* #6E7278 */
 
-  --input-bg: var(--gray-0);
-  --input-border: var(--gray-300);
-  --input-focus: var(--brand-600);
+  --card:                 var(--gray-0, oklch(100% 0 0));          /* #FFFFFF */
+  --card-border:          oklch(91.5% 0.002 240);                  /* #E5E7EB */
 
-  --ring: var(--brand-600);
+  --input-bg:             var(--gray-0, oklch(100% 0 0));          /* #FFFFFF */
+  --input-border:         oklch(84.0% 0.004 240);                  /* #CFD3D8 */
+  --input-focus:          var(--brand-500);
 
-  --destructive: oklch(53% 0.2 25); /* darker red: WCAG AA as error text on white (5.9:1) */
-  --destructive-foreground: var(--gray-0);
+  --ring:                 oklch(55.0% 0.280 289.5 / 0.35);         /* 燧光紫聚焦微光 */
 
-  --gradient-start: oklch(96.5% 0 0);
-  --gradient-end: oklch(100% 0 0);
+  --destructive:            oklch(58.5% 0.225 18.5);               /* #E83B4E - 赤晶红 */
+  --destructive-foreground: var(--gray-0, oklch(100% 0 0));
+
+  --gradient-start: oklch(98.5% 0.001 240);
+  --gradient-end:   oklch(100% 0 0);
 
   /* Status colors - light mode backgrounds */
-  --success-light: oklch(94% 0.05 145);
-  --warning-light: oklch(95% 0.05 85);
-  --error-light:   oklch(94% 0.05 25);
+  --success-light: oklch(96.0% 0.035 148.0);
+  --warning-light: oklch(96.5% 0.045 45.0);                        /* 基于熔界橙 */
+  --error-light:   oklch(96.0% 0.040 18.5);                        /* 基于赤晶红 */
 
   /* -------------------------------------------------------------------------
-     Inverted/Contrast Section — deep cyan-dark
+     Inverted/Contrast Section — 浅色模式下的反色暗底区块 (以玄铁黑为基底)
      ------------------------------------------------------------------------- */
-  --surface-invert: oklch(9.5% 0.018 289.4473);
-  --surface-invert-secondary: oklch(13.5% 0.014 289.4473);
-  --surface-invert-tertiary: oklch(17.5% 0.011 289.4473);
-  --on-invert: var(--gray-50);
-  --on-invert-secondary: var(--gray-200);
-  --on-invert-muted: var(--gray-300);
-  --border-invert: oklch(21% 0.014 289.4473);
-  --border-invert-strong: oklch(29% 0.011 289.4473);
+  --surface-invert:           oklch(26.2% 0.006 219.5);            /* #222526 - 玄铁黑原生落地 */
+  --surface-invert-secondary: oklch(21.0% 0.006 220);              /* #1B1E1F */
+  --surface-invert-tertiary:  oklch(31.0% 0.007 220);              /* #2C3032 */
+  --on-invert:                var(--gray-50, oklch(98.0% 0 0));    /* #FAFAFA - 白字 */
+  --on-invert-secondary:      var(--gray-200, oklch(84.0% 0 0));   /* #D4D4D8 */
+  --on-invert-muted:          var(--gray-300, oklch(70.0% 0 0));   /* #A1A1AA */
+  --border-invert:            oklch(33.0% 0.006 220);              /* #313537 */
+  --border-invert-strong:     oklch(42.0% 0.006 220);              /* #44494C */
 
   /* -------------------------------------------------------------------------
      FireStone Typography — Wix Madefor Text (Body) + Neue Regrade (Display)
@@ -95,11 +112,11 @@ html[data-theme="firestone"] {
 
   --theme-font-display: 'Neue Regrade Variable', 'Neue Regrade', 'Inter',
   'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Google Sans Flex', 'Segoe UI Variable Text', 'HarmonyOS Sans', 'Segoe UI', 'Helvetica Neue', 'Noto Sans', 'Roboto', 'Arial',
-  var(--theme-font-zh-cn), ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
+    var(--theme-font-zh-cn), ui-sans-serif, system-ui, sans-serif, var(--theme-font-emoji);
 
   --theme-font-serif: 'Playfair Display Variable', 'Playfair Display', 'Instrument Serif',
   'New York', 'Noto Serif', 'Roboto Serif', 'Times Ten', 'Times New Roman',
-  var(--theme-font-serif-zh-cn), -apple-system, BlinkMacSystemFont, ui-serif, serif, system-ui var(--theme-font-emoji);
+    var(--theme-font-serif-zh-cn), -apple-system, BlinkMacSystemFont, ui-serif, serif, system-ui, var(--theme-font-emoji);
 
   --theme-font-mono: 'NKDuy Mono Variable', 'NKDuy Mono', 'JetBrains Mono',
     'SFMono-Regular', 'SF Mono', 'Menlo', 'Monaco', 'Cascade Mono', 'Consolas', 'Liberation Mono', 'Courier New',
@@ -112,19 +129,19 @@ html[data-theme="firestone"] {
   --theme-font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --theme-heading-weight: 700;
-  --theme-heading-tracking: var(--tracking-tighter);
+  --theme-heading-tracking: var(--tracking-tighter, -0.025em);
   --theme-body-leading: 1.6;
 
   /* -------------------------------------------------------------------------
      Shadows — neutral dark
      ------------------------------------------------------------------------- */
-  --theme-shadow-sm: 0 1px 2px oklch(20% 0 0 / 0.08);
-  --theme-shadow-md: 0 4px 8px oklch(20% 0 0 / 0.10),
-    0 0 1px oklch(20% 0 0 / 0.05);
-  --theme-shadow-lg: 0 8px 16px oklch(20% 0 0 / 0.12),
-    0 0 1px oklch(20% 0 0 / 0.05);
-  --theme-shadow-xl: 0 24px 48px oklch(20% 0 0 / 0.18),
-    0 0 1px oklch(20% 0 0 / 0.05);
+  --theme-shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.05);
+  --theme-shadow-md: 0 4px 12px oklch(0% 0 0 / 0.07),
+    0 1px 2px oklch(0% 0 0 / 0.04);
+  --theme-shadow-lg: 0 10px 24px oklch(0% 0 0 / 0.09),
+    0 2px 4px oklch(0% 0 0 / 0.04);
+  --theme-shadow-xl: 0 24px 48px oklch(0% 0 0 / 0.14),
+    0 4px 8px oklch(0% 0 0 / 0.04);
 
   /* -------------------------------------------------------------------------
      Border Radii
@@ -136,72 +153,78 @@ html[data-theme="firestone"] {
   --theme-radius-full: 9999px;
 }
 
-/* -------------------------------------------------------------------------
-   Dark Mode — deep near-black with cyan glow
-   ------------------------------------------------------------------------- */
+/* =============================================================================
+   Dark Mode — 赛博玄铁质感 + 纯净中性黑 (彻底修复反转并杜绝发紫浑浊)
+   ============================================================================= */
 html.dark[data-theme="firestone"] {
-  --background: oklch(5% 0.0048 289.4473);
-  --background-secondary: oklch(15% 0.014 289.4473);
-  --background-tertiary: oklch(20% 0.011 289.4473);
-  --background-elevated: oklch(15% 0.014 289.4473);
+  /* Surfaces: 层次严明、绝无杂色的黑曜石阶梯 */
+  --background:           oklch(0% 0 0);            /* #000000 - 纯正深邃黑 */
+  --background-secondary: oklch(19.5% 0.005 220);   /* #171A1B - 次级底色 */
+  --background-tertiary:  oklch(26.2% 0.006 219.5); /* #222526 - 玄铁黑 (卡片背景) */
+  --background-elevated:  oklch(24.0% 0.006 220);   /* #1E2122 - 浮动层/弹窗 */
 
-  --foreground: oklch(95% 0.010 289.4473);
-  --foreground-secondary: oklch(85% 0.013 289.4473);
-  --foreground-muted: oklch(75% 0.010 289.4473);
-  --foreground-subtle: oklch(60% 0.008 289.4473);   /*  ~4.8:1 on bg — WCAG AA  */
+  /* Foregrounds: 清透高对比发光白至银灰阶梯 */
+  --foreground:           oklch(96.0% 0.000 0.0);   /* #F5F5F5 - 纯净白 (14:1 AAA) */
+  --foreground-secondary: oklch(82.0% 0.000 0.0);   /* #D1D5DB - 柔和次级亮白 */
+  --foreground-muted:     oklch(66.0% 0.000 0.0);   /* #A1A1AA - 辅文银灰 */
+  --foreground-subtle:    oklch(50.0% 0.000 0.0);   /* #71717A - 弱化注脚 */
 
-  --border: oklch(20% 0.014 289.4473);
-  --border-strong: oklch(27% 0.011 289.4473);
-  --border-subtle: oklch(13.5% 0.014 289.4473);
+  /* Borders: 现代科技感微光透视线 */
+  --border:               oklch(24.0% 0.005 220);   /* #1E2122 - 暗度精致边框 */
+  --border-strong:        oklch(33.0% 0.006 220);   /* #313537 - 轮廓加强 */
+  --border-subtle:        oklch(18.5% 0.005 220);   /* #151819 - 隐性分割线 */
 
-  --primary: oklch(95% 0.010 289.4473);
-  --primary-hover: oklch(83% 0.013 289.4473);
-  --primary-foreground: oklch(9.5% 0.018 289.4473);
+  --primary:              oklch(96.0% 0.000 0.0);   /* #F5F5F5 - 暗色下亮白高光主按钮 */
+  --primary-hover:        oklch(88.0% 0.000 0.0);   /* #E0E0E0 */
+  --primary-foreground:   oklch(14.5% 0.005 220);   /* #0F1112 */
 
-  --secondary: oklch(20% 0.011 289.4473);
-  --secondary-hover: oklch(24% 0.011 289.4473);
-  --secondary-foreground: oklch(90% 0.010 289.4473);
+  --secondary:            oklch(26.2% 0.006 219.5); /* #222526 - 玄铁黑次级按钮 */
+  --secondary-hover:      oklch(31.0% 0.007 220);   /* #2B3032 */
+  --secondary-foreground: oklch(92.0% 0.000 0.0);   /* #EBEBEB */
 
-  --accent: var(--brand-400);
-  --accent-hover: var(--brand-500);
-  --accent-light: oklch(18% 0.08 289.4473);
+  --accent:               var(--brand-400);         /* #9D64FF - 暗色下提高明度的亮电紫 */
+  --accent-hover:         var(--brand-300);         /* #BE9AFF */
+  --accent-light:         oklch(22.0% 0.080 289.5); /* 暮紫高光底板 */
 
-  --muted: oklch(20% 0.011 289.4473);
-  --muted-foreground: oklch(75% 0.010 289.4473);
+  --muted:                oklch(21.0% 0.005 220);   /* #1A1D1E */
+  --muted-foreground:     oklch(66.0% 0.000 0.0);   /* #A1A1AA */
 
-  --card: oklch(15% 0.014 289.4473);
-  --card-border: oklch(23% 0.014 289.4473);
+  --card:                 oklch(18.5% 0.005 220);   /* #151819 */
+  --card-border:          oklch(24.0% 0.005 220);   /* #1E2122 */
 
-  --input-bg: oklch(15% 0.014 289.4473);
-  --input-border: oklch(27% 0.011 289.4473);
-  --input-focus: var(--brand-400);
+  --input-bg:             oklch(16.0% 0.005 220);   /* #121415 */
+  --input-border:         oklch(28.0% 0.006 220);   /* #26292B */
+  --input-focus:          var(--brand-400);
 
-  --ring: var(--brand-400);
+  --ring:                 oklch(66.2% 0.230 289.5 / 0.5); /* 电紫光聚焦环 */
 
-  --destructive: oklch(65% 0.22 25);
-  --destructive-foreground: var(--gray-0);
+  --destructive:            oklch(65.0% 0.235 18.5);  /* 明亮警示赤晶红 */
+  --destructive-foreground: oklch(100% 0 0);
 
-  --gradient-start: oklch(9.5% 0.018 289.4473);
-  --gradient-end: oklch(13% 0.014 289.4473);
+  --gradient-start: oklch(16.0% 0.005 220);
+  --gradient-end:   oklch(21.0% 0.006 220);
 
-  --success-light: oklch(18% 0.06 155);
-  --warning-light: oklch(18% 0.05 85);
-  --error-light: oklch(18% 0.05 25);
+  --success-light: oklch(20.0% 0.060 150.0);
+  --warning-light: oklch(22.0% 0.060 45.0);
+  --error-light:   oklch(22.0% 0.060 18.5);
 
-  --surface-invert: oklch(13% 0.014 289.4473);
-  --surface-invert-secondary: oklch(16.5% 0.011 289.4473);
-  --surface-invert-tertiary: oklch(21% 0.011 289.4473);
-  --on-invert: oklch(95% 0.010 289.4473);
-  --on-invert-secondary: oklch(72% 0.013 289.4473);
-  --on-invert-muted: oklch(68% 0.010 289.4473);
-  --border-invert: oklch(21% 0.011 289.4473);
-  --border-invert-strong: oklch(29% 0.009 289.4473);
+  /* -------------------------------------------------------------------------
+     Inverted/Contrast Section (修复核心：深色模式下的反转层必须依然是深色微亮层)
+     ------------------------------------------------------------------------- */
+  --surface-invert:           oklch(19.5% 0.005 220);   /* #171A1B - 比主背景略亮的对比底色 */
+  --surface-invert-secondary: oklch(23.0% 0.006 220);   /* #1D2022 */
+  --surface-invert-tertiary:  oklch(26.2% 0.006 219.5); /* #222526 - 玄铁黑容器 */
+  --on-invert:                oklch(96.0% 0.000 0.0);   /* #F5F5F5 - 保持白字，绝不反转为黑字 */
+  --on-invert-secondary:      oklch(80.0% 0.000 0.0);   /* #CCCCCC */
+  --on-invert-muted:          oklch(65.0% 0.000 0.0);   /* #A6A6A6 */
+  --border-invert:            oklch(26.0% 0.005 220);   /* #232628 */
+  --border-invert-strong:     oklch(35.0% 0.006 220);   /* #35393C */
 
-  --theme-shadow-sm: 0 1px 3px oklch(9% 0 0 / 0.35);
-  --theme-shadow-md: 0 4px 12px oklch(9% 0 0 / 0.4),
-    0 0 1px oklch(9% 0 0 / 0.15);
-  --theme-shadow-lg: 0 8px 24px oklch(9% 0 0 / 0.45),
-    0 1px 2px oklch(50% 0 0 / 0.08);
-  --theme-shadow-xl: 0 24px 48px oklch(9% 0 0 / 0.55),
-    0 2px 4px oklch(50% 0 0 / 0.11);
+  --theme-shadow-sm: 0 1px 3px oklch(0% 0 0 / 0.45);
+  --theme-shadow-md: 0 4px 16px oklch(0% 0 0 / 0.55),
+    0 0 1px oklch(100% 0 0 / 0.12);
+  --theme-shadow-lg: 0 8px 30px oklch(0% 0 0 / 0.65),
+    0 0 1px oklch(100% 0 0 / 0.16);
+  --theme-shadow-xl: 0 20px 50px oklch(0% 0 0 / 0.80),
+    0 0 2px oklch(100% 0 0 / 0.18);
 }

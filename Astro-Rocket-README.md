@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.3.1-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.3.2-bc52ee?logo=astro&logoColor=white" alt="Astro" /></a>
   <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4.3.3-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
   <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-6.0.3-3178c6?logo=typescript&logoColor=white" alt="TypeScript" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e" alt="License" /></a>
