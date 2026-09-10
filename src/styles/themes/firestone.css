@@ -154,19 +154,19 @@ html[data-theme="firestone"] {
 }
 
 /* =============================================================================
-   Dark Mode — 赛博玄铁质感 + 纯净中性黑 (彻底修复反转并杜绝发紫浑浊)
+   Dark Mode — 玄铁中性黑
    ============================================================================= */
 html.dark[data-theme="firestone"] {
-  /* Surfaces: 层次严明、绝无杂色的黑曜石阶梯 */
+  /* Surfaces: 层次严明、无杂色的阶梯黑色 */
   --background:           oklch(0% 0 0);            /* #000000 - 纯正深邃黑 */
   --background-secondary: oklch(19.5% 0.005 220);   /* #171A1B - 次级底色 */
   --background-tertiary:  oklch(26.2% 0.006 219.5); /* #222526 - 玄铁黑 (卡片背景) */
   --background-elevated:  oklch(24.0% 0.006 220);   /* #1E2122 - 浮动层/弹窗 */
 
-  /* Foregrounds: 清透高对比发光白至银灰阶梯 */
+  /* Foregrounds: 清透的高对比发光阶梯白 & 银灰色 */
   --foreground:           oklch(96.0% 0.000 0.0);   /* #F5F5F5 - 纯净白 (14:1 AAA) */
-  --foreground-secondary: oklch(82.0% 0.000 0.0);   /* #D1D5DB - 柔和次级亮白 */
-  --foreground-muted:     oklch(66.0% 0.000 0.0);   /* #A1A1AA - 辅文银灰 */
+  --foreground-secondary: oklch(91.0% 0.000 0.0);   /* #D1D5DB - 柔和次级亮白 */
+  --foreground-muted:     oklch(75.0% 0.000 0.0);   /* #A1A1AA - 辅文银灰 */
   --foreground-subtle:    oklch(50.0% 0.000 0.0);   /* #71717A - 弱化注脚 */
 
   /* Borders: 现代科技感微光透视线 */
