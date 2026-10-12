@@ -7,7 +7,7 @@ valuable: inspect them, work with them, and do not reset or discard them.
 ## Project facts
 
 - FireStone 火石 is a Chinese portfolio, project showcase, and technical blog.
-- It is a customized Astro Rocket fork. The site is statically built and
+- It is a customized [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket) fork. The site is statically built and
   deployed to Cloudflare; the canonical site URL is `https://fire-stone.co/`.
 - Stack: Astro 7.3, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
   Pagefind, and pnpm. Node must satisfy `>=22.12.0`.
@@ -157,3 +157,10 @@ from repository evidence and this guide. In particular:
 The goal of this file is to provide accurate constraints without replacing
 engineering judgment. When a rule and the code disagree, verify the code,
 state the discrepancy, and update the smallest necessary surface.
+
+## Code styles
+
+- Write all comments, project summaries, and Agent documentation in English; write project documentation and reports in Simplified Chinese.
+
+- In Astro components, use `<!-- -->` only when information needs to be exposed publicly (e.g., copyright notices, recruitment Easter eggs).
+For all reminders and explanatory notes during development, use `{/* comment content */}` or `//[2]` within the Frontmatter.
