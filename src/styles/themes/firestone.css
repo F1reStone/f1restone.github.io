@@ -94,7 +94,7 @@ html[data-theme="firestone"] {
   /* -------------------------------------------------------------------------
      Inverted/Contrast Section — 浅色模式下的反色暗底区块 (以玄铁黑为基底)
      ------------------------------------------------------------------------- */
-  --surface-invert:           oklch(26.2% 0.006 219.5);            /* #222526 - 玄铁黑原生落地 */
+  --surface-invert:           oklch(0% 0 0);                       /* #000000 */
   --surface-invert-secondary: oklch(21.0% 0.006 220);              /* #1B1E1F */
   --surface-invert-tertiary:  oklch(31.0% 0.007 220);              /* #2C3032 */
   --on-invert:                var(--gray-50, oklch(98.0% 0 0));    /* #FAFAFA - 白字 */
@@ -211,7 +211,7 @@ html.dark[data-theme="firestone"] {
   /* -------------------------------------------------------------------------
      Inverted/Contrast Section (修复核心：深色模式下的反转层必须依然是深色微亮层)
      ------------------------------------------------------------------------- */
-  --surface-invert:           oklch(19.5% 0.005 220);   /* #171A1B - 比主背景略亮的对比底色 */
+  --surface-invert:           oklch(0% 0 0);            /* #000000 */
   --surface-invert-secondary: oklch(23.0% 0.006 220);   /* #1D2022 */
   --surface-invert-tertiary:  oklch(26.2% 0.006 219.5); /* #222526 - 玄铁黑容器 */
   --on-invert:                oklch(96.0% 0.000 0.0);   /* #F5F5F5 - 保持白字，绝不反转为黑字 */

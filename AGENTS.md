@@ -1,12 +1,12 @@
 # FireStone Website: Agent Guide
 
 This file is the repository-level source of truth for coding work. Read it
-before editing. `CLAUDE.md` only points here. User changes in the worktree are
+before editing. User changes in the worktree are
 valuable: inspect them, work with them, and do not reset or discard them.
 
 ## Project facts
 
-- FireStone 火石 is a Chinese portfolio, project showcase, and technical blog.
+- FireStone Website is a Chinese portfolio, project showcase, and technical blog.
 - It is a customized [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket) fork. The site is statically built and
   deployed to Cloudflare; the canonical site URL is `https://fire-stone.co/`.
 - Stack: Astro 7.3, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
@@ -28,24 +28,36 @@ pnpm check           # Astro and TypeScript diagnostics
 pnpm lint            # ESLint
 pnpm test            # Vitest
 pnpm test:run        # Vitest, one run without watch mode
-pnpm test:i18n       # isolated bilingual build and browser checks; restores config
-pnpm test:e2e        # Playwright
+pnpm test:i18n       # local bilingual build and browser checks; restores config
+pnpm test:e2e        # local Playwright browser checks
 pnpm build           # production build plus Pagefind index
 pnpm validate        # lint, check, unit tests, and build
 pnpm format:check    # Prettier verification
 ```
 
-Use the narrowest relevant command while iterating. For a meaningful route,
-content, schema, or shared-component change, finish with `pnpm check` and
-`pnpm build`; add lint/tests when the changed surface warrants them. A Pagefind
-index exists after `pnpm build`, not during `pnpm dev`. Do not leave a server or
-watch process running when the task is complete.
+Keep verification focused. Prioritize tests for core site behavior, content and
+routing contracts, and backend or build behavior that is difficult to verify
+manually. Avoid one-off tests for small visual details or every reported
+frontend interaction issue. When the user supplies reliable reproduction steps,
+use them to guide the fix; for browser-specific interaction or appearance, ask
+the user to verify it when that is more useful than adding a brittle test. Add
+automated UI tests when the behavior is shared and critical, hard to validate
+manually, or carries meaningful regression risk.
+
+Run browser tests locally only when they provide meaningful coverage; do not
+add Playwright browser installation or browser-test runs to GitHub Actions. CI
+keeps lint, Astro/TypeScript checks, unit tests, and the production build. For a
+meaningful route, content, schema, or shared-component change, finish with
+`pnpm check` and `pnpm build`; add lint or focused tests when warranted. A
+Pagefind index exists after `pnpm build`, not during `pnpm dev`. Do not leave a
+server or watch process running when the task is complete.
 
 ## How to work
 
-1. Inspect the target route/component, its callers, related config, and nearby
-   tests before deciding how to change it. Follow existing patterns and keep
-   the diff focused.
+1. Inspect the target route/component, its callers, and related config before
+   deciding how to change it. Inspect nearby tests when they are relevant to
+   core behavior or a meaningful regression risk. Follow existing patterns and
+   keep the diff focused.
 2. Treat user intent and current code as higher priority than generic advice
    from a skill. Prefer Astro server/build-time code and existing components;
    add client JavaScript or a React island only when the interaction needs it.
@@ -54,7 +66,8 @@ watch process running when the task is complete.
    the request.
 4. Make accessibility, keyboard focus, responsive layout, dark/light themes,
    and reduced motion part of the implementation when the surface is user
-   facing. Verify the affected page at a mobile width when layout is involved.
+   facing. For frontend interaction issues, use the user's reproduction steps
+   and request manual verification when that is the most reliable check.
 5. Explain assumptions in the final response. Do not hide uncertainty by
    changing unrelated code or weakening types/checks.
 
@@ -163,4 +176,4 @@ state the discrepancy, and update the smallest necessary surface.
 - Write all comments, project summaries, and Agent documentation in English; write project documentation and reports in Simplified Chinese.
 
 - In Astro components, use `<!-- -->` only when information needs to be exposed publicly (e.g., copyright notices, recruitment Easter eggs).
-For all reminders and explanatory notes during development, use `{/* comment content */}` or `//[2]` within the Frontmatter.
+  For all reminders and explanatory notes during development, use `{/* comment content */}` or `//[2]` within the Frontmatter.

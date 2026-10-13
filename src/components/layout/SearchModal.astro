@@ -42,7 +42,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
   <button
     type="button"
     class={cn(
-      'search-trigger inline-flex items-center justify-center rounded-full border border-border-strong p-1.5',
+      'search-trigger inline-flex items-center justify-center rounded-full border border-border-strong p-2',
       'text-foreground-secondary glass-panel hover-glow-box hover-solid-fill',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
     )}
@@ -218,18 +218,34 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       let backdropAnimation: Animation | undefined;
       let heightAnimation: Animation | undefined;
       let revision = 0;
-      let restoreOverflow = '';
-      let restoreGutter = '';
+      let triggerScrollY: number | null = null;
       const inactive = new Map<HTMLElement, boolean>();
       const events = new AbortController();
+      const preventBackgroundScroll = (event: Event) => event.preventDefault();
+
+      backdrop.addEventListener('wheel', preventBackgroundScroll, {
+        passive: false,
+        signal: events.signal,
+      });
+      backdrop.addEventListener('touchmove', preventBackgroundScroll, {
+        passive: false,
+        signal: events.signal,
+      });
+
+      // Capture before focusing a sticky descendant can scroll it to its normal-flow position.
+      trigger.addEventListener(
+        'pointerdown',
+        () => {
+          triggerScrollY = window.scrollY;
+        },
+        { signal: events.signal }
+      );
 
       const setHeaderExpanded = (expanded: boolean) => {
         animateHeaderSurface(header, 'data-search-expanded', expanded);
       };
 
       const restorePage = () => {
-        document.body.style.overflow = restoreOverflow;
-        document.documentElement.style.scrollbarGutter = restoreGutter;
         inactive.forEach((wasInert, element) => {
           element.inert = wasInert;
         });
@@ -305,12 +321,10 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       const open = () => {
         if (isOpen) return;
         revision++;
+        const scrollY = triggerScrollY ?? window.scrollY;
+        triggerScrollY = null;
         if (modal.classList.contains('hidden')) {
           previousActiveElement = document.activeElement as HTMLElement;
-          restoreOverflow = document.body.style.overflow;
-          restoreGutter = document.documentElement.style.scrollbarGutter;
-          document.documentElement.style.scrollbarGutter = 'stable';
-          document.body.style.overflow = 'hidden';
           for (const element of document.body.children) {
             if (
               !(element instanceof HTMLElement) ||
@@ -338,6 +352,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         // Stay inside the user gesture so iOS can open its software keyboard.
         input.focus({ preventScroll: true });
         input.select();
+        if (window.scrollY !== scrollY) window.scrollTo(0, scrollY);
       };
 
       const close = () => {

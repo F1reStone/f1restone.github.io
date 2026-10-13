@@ -820,6 +820,28 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     <!-- FireStone: 可变字重放大计算：读取 .weight-shift 元素的当前 computed font-weight 并自动 +300 (最高 900)，传到 CSS 变量 -->
     <script is:inline>
       function initSmartWeightShift() {
+        const cjkPattern = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+        const chromiumBrand = navigator.userAgentData?.brands?.some(function(brand) {
+          return brand.brand === 'Chromium';
+        });
+        const isChromium = chromiumBrand || /(?:Chrome|Chromium|Edg\/)/.test(navigator.userAgent);
+        const root = document.documentElement;
+
+        if (isChromium) {
+          root.dataset.browserEngine = 'chromium';
+          document.querySelectorAll('.weight-shift, .weight-shift-non-centered, .hero-title-text, .hero-title-serif').forEach(function(el) {
+            const text = el.getAttribute('data-text') || el.textContent || '';
+            if (!cjkPattern.test(text) || el.hasAttribute('data-ws-variable-axis')) return;
+
+            const baseWeight = parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
+            const targetWeight = el.classList.contains('hero-title-serif') ? 600 :
+              el.classList.contains('hero-title-text') ? 800 : Math.min(baseWeight + 300, 900);
+            el.style.setProperty('--ws-base', baseWeight);
+            el.style.setProperty('--ws-target', targetWeight);
+            el.setAttribute('data-ws-variable-axis', '');
+          });
+        }
+
         const els = Array.from(document.querySelectorAll('.weight-shift:not([data-ws-init]), .weight-shift-non-centered:not([data-ws-init])'));
         if (!els.length) return;
 

@@ -1563,6 +1563,10 @@ input[type='reset'] {
     border-color 400ms var(--ease-fluid), background-color 200ms linear, color 200ms linear,
     text-shadow 500ms var(--ease-fluid), font-weight 700ms var(--ease-bouncy),
     filter 400ms var(--ease-fluid), opacity 500ms var(--ease-fluid); /* FireStone: 增加透明度过渡，让引擎支持入场淡入 */
+  --engine-transition-no-font-weight:
+    transform 500ms var(--ease-fluid), box-shadow 500ms var(--ease-fluid),
+    border-color 400ms var(--ease-fluid), background-color 200ms linear, color 200ms linear,
+    text-shadow 500ms var(--ease-fluid), filter 400ms var(--ease-fluid), opacity 500ms var(--ease-fluid);
 }
 
 /* 1. 基础 SparkGlass 材质 */
@@ -1742,11 +1746,38 @@ input[type='reset'] {
   font-weight: var(--ws-target, 900);
 }
 
+/* Animate the variable font's weight axis directly to avoid Blink's font-weight repaint path for CJK glyphs. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-browser-engine='chromium'] :is(.weight-shift, .weight-shift-non-centered, .hero-title-text, .hero-title-serif)[data-ws-variable-axis] {
+    font-weight: var(--ws-base) !important;
+    font-variation-settings: 'wght' var(--ws-base);
+    transition:
+      var(--engine-transition-no-font-weight),
+      font-variation-settings 700ms var(--ease-bouncy) !important;
+  }
+
+  html[data-browser-engine='chromium'] :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis]::after {
+    font-variation-settings: 'wght' 900;
+  }
+
+  html[data-browser-engine='chromium'] :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis]:is(:hover, :active, :focus-visible, .active),
+  html[data-browser-engine='chromium'] .group:hover :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis],
+  html[data-browser-engine='chromium'] .group:focus-visible :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis],
+  html[data-browser-engine='chromium'] :is(.hero-title-wrapper:hover, .hero-title-wrapper:active) :is(.hero-title-text, .hero-title-serif)[data-ws-variable-axis] {
+    font-variation-settings: 'wght' var(--ws-target);
+  }
+}
+
 /* User/device preference can disable variable-font expansion without removing text glow. */
 html[data-effect-variable-font='off'] .weight-shift,
 html[data-effect-variable-font='off'] .weight-shift-non-centered {
   font-weight: var(--ws-base, 400) !important;
-  transition: none !important;
+  transition: var(--engine-transition-no-font-weight) !important;
+}
+
+html[data-effect-variable-font='off'][data-browser-engine='chromium'] [data-ws-variable-axis] {
+  font-variation-settings: 'wght' var(--ws-base) !important;
+  transition: var(--engine-transition-no-font-weight) !important;
 }
 
 /* prefers-reduced-motion 降级 */

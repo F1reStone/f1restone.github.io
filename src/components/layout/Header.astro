@@ -1009,13 +1009,6 @@ header.hdr-progressive-glass {
 }
 header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface { opacity: 1; }
 header[data-search-active] { z-index: 101; }
-/* A body scroll lock can move a sticky header out of its scroll container.
-   Keep it attached to the viewport while its search dialog is open so the
-   dialog backdrop never replaces the header during a scroll. */
-header[data-search-active][data-header-position='sticky'] {
-  position: fixed;
-  inset-inline: 0;
-}
 header[data-search-active] > .hdr-inner { pointer-events: auto; }
 header > .hdr-inner { position: relative; z-index: 1; }
 header > .mobile-menu-panel { z-index: 2; }
