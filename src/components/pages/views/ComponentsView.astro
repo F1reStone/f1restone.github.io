@@ -493,7 +493,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         <div class="component-showcase">
           <div class="showcase-header">
             <span class="showcase-label">Background Variants</span>
-            <span class="showcase-hint">default, solid, transparent</span>
+            <span class="showcase-hint">progressive, blur, solid</span>
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <div class="divide-y divide-border">
@@ -502,19 +502,19 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 <div class="absolute inset-0 bg-gradient-to-r from-brand-100 to-brand-200 dark:from-brand-900/30 dark:to-brand-800/30"></div>
                 <div class="relative">
                   <div class="bg-background/80 backdrop-blur-sm px-4 py-2 border-b border-border">
-                    <span class="text-xs font-mono text-foreground-muted">variant="default"</span>
+                    <span class="text-xs font-mono text-foreground-muted">background="blur"</span>
                     <span class="text-xs text-foreground-subtle ml-2">— backdrop blur + transparency</span>
                   </div>
-                  <Header position="static" size="sm" variant="default" showMobileMenu={false} nav={[{ label: 'Home', href: '#' }, { label: 'About', href: '#' }]} />
+                  <Header position="static" size="sm" background="blur" colorScheme="default" showMobileMenu={false} nav={[{ label: 'Home', href: '#' }, { label: 'About', href: '#' }]} />
                 </div>
               </div>
               <!-- Solid -->
               <div>
                 <div class="bg-background-secondary/50 px-4 py-2 border-b border-border">
-                  <span class="text-xs font-mono text-foreground-muted">variant="solid"</span>
+                  <span class="text-xs font-mono text-foreground-muted">background="solid"</span>
                   <span class="text-xs text-foreground-subtle ml-2">— opaque background</span>
                 </div>
-                <Header position="static" size="sm" variant="solid" showMobileMenu={false} nav={[{ label: 'Home', href: '#' }, { label: 'About', href: '#' }]} />
+                <Header position="static" size="sm" background="solid" colorScheme="default" showMobileMenu={false} nav={[{ label: 'Home', href: '#' }, { label: 'About', href: '#' }]} />
               </div>
               <!-- Transparent on light image -->
               <div class="relative overflow-hidden">
@@ -525,13 +525,14 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 <div class="absolute inset-0 bg-white/20"></div>
                 <div class="relative">
                   <div class="bg-white/60 backdrop-blur-sm px-4 py-2 border-b border-black/10">
-                    <span class="text-xs font-mono text-black/70">variant="transparent"</span>
-                    <span class="text-xs text-black/50 ml-2">— light background, dark text</span>
+                    <span class="text-xs font-mono text-black/70">background="progressive"</span>
+                    <span class="text-xs text-black/50 ml-2">— progressive glass</span>
                   </div>
                   <Header
                     position="static"
                     size="md"
-                    variant="progressive"
+                    background="progressive"
+                    colorScheme="default"
                     showMobileMenu={false}
                     showCta
                     cta={{ label: 'Explore', href: '#' }}
@@ -547,13 +548,13 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 <div class="absolute inset-0 bg-black/40"></div>
                 <div class="relative">
                   <div class="bg-black/30 backdrop-blur-sm px-4 py-2 border-b border-white/10">
-                    <span class="text-xs font-mono text-white/90">variant="transparent" colorScheme="invert"</span>
+                    <span class="text-xs font-mono text-white/90">background="progressive" colorScheme="invert"</span>
                     <span class="text-xs text-white/70 ml-2">— for dark backgrounds</span>
                   </div>
                   <Header
                     position="static"
                     size="md"
-                    variant="progressive"
+                    background="progressive"
                     colorScheme="invert"
                     showMobileMenu={false}
                     showCta
@@ -581,8 +582,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                   <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> default | centered | minimal</li>
                   <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">position</code> fixed | sticky | static</li>
                   <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">size</code> sm | md | lg</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">variant</code> default | solid | transparent</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">colorScheme</code> default | invert</li>
+                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">background</code> progressive | blur | solid</li>
+                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">colorScheme</code> auto | default | invert</li>
+                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">topColor</code> fixed header color before scrolling</li>
+                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showScrollProgress</code> legacy; avoid with progressive</li>
                 </ul>
               </div>
               <div>

@@ -1,15 +1,14 @@
 ---
 /**
  * Header Component
- * Flexible navigation header with variant-based configuration
+ * Navigation header with independent layout, background, and color options
  *
  * Variants:
  * - layout: 'default' | 'centered' | 'minimal'
  * - position: 'fixed' | 'sticky' | 'static'
  * - size: 'sm' | 'md' | 'lg'
- * - variant: 'default' | 'solid' | 'transparent' | 'progressive'
- * - colorScheme: 'default' | 'invert' (use 'invert' for dark backgrounds)
- * - shape: 'bar' | 'floating' (use 'floating' for capsule header)
+ * - background: 'progressive' | 'blur' | 'solid'
+ * - colorScheme: 'auto' | 'default' | 'invert'
  *
  * Features:
  * - Dynamic navigation from nav.config.ts (default) or custom nav prop
@@ -19,7 +18,7 @@
  * - GitHub/action buttons
  * - Full slot support for customization
  * - Inverted color scheme for use on dark/image backgrounds
- * - Floating capsule shape with scroll-reactive bg + color flip
+ * - Configurable page-top color for fixed headers
  */
 import type { HTMLAttributes } from 'astro/types';
 import type { ImageMetadata } from 'astro';
@@ -56,9 +55,13 @@ interface Props extends HTMLAttributes<'header'> {
   layout?: 'default' | 'centered' | 'minimal';
   position?: 'fixed' | 'sticky' | 'static';
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  variant?: 'default' | 'solid' | 'transparent' | 'progressive';
-  colorScheme?: 'default' | 'invert';
-  shape?: 'bar' | 'floating';
+  background?: 'progressive' | 'blur' | 'solid';
+  colorScheme?: 'auto' | 'default' | 'invert';
+  /**
+   * Fixed-header text color before scrolling. Defaults to white; update the
+   * rendered header's `--header-top-color` property to transition it at runtime.
+   */
+  topColor?: string;
   nav?: NavItem[];
   extraNav?: NavItem[];
   showCta?: boolean;
@@ -95,12 +98,11 @@ interface Props extends HTMLAttributes<'header'> {
   /** Optional map of `locale -> URL` for "same page, other language" links. Passed to LanguageSwitcher. */
   languageAlternates?: Record<string, string>;
   showSocialLinks?: boolean;
+  /** Legacy feature; visually conflicts with progressive blur. */
   showScrollProgress?: boolean;
   scrollProgressPosition?: 'top' | 'bottom';
-  autoHide?: boolean;
-  invertOnReturn?: boolean;
   /**
-   * Max width of the inner container (only applies when `shape='bar'`).
+   * Max width of the inner container.
    * Defaults to `'6xl'` (the historical width).
    */
   // FireStone: [Add '8xl' and '9xl' to the props interface]
@@ -111,9 +113,9 @@ const {
   layout = 'default',
   position = 'fixed',
   size = '2xl',
-  variant = 'progressive',
-  colorScheme = 'invert',
-  shape = 'bar',
+  background = 'progressive',
+  colorScheme = 'auto',
+  topColor = '#ffffff',
   nav,
   extraNav = [],
   showCta = false,
@@ -129,8 +131,6 @@ const {
   showActiveState = true,
   showScrollProgress = false,
   scrollProgressPosition = 'bottom',
-  autoHide = true,
-  invertOnReturn = true,
   hideLogo = false,
   secondaryLogo,
   secondaryLogoSvg,
@@ -148,7 +148,6 @@ const cleanSecondaryLogoSvg = secondaryLogoSvg
   ?.replace(/\s(width|height)="[^"]*"/g, '')
   .replace(/^<svg/, '<svg class="block h-6 w-auto shrink-0 hdr-logo-glow"');
 
-const isFloating = shape === 'floating';
 const maxWidthClass = {
   '4xl': 'max-w-4xl',
   '5xl': 'max-w-5xl',
@@ -158,7 +157,6 @@ const maxWidthClass = {
   '9xl': 'max-w-9xl',
   full: 'max-w-full',
 }[maxWidth];
-const effectiveShowScrollProgress = showScrollProgress || (isFloating && !autoHide);
 const isInvert = colorScheme === 'invert';
 
 
@@ -193,17 +191,24 @@ if (import.meta.env.DEV && Astro.slots.has('default')) {
 }
 
 const headerClasses = cn(
-  headerVariants({ position, variant, shape }),
-  isInvert && !isFloating && 'invert-section',
+  headerVariants({ position, background }),
+  isInvert && 'invert-section',
   className
 );
 
-const innerClasses = cn(headerInnerVariants({ size, shape }), !isFloating && maxWidthClass);
+const innerClasses = cn(headerInnerVariants({ size }), maxWidthClass);
 
 function isActive(href: string): boolean {
   if (!showActiveState) return false;
-  if (href.startsWith('#')) return false;
-  return currentPath === href || currentPath.startsWith(href + '/');
+  if (href.startsWith('#') || /^(https?:)?\/\//.test(href)) return false;
+  const normalizePath = (path: string) => {
+    const pathname = new URL(path, Astro.url).pathname;
+    const localeFreePath = stripLocaleFromPath(pathname);
+    return localeFreePath.replace(/\/+$/, '') || '/';
+  };
+  const current = normalizePath(currentPath);
+  const target = normalizePath(href);
+  return current === target || current.startsWith(`${target}/`);
 }
 
 function getSocialIconData(url: string): { icon: string; label: string } {
@@ -238,14 +243,12 @@ const buttonId = `${menuId}-button`;
   data-menu-id={menuId}
   data-button-id={buttonId}
   data-header-position={position}
-  data-header-shape={shape}
-  data-header-variant={variant}
+  data-header-background={background}
   data-header-color-scheme={colorScheme}
-  data-header-auto-hide={autoHide ? 'true' : 'false'}
-  data-header-invert-on-return={invertOnReturn ? 'true' : 'false'}
   {...attrs}
+  style={`--header-top-color: ${topColor}; ${attrs.style ?? ''}`}
 >
-  {variant === 'progressive' && (
+  {background === 'progressive' && (
     <div class="hdr-progressive-blur" aria-hidden="true">
       {[1, 2, 3, 4, 5].map((layer) => (
         <div class={`hdr-progressive-blur-layer hdr-progressive-blur-layer--${layer}`} />
@@ -360,12 +363,9 @@ const buttonId = `${menuId}-button`;
                 class={cn(
                   'relative rounded-full px-3 py-2 text-sm',
                   'hover-glow-text weight-shift',
-                  isFloating && 'hdr-invert-text',
-                  isFloating
-                    ? (isActive(href) ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' : 'text-foreground-secondary font-medium')
-                    : (isActive(href) 
-                        ? 'text-foreground text-shadow-[0_0_10px_currentColor] font-bold' 
-                        : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground font-medium')
+                  isActive(href)
+                    ? 'hdr-nav-active text-foreground text-shadow-[0_0_10px_currentColor] font-bold'
+                    : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground font-medium'
                 )}
                 aria-current={isActive(href) ? 'page' : undefined}
                 data-text={label}
@@ -385,25 +385,25 @@ const buttonId = `${menuId}-button`;
           <>
             {showSearch && (
               <div class="flex">
-                <SearchModal class={isFloating ? 'hdr-invert-text' : undefined} />
+                <SearchModal />
               </div>
             )}
 
             {showThemeToggle && (
               <div class="flex">
-                <ThemeModeDropdown class={isFloating ? 'hdr-invert-text' : undefined} />
+                <ThemeModeDropdown />
               </div>
             )}
 
             {showThemeSelector && (
               <div class="hidden lg:flex">
-                <ThemeSelectorDropdown class={isFloating ? 'hdr-invert-text' : undefined} />
+                <ThemeSelectorDropdown />
               </div>
             )}
 
             {showLanguageSwitcher && (
               <div class="hidden lg:flex">
-                <LanguageSwitcher class={isFloating ? 'hdr-invert-text' : undefined} alternates={languageAlternates} />
+                <LanguageSwitcher alternates={languageAlternates} />
               </div>
             )}
 
@@ -421,9 +421,7 @@ const buttonId = `${menuId}-button`;
                         'rounded-full p-2',
                         'hover-glow-icon',
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                        isFloating
-                          ? 'hdr-invert-text'
-                          : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
+                        'text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
                       )}
                     >
                       <Icon name={icon} size="md" />
@@ -441,7 +439,6 @@ const buttonId = `${menuId}-button`;
                 href={action.href}
                 target={action.target}
                 aria-label={action.label}
-                class={isFloating ? 'hdr-invert-text' : undefined}
               >
                 <Icon name={action.icon} size="sm" />
                 {!action.iconOnly && action.label}
@@ -454,7 +451,7 @@ const buttonId = `${menuId}-button`;
                   size="sm"
                   href={ctaHref}
                   target={ctaHref?.startsWith('http') ? '_blank' : undefined}
-                  class={cn('hdr-cta-brand', isFloating ? 'hdr-invert-cta' : undefined)}
+                  class="hdr-cta-brand"
                 >
                   {cta.icon && <Icon name={cta.icon} size="sm" />}
                   {cta.label}
@@ -472,10 +469,9 @@ const buttonId = `${menuId}-button`;
             type="button"
             id={buttonId}
             class={cn(
-              'hdr-hamburger inline-flex items-center justify-center rounded-md p-2 lg:hidden',
+              'hdr-hamburger inline-flex items-center justify-center rounded-full p-2 lg:hidden',
               'hover-glow-icon', /* FireStone: Hamburger 菜单应用统一交互引擎 */
               'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
-              isFloating ? 'hover:bg-secondary/40' : 'hover:bg-secondary'
             )}
             aria-expanded="false"
             aria-controls={menuId}
@@ -493,24 +489,13 @@ const buttonId = `${menuId}-button`;
     </div>
   </div>
 
-  {effectiveShowScrollProgress && (
-    isFloating ? (
-      <div
-        class={`absolute inset-x-3 h-0.5 overflow-hidden rounded-full ${scrollProgressPosition === 'top' ? 'top-0.5' : 'bottom-0.5'}`}
-        aria-hidden="true"
-      >
-        <div
-          id="scroll-progress-bar"
-          class="absolute left-0 top-0 h-full w-0 bg-brand-500 transition-none"
-        />
-      </div>
-    ) : (
+  {/* Legacy indicator: its line competes visually with progressive blur. */}
+  {showScrollProgress && (
       <div
         id="scroll-progress-bar"
         class={`absolute left-0 h-0.5 w-0 bg-brand-500 transition-none ${scrollProgressPosition === 'top' ? 'top-0' : 'bottom-0'}`}
         aria-hidden="true"
       />
-    )
   )}
 
   {
@@ -522,9 +507,7 @@ const buttonId = `${menuId}-button`;
           class={cn(
             'mobile-menu-panel', // FireStone: Target class for theme protection
             'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
-            isFloating
-              ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
-              : 'border-border bg-background border-t'
+            'border-border bg-background border-t'
           )}
           role="navigation"
           inert
@@ -538,9 +521,7 @@ const buttonId = `${menuId}-button`;
           class={cn(
             'mobile-menu-panel', // FireStone: Target class for theme protection
             'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
-            isFloating
-              ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
-              : 'border-border bg-background border-t'
+            'border-border bg-background border-t'
           )}
           role="navigation"
           inert
@@ -548,7 +529,7 @@ const buttonId = `${menuId}-button`;
         >
           <div class={cn(
             'mobile-menu-body py-3',
-            isFloating ? 'px-3' : cn('mx-auto px-4', maxWidthClass)
+            cn('mx-auto px-4', maxWidthClass)
           )}>
             <section class="mobile-menu-section">
               <p class="mobile-menu-label">{t('nav.sectionNavigate', locale)}</p>
@@ -664,14 +645,13 @@ const buttonId = `${menuId}-button`;
 }
 
 <script>
-  import { animateHeaderSurface, headerMotionTiming } from '@/lib/headerMotion';
+  import { headerMotionTiming } from '@/lib/headerMotion';
 
   function initMobileMenu() {
     const menuHeaders = document.querySelectorAll<HTMLElement>('header[data-menu-id]');
     menuHeaders.forEach((header) => {
       const menuId = header.dataset.menuId!;
       const buttonId = header.dataset.buttonId!;
-      const isFloating = header.dataset.headerShape === 'floating';
 
       const button = document.getElementById(buttonId);
       const menu = document.getElementById(menuId);
@@ -700,7 +680,7 @@ const buttonId = `${menuId}-button`;
           : { opacity: style.opacity, clipPath: style.clipPath === 'none' ? 'inset(0 0 0% 0)' : style.clipPath };
         menuAnimation?.cancel();
         menu!.classList.remove('hidden');
-        animateHeaderSurface(header, 'data-menu-expanded', opening);
+        header.toggleAttribute('data-menu-expanded', opening);
         const timing = headerMotionTiming();
         // Reveal the panel without scaling its text or changing the page layout.
         menuAnimation = menu!.animate([
@@ -720,14 +700,6 @@ const buttonId = `${menuId}-button`;
         button!.setAttribute('aria-expanded', 'true');
         menuIcon!.classList.add('hidden');
         closeIcon!.classList.remove('hidden');
-
-        // FireStone: [Explicitly set state attribute on header when menu opens to bypass CSS :has() compiler bugs]
-        header.setAttribute('data-menu-open', 'true');
-
-        if (isFloating) {
-          header.classList.remove('rounded-2xl');
-          header.classList.add('rounded-t-2xl');
-        }
 
         fitMenu();
         menu!.inert = false;
@@ -777,17 +749,8 @@ const buttonId = `${menuId}-button`;
           menuAnimation?.cancel();
           socialExits.forEach((animation) => animation.cancel());
           socialExits = [];
-          header.removeAttribute('data-menu-open');
           if (backdrop) {
             backdrop.classList.add('pointer-events-none');
-          }
-
-          if (isFloating) {
-            header.classList.remove('rounded-t-2xl');
-            header.classList.add('rounded-2xl');
-            if (window.scrollY <= 60) {
-              header.removeAttribute('data-scrolled');
-            }
           }
 
         }, () => {});
@@ -832,15 +795,13 @@ const buttonId = `${menuId}-button`;
 </script>
 
 <script>
-  // Header scroll behaviour + scroll-progress bar driven by a single rAF.
+// Header scroll state and the optional legacy progress bar share one rAF.
   // All layout reads are taken before any DOM writes. `docMaxScrollY` is
   // cached; the first read is deferred to a rAF so it runs AFTER first
   // paint instead of forcing a synchronous layout before it. ResizeObserver
   // handles subsequent changes (font swap, image loads, reveal animations)
   // without re-introducing a critical-path reflow.
   const SCROLL_THRESHOLD = 60;
-  const AUTO_HIDE_THRESHOLD = 150;
-  const BAR_SCROLLED_CLASSES = ['bg-background/80', 'backdrop-blur-lg', 'border-b', 'border-border/50'];
 
   let docMaxScrollY = 0;
   let docMetricsInited = false;
@@ -857,24 +818,17 @@ const buttonId = `${menuId}-button`;
   }
 
   function initScrollDriven() {
-    initDocMetrics();
-
     const scrollHeaders = document.querySelectorAll<HTMLElement>(
-      'header[data-header-shape="floating"], header[data-header-shape="bar"]'
+      'header[data-header-position="fixed"], header[data-header-position="sticky"]'
     );
     const progressBar = document.getElementById('scroll-progress-bar');
+    if (progressBar) initDocMetrics();
 
     scrollHeaders.forEach((header) => {
       if (header.dataset.scrollInit) return;
       header.dataset.scrollInit = 'true';
 
-      const isBar = header.dataset.headerShape === 'bar';
-      const isFloating = header.dataset.headerShape === 'floating';
-      const isAutoHide = header.dataset.headerAutoHide !== 'false';
-      const isTransparentBar = isBar && header.dataset.headerVariant === 'transparent';
       let ticking = false;
-      let lastScrollY = window.scrollY;
-      let lastShownAtY = 0;
 
       function onScroll() {
         if (ticking) return;
@@ -883,51 +837,10 @@ const buttonId = `${menuId}-button`;
         requestAnimationFrame(() => {
           // ── READS (gather everything before touching the DOM) ──
           const currentScrollY = window.scrollY;
-          const menuId = header.dataset.menuId;
-          const menu = menuId ? document.getElementById(menuId) : null;
-          const menuOpen = header.hasAttribute('data-search-active') || (menu && !menu.classList.contains('hidden'));
-          const wasHidden = header.hasAttribute('data-header-hidden');
-
-          // ── WRITES ──
           if (currentScrollY > SCROLL_THRESHOLD) {
             header.setAttribute('data-scrolled', '');
-            if (isTransparentBar) {
-              header.classList.add(...BAR_SCROLLED_CLASSES);
-              header.classList.remove('bg-transparent');
-            }
-          } else {
-            if (!menuOpen) {
-              header.removeAttribute('data-scrolled');
-              header.removeAttribute('data-header-hidden');
-              lastShownAtY = 0;
-              if (isTransparentBar) {
-                header.classList.remove(...BAR_SCROLLED_CLASSES);
-                header.classList.add('bg-transparent');
-              }
-            }
-          }
-
-          if (isFloating && isAutoHide && !menuOpen) {
-            if (currentScrollY > AUTO_HIDE_THRESHOLD) {
-              if (currentScrollY > lastScrollY) {
-                if (currentScrollY - lastShownAtY >= AUTO_HIDE_THRESHOLD) {
-                  header.setAttribute('data-header-hidden', '');
-                }
-              } else {
-                if (wasHidden) {
-                  lastShownAtY = Math.min(
-                    currentScrollY,
-                    Math.max(0, docMaxScrollY - AUTO_HIDE_THRESHOLD),
-                  );
-                  header.setAttribute('data-header-returned', '');
-                }
-                header.removeAttribute('data-header-hidden');
-              }
-            } else {
-              header.removeAttribute('data-header-hidden');
-              header.removeAttribute('data-header-returned');
-              lastShownAtY = 0;
-            }
+          } else if (!header.matches('[data-menu-expanded], [data-search-expanded]')) {
+            header.removeAttribute('data-scrolled');
           }
 
           // Drive the scroll-progress bar in the same frame, using the
@@ -937,7 +850,6 @@ const buttonId = `${menuId}-button`;
             progressBar.style.width = `${pct}%`;
           }
 
-          lastScrollY = currentScrollY;
           ticking = false;
         });
       }
@@ -997,6 +909,13 @@ header.hdr-progressive-glass {
   box-shadow: none !important;
 }
 
+header.hdr-blur-glass {
+  background: color-mix(in oklab, var(--color-background) 82%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
 /* One solid surface fades over the existing transparent/glass header. */
 .hdr-menu-surface {
   position: absolute;
@@ -1006,6 +925,7 @@ header.hdr-progressive-glass {
   pointer-events: none;
   background: var(--background);
   opacity: 0;
+  transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface { opacity: 1; }
 header[data-search-active] { z-index: 101; }
@@ -1095,8 +1015,8 @@ header.invert-section > .hdr-progressive-blur {
 }
 
 /* 当页面发生滚动时，渐进式模糊平滑显现 */
-header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur > .hdr-progressive-blur-layer,
-header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur::after {
+header[data-scrolled] > .hdr-progressive-blur > .hdr-progressive-blur-layer,
+header[data-scrolled] > .hdr-progressive-blur::after {
   opacity: 1;
   visibility: visible;
 }
@@ -1126,266 +1046,9 @@ header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur::after {
 
 @media (prefers-reduced-motion: reduce) {
   .mobile-menu-backdrop { transition: none; }
+  .hdr-menu-surface { transition: none; }
 }
 
-  [data-header-shape="floating"] {
-    transition-property: translate, background, border-color, box-shadow, width, max-width, border-radius, margin-top;
-    transition-duration: 300ms;
-    transition-timing-function: ease;
-  }
-
-  [data-header-shape="floating"][data-header-hidden] {
-    translate: -50% calc(-100% - 1.5rem) !important;
-  }
-
-  [data-header-shape="floating"][data-scrolled] {
-    background: color-mix(in oklch, var(--color-background) 92%, transparent);
-    backdrop-filter: blur(24px);
-    border-color: var(--color-border);
-    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.14), 0 2px 8px -2px rgba(0, 0, 0, 0.08);
-  }
-
-  [data-header-shape="floating"] .hdr-inner {
-    max-width: 72rem;
-    margin-left: auto;
-    margin-right: auto;
-    transition: box-shadow 300ms;
-  }
-
-  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-invert-text {
-    color: var(--color-on-invert);
-    transition: color 300ms;
-  }
-  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-text {
-    color: var(--color-foreground);
-  }
-
-  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-logo-text {
-    color: var(--color-on-invert);
-    transition: color 300ms;
-  }
-  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-text {
-    color: var(--color-brand-600);
-  }
-
-  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-logo-text {
-    color: var(--color-brand-600);
-  }
-  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text {
-    color: var(--color-foreground-muted);
-    transition: color 300ms;
-  }
-  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text:hover {
-    color: var(--color-foreground);
-  }
-
-  [data-header-shape="floating"] .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    right: 50%;
-    height: 2px;
-    background: currentColor;
-    border-radius: 1px;
-    transition: left 200ms, right 200ms;
-  }
-
-  [data-header-shape="floating"] .nav-link:hover::after,
-  [data-header-shape="floating"] .nav-link.hdr-nav-active::after {
-    left: 12px;
-    right: 12px;
-  }
-
-  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-invert-cta {
-    background: white;
-    color: #111;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    transition: background 300ms, color 300ms, border-color 300ms;
-  }
-  [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-invert-cta:hover {
-    background: rgba(255, 255, 255, 0.9);
-  }
-  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-cta {
-    background: var(--color-primary);
-    color: var(--color-primary-foreground);
-  }
-  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-invert-cta:hover {
-    opacity: 0.9;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-header-shape="floating"],
-    [data-header-shape="floating"] .hdr-inner,
-    [data-header-shape="floating"] .hdr-invert-text,
-    [data-header-shape="floating"] .hdr-logo-text,
-    [data-header-shape="floating"] .hdr-invert-cta,
-    [data-header-shape="floating"] .nav-link::after {
-      transition: none !important;
-    }
-    [data-header-shape="floating"][data-header-hidden] {
-      translate: -50% calc(-100% - 1.5rem) !important;
-    }
-  }
-
-  .dark [data-header-shape="floating"] {
-    background: color-mix(in oklch, var(--color-background) 65%, transparent);
-    border-color: color-mix(in oklch, var(--color-brand-400) 35%, transparent);
-    box-shadow: none;
-  }
-  .dark [data-header-shape="floating"][data-scrolled] {
-    background: color-mix(in oklch, var(--color-background) 88%, transparent);
-    border-color: rgba(255, 255, 255, 0.14);
-    box-shadow: 0 4px 32px rgba(255, 255, 255, 0.07), 0 12px 40px -8px rgba(0, 0, 0, 0.6), 0 2px 8px -2px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Light-mode floating header at rest: dark-glass capsule, mirroring the
-     dark-mode look so it reads cleanly over the home hero's black→brand
-     gradient. A neutral 18% white hairline sits below the badge and pill
-     borders so the header reads as the quiet frame those chips live in. */
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) {
-    background: color-mix(in oklch, var(--surface-invert) 70%, transparent);
-    border-color: color-mix(in oklch, var(--color-on-invert) 18%, transparent);
-    box-shadow: none;
-  }
-  html:not(.dark) [data-header-shape="floating"][data-scrolled] {
-    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.14), 0 2px 8px -2px rgba(0, 0, 0, 0.08);
-  }
-
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-logo-text {
-    color: oklch(91% 0.008 250);
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-invert-text {
-    color: oklch(68% 0.01 250);
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-invert-text:hover {
-    color: oklch(91% 0.008 250);
-  }
-
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .ttg-wrapper > .ttg-trigger,
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .theme-dropdown-wrapper > button,
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .search-wrapper > .search-trigger {
-    border-color: oklch(58% 0.008 250 / 0.6);
-    color: oklch(68% 0.01 250);
-    box-shadow: none;
-  }
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .ttg-wrapper > .ttg-trigger:hover,
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .theme-dropdown-wrapper > button:hover,
-  html:not(.dark) [data-header-shape="floating"]:not([data-scrolled]) .search-wrapper > .search-trigger:hover {
-    border-color: oklch(58% 0.008 250 / 0.85);
-    background-color: rgb(255 255 255 / 0.06);
-    color: oklch(91% 0.008 250);
-  }
-
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-hamburger,
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-hamburger svg {
-    color: oklch(68% 0.01 250);
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-hamburger:hover,
-  html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="default"]:not([data-scrolled]) .hdr-hamburger:hover svg {
-    background-color: rgb(255 255 255 / 0.06);
-    color: oklch(91% 0.008 250);
-  }
-
-  .dark [data-header-shape="floating"] .theme-dropdown-wrapper button,
-  .dark [data-header-shape="floating"] .ttg-wrapper .ttg-trigger,
-  .dark [data-header-shape="floating"] .search-wrapper .search-trigger {
-    border-color: var(--color-foreground-subtle);
-  }
-
-  [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-text {
-    color: var(--color-brand-600);
-  }
-  .dark [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-text {
-    color: var(--color-foreground);
-  }
-  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-logo-text {
-    color: var(--color-brand-600);
-  }
-  .dark [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-logo-text {
-    color: var(--color-foreground);
-  }
-
-  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text {
-    color: var(--color-foreground-muted);
-    transition: color 300ms;
-  }
-  .dark [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text {
-    color: var(--color-foreground-muted);
-  }
-  [data-header-shape="floating"][data-header-color-scheme="default"] .hdr-invert-text:hover {
-    color: var(--color-foreground);
-  }
-
-  @media (max-width: 1023px) {
-    html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="invert"] .hdr-logo-text {
-      color: var(--color-brand-500);
-    }
-    html:not(.dark) [data-header-shape="floating"][data-header-color-scheme="invert"][data-scrolled] .hdr-logo-text {
-      color: var(--color-brand-500);
-    }
-  }
-
-  /* ===== Returned state: color flip only when header comes back after being hidden ===== */
-
-  /* Dark mode: flip to white capsule */
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 0, 0, 0.06);
-    box-shadow: 0 4px 32px rgba(255, 255, 255, 0.12), 0 8px 24px -4px rgba(0, 0, 0, 0.25);
-  }
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .hdr-invert-text {
-    color: oklch(20% 0.005 250);
-    transition: color 300ms;
-  }
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .hdr-invert-text:hover {
-    color: oklch(8% 0 0);
-  }
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .hdr-logo-text {
-    color: var(--color-brand-700);
-  }
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .theme-dropdown-wrapper button,
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .ttg-wrapper .ttg-trigger,
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .search-wrapper .search-trigger {
-    border-color: rgba(0, 0, 0, 0.15);
-  }
-
-  /* Light mode: flip to dark capsule */
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] {
-    background: oklch(12% 0.005 250 / 0.93);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.45), 0 2px 8px -2px rgba(0, 0, 0, 0.25);
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .hdr-invert-text {
-    color: rgba(255, 255, 255, 0.82);
-    transition: color 300ms;
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .hdr-invert-text:hover {
-    color: rgba(255, 255, 255, 1);
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .hdr-logo-text {
-    color: var(--color-brand-500);
-  }
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .theme-dropdown-wrapper button,
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .ttg-wrapper .ttg-trigger,
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .search-wrapper .search-trigger {
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  /* ===== Returned state: fix button hover backgrounds ===== */
-  /* Dark mode: white header needs light hover, not dark-mode secondary */
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] button.hdr-invert-text:hover,
-  .dark [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .theme-dropdown-wrapper > button:hover {
-    background-color: rgba(0, 0, 0, 0.08);
-    color: oklch(8% 0 0);
-  }
-
-  /* Light mode: dark header needs dark hover, not light-mode secondary */
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] button.hdr-invert-text:hover,
-  html:not(.dark) [data-header-shape="floating"][data-header-returned][data-header-invert-on-return="true"] .theme-dropdown-wrapper > button:hover {
-    background-color: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 1);
-  }
 
   /* ============================================================
      Mobile dropdown menu — sectioned layout with icons + socials
@@ -1584,7 +1247,7 @@ header[data-scrolled]:not([data-header-hidden]) > .hdr-progressive-blur::after {
   }
 
   /* Keep colour adaptation separate from the animated solid surface. */
-  header[data-menu-open] {
+  header:is([data-menu-expanded], [data-search-expanded]) {
     border-bottom-color: var(--color-border) !important;
   }
 

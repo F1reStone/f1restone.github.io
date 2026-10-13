@@ -57,11 +57,8 @@ const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcr
   <Header
     slot="header"
     position="fixed"
-    shape="bar"
     showCta={false}
     cta={{ label: '探索我的项目', href: '/projects', icon: 'layers', trailingIcon: 'download' }}
-    autoHide={false}
-    invertOnReturn={false}
   />
 
   <slot />

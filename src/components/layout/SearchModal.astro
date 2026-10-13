@@ -8,7 +8,7 @@
  * - In `astro dev` the index does not exist; the modal explains how to
  *   build it instead of failing silently.
  * - The dialog node is portalled to <body> on init so the fixed overlay
- *   escapes the header's transform (auto-hide) and backdrop-filter.
+ *   escapes the header's backdrop-filter.
  * - Keyboard: Cmd/Ctrl+K opens, Escape closes, ↑/↓ move through results.
  * - The panel expands from the Header's lower edge while the page remains
  *   visible through a blurred backdrop on desktop and mobile.
@@ -145,7 +145,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
 </style>
 
 <script>
-  import { animateHeaderSurface, headerMotionTiming } from '@/lib/headerMotion';
+  import { headerMotionTiming } from '@/lib/headerMotion';
   interface PagefindResultData {
     url: string;
     excerpt: string;
@@ -242,7 +242,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       );
 
       const setHeaderExpanded = (expanded: boolean) => {
-        animateHeaderSurface(header, 'data-search-expanded', expanded);
+        header.toggleAttribute('data-search-expanded', expanded);
       };
 
       const restorePage = () => {
@@ -264,9 +264,8 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         shell.style.setProperty('--search-top', `${top}px`);
         shell.style.top = `${top}px`;
         shell.style.maxHeight = `${availableHeight}px`;
-        const floating = header.dataset.headerShape === 'floating';
-        shell.style.left = floating ? `${headerBox.left}px` : '0';
-        shell.style.right = floating ? `${window.innerWidth - headerBox.right}px` : '0';
+        shell.style.left = '0';
+        shell.style.right = '0';
         results.style.maxHeight = `${Math.max(0, Math.min(viewportHeight * 0.6, availableHeight - row.offsetHeight - 1))}px`;
         heightAnimation?.cancel();
       };
@@ -339,7 +338,6 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         }
         isOpen = true;
         header.setAttribute('data-search-active', '');
-        header.removeAttribute('data-header-hidden');
         setHeaderExpanded(true);
         header.dispatchEvent(new Event('header:search-open'));
         modal.classList.remove('hidden');

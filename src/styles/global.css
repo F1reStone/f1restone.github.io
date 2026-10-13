@@ -9,6 +9,12 @@
 @import './tokens/typography.css';
 @import './tokens/spacing.css';
 
+@property --header-top-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+
 /* =============================================================================
    Base Interactive Element Styles
    =============================================================================
@@ -480,28 +486,30 @@ input[type='reset'] {
     background: linear-gradient(to bottom, var(--gradient-start) 0%, var(--gradient-end) 100%);
   }
 
-  /* =========================================================================
-     FireStone: Immersive Header Variable Override
-     当 Header 设定为 fixed 且未发生滚动或移动端菜单处于非展开状态时，将内部颜色变量映射为亮色 (针对深色背景)。
-     一旦向下滚动，或菜单打开[data-scrolled] 出现，此规则失效，Header 将恢复到正常浅色/深色主题状态。
-     ========================================================================= */
-  header[data-header-shape='bar'][data-header-position='fixed']:not([data-scrolled]):not(
-      :has(.hdr-hamburger[aria-expanded='true'])
-    ) {
-    /* 强制主导航栏元素为白色 */
-    --color-foreground: #ffffff;
-    --color-foreground-secondary: rgba(255, 255, 255, 0.85);
-    --color-foreground-muted: rgba(255, 255, 255, 0.7);
-    --color-border-strong: rgba(255, 255, 255, 0.2);
-    --color-border: rgba(255, 255, 255, 0.1);
-    --color-secondary: rgba(255, 255, 255, 0.1);
+  /* The top color is scoped to fixed headers and fades with the page state. */
+  header[data-header-color-scheme='auto'][data-header-position='fixed'] {
+    transition: --header-top-color 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-    /* 导航栏悬停/激活映射 */
-    --nav-link-color: rgba(255, 255, 255, 0.75);
-    --nav-link-hover-color: #ffffff;
+  header[data-header-color-scheme='auto'][data-header-position='fixed']:not([data-scrolled]):not([data-menu-expanded]):not([data-search-expanded]) {
+    --color-foreground: var(--header-top-color);
+    --color-foreground-secondary: color-mix(in srgb, var(--header-top-color) 85%, transparent);
+    --color-foreground-muted: color-mix(in srgb, var(--header-top-color) 70%, transparent);
+    --color-foreground-subtle: color-mix(in srgb, var(--header-top-color) 50%, transparent);
+    --color-border-strong: color-mix(in srgb, var(--header-top-color) 22%, transparent);
+    --color-border: color-mix(in srgb, var(--header-top-color) 12%, transparent);
+    --color-secondary: color-mix(in srgb, var(--header-top-color) 12%, transparent);
+    --nav-link-color: color-mix(in srgb, var(--header-top-color) 75%, transparent);
+    --nav-link-hover-color: var(--header-top-color);
     --nav-link-hover-bg: transparent;
-    --nav-link-active-color: #ffffff;
+    --nav-link-active-color: var(--header-top-color);
     --nav-link-active-bg: transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    header[data-header-color-scheme='auto'][data-header-position='fixed'] {
+      transition: none;
+    }
   }
 
   /* -------------------------------------------------------------------------
