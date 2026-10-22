@@ -9,7 +9,7 @@ valuable: inspect them, work with them, and do not reset or discard them.
 - FireStone Website is a Chinese portfolio, project showcase, and technical blog.
 - It is a customized [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket) fork. The site is statically built and
   deployed to Cloudflare; the canonical site URL is `https://fire-stone.co/`.
-- Stack: Astro 7.3, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
+- Stack: Astro 7.4, Tailwind CSS 4, TypeScript 6, React 19 islands, MDX,
   Pagefind, and pnpm. Node must satisfy `>=22.12.0`.
 - The default locale is `zh-CN`. `src/config/i18n.config.ts` controls whether
   locale-aware routes are enabled. Preserve the configured switch during
