@@ -42,17 +42,17 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "14.3.4",
-    "@astrojs/mdx": "8.0.3",
-    "@astrojs/netlify": "8.2.9",
-    "@astrojs/react": "7.0.1",
+    "@astrojs/cloudflare": "14.4.2",
+    "@astrojs/mdx": "8.1.1",
+    "@astrojs/netlify": "8.2.10",
+    "@astrojs/react": "7.1.1",
     "@astrojs/sitemap": "^3.7.4",
-    "@astrojs/vercel": "11.0.14",
+    "@astrojs/vercel": "11.0.16",
     "@expressive-code/plugin-frames": "^0.44.2",
     "@iconify-json/lucide": "^1.2.130",
     "@iconify-json/simple-icons": "^1.2.95",
     "@iconify/react": "^6.0.2",
-    "astro": "7.3.8",
+    "astro": "7.4.2",
     "astro-expressive-code": "^0.44.2",
     "astro-icon": "^1.2.0",
     "class-variance-authority": "^0.7.1",
@@ -70,7 +70,7 @@
     "wrangler": "^4.129.1"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.10",
+    "@astrojs/check": "0.9.12",
     "@eslint/js": "^10.0.1",
     "@pagefind/default-ui": "^1.5.2",
     "@playwright/test": "^1.63.0",
