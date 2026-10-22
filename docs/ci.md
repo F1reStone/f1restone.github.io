@@ -26,7 +26,7 @@ Build 在两套浏览器测试全部成功后上传 `production-site-<commit SHA
 ## 版本与维护
 
 - `package.json` 的 `packageManager` 是 pnpm 版本的唯一声明，目前为 `pnpm@11.25.0`；已移除工作流中的 pnpm 9。
-- `.nvmrc` 指定 Node 24 LTS，setup-node 读取它；`engines.node` 仍表示最低兼容要求。
+- `.nvmrc` 指定 Node 26，setup-node 读取它；`engines.node` 仍表示最低兼容要求。
 - pnpm 11 使用官方后继 Action `pnpm/setup`，并缓存锁文件对应的依赖仓库。安装显式使用 `--frozen-lockfile`。
 - Action 固定完整提交 SHA，并注明版本。2026-09-08 核对：checkout 7.0.1、setup-node 7.0.0、pnpm/setup 2.1.0、upload-artifact 7.0.1。
 - 拆分部署时新增 download-artifact 8.0.1，并固定其 release 对应 SHA。
