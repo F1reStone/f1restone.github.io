@@ -151,7 +151,7 @@ when renaming a file; public slug URLs themselves are not replaced by UIDs.
 ### Prerequisites
 
 - **Node.js 22.12.0+** (required for Astro 7)
-- **pnpm 12.11.2** (pinned in `packageManager`)
+- **pnpm 12.15.0** (pinned in `packageManager`)
 
 ### Installation
 
