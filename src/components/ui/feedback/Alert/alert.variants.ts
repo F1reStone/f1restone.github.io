@@ -1,21 +1,18 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
-export const alertVariants = cva(
-  'relative flex gap-4 p-4 rounded-2xl border overflow-hidden',
-  {
-    variants: {
-      variant: {
-        info: 'bg-background border-border',
-        success: 'bg-background border-[var(--success)]/30',
-        warning: 'bg-background border-[var(--warning)]/30',
-        error: 'bg-background border-[var(--error)]/30',
-      },
+export const alertVariants = cva('relative flex gap-4 p-4 rounded-2xl border overflow-hidden', {
+  variants: {
+    variant: {
+      info: 'bg-background border-border',
+      success: 'bg-background border-[var(--success)]/30',
+      warning: 'bg-background border-[var(--warning)]/30',
+      error: 'bg-background border-[var(--error)]/30',
     },
-    defaultVariants: {
-      variant: 'info',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'info',
+  },
+});
 
 export const alertIconColors = {
   info: 'text-foreground-muted',

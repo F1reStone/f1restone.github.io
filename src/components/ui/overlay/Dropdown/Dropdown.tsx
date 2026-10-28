@@ -1,10 +1,4 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from 'react';
+import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 import { Icon } from '@/components/ui/primitives/Icon/Icon';
 
@@ -69,24 +63,27 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
     setFocusedIndex(-1);
   }, []);
 
-  const focusItem = useCallback((index: number) => {
-    // Cycle through actionable indices
-    const pos = actionableIndices.indexOf(index);
-    let targetIndex: number;
+  const focusItem = useCallback(
+    (index: number) => {
+      // Cycle through actionable indices
+      const pos = actionableIndices.indexOf(index);
+      let targetIndex: number;
 
-    if (pos !== -1) {
-      targetIndex = index;
-    } else if (index < 0 || index < actionableIndices[0]) {
-      targetIndex = actionableIndices[actionableIndices.length - 1];
-    } else {
-      targetIndex = actionableIndices[0];
-    }
+      if (pos !== -1) {
+        targetIndex = index;
+      } else if (index < 0 || index < actionableIndices[0]) {
+        targetIndex = actionableIndices[actionableIndices.length - 1];
+      } else {
+        targetIndex = actionableIndices[0];
+      }
 
-    setFocusedIndex(targetIndex);
-    requestAnimationFrame(() => {
-      itemRefs.current[targetIndex]?.focus();
-    });
-  }, [actionableIndices]);
+      setFocusedIndex(targetIndex);
+      requestAnimationFrame(() => {
+        itemRefs.current[targetIndex]?.focus();
+      });
+    },
+    [actionableIndices]
+  );
 
   const focusNext = useCallback(() => {
     const currentPos = actionableIndices.indexOf(focusedIndex);
@@ -163,9 +160,9 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
         close();
         // Return focus to trigger
         requestAnimationFrame(() => {
-          const triggerEl = triggerRef.current?.querySelector<HTMLElement>(
-            'button, [tabindex], a'
-          ) || triggerRef.current;
+          const triggerEl =
+            triggerRef.current?.querySelector<HTMLElement>('button, [tabindex], a') ||
+            triggerRef.current;
           triggerEl?.focus();
         });
         break;
@@ -196,11 +193,7 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
 
   return (
     <div ref={containerRef} className={cn('relative inline-block', className)}>
-      <div
-        ref={triggerRef}
-        onClick={handleTriggerClick}
-        onKeyDown={handleTriggerKeyDown}
-      >
+      <div ref={triggerRef} onClick={handleTriggerClick} onKeyDown={handleTriggerKeyDown}>
         {trigger}
       </div>
 
@@ -208,11 +201,9 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
         ref={menuRef}
         className={cn(
           'absolute z-[100] mt-2 min-w-[180px] p-1.5',
-          'rounded-xl bg-background border border-border shadow-xl',
+          'bg-background border-border rounded-xl border shadow-xl',
           'transition-all duration-150 ease-out',
-          isOpen
-            ? 'opacity-100 visible translate-y-0'
-            : 'opacity-0 invisible translate-y-1',
+          isOpen ? 'visible translate-y-0 opacity-100' : 'invisible translate-y-1 opacity-0',
           align === 'end' ? 'right-0' : 'left-0'
         )}
         role="menu"
@@ -221,18 +212,20 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
       >
         {items.map((item, index) =>
           item.separator ? (
-            <div key={index} className="my-1.5 h-px bg-border" role="separator" />
+            <div key={index} className="bg-border my-1.5 h-px" role="separator" />
           ) : item.href ? (
             <a
               key={index}
-              ref={(el) => { itemRefs.current[index] = el; }}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
               href={item.href}
               className={cn(
-                'flex items-center gap-2.5 px-3 py-2 text-sm rounded-md',
+                'flex items-center gap-2.5 rounded-md px-3 py-2 text-sm',
                 'transition-colors outline-none',
-                'focus-visible:ring-2 focus-visible:ring-ring',
+                'focus-visible:ring-ring focus-visible:ring-2',
                 item.disabled
-                  ? 'opacity-50 cursor-not-allowed pointer-events-none text-foreground-muted'
+                  ? 'text-foreground-muted pointer-events-none cursor-not-allowed opacity-50'
                   : 'hover:bg-secondary focus:bg-secondary text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
               )}
               role="menuitem"
@@ -247,20 +240,28 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
               }}
               onKeyDown={(e) => handleItemKeyDown(e, item)}
             >
-              {item.icon && <Icon name={iconNameMap[item.icon] ?? item.icon} size="sm" className={item.disabled ? 'text-foreground-subtle' : 'text-foreground-muted'} />}
+              {item.icon && (
+                <Icon
+                  name={iconNameMap[item.icon] ?? item.icon}
+                  size="sm"
+                  className={item.disabled ? 'text-foreground-subtle' : 'text-foreground-muted'}
+                />
+              )}
               <span>{item.label}</span>
             </a>
           ) : (
             <button
               key={index}
-              ref={(el) => { itemRefs.current[index] = el; }}
+              ref={(el) => {
+                itemRefs.current[index] = el;
+              }}
               type="button"
               className={cn(
-                'flex w-full items-center gap-2.5 px-3 py-2 text-sm rounded-md',
+                'flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm',
                 'transition-colors outline-none',
-                'focus-visible:ring-2 focus-visible:ring-ring',
+                'focus-visible:ring-ring focus-visible:ring-2',
                 item.disabled
-                  ? 'opacity-50 cursor-not-allowed pointer-events-none text-foreground-muted'
+                  ? 'text-foreground-muted pointer-events-none cursor-not-allowed opacity-50'
                   : 'hover:bg-secondary focus:bg-secondary text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
               )}
               role="menuitem"
@@ -269,7 +270,13 @@ export function Dropdown({ items, align = 'start', trigger, className }: Dropdow
               onClick={() => handleItemActivate(item)}
               onKeyDown={(e) => handleItemKeyDown(e, item)}
             >
-              {item.icon && <Icon name={iconNameMap[item.icon] ?? item.icon} size="sm" className={item.disabled ? 'text-foreground-subtle' : 'text-foreground-muted'} />}
+              {item.icon && (
+                <Icon
+                  name={iconNameMap[item.icon] ?? item.icon}
+                  size="sm"
+                  className={item.disabled ? 'text-foreground-subtle' : 'text-foreground-muted'}
+                />
+              )}
               <span>{item.label}</span>
             </button>
           )

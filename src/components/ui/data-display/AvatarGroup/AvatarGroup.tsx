@@ -24,7 +24,14 @@ const overflowSizes: Record<string, string> = {
   xl: 'w-14 h-14 text-base',
 };
 
-export function AvatarGroup({ ref, avatars, max = 4, size = 'md', className, ...rest }: AvatarGroupProps) {
+export function AvatarGroup({
+  ref,
+  avatars,
+  max = 4,
+  size = 'md',
+  className,
+  ...rest
+}: AvatarGroupProps) {
   const visibleAvatars = avatars.slice(0, max);
   const overflowCount = Math.max(0, avatars.length - max);
 
@@ -37,16 +44,16 @@ export function AvatarGroup({ ref, avatars, max = 4, size = 'md', className, ...
           alt={avatar.alt || ''}
           fallback={avatar.fallback}
           size={size}
-          className="ring-2 ring-background"
+          className="ring-background ring-2"
         />
       ))}
       {overflowCount > 0 && (
         <div
           className={cn(
             'relative inline-flex items-center justify-center',
-            'rounded-full overflow-hidden',
+            'overflow-hidden rounded-full',
             'bg-secondary text-foreground-muted font-semibold',
-            'ring-2 ring-background',
+            'ring-background ring-2',
             overflowSizes[size]
           )}
           aria-label={`${overflowCount} more`}

@@ -44,7 +44,6 @@ const thumbSizes = {
   md: 'h-5 w-5',
   lg: 'h-6 w-6',
 };
-
 ---
 
 <div class={cn('flex items-start gap-3', className)}>
@@ -92,12 +91,20 @@ const thumbSizes = {
   {(label || description) && (
     <div class="grid gap-0.5">
       {label && (
-        <label for={switchId} class={cn('text-sm font-medium text-foreground cursor-pointer', disabled && 'cursor-not-allowed')}>
+        <label
+          for={switchId}
+          class={cn(
+            'text-sm font-medium text-foreground cursor-pointer',
+            disabled && 'cursor-not-allowed'
+          )}
+        >
           {label}
         </label>
       )}
       {description && (
-        <p id={`${switchId}-description`} class="text-xs text-foreground-subtle leading-normal">{description}</p>
+        <p id={`${switchId}-description`} class="text-xs text-foreground-subtle leading-normal">
+          {description}
+        </p>
       )}
     </div>
   )}
@@ -105,14 +112,14 @@ const thumbSizes = {
 
 <style>
   /* Use :has() for checked state since peer-checked can't reach nested thumb */
-  label:has(input:checked) [data-thumb][data-size="sm"] {
-    --tw-translate-x: 1rem;    /* translate-x-4 */
+  label:has(input:checked) [data-thumb][data-size='sm'] {
+    --tw-translate-x: 1rem; /* translate-x-4 */
   }
-  label:has(input:checked) [data-thumb][data-size="md"] {
+  label:has(input:checked) [data-thumb][data-size='md'] {
     --tw-translate-x: 1.25rem; /* translate-x-5 */
   }
-  label:has(input:checked) [data-thumb][data-size="lg"] {
-    --tw-translate-x: 1.5rem;  /* translate-x-6 */
+  label:has(input:checked) [data-thumb][data-size='lg'] {
+    --tw-translate-x: 1.5rem; /* translate-x-6 */
   }
   label:has(input:checked) > div {
     background-color: var(--foreground);

@@ -1,25 +1,26 @@
 ---
-title: "SparkForge 燧光"
-description: "由 FireStone 维护的现代虚幻引擎分支，致力于通过高性能的 RTXGI / 屏幕空间反射 / 反射捕获 / 传统 AO 等技术来替换开销极大的 Lumen 光照解决方案。"
-repo: "https://github.com/F1reStone/UnrealEngine-SparkForge/"
-tags: ["虚幻引擎", "C++", "C#", "HLSL", "Angelscript"]
+title: 'SparkForge 燧光'
+description: '由 FireStone 维护的现代虚幻引擎分支，致力于通过高性能的 RTXGI / 屏幕空间反射 / 反射捕获 / 传统 AO 等技术来替换开销极大的 Lumen 光照解决方案。'
+repo: 'https://github.com/F1reStone/UnrealEngine-SparkForge/'
+tags: ['虚幻引擎', 'C++', 'C#', 'HLSL', 'Angelscript']
 featured: true
 order: 0
 year: 2026
-role: "设计与开发"
-services: ["虚幻引擎", "游戏引擎开发", "图形渲染"]
-meta: ["性能优先", "RTXGI 支持", "最新 MSVC 支持", ".NET 10 支持", "Angelscript 支持"]
-image: "../../assets/projects/sparkforge/sparkforge-concept-1.png"
-imageAlt: "SparkForge 燧光 - 5.3 Base 主视觉图。"
+role: '设计与开发'
+services: ['虚幻引擎', '游戏引擎开发', '图形渲染']
+meta: ['性能优先', 'RTXGI 支持', '最新 MSVC 支持', '.NET 10 支持', 'Angelscript 支持']
+image: '../../assets/projects/sparkforge/sparkforge-concept-1.png'
+imageAlt: 'SparkForge 燧光 - 5.3 Base 主视觉图。'
 gallery:
-  - src: "../../assets/projects/sparkforge/sparkforge-concept-1.png"
-    alt: "SparkForge 燧光 - 5.3 Base 主视觉图。"
+  - src: '../../assets/projects/sparkforge/sparkforge-concept-1.png'
+    alt: 'SparkForge 燧光 - 5.3 Base 主视觉图。'
 soloPage: true
-logo: "../../assets/projects/sparkforge/logo/sparkforge-logo.svg"
-
+logo: '../../assets/projects/sparkforge/logo/sparkforge-logo.svg'
 ---
 
-<h1 class="text-4xl font-bold text-foreground">次世代游戏的<p class="text-brand-500">坚实基础</p></h1>
+<h1 class="text-foreground text-4xl font-bold">
+  次世代游戏的<p class="text-brand-500">坚实基础</p>
+</h1>
 
 **SparkForge 燧光**是 [**FireStone 火石**](https://fire-stone.co/) 基于[**虚幻引擎**](https://www.unrealengine.com/)定制的技术分支，致力于在保留虚幻核心架构的同时，对其在实际开发中的性能问题进行深入的系统性优化，在虚幻中以开销更低的技术栈替代 Epic 技术解决方案。
 
@@ -35,33 +36,40 @@ logo: "../../assets/projects/sparkforge/logo/sparkforge-logo.svg"
 
 ## 核心功能
 
-- 基于 **RTXGI / RTXDI / SSR / 传统 AO** 的光照 
+- 基于 **RTXGI / RTXDI / SSR / 传统 AO** 的光照
 - 支持 **NVIDIA DLSS 4**[^*1]、**AMD FSR 4 “Redstone”**[^*2]、**Intel X<sup>e</sup>SS 3**[^*3]
 - **Angelscript** 支持[^*4]
 - 更高的性能可控性与调优空间
-- 针对旧版虚幻的 **Visual Studio 2026**[^*5]、JetBrains Rider[^*6] 编译适配  
-- **最新 Windows SDK** 适配[^*7] 
+- 针对旧版虚幻的 **Visual Studio 2026**[^*5]、JetBrains Rider[^*6] 编译适配
+- **最新 Windows SDK** 适配[^*7]
 - **最新 Microsoft Visual C++** 适配[^*8]
 
 ## 应用场景
 
 该分支适用于：
+
 - 使用 RTXGI 技术进行开发的项目迁移
 - 希望摆脱 Lumen 光照限制的团队
 - 需要在虚幻中实现传统技术栈/工作流的场景
 
 ---
 
-[^*1]: *¹：包括超分辨率、帧生成、光线重构。仅限 SparkForge-5.8Base、SparkForge-5.3Base。SparkForge-5.0Base 支持 NVIDIA DLSS 3.7 超分辨率和帧生成。*
-[^*2]: *²：仅限 SparkForge-5.3Base，SparkForge-5.8Base 支持规划中。SparkForge-5.0Base 的 AMD FSR 2 支持规划中。*
-[^*3]: *³：仅限 SparkForge-5.8Base、SparkForge-5.3Base。SparkForge-5.0Base 适配规划中。*
-[^*4]: *⁴：仅限 SparkForge-5.8Base，SparkForge-5.3Base 支持规划中。*
-[^*5]: *⁵：仅限 SparkForge-5.8Base。SparkForge-5.3Base 对 Visual Studio 2026 的支持仍在测试中，可能存在一些未知问题。*
-[^*6]: *⁶：对 JetBrains Rider 的支持仍在测试中，可能存在一些未知问题。*
-[^*7]: *⁷：指目前最新版本 Windows SDK 10.0.26100。*
-[^*8]: *⁸：指目前最新版本 Microsoft Visual C++ 14.51。*
+[^*1]: _¹：包括超分辨率、帧生成、光线重构。仅限 SparkForge-5.8Base、SparkForge-5.3Base。SparkForge-5.0Base 支持 NVIDIA DLSS 3.7 超分辨率和帧生成。_
 
-*本项目为实验性分支。不保证与官方虚幻引擎完全兼容。需要一定的引擎源码开发/编译经验。*
+[^*2]: _²：仅限 SparkForge-5.3Base，SparkForge-5.8Base 支持规划中。SparkForge-5.0Base 的 AMD FSR 2 支持规划中。_
 
-*本文中的部分内容使用了生成式 AI 制作/翻译。*
+[^*3]: _³：仅限 SparkForge-5.8Base、SparkForge-5.3Base。SparkForge-5.0Base 适配规划中。_
 
+[^*4]: _⁴：仅限 SparkForge-5.8Base，SparkForge-5.3Base 支持规划中。_
+
+[^*5]: _⁵：仅限 SparkForge-5.8Base。SparkForge-5.3Base 对 Visual Studio 2026 的支持仍在测试中，可能存在一些未知问题。_
+
+[^*6]: _⁶：对 JetBrains Rider 的支持仍在测试中，可能存在一些未知问题。_
+
+[^*7]: _⁷：指目前最新版本 Windows SDK 10.0.26100。_
+
+[^*8]: _⁸：指目前最新版本 Microsoft Visual C++ 14.51。_
+
+_本项目为实验性分支。不保证与官方虚幻引擎完全兼容。需要一定的引擎源码开发/编译经验。_
+
+_本文中的部分内容使用了生成式 AI 制作/翻译。_

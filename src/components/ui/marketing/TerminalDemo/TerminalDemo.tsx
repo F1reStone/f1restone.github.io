@@ -25,9 +25,13 @@ interface ScriptLine {
 // Astro Rocket setup flow: clone → install → dev
 const script: ScriptLine[] = [
   // Step 1: clone
-  { text: '$ git clone https://github.com/hansmartensdev/Astro-Rocket.git', delay: 1200, type: 'command' },
+  {
+    text: '$ git clone https://github.com/hansmartensdev/Astro-Rocket.git',
+    delay: 1200,
+    type: 'command',
+  },
   { text: '', delay: 200, type: 'command' },
-  { text: 'Cloning into \'Astro-Rocket\'...', delay: 300, type: 'prompt-hint' },
+  { text: "Cloning into 'Astro-Rocket'...", delay: 300, type: 'prompt-hint' },
   { text: '✔  Repository cloned', delay: 600, type: 'success' },
   { text: '', delay: 200, type: 'prompt-label' },
 
@@ -95,7 +99,7 @@ export function TerminalDemo() {
             timeoutIds.push(setTimeout(typeChar, 35));
           } else {
             setIsTyping(false);
-            setLines(prev => [...prev, { text: line.text, type: line.type }]);
+            setLines((prev) => [...prev, { text: line.text, type: line.type }]);
             setTypingText('');
             setCurrentIndex(index + 1);
             timeoutIds.push(setTimeout(() => processLine(index + 1), line.delay));
@@ -104,16 +108,18 @@ export function TerminalDemo() {
         typeChar();
       } else if (line.type === 'spinner') {
         // Show spinner briefly then replace with success
-        setLines(prev => [...prev, { text: line.text, type: line.type }]);
+        setLines((prev) => [...prev, { text: line.text, type: line.type }]);
         setCurrentIndex(index + 1);
-        timeoutIds.push(setTimeout(() => {
-          // Remove spinner line and add success
-          setLines(prev => prev.slice(0, -1));
-          processLine(index + 1);
-        }, line.delay));
+        timeoutIds.push(
+          setTimeout(() => {
+            // Remove spinner line and add success
+            setLines((prev) => prev.slice(0, -1));
+            processLine(index + 1);
+          }, line.delay)
+        );
       } else {
         // Instant display for other lines
-        setLines(prev => [...prev, { text: line.text, type: line.type }]);
+        setLines((prev) => [...prev, { text: line.text, type: line.type }]);
         setCurrentIndex(index + 1);
         timeoutIds.push(setTimeout(() => processLine(index + 1), line.delay));
       }
@@ -168,20 +174,17 @@ export function TerminalDemo() {
   };
 
   return (
-    <div className="w-full max-w-lg overflow-hidden rounded-md border border-border-invert bg-surface-invert shadow-xl mx-auto lg:mx-0">
+    <div className="border-border-invert bg-surface-invert mx-auto w-full max-w-lg overflow-hidden rounded-md border shadow-xl lg:mx-0">
       {/* Window Chrome */}
-      <div className="flex items-center gap-2 border-b border-border-invert bg-surface-invert-secondary px-4 py-3">
+      <div className="border-border-invert bg-surface-invert-secondary flex items-center gap-2 border-b px-4 py-3">
         <div className="h-3 w-3 rounded-full bg-[#FF5F56]" />
         <div className="h-3 w-3 rounded-full bg-[#FFBD2E]" />
         <div className="h-3 w-3 rounded-full bg-[#27C93F]" />
-        <span className="ml-2 text-xs font-mono text-on-invert-muted">terminal</span>
+        <span className="text-on-invert-muted ml-2 font-mono text-xs">terminal</span>
       </div>
 
       {/* Terminal Content */}
-      <div
-        ref={scrollRef}
-        className="h-[380px] overflow-y-auto p-4 font-mono text-xs leading-5"
-      >
+      <div ref={scrollRef} className="h-[380px] overflow-y-auto p-4 font-mono text-xs leading-5">
         {lines.map((line, idx) => (
           <div key={idx} className={getLineClass(line.type)}>
             {line.text}
@@ -190,7 +193,7 @@ export function TerminalDemo() {
         {isTyping && (
           <div className="text-on-invert">
             {typingText}
-            <span className="inline-block h-4 w-2 bg-on-invert animate-pulse align-middle ml-0.5" />
+            <span className="bg-on-invert ml-0.5 inline-block h-4 w-2 animate-pulse align-middle" />
           </div>
         )}
       </div>

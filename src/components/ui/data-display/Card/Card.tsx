@@ -45,11 +45,7 @@ export function Card({
   children,
   ...props
 }: CardProps) {
-  const cardStyles = cn(
-    cardVariants({ variant, padding, hover }),
-    shadows[shadow],
-    className
-  );
+  const cardStyles = cn(cardVariants({ variant, padding, hover }), shadows[shadow], className);
 
   // If using structured layout with icon/title/description
   if (structured || icon || title) {
@@ -57,24 +53,22 @@ export function Card({
       <div ref={ref} className={cardStyles} {...props}>
         <div className="flex items-start gap-4">
           {icon && (
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
+            <div className="from-brand-500/20 to-brand-500/5 text-brand-500 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br">
               {icon}
             </div>
           )}
           {(title || subtitle) && (
-            <div className="flex-1 min-w-0">
-              {title && (
-                <h3 className="text-base font-semibold text-foreground">{title}</h3>
-              )}
+            <div className="min-w-0 flex-1">
+              {title && <h3 className="text-foreground text-base font-semibold">{title}</h3>}
               {subtitle && (
-                <p className="text-xs text-foreground-subtle mt-0.5 font-medium">{subtitle}</p>
+                <p className="text-foreground-subtle mt-0.5 text-xs font-medium">{subtitle}</p>
               )}
             </div>
           )}
         </div>
         {description && (
           <div className="mt-4">
-            <p className="text-sm text-foreground-muted leading-relaxed">{description}</p>
+            <p className="text-foreground-muted text-sm leading-relaxed">{description}</p>
           </div>
         )}
         {children}
@@ -110,10 +104,7 @@ export function CardTitle({ ref, className, ...props }: CardTitleProps) {
   return (
     <h3
       ref={ref}
-      className={cn(
-        'text-base font-black leading-tight tracking-tight text-foreground',
-        className
-      )}
+      className={cn('text-foreground text-base leading-tight font-black tracking-tight', className)}
       {...props}
     />
   );
@@ -123,7 +114,7 @@ export function CardByline({ ref, className, ...props }: CardTextProps) {
   return (
     <p
       ref={ref}
-      className={cn('text-xs text-foreground-subtle mt-0.5 font-medium', className)}
+      className={cn('text-foreground-subtle mt-0.5 text-xs font-medium', className)}
       {...props}
     />
   );
@@ -133,7 +124,7 @@ export function CardDescription({ ref, className, ...props }: CardTextProps) {
   return (
     <p
       ref={ref}
-      className={cn('text-sm text-foreground-muted leading-relaxed mt-1.5', className)}
+      className={cn('text-foreground-muted mt-1.5 text-sm leading-relaxed', className)}
       {...props}
     />
   );
@@ -147,7 +138,7 @@ export function CardFooter({ ref, className, ...props }: CardSubComponentProps) 
   return (
     <div
       ref={ref}
-      className={cn('flex items-center mt-4 pt-4 border-t border-border', className)}
+      className={cn('border-border mt-4 flex items-center border-t pt-4', className)}
       {...props}
     />
   );

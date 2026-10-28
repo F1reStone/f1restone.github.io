@@ -10,15 +10,25 @@ interface AvatarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ref'> {
   size?: AvatarVariants['size'];
 }
 
-export function Avatar({ ref, src, alt = '', fallback, size = 'md', className, ...rest }: AvatarProps) {
+export function Avatar({
+  ref,
+  src,
+  alt = '',
+  fallback,
+  size = 'md',
+  className,
+  ...rest
+}: AvatarProps) {
   const [imgError, setImgError] = useState(false);
 
-  const initials = fallback || alt
-    .split(' ')
-    .map((word) => word[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  const initials =
+    fallback ||
+    alt
+      .split(' ')
+      .map((word) => word[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
 
   return (
     <div ref={ref} className={cn(avatarVariants({ size }), className)} {...rest}>
@@ -27,7 +37,7 @@ export function Avatar({ ref, src, alt = '', fallback, size = 'md', className, .
           <img
             src={src}
             alt={alt}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             loading="lazy"
             decoding="async"
             onError={() => setImgError(true)}

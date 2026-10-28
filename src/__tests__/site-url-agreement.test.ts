@@ -59,7 +59,9 @@ describe('reading a built page', () => {
 describe('comparing the two addresses', () => {
   it('passes when they name the same origin', () => {
     expect(
-      siteUrlDisagreement(page({ canonical: 'https://mine.test/blog/', jsonLd: 'https://mine.test' }))
+      siteUrlDisagreement(
+        page({ canonical: 'https://mine.test/blog/', jsonLd: 'https://mine.test' })
+      )
     ).toBeNull();
   });
 
@@ -94,7 +96,9 @@ describe('comparing the two addresses', () => {
   });
 
   it('says nothing when a value is not a URL', () => {
-    expect(siteUrlDisagreement(page({ canonical: '/relative/', jsonLd: 'https://mine.test' }))).toBeNull();
+    expect(
+      siteUrlDisagreement(page({ canonical: '/relative/', jsonLd: 'https://mine.test' }))
+    ).toBeNull();
   });
 });
 

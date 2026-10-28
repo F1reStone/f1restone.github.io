@@ -32,7 +32,10 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
 
 {svgContent && (
   <div
-    class:list={['svg-host overflow-hidden rounded-xl media-shadow ring-1 ring-black/5 dark:ring-white/10', className]}
+    class:list={[
+      'svg-host overflow-hidden rounded-xl media-shadow ring-1 ring-black/5 dark:ring-white/10',
+      className,
+    ]}
     role="img"
     aria-label={title}
     set:html={svgContent}
@@ -59,26 +62,70 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
      Brand-600 background with light icons and text on top, matching the
      blog covers so a project hero and a post cover read as one system.
   ── */
-  .svg-host :global(.bg)  { fill: var(--brand-600); }
-  .svg-host :global(.ico) { stroke: var(--brand-50); }
-  .svg-host :global(.txt) { fill: var(--brand-50); }
-  .svg-host :global(.ln)  { stroke: var(--brand-200); stroke-opacity: 0.5; }
-  .svg-host :global(.pil) { fill: var(--brand-300); fill-opacity: 0.35; stroke: var(--brand-100); stroke-opacity: 0.8; }
-  .svg-host :global(.ptx) { fill: var(--brand-50); }
-  .svg-host :global(.cor) { stroke: var(--brand-200); stroke-opacity: 0.7; }
-  .svg-host :global(.num) { fill: var(--brand-100); fill-opacity: 0.18; }
+  .svg-host :global(.bg) {
+    fill: var(--brand-600);
+  }
+  .svg-host :global(.ico) {
+    stroke: var(--brand-50);
+  }
+  .svg-host :global(.txt) {
+    fill: var(--brand-50);
+  }
+  .svg-host :global(.ln) {
+    stroke: var(--brand-200);
+    stroke-opacity: 0.5;
+  }
+  .svg-host :global(.pil) {
+    fill: var(--brand-300);
+    fill-opacity: 0.35;
+    stroke: var(--brand-100);
+    stroke-opacity: 0.8;
+  }
+  .svg-host :global(.ptx) {
+    fill: var(--brand-50);
+  }
+  .svg-host :global(.cor) {
+    stroke: var(--brand-200);
+    stroke-opacity: 0.7;
+  }
+  .svg-host :global(.num) {
+    fill: var(--brand-100);
+    fill-opacity: 0.18;
+  }
 
   /* ── Dark mode ──────────────────────────────────────────────────────────
      Same background, brand colours kept vivid rather than faded.
   ── */
-  :global(html.dark) .svg-host :global(.bg)  { fill: var(--brand-600); }
-  :global(html.dark) .svg-host :global(.ico) { stroke: var(--brand-200); }
-  :global(html.dark) .svg-host :global(.txt) { fill: var(--brand-50); }
-  :global(html.dark) .svg-host :global(.ln)  { stroke: var(--brand-300); stroke-opacity: 0.5; }
-  :global(html.dark) .svg-host :global(.pil) { fill: var(--brand-600); fill-opacity: 0.4; stroke: var(--brand-300); stroke-opacity: 0.7; }
-  :global(html.dark) .svg-host :global(.ptx) { fill: var(--brand-100); }
-  :global(html.dark) .svg-host :global(.cor) { stroke: var(--brand-300); stroke-opacity: 0.6; }
-  :global(html.dark) .svg-host :global(.num) { fill: var(--brand-50); fill-opacity: 0.18; }
+  :global(html.dark) .svg-host :global(.bg) {
+    fill: var(--brand-600);
+  }
+  :global(html.dark) .svg-host :global(.ico) {
+    stroke: var(--brand-200);
+  }
+  :global(html.dark) .svg-host :global(.txt) {
+    fill: var(--brand-50);
+  }
+  :global(html.dark) .svg-host :global(.ln) {
+    stroke: var(--brand-300);
+    stroke-opacity: 0.5;
+  }
+  :global(html.dark) .svg-host :global(.pil) {
+    fill: var(--brand-600);
+    fill-opacity: 0.4;
+    stroke: var(--brand-300);
+    stroke-opacity: 0.7;
+  }
+  :global(html.dark) .svg-host :global(.ptx) {
+    fill: var(--brand-100);
+  }
+  :global(html.dark) .svg-host :global(.cor) {
+    stroke: var(--brand-300);
+    stroke-opacity: 0.6;
+  }
+  :global(html.dark) .svg-host :global(.num) {
+    fill: var(--brand-50);
+    fill-opacity: 0.18;
+  }
 
   /* ── Drawn-interface art (`sh-` prefix) ──────────────────────────────────
      A second vocabulary, for SVGs that draw a piece of the product rather
@@ -106,10 +153,16 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
   .svg-host {
     container-type: inline-size;
   }
-  .svg-host :global(.sh-tall) { display: none; }
+  .svg-host :global(.sh-tall) {
+    display: none;
+  }
   @container (max-width: 519px) {
-    .svg-host :global(.sh-wide) { display: none; }
-    .svg-host :global(.sh-tall) { display: block; }
+    .svg-host :global(.sh-wide) {
+      display: none;
+    }
+    .svg-host :global(.sh-tall) {
+      display: block;
+    }
   }
 
   .svg-host :global(.sh-label),
@@ -119,13 +172,33 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
   .svg-host :global(.sh-note),
   .svg-host :global(.sh-kicker),
   .svg-host :global(.sh-word) {
-    font-family: 'Outfit Variable', Outfit, system-ui, -apple-system, sans-serif;
+    font-family:
+      'Outfit Variable',
+      Outfit,
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
-  .svg-host :global(.sh-label) { font-size: 30px; font-weight: 600; }
-  .svg-host :global(.sh-placeholder) { font-size: 32px; font-weight: 400; }
-  .svg-host :global(.sh-hint) { font-size: 24px; font-weight: 400; }
-  .svg-host :global(.sh-btnText) { font-size: 32px; font-weight: 700; }
-  .svg-host :global(.sh-note) { font-size: 24px; font-weight: 400; }
+  .svg-host :global(.sh-label) {
+    font-size: 30px;
+    font-weight: 600;
+  }
+  .svg-host :global(.sh-placeholder) {
+    font-size: 32px;
+    font-weight: 400;
+  }
+  .svg-host :global(.sh-hint) {
+    font-size: 24px;
+    font-weight: 400;
+  }
+  .svg-host :global(.sh-btnText) {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .svg-host :global(.sh-note) {
+    font-size: 24px;
+    font-weight: 400;
+  }
 
   /* Stroke widths are set against the scale each icon is drawn at, not left
      at Lucide's 2/24. */
@@ -135,8 +208,12 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .svg-host :global(.sh-fieldIcon) { stroke-width: 1.6; }
-  .svg-host :global(.sh-btnIcon) { stroke-width: 1.8; }
+  .svg-host :global(.sh-fieldIcon) {
+    stroke-width: 1.6;
+  }
+  .svg-host :global(.sh-btnIcon) {
+    stroke-width: 1.8;
+  }
 
   /*
      One treatment, both modes. These are the dark-mode values, and there is
@@ -148,26 +225,82 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
      Canvas at brand-900, card up at brand-800, field back down again, so the
      three surfaces keep their order of depth in either mode.
   */
-  .svg-host :global(.sh-bg) { fill: var(--brand-900); }
-  .svg-host :global(.sh-grid) { fill: none; stroke: var(--brand-500); stroke-opacity: 0.28; stroke-width: 1; }
-  .svg-host :global(.sh-cor) { fill: none; stroke: var(--brand-400); stroke-opacity: 0.6; stroke-width: 2; }
-  .svg-host :global(.sh-glow-in) { stop-color: var(--brand-400); stop-opacity: 0.35; }
-  .svg-host :global(.sh-glow-out) { stop-color: var(--brand-400); stop-opacity: 0; }
-  .svg-host :global(.sh-card) { fill: var(--brand-800); stroke: var(--brand-400); stroke-opacity: 0.45; stroke-width: 1.5; }
-  .svg-host :global(.sh-label) { fill: var(--brand-100); fill-opacity: 0.9; }
-  .svg-host :global(.sh-field) { fill: var(--brand-900); fill-opacity: 0.55; stroke: var(--brand-400); stroke-opacity: 0.75; stroke-width: 1.5; }
-  .svg-host :global(.sh-fieldRing) { fill: none; stroke: var(--brand-400); stroke-opacity: 0.45; stroke-width: 3; }
-  .svg-host :global(.sh-caret) { fill: var(--brand-200); }
-  .svg-host :global(.sh-fieldIcon) { stroke: var(--brand-300); }
-  .svg-host :global(.sh-placeholder) { fill: var(--brand-50); fill-opacity: 0.95; }
+  .svg-host :global(.sh-bg) {
+    fill: var(--brand-900);
+  }
+  .svg-host :global(.sh-grid) {
+    fill: none;
+    stroke: var(--brand-500);
+    stroke-opacity: 0.28;
+    stroke-width: 1;
+  }
+  .svg-host :global(.sh-cor) {
+    fill: none;
+    stroke: var(--brand-400);
+    stroke-opacity: 0.6;
+    stroke-width: 2;
+  }
+  .svg-host :global(.sh-glow-in) {
+    stop-color: var(--brand-400);
+    stop-opacity: 0.35;
+  }
+  .svg-host :global(.sh-glow-out) {
+    stop-color: var(--brand-400);
+    stop-opacity: 0;
+  }
+  .svg-host :global(.sh-card) {
+    fill: var(--brand-800);
+    stroke: var(--brand-400);
+    stroke-opacity: 0.45;
+    stroke-width: 1.5;
+  }
+  .svg-host :global(.sh-label) {
+    fill: var(--brand-100);
+    fill-opacity: 0.9;
+  }
+  .svg-host :global(.sh-field) {
+    fill: var(--brand-900);
+    fill-opacity: 0.55;
+    stroke: var(--brand-400);
+    stroke-opacity: 0.75;
+    stroke-width: 1.5;
+  }
+  .svg-host :global(.sh-fieldRing) {
+    fill: none;
+    stroke: var(--brand-400);
+    stroke-opacity: 0.45;
+    stroke-width: 3;
+  }
+  .svg-host :global(.sh-caret) {
+    fill: var(--brand-200);
+  }
+  .svg-host :global(.sh-fieldIcon) {
+    stroke: var(--brand-300);
+  }
+  .svg-host :global(.sh-placeholder) {
+    fill: var(--brand-50);
+    fill-opacity: 0.95;
+  }
   /* 5.59:1 on the brand-800 card. brand-300 at 0.8 measured 3.83:1, under the
      4.5:1 this size needs; full-strength brand-200 reaches 7.09:1 but lands
      level with the label, flattening the order of the card. */
-  .svg-host :global(.sh-hint) { fill: var(--brand-200); fill-opacity: 0.85; }
-  .svg-host :global(.sh-btn) { fill: var(--brand-500); }
-  .svg-host :global(.sh-btnText) { fill: var(--brand-50); }
-  .svg-host :global(.sh-btnIcon) { stroke: var(--brand-50); }
-  .svg-host :global(.sh-note) { fill: var(--brand-200); fill-opacity: 0.85; }
+  .svg-host :global(.sh-hint) {
+    fill: var(--brand-200);
+    fill-opacity: 0.85;
+  }
+  .svg-host :global(.sh-btn) {
+    fill: var(--brand-500);
+  }
+  .svg-host :global(.sh-btnText) {
+    fill: var(--brand-50);
+  }
+  .svg-host :global(.sh-btnIcon) {
+    stroke: var(--brand-50);
+  }
+  .svg-host :global(.sh-note) {
+    fill: var(--brand-200);
+    fill-opacity: 0.85;
+  }
 
   /* ── Scene art ───────────────────────────────────────────────────────────
      The second kind of `sh-` drawing: not a piece of the product, but a
@@ -180,7 +313,9 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
 
   /* Sky. Stars carry no meaning, so they take the near-white the text does
      and are separated by opacity, which is set per star in the file. */
-  .svg-host :global(.sh-star) { fill: var(--brand-100); }
+  .svg-host :global(.sh-star) {
+    fill: var(--brand-100);
+  }
   .svg-host :global(.sh-glint) {
     stroke: var(--brand-50);
     stroke-opacity: 0.55;
@@ -191,10 +326,22 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
   /* Light. The burst sits behind the mark; the rays fan up from beyond the
      horizon, so they are drawn before the planet and read as coming from
      behind it. */
-  .svg-host :global(.sh-burst-in) { stop-color: var(--brand-400); stop-opacity: 0.42; }
-  .svg-host :global(.sh-burst-out) { stop-color: var(--brand-400); stop-opacity: 0; }
-  .svg-host :global(.sh-ray-a) { stop-color: var(--brand-300); stop-opacity: 0.26; }
-  .svg-host :global(.sh-ray-b) { stop-color: var(--brand-300); stop-opacity: 0; }
+  .svg-host :global(.sh-burst-in) {
+    stop-color: var(--brand-400);
+    stop-opacity: 0.42;
+  }
+  .svg-host :global(.sh-burst-out) {
+    stop-color: var(--brand-400);
+    stop-opacity: 0;
+  }
+  .svg-host :global(.sh-ray-a) {
+    stop-color: var(--brand-300);
+    stop-opacity: 0.26;
+  }
+  .svg-host :global(.sh-ray-b) {
+    stop-color: var(--brand-300);
+    stop-opacity: 0;
+  }
 
   /* Planet. A gradient across the ellipse put its lit end in a band a few
      pixels tall — only the top 7% of the shape is on canvas — so the body is
@@ -204,16 +351,47 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
 
      Darker than brand-900 on purpose. The canvas is the sky; a planet the
      same value as the sky has no edge. */
-  .svg-host :global(.sh-planet) { fill: color-mix(in oklch, var(--brand-900) 45%, #000); }
-  .svg-host :global(.sh-atmo-3) { fill: none; stroke: var(--brand-500); stroke-opacity: 0.20; stroke-width: 34; }
-  .svg-host :global(.sh-atmo-2) { fill: none; stroke: var(--brand-400); stroke-opacity: 0.22; stroke-width: 16; }
-  .svg-host :global(.sh-atmo-1) { fill: none; stroke: var(--brand-300); stroke-opacity: 0.28; stroke-width: 7; }
-  .svg-host :global(.sh-horizon) { fill: none; stroke: var(--brand-100); stroke-opacity: 0.9; stroke-width: 2.5; }
+  .svg-host :global(.sh-planet) {
+    fill: color-mix(in oklch, var(--brand-900) 45%, #000);
+  }
+  .svg-host :global(.sh-atmo-3) {
+    fill: none;
+    stroke: var(--brand-500);
+    stroke-opacity: 0.2;
+    stroke-width: 34;
+  }
+  .svg-host :global(.sh-atmo-2) {
+    fill: none;
+    stroke: var(--brand-400);
+    stroke-opacity: 0.22;
+    stroke-width: 16;
+  }
+  .svg-host :global(.sh-atmo-1) {
+    fill: none;
+    stroke: var(--brand-300);
+    stroke-opacity: 0.28;
+    stroke-width: 7;
+  }
+  .svg-host :global(.sh-horizon) {
+    fill: none;
+    stroke: var(--brand-100);
+    stroke-opacity: 0.9;
+    stroke-width: 2.5;
+  }
 
   /* Trail, for the climb variant. */
-  .svg-host :global(.sh-trail-a) { stop-color: var(--brand-500); stop-opacity: 0; }
-  .svg-host :global(.sh-trail-b) { stop-color: var(--brand-400); stop-opacity: 0.45; }
-  .svg-host :global(.sh-trail-c) { stop-color: var(--brand-200); stop-opacity: 0.85; }
+  .svg-host :global(.sh-trail-a) {
+    stop-color: var(--brand-500);
+    stop-opacity: 0;
+  }
+  .svg-host :global(.sh-trail-b) {
+    stop-color: var(--brand-400);
+    stop-opacity: 0.45;
+  }
+  .svg-host :global(.sh-trail-c) {
+    stop-color: var(--brand-200);
+    stop-opacity: 0.85;
+  }
   .svg-host :global(.sh-trail-ln) {
     fill: none;
     stroke: var(--brand-300);
@@ -224,8 +402,14 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
   /* Vignette, painted last over everything but the corner brackets. Without
      it the starfield runs to the edges at the same brightness as the middle
      and the frame has no centre. */
-  .svg-host :global(.sh-vig-in) { stop-color: var(--brand-900); stop-opacity: 0; }
-  .svg-host :global(.sh-vig-out) { stop-color: color-mix(in oklch, var(--brand-900) 35%, #000); stop-opacity: 0.5; }
+  .svg-host :global(.sh-vig-in) {
+    stop-color: var(--brand-900);
+    stop-opacity: 0;
+  }
+  .svg-host :global(.sh-vig-out) {
+    stop-color: color-mix(in oklch, var(--brand-900) 35%, #000);
+    stop-opacity: 0.5;
+  }
 
   /* The mark and the name. Stroke width is set in the file, in icon units,
      because the group is scaled up from Lucide's 24×24 and a stroke scales
@@ -236,6 +420,14 @@ const svgContent = svgs[`/src/assets/projects/${slug}.svg`] ?? '';
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .svg-host :global(.sh-kicker) { font-size: 36px; font-weight: 500; fill: var(--brand-200); }
-  .svg-host :global(.sh-word) { font-size: 76px; font-weight: 700; fill: var(--brand-50); }
+  .svg-host :global(.sh-kicker) {
+    font-size: 36px;
+    font-weight: 500;
+    fill: var(--brand-200);
+  }
+  .svg-host :global(.sh-word) {
+    font-size: 76px;
+    font-weight: 700;
+    fill: var(--brand-50);
+  }
 </style>

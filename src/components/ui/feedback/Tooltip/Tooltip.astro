@@ -13,7 +13,6 @@ interface Props extends HTMLAttributes<'span'> {
 }
 
 const { content, position = 'top', delay = 200, class: className, ...attrs } = Astro.props;
-
 ---
 
 <span
@@ -24,11 +23,7 @@ const { content, position = 'top', delay = 200, class: className, ...attrs } = A
   {...attrs}
 >
   <slot />
-  <span
-    class="tooltip-bubble"
-    role="tooltip"
-    data-tooltip-content
-  >
+  <span class="tooltip-bubble" role="tooltip" data-tooltip-content>
     {content}
   </span>
 </span>

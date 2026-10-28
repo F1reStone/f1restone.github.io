@@ -2,11 +2,11 @@
 /**
  * StackMarquee
  * FireStone Refactored: Pure SVG Logo Wall (Chameleon Mode)
- * 
+ *
  * - Removes heavy Card wrapping and static colored icons.
  * - Uses import.meta.glob to load raw SVGs, injecting currentColor and hover-glow-icon engine.
  * - Enforces smooth double-row marquee scrolling on ALL devices (mobile included).
- * 
+ *
  *  * Usage:
  *   <StackMarquee />                         // pulls from content/stack, 2 rows
  *   <StackMarquee rows={1} duration={30} />  // single strip
@@ -17,7 +17,11 @@ import { cn } from '@/lib/cn';
 
 // FireStone: 使用 Vite 的 import.meta.glob 批量在构建时以字符串形式引入 SVG。
 // 请确保你的 SVG 文件存放在 src/assets/stack/logo/ 目录下！
-const svgFiles = import.meta.glob('/src/assets/stack/logo/*.svg', { query: '?raw', import: 'default', eager: true });
+const svgFiles = import.meta.glob('/src/assets/stack/logo/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
 
 export interface StackItem {
   name: string;
@@ -55,7 +59,7 @@ const {
   direction = 'left',
   duration = 40,
   pauseOnHover = true,
-  gap = '4rem',    // FireStone: 增大 Logo 之间的水平呼吸空间
+  gap = '4rem', // FireStone: 增大 Logo 之间的水平呼吸空间
   rowGap = '3rem', // FireStone: 增大行与行之间的垂直呼吸空间
   fade = true,
   linked = true,
@@ -105,48 +109,46 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
   style={`--row-gap: ${rowGap};`}
   aria-label="Tech stack"
 >
-  {
-    rowConfigs.map((row) => (
-      <div
-        class="stack-marquee-row"
-        data-direction={row.direction}
-        style={`--marquee-duration: ${row.duration}s; --marquee-gap: ${gap};`}
-      >
-        <div class="stack-marquee-track">
-          {[...row.items, ...row.items].map((item, idx) => {
-            const hidden = idx >= row.uniqueCount || row.decorative;
-            
-            // FireStone: 解析并注入深浅模式适配的 CSS
-            const rawSvg = svgFiles[`/src/assets/stack/logo/${item.logo}`] as string | undefined;
-            const cleanSvg = rawSvg
-              ?.replace(/\s(width|height)="[^"]*"/g, '')
-              .replace(/^<svg/, '<svg class="w-auto h-8 md:h-10 object-contain" fill="currentColor"');
+  {rowConfigs.map((row) => (
+    <div
+      class="stack-marquee-row"
+      data-direction={row.direction}
+      style={`--marquee-duration: ${row.duration}s; --marquee-gap: ${gap};`}
+    >
+      <div class="stack-marquee-track">
+        {[...row.items, ...row.items].map((item, idx) => {
+          const hidden = idx >= row.uniqueCount || row.decorative;
 
-            return (
-              <div class="stack-marquee-item">
-                <a
-                  href={linked ? item.url : undefined}
-                  target={linked && item.url ? '_blank' : undefined}
-                  rel={linked && item.url ? 'noopener noreferrer' : undefined}
-                  class="flex items-center justify-center outline-none"
-                  aria-hidden={hidden ? 'true' : undefined}
-                  tabindex={hidden ? -1 : undefined}
-                  aria-label={item.name}
-                >
-                  <!-- FireStone: 调用全局 hover-glow-icon 实现交互 -->
-                  <span 
-                    class="hover-glow-icon block"
-                    style="color: var(--color-foreground);"
-                    set:html={cleanSvg || `<span class="text-lg font-bold">${item.name}</span>`} 
-                  />
-                </a>
-              </div>
-            );
-          })}
-        </div>
+          // FireStone: 解析并注入深浅模式适配的 CSS
+          const rawSvg = svgFiles[`/src/assets/stack/logo/${item.logo}`] as string | undefined;
+          const cleanSvg = rawSvg
+            ?.replace(/\s(width|height)="[^"]*"/g, '')
+            .replace(/^<svg/, '<svg class="w-auto h-8 md:h-10 object-contain" fill="currentColor"');
+
+          return (
+            <div class="stack-marquee-item">
+              <a
+                href={linked ? item.url : undefined}
+                target={linked && item.url ? '_blank' : undefined}
+                rel={linked && item.url ? 'noopener noreferrer' : undefined}
+                class="flex items-center justify-center outline-none"
+                aria-hidden={hidden ? 'true' : undefined}
+                tabindex={hidden ? -1 : undefined}
+                aria-label={item.name}
+              >
+                <!-- FireStone: 调用全局 hover-glow-icon 实现交互 -->
+                <span
+                  class="hover-glow-icon block"
+                  style="color: var(--color-foreground);"
+                  set:html={cleanSvg || `<span class="text-lg font-bold">${item.name}</span>`}
+                />
+              </a>
+            </div>
+          );
+        })}
       </div>
-    ))
-  }
+    </div>
+  ))}
 </div>
 
 <style>
@@ -162,7 +164,7 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
     overflow-x: visible;
     overflow-y: visible;
     width: 100%;
-    
+
     /* FireStone: 盒模型排版
        1. 上下 padding 扩大了元素的实际绘制区域（Border-box），使得外围的 mask-image 遮罩跟着变高，给发光和放大留出完美的 24px 缓冲区，解决裁切。
        2. 对应的上下负 margin 使得它在 Flex 布局中不会推挤其他元素。
@@ -173,7 +175,13 @@ const rowConfigs = Array.from({ length: rowCount }, (_, r) => {
 
   /* 边缘羽化渐变遮罩 */
   .stack-marquee[data-fade='true'] .stack-marquee-row {
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      #000 15%,
+      #000 85%,
+      transparent 100%
+    );
     mask-image: linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%);
   }
 

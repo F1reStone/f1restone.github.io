@@ -20,13 +20,7 @@ interface Props extends HTMLAttributes<'div'> {
   size?: 'xs' | 'sm' | 'md' | 'lg';
 }
 
-const {
-  avatars,
-  max = 4,
-  size = 'md',
-  class: className,
-  ...attrs
-} = Astro.props;
+const { avatars, max = 4, size = 'md', class: className, ...attrs } = Astro.props;
 
 const visibleAvatars = avatars.slice(0, max);
 const overflowCount = Math.max(0, avatars.length - max);

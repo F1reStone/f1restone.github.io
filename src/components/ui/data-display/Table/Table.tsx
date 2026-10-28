@@ -41,21 +41,18 @@ export function Table({
   const cellPadding = compact ? 'px-3 py-2' : 'px-4 py-3';
 
   return (
-    <div
-      className={cn('overflow-auto rounded-lg border border-border', className)}
-      {...attrs}
-    >
+    <div className={cn('border-border overflow-auto rounded-lg border', className)} {...attrs}>
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border bg-secondary/50">
+          <tr className="border-border bg-secondary/50 border-b">
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={cn(
                   cellPadding,
-                  'font-medium text-foreground-muted',
+                  'text-foreground-muted font-medium',
                   alignClasses[col.align || 'left'],
-                  col.class,
+                  col.class
                 )}
               >
                 {col.label}
@@ -68,10 +65,10 @@ export function Table({
             <tr
               key={i}
               className={cn(
-                'border-b border-border last:border-b-0',
+                'border-border border-b last:border-b-0',
                 'transition-colors',
                 hoverable && 'hover:bg-secondary/30',
-                striped && i % 2 === 1 && 'bg-secondary/20',
+                striped && i % 2 === 1 && 'bg-secondary/20'
               )}
             >
               {columns.map((col) => (
@@ -81,7 +78,7 @@ export function Table({
                     cellPadding,
                     'text-foreground',
                     alignClasses[col.align || 'left'],
-                    col.class,
+                    col.class
                   )}
                 >
                   {String(row[col.key] ?? '')}

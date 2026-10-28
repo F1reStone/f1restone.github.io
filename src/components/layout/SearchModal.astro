@@ -69,13 +69,10 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       class="search-backdrop bg-background/20 fixed inset-0 opacity-0 backdrop-blur-md"
       data-search-close
       aria-hidden="true"
-    >
-    </div>
+    ></div>
 
     <div class="search-dropdown-shell fixed inset-x-0 top-0 overflow-hidden">
-      <div
-        class="search-panel bg-background relative w-full overflow-hidden shadow-2xl"
-      >
+      <div class="search-panel bg-background relative w-full overflow-hidden shadow-2xl">
         <div class="search-content mx-auto w-full max-w-6xl px-5 sm:px-8">
           <div class="search-input-row border-border/50 flex items-center gap-3 border-b">
             <!-- FireStone: Search Icon SparkFlow glow effect -->
@@ -405,7 +402,9 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           panel?.querySelectorAll<HTMLElement>(
             'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
           ) || []
-        ).filter((el) => el instanceof HTMLElement && el.tabIndex >= 0 && !el.hasAttribute('disabled'));
+        ).filter(
+          (el) => el instanceof HTMLElement && el.tabIndex >= 0 && !el.hasAttribute('disabled')
+        );
       }
 
       function trapFocus(e: KeyboardEvent) {

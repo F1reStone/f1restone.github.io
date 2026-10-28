@@ -1,6 +1,8 @@
 ---
 import { defaultLocale, localizedPath } from '@/i18n';
-interface Props { locale?: string;  }
+interface Props {
+  locale?: string;
+}
 const { locale = defaultLocale } = Astro.props;
 /**
  * Projects page
@@ -13,7 +15,13 @@ import ProjectCard from '@/components/projects/ProjectCard.astro';
 import { Hero } from '@/components/hero';
 import Pagination from '@/components/blog/Pagination.astro';
 import TagList from '@/components/blog/TagList.astro';
-import { getVisibleProjects, PROJECTS_PER_PAGE, collectTopProjectTags, PROJECT_TAG_CLOUD_LIMIT, getProjectTagUrl } from '@/lib/projects';
+import {
+  getVisibleProjects,
+  PROJECTS_PER_PAGE,
+  collectTopProjectTags,
+  PROJECT_TAG_CLOUD_LIMIT,
+  getProjectTagUrl,
+} from '@/lib/projects';
 
 const projects = await getVisibleProjects(locale);
 // Use the same page size as /projects/page/N so page one does not repeat every entry.
@@ -22,38 +30,51 @@ const totalPages = Math.max(1, Math.ceil(projects.length / PROJECTS_PER_PAGE));
 const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
 ---
 
-<PageLayout
-  title="项目"
-  description="一些由 FireStone 火石制作的有趣（？）作品。"
-  eagerReveal
->
+<PageLayout title="项目" description="一些由 FireStone 火石制作的有趣（？）作品。" eagerReveal>
   <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
     <Badge slot="badge" variant="brand" pill>
       <Icon name="layers" size="sm" />
       项目
     </Badge>
 
-    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+    <h1
+      slot="title"
+      class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative"
+    >
       <span class="hero-title-text">Projects</span>
     </h1>
 
-    <p slot="description" class="hero-description-text">一些由我制作的有趣（？）作品。</p>
+    <p slot="description" class="hero-description-text">
+      一些由我制作的有趣（？）作品。
+    </p>
   </Hero>
 
   <!-- All projects -->
   {projects.length > 0 && (
     <section class="py-[var(--space-section-md)] bg-background">
       <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8">
-        {topTags.length > 0 && <TagList tags={topTags} locale={locale} hrefForTag={getProjectTagUrl} class="justify-center" />}
+        {topTags.length > 0 && (
+          <TagList
+            tags={topTags}
+            locale={locale}
+            hrefForTag={getProjectTagUrl}
+            class="justify-center"
+          />
+        )}
 
         <div class="grid gap-6 md:grid-cols-2">
           {pageProjects.map((project, i) => (
             <ProjectCard locale={locale} project={project} index={i} />
           ))}
         </div>
-        <Pagination currentPage={1} totalPages={totalPages} href={(page) => localizedPath(page === 1 ? '/projects' : `/projects/page/${page}`, locale)} />
+        <Pagination
+          currentPage={1}
+          totalPages={totalPages}
+          href={(page) =>
+            localizedPath(page === 1 ? '/projects' : `/projects/page/${page}`, locale)
+          }
+        />
       </div>
     </section>
   )}
-
 </PageLayout>

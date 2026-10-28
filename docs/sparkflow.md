@@ -5,15 +5,15 @@ The first section of `/components/#sparkflow` demonstrates each effect with mous
 hover and keyboard focus. Reuse these utilities rather than adding a separate
 hover implementation.
 
-| Utility | Target and behavior |
-| --- | --- |
-| `hover-glow-icon` | SVG, icon wrapper, or control containing SVGs; glows and scales icons without changing the control's background or text. |
-| `hover-glow-text` | Text glow using `currentColor`. |
-| `hover-glow-box` | Filled control or card; outer glow, hover scale, and press feedback. |
-| `hover-glow-outline` | Outlined control, usually with `glass-panel`; preserves the translucent surface while glowing. |
-| `hover-solid-fill` | Fills a control with the foreground color and uses the background color for its text. |
-| `weight-shift` | Text whose center remains fixed while its weight grows. |
-| `weight-shift-non-centered` | Text whose left edge remains fixed while its weight grows. |
+| Utility                     | Target and behavior                                                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `hover-glow-icon`           | SVG, icon wrapper, or control containing SVGs; glows and scales icons without changing the control's background or text. |
+| `hover-glow-text`           | Text glow using `currentColor`.                                                                                          |
+| `hover-glow-box`            | Filled control or card; outer glow, hover scale, and press feedback.                                                     |
+| `hover-glow-outline`        | Outlined control, usually with `glass-panel`; preserves the translucent surface while glowing.                           |
+| `hover-solid-fill`          | Fills a control with the foreground color and uses the background color for its text.                                    |
+| `weight-shift`              | Text whose center remains fixed while its weight grows.                                                                  |
+| `weight-shift-non-centered` | Text whose left edge remains fixed while its weight grows.                                                               |
 
 ## Color and keyboard focus
 
@@ -25,9 +25,11 @@ Keep a visible focus outline/ring; color or glow alone is not a replacement.
 Selected tab colors remain controlled by their existing active-state branches.
 
 ```astro
-<a href="/projects/"
+<a
+  href="/projects/"
   class="text-foreground-muted hover-glow-text hover-glow-icon
-    hover:text-foreground focus-visible:text-foreground">
+    hover:text-foreground focus-visible:text-foreground"
+>
   <span>Projects</span>
   <Icon name="arrow-up-right" size="sm" />
 </a>

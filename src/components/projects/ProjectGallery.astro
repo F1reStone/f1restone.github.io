@@ -12,12 +12,19 @@ interface Props {
 const { images } = Astro.props;
 const id = Math.random().toString(36).slice(2, 8);
 // Posters use the same build-time optimization as images; video bytes stay deferred.
-const posters = await Promise.all(images.map(item =>
-  isVideoSlide(item) ? getImage({ src: item.poster, width: 1280 }) : null
-));
-const slideData = images.map((item, i) => isVideoSlide(item)
-  ? { type: 'video', src: item.video, poster: posters[i]?.src ?? '', alt: item.alt, caption: item.caption ?? '' }
-  : { type: 'image', src: item.src.src, poster: '', alt: item.alt, caption: item.caption ?? '' }
+const posters = await Promise.all(
+  images.map((item) => (isVideoSlide(item) ? getImage({ src: item.poster, width: 1280 }) : null))
+);
+const slideData = images.map((item, i) =>
+  isVideoSlide(item)
+    ? {
+        type: 'video',
+        src: item.video,
+        poster: posters[i]?.src ?? '',
+        alt: item.alt,
+        caption: item.caption ?? '',
+      }
+    : { type: 'image', src: item.src.src, poster: '', alt: item.alt, caption: item.caption ?? '' }
 );
 
 // FireStone: 画廊精确防抖计算
@@ -43,14 +50,24 @@ const dotsWidth = 12 * (images.length - 1) + 24;
           data-gallery-slide={`gallery-${id}`}
         >
           {isVideoSlide(img) ? (
-            <video class="aspect-video w-full object-cover" src={img.video} poster={posters[i]?.src} controls playsinline preload="none" aria-label={img.alt} />
-          ) : <Picture
-            src={img.src}
-            alt={img.alt}
-            formats={['avif', 'webp']}
-            class="aspect-video w-full object-cover"
-            loading="lazy"
-          />}
+            <video
+              class="aspect-video w-full object-cover"
+              src={img.video}
+              poster={posters[i]?.src}
+              controls
+              playsinline
+              preload="none"
+              aria-label={img.alt}
+            />
+          ) : (
+            <Picture
+              src={img.src}
+              alt={img.alt}
+              formats={['avif', 'webp']}
+              class="aspect-video w-full object-cover"
+              loading="lazy"
+            />
+          )}
         </div>
       ))}
     </div>
@@ -62,7 +79,14 @@ const dotsWidth = 12 * (images.length - 1) + 24;
       aria-label={t('projects.galleryPreviousImage', locale)}
       disabled
     >
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <svg
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
       </svg>
     </button>
@@ -73,7 +97,14 @@ const dotsWidth = 12 * (images.length - 1) + 24;
       class="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-background/80 border border-border shadow-md text-foreground backdrop-blur-sm transition-opacity disabled:opacity-30 disabled:pointer-events-none disabled:cursor-not-allowed hover:bg-background"
       aria-label={t('projects.galleryNextImage', locale)}
     >
-      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <svg
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
       </svg>
     </button>
@@ -82,7 +113,13 @@ const dotsWidth = 12 * (images.length - 1) + 24;
   <!-- Dots + counter -->
   <div class="mt-4 flex flex-col items-center gap-2">
     <div class="flex items-center justify-center rounded-full bg-secondary/50 px-1.5 py-1.5 backdrop-blur-md ring-1 ring-inset ring-border/50 shadow-sm">
-      <div id={`dots-${id}`} class="relative h-1.5" role="group" aria-label={t('projects.carouselChooseSlide', locale)} style={`width: ${dotsWidth}px;`}>
+      <div
+        id={`dots-${id}`}
+        class="relative h-1.5"
+        role="group"
+        aria-label={t('projects.carouselChooseSlide', locale)}
+        style={`width: ${dotsWidth}px;`}
+      >
         {images.map((_, i) => {
           const x = i === 0 ? 0 : i * 12 + 18;
           return (
@@ -96,7 +133,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
               style={`transform: translate3d(${x}px, 0, 0);`}
               class="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-foreground-subtle/50 transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
             ></button>
-        );
+          );
         })}
       </div>
     </div>
@@ -104,7 +141,6 @@ const dotsWidth = 12 * (images.length - 1) + 24;
       {String(1).padStart(String(images.length).length, '0')} / {images.length}
     </span>
   </div>
-
 </div>
 
 <!-- Lightbox -->
@@ -120,7 +156,14 @@ const dotsWidth = 12 * (images.length - 1) + 24;
     class="absolute top-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
     aria-label={t('projects.galleryClose', locale)}
   >
-    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <svg
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true"
+    >
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   </button>
@@ -130,14 +173,27 @@ const dotsWidth = 12 * (images.length - 1) + 24;
     class="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
     aria-label={t('projects.galleryPreviousImage', locale)}
   >
-    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <svg
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true"
+    >
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   </button>
 
   <div class="mx-16 flex flex-col items-center gap-3 max-w-5xl w-full px-4">
     <img id={`lb-img-${id}`} src="" alt="" class="max-h-[80vh] w-auto rounded-lg object-contain" />
-    <video id={`lb-video-${id}`} class="hidden max-h-[80vh] w-auto rounded-lg object-contain" controls playsinline preload="none"></video>
+    <video
+      id={`lb-video-${id}`}
+      class="hidden max-h-[80vh] w-auto rounded-lg object-contain"
+      controls
+      playsinline
+      preload="none"
+    ></video>
     <p id={`lb-caption-${id}`} class="text-sm text-white/70 text-center"></p>
   </div>
 
@@ -146,176 +202,209 @@ const dotsWidth = 12 * (images.length - 1) + 24;
     class="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
     aria-label={t('projects.galleryNextImage', locale)}
   >
-    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <svg
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+      aria-hidden="true"
+    >
       <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   </button>
 </div>
 
 <script is:inline define:vars={{ id, imageData: slideData }}>
-(function () {
-  const galleryId = id;
-  const track = document.getElementById('track-' + galleryId);
-  const prevBtn = document.getElementById('prev-' + galleryId);
-  const nextBtn = document.getElementById('next-' + galleryId);
-  const counter = document.getElementById('counter-' + galleryId);
-  const dotsContainer = document.getElementById('dots-' + galleryId);
-  const lightbox = document.getElementById('lightbox-' + galleryId);
-  const lbImg = document.getElementById('lb-img-' + galleryId);
-  const lbVideo = document.getElementById('lb-video-' + galleryId);
-  const lbCaption = document.getElementById('lb-caption-' + galleryId);
-  const lbClose = document.getElementById('lb-close-' + galleryId);
-  const lbPrev = document.getElementById('lb-prev-' + galleryId);
-  const lbNext = document.getElementById('lb-next-' + galleryId);
+  (function () {
+    const galleryId = id;
+    const track = document.getElementById('track-' + galleryId);
+    const prevBtn = document.getElementById('prev-' + galleryId);
+    const nextBtn = document.getElementById('next-' + galleryId);
+    const counter = document.getElementById('counter-' + galleryId);
+    const dotsContainer = document.getElementById('dots-' + galleryId);
+    const lightbox = document.getElementById('lightbox-' + galleryId);
+    const lbImg = document.getElementById('lb-img-' + galleryId);
+    const lbVideo = document.getElementById('lb-video-' + galleryId);
+    const lbCaption = document.getElementById('lb-caption-' + galleryId);
+    const lbClose = document.getElementById('lb-close-' + galleryId);
+    const lbPrev = document.getElementById('lb-prev-' + galleryId);
+    const lbNext = document.getElementById('lb-next-' + galleryId);
 
-  if (!track || !prevBtn || !nextBtn || !counter || !dotsContainer || !lightbox) return;
+    if (!track || !prevBtn || !nextBtn || !counter || !dotsContainer || !lightbox) return;
 
-  const slides = Array.from(track.querySelectorAll('[data-index]'));
-  const dots = Array.from(dotsContainer.querySelectorAll('[data-dot]'));
-  const total = slides.length;
-  let current = 0;
-  let lbCurrent = 0;
-  let previousFocus = null;
-  let previousOverflow = '';
+    const slides = Array.from(track.querySelectorAll('[data-index]'));
+    const dots = Array.from(dotsContainer.querySelectorAll('[data-dot]'));
+    const total = slides.length;
+    let current = 0;
+    let lbCurrent = 0;
+    let previousFocus = null;
+    let previousOverflow = '';
 
-  function scrollTo(index) {
-    current = Math.max(0, Math.min(index, total - 1));
-    track.scrollTo({ left: slides[current].offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
-    sync(current);
-  }
-
-  const padLen = String(total).length;
-
-  function sync(index, immediate = false) {
-    current = index;
-    slides.forEach((slide, i) => {
-      if (i !== index) slide.querySelector('video')?.pause();
-    });
-    // 动态补零
-    counter.textContent = String(index + 1).padStart(padLen, '0') + ' / ' + total;
-    prevBtn.disabled = index === 0;
-    nextBtn.disabled = index === total - 1;
-    
-    // FireStone: 阻断首屏弹射
-    if (immediate) {
-      dots.forEach(dot => dot.style.transition = 'none');
+    function scrollTo(index) {
+      current = Math.max(0, Math.min(index, total - 1));
+      track.scrollTo({
+        left: slides[current].offsetLeft,
+        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+      });
+      sync(current);
     }
 
-    dots.forEach((dot, j) => {
-      dot.dataset.active = (j === index) ? 'true' : 'false';
-      dot.setAttribute('aria-pressed', String(j === index));
-      const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
-      dot.style.transform = `translate3d(${x}px, 0, 0)`;
-    });
+    const padLen = String(total).length;
 
-    if (immediate) {
-      void dotsContainer.offsetHeight; // 强制重绘
-      dots.forEach(dot => dot.style.transition = '');
-    }
-  }
+    function sync(index, immediate = false) {
+      current = index;
+      slides.forEach((slide, i) => {
+        if (i !== index) slide.querySelector('video')?.pause();
+      });
+      // 动态补零
+      counter.textContent = String(index + 1).padStart(padLen, '0') + ' / ' + total;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === total - 1;
 
-  // Scroll spy
-  let scrollTimer;
-  track.addEventListener('scroll', function () {
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(function () {
-      const scrollLeft = track.scrollLeft;
-      const width = track.clientWidth;
-      const idx = Math.round(scrollLeft / width);
-      sync(idx);
-    }, 50);
-  }, { passive: true });
-
-  prevBtn.addEventListener('click', function () { scrollTo(current - 1); });
-  nextBtn.addEventListener('click', function () { scrollTo(current + 1); });
-
-  dots.forEach(function (dot, i) {
-    dot.addEventListener('click', function () { scrollTo(i); });
-  });
-
-  // Keyboard nav
-  document.getElementById('gallery-' + galleryId).addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowLeft') scrollTo(current - 1);
-    if (e.key === 'ArrowRight') scrollTo(current + 1);
-  });
-
-  // Click to open lightbox
-  slides.forEach(function (slide, i) {
-    if (slide.dataset.slideType === 'video') return;
-    slide.addEventListener('click', function () { openLightbox(i); });
-    slide.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openLightbox(i);
+      // FireStone: 阻断首屏弹射
+      if (immediate) {
+        dots.forEach((dot) => (dot.style.transition = 'none'));
       }
+
+      dots.forEach((dot, j) => {
+        dot.dataset.active = j === index ? 'true' : 'false';
+        dot.setAttribute('aria-pressed', String(j === index));
+        const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
+        dot.style.transform = `translate3d(${x}px, 0, 0)`;
+      });
+
+      if (immediate) {
+        void dotsContainer.offsetHeight; // 强制重绘
+        dots.forEach((dot) => (dot.style.transition = ''));
+      }
+    }
+
+    // Scroll spy
+    let scrollTimer;
+    track.addEventListener(
+      'scroll',
+      function () {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () {
+          const scrollLeft = track.scrollLeft;
+          const width = track.clientWidth;
+          const idx = Math.round(scrollLeft / width);
+          sync(idx);
+        }, 50);
+      },
+      { passive: true }
+    );
+
+    prevBtn.addEventListener('click', function () {
+      scrollTo(current - 1);
     });
-  });
+    nextBtn.addEventListener('click', function () {
+      scrollTo(current + 1);
+    });
 
-  function openLightbox(index) {
-    previousFocus = document.activeElement;
-    previousOverflow = document.body.style.overflow;
-    slides.forEach(slide => slide.querySelector('video')?.pause());
-    lbCurrent = index;
-    lbSync(index);
-    lightbox.classList.remove('hidden');
-    lightbox.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-    lbClose.focus();
-  }
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () {
+        scrollTo(i);
+      });
+    });
 
-  function closeLightbox() {
-    lightbox.classList.add('hidden');
-    lightbox.classList.remove('flex');
-    lbVideo.pause();
-    document.body.style.overflow = previousOverflow;
-    previousFocus?.focus();
-  }
+    // Keyboard nav
+    document.getElementById('gallery-' + galleryId).addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') scrollTo(current - 1);
+      if (e.key === 'ArrowRight') scrollTo(current + 1);
+    });
 
-  function lbSync(index) {
-    lbCurrent = index;
-    const img = imageData[index];
-    lbVideo.pause();
-    const isVideo = img.type === 'video';
-    lbVideo.classList.toggle('hidden', !isVideo);
-    lbImg.classList.toggle('hidden', isVideo);
-    if (isVideo) {
-      lbVideo.src = img.src;
-      lbVideo.poster = img.poster;
-      lbVideo.setAttribute('aria-label', img.alt);
-    } else {
-      lbImg.src = img.src;
-      lbImg.alt = img.alt;
+    // Click to open lightbox
+    slides.forEach(function (slide, i) {
+      if (slide.dataset.slideType === 'video') return;
+      slide.addEventListener('click', function () {
+        openLightbox(i);
+      });
+      slide.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openLightbox(i);
+        }
+      });
+    });
+
+    function openLightbox(index) {
+      previousFocus = document.activeElement;
+      previousOverflow = document.body.style.overflow;
+      slides.forEach((slide) => slide.querySelector('video')?.pause());
+      lbCurrent = index;
+      lbSync(index);
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lbClose.focus();
     }
-    lbCaption.textContent = img.caption || '';
-    lbPrev.disabled = index === 0;
-    lbNext.disabled = index === total - 1;
-  }
 
-  lbClose.addEventListener('click', closeLightbox);
-  lbPrev.addEventListener('click', function () { lbSync(lbCurrent - 1); });
-  lbNext.addEventListener('click', function () { lbSync(lbCurrent + 1); });
-
-  lightbox.addEventListener('click', function (e) {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (!lightbox.classList.contains('flex')) return;
-    if (e.key === 'Tab') {
-      const controls = Array.from(lightbox.querySelectorAll('button:not(:disabled), video[controls]')).filter(el => el.getClientRects().length);
-      const first = controls[0];
-      const last = controls[controls.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      lbVideo.pause();
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
     }
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft' && lbCurrent > 0) lbSync(lbCurrent - 1);
-    if (e.key === 'ArrowRight' && lbCurrent < total - 1) lbSync(lbCurrent + 1);
-  });
 
-  const initialWidth = track.clientWidth || 1;
-  const initialIdx = Math.round(track.scrollLeft / initialWidth);
-  // FireStone: 首屏瞬移归位
-  sync(initialIdx || 0, true);
-})();
+    function lbSync(index) {
+      lbCurrent = index;
+      const img = imageData[index];
+      lbVideo.pause();
+      const isVideo = img.type === 'video';
+      lbVideo.classList.toggle('hidden', !isVideo);
+      lbImg.classList.toggle('hidden', isVideo);
+      if (isVideo) {
+        lbVideo.src = img.src;
+        lbVideo.poster = img.poster;
+        lbVideo.setAttribute('aria-label', img.alt);
+      } else {
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+      }
+      lbCaption.textContent = img.caption || '';
+      lbPrev.disabled = index === 0;
+      lbNext.disabled = index === total - 1;
+    }
+
+    lbClose.addEventListener('click', closeLightbox);
+    lbPrev.addEventListener('click', function () {
+      lbSync(lbCurrent - 1);
+    });
+    lbNext.addEventListener('click', function () {
+      lbSync(lbCurrent + 1);
+    });
+
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (!lightbox.classList.contains('flex')) return;
+      if (e.key === 'Tab') {
+        const controls = Array.from(
+          lightbox.querySelectorAll('button:not(:disabled), video[controls]')
+        ).filter((el) => el.getClientRects().length);
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft' && lbCurrent > 0) lbSync(lbCurrent - 1);
+      if (e.key === 'ArrowRight' && lbCurrent < total - 1) lbSync(lbCurrent + 1);
+    });
+
+    const initialWidth = track.clientWidth || 1;
+    const initialIdx = Math.round(track.scrollLeft / initialWidth);
+    // FireStone: 首屏瞬移归位
+    sync(initialIdx || 0, true);
+  })();
 </script>

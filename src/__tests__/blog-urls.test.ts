@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('@/config/i18n.config', () => ({ default: { enabled: true, defaultLocale: 'zh-CN', locales: ['zh-CN', 'en-US'] } }));
+vi.mock('@/config/i18n.config', () => ({
+  default: { enabled: true, defaultLocale: 'zh-CN', locales: ['zh-CN', 'en-US'] },
+}));
 
 // `lib/blog` imports `astro:content at the top level for its data helpers.
 // The URL helpers under test don't touch the content runtime, so a tiny stub

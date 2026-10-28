@@ -10,7 +10,16 @@ interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ref'> {
   animated?: boolean;
 }
 
-export function Skeleton({ ref, variant = 'default', width, height, animated = true, className, style, ...rest }: SkeletonProps) {
+export function Skeleton({
+  ref,
+  variant = 'default',
+  width,
+  height,
+  animated = true,
+  className,
+  style,
+  ...rest
+}: SkeletonProps) {
   return (
     <div
       ref={ref}

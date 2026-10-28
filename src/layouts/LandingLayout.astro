@@ -39,7 +39,11 @@ const {
   includeProfessionalServiceSchema = false,
 } = Astro.props;
 const locale = getLocaleFromPath(Astro.url.pathname);
-const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcrumbs ?? buildBreadcrumbs(Astro.props.breadcrumbLabel ?? title, Astro.url.pathname, locale);
+const breadcrumbs =
+  Astro.props.breadcrumbs === false
+    ? []
+    : (Astro.props.breadcrumbs ??
+      buildBreadcrumbs(Astro.props.breadcrumbLabel ?? title, Astro.url.pathname, locale));
 ---
 
 <BaseLayout
@@ -63,6 +67,5 @@ const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcr
 
   <slot />
 
-  <Footer breadcrumbs={breadcrumbs}     slot="footer"
-  />
+  <Footer breadcrumbs={breadcrumbs} slot="footer" />
 </BaseLayout>

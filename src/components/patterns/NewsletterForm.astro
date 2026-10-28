@@ -25,7 +25,12 @@ const {
   placeholder = t('newsletter.emailPlaceholder', locale),
   buttonText = t('newsletter.subscribe', locale),
   successMessage = t('newsletter.success', locale),
-  heading, description, note, size = 'md', layout = 'auto', buttonClass,
+  heading,
+  description,
+  note,
+  size = 'md',
+  layout = 'auto',
+  buttonClass,
   class: className,
 } = Astro.props;
 ---
@@ -53,13 +58,24 @@ const {
         autocomplete="email"
       />
     </div>
-    <Button type="submit" size={size} class={cn('newsletter-submit shrink-0', buttonClass)} disabled={!action}>
+    <Button
+      type="submit"
+      size={size}
+      class={cn('newsletter-submit shrink-0', buttonClass)}
+      disabled={!action}
+    >
       {buttonText}
     </Button>
   </div>
 
-  <div class="hidden" aria-hidden="true"><input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></div>
-  {!action && <p class="mt-3 text-sm text-foreground-muted">{t(import.meta.env.DEV ? 'newsletter.notConfigured' : 'newsletter.unavailable', locale)}</p>}
+  <div class="hidden" aria-hidden="true">
+    <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+  </div>
+  {!action && (
+    <p class="mt-3 text-sm text-foreground-muted">
+      {t(import.meta.env.DEV ? 'newsletter.notConfigured' : 'newsletter.unavailable', locale)}
+    </p>
+  )}
   <!-- Reserve space so feedback does not move adjacent controls or footer links. -->
   <p class="newsletter-message mt-3 min-h-5 text-sm" role="status"></p>
   {note && <p class="mt-2 text-xs text-foreground-muted">{note}</p>}
@@ -107,7 +123,8 @@ const {
             message.classList.add('text-destructive');
           }
         } catch {
-          message.textContent = form.dataset.errorMessage || 'Subscription failed. Please try again.';
+          message.textContent =
+            form.dataset.errorMessage || 'Subscription failed. Please try again.';
           message.classList.add('text-destructive');
         } finally {
           button.disabled = false;

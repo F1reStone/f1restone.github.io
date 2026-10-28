@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useCallback,
-  type ReactNode,
-} from 'react';
+import { useEffect, useRef, useCallback, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { t, defaultLocale, type Locale } from '@/i18n';
 import { cn } from '@/lib/cn';
@@ -31,7 +26,8 @@ interface DialogProps {
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-export function Dialog({ locale = defaultLocale,
+export function Dialog({
+  locale = defaultLocale,
   open,
   onClose,
   title,
@@ -46,9 +42,9 @@ export function Dialog({ locale = defaultLocale,
 
   const getFocusableElements = useCallback((): HTMLElement[] => {
     if (!panelRef.current) return [];
-    return Array.from(
-      panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
-    ).filter((el) => !el.hasAttribute('disabled'));
+    return Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+      (el) => !el.hasAttribute('disabled')
+    );
   }, []);
 
   // Body scroll lock and focus management on open/close
@@ -126,19 +122,19 @@ export function Dialog({ locale = defaultLocale,
       {/* Backdrop */}
       {/* FireStone: [Inject the standard Liquid Glass backdrop and custom easing] */}
       <div
-        className="fixed inset-0 bg-background/40 backdrop-blur-md opacity-100 transition-opacity duration-300 ease-[var(--ease-default)]"
+        className="bg-background/40 fixed inset-0 opacity-100 backdrop-blur-md transition-opacity duration-300 ease-[var(--ease-default)]"
         aria-hidden="true"
         onClick={onClose}
       />
 
       {/* Dialog Panel */}
-      <div className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4">
         <div
           ref={panelRef}
           className={cn(
             'relative w-full',
             sizes[size],
-            'bg-background rounded-3xl border border-border/50 shadow-2xl',
+            'bg-background border-border/50 rounded-3xl border shadow-2xl',
             'scale-100 opacity-100 transition-all duration-300 ease-[var(--ease-default)]',
             className
           )}
@@ -147,23 +143,20 @@ export function Dialog({ locale = defaultLocale,
           <button
             type="button"
             className={cn(
-              'absolute top-4 right-4 p-1.5 rounded-full text-foreground-muted glass-panel hover-glow-box hover-solid-fill',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+              'text-foreground-muted glass-panel hover-glow-box hover-solid-fill absolute top-4 right-4 rounded-full p-1.5',
+              'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none'
             )}
             onClick={onClose}
             aria-label={t('common.closeDialog', locale)}
           >
-            <Icon name="x" class="w-5 h-5" />
+            <Icon name="x" class="h-5 w-5" />
           </button>
 
           {/* Header */}
           {(title || description) && (
             <div className="p-6 pb-0">
               {title && (
-                <h2
-                  id={titleId}
-                  className="text-lg font-bold tracking-tight text-foreground pr-8"
-                >
+                <h2 id={titleId} className="text-foreground pr-8 text-lg font-bold tracking-tight">
                   {title}
                 </h2>
               )}
@@ -171,7 +164,7 @@ export function Dialog({ locale = defaultLocale,
               {description && (
                 <p
                   id={descriptionId}
-                  className="mt-1 mb-3 text-xs leading-relaxed text-foreground-muted"
+                  className="text-foreground-muted mt-1 mb-3 text-xs leading-relaxed"
                 >
                   {description}
                 </p>

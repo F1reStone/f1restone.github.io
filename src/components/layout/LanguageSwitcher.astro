@@ -44,93 +44,97 @@ const { class: className, compact = false, placement = 'bottom', alternates } = 
 const enabled = i18nIsEnabled();
 const currentPath = Astro.originPathname;
 const currentLocale = getLocaleFromPath(currentPath);
-const resolvedAlternates = alternates ?? Object.fromEntries(getLocales().map(locale => [locale, swapLocaleInPath(currentPath, locale)]));
-const locales = enabled ? getLocales().filter(locale => Boolean(resolvedAlternates[locale])) : [];
+const resolvedAlternates =
+  alternates ??
+  Object.fromEntries(getLocales().map((locale) => [locale, swapLocaleInPath(currentPath, locale)]));
+const locales = enabled ? getLocales().filter((locale) => Boolean(resolvedAlternates[locale])) : [];
 
 const triggerLabel = t('nav.selectLanguage', currentLocale);
 const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
 ---
 
-{
-  enabled && (
-    <div class={cn('relative lang-wrapper', className)} data-placement={placement}>
-      <button
-        type="button"
-        class={cn(
-          'lang-trigger inline-flex items-center gap-1.5 rounded-full border border-border-strong px-2.5 py-1.5',
-          'text-foreground-secondary glass-panel hover-glow-box hover-solid-fill',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-        )}
-        aria-haspopup="menu"
-        aria-expanded="false"
-        aria-label={`${currentLanguageLabel}: ${getLocaleName(currentLocale)}. ${triggerLabel}.`}
-      >
-        <span class="ttg-icon ttg-icon-light h-4 w-4" aria-hidden="true">
-          <Icon name="languages" size="sm" />
+{enabled && (
+  <div class={cn('relative lang-wrapper', className)} data-placement={placement}>
+    <button
+      type="button"
+      class={cn(
+        'lang-trigger inline-flex items-center gap-1.5 rounded-full border border-border-strong px-2.5 py-1.5',
+        'text-foreground-secondary glass-panel hover-glow-box hover-solid-fill',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+      )}
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-label={`${currentLanguageLabel}: ${getLocaleName(currentLocale)}. ${triggerLabel}.`}
+    >
+      <span class="ttg-icon ttg-icon-light h-4 w-4" aria-hidden="true">
+        <Icon name="languages" size="sm" />
+      </span>
+      {!compact && (
+        <span class="text-xs font-semibold uppercase tracking-wide">
+          {getLocaleName(currentLocale)}
         </span>
-        {!compact && (
-          <span class="text-xs font-semibold uppercase tracking-wide">{getLocaleName(currentLocale)}</span>
-        )}
-        <svg
-          class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200 motion-reduce:transition-none"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
-      </button>
-
-      <div
-        class={cn(
-          'lang-panel absolute z-50',
-          placement === 'top' ? 'left-0 bottom-full mb-2 md:left-auto md:right-0' : 'right-0 top-full mt-2',
-          'w-48 rounded-3xl border border-border/10 bg-background/50 backdrop-blur-md shadow-xl',
-          'p-1.5 hidden'
-        )}
-        role="menu"
-        aria-label={triggerLabel}
+      )}
+      <svg
+        class="lang-chevron h-3 w-3 flex-shrink-0 transition-transform duration-200 motion-reduce:transition-none"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
       >
-        {locales.map((locale) => {
-          const href = resolvedAlternates[locale];
-          const isActive = locale === currentLocale;
-          return (
-            <a
-              href={href}
-              hreflang={locale}
-              lang={locale}
-              class="lang-row"
-              role="menuitemradio"
-              aria-checked={isActive ? 'true' : 'false'}
-              data-locale={locale}
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    </button>
+
+    <div
+      class={cn(
+        'lang-panel absolute z-50',
+        placement === 'top'
+          ? 'left-0 bottom-full mb-2 md:left-auto md:right-0'
+          : 'right-0 top-full mt-2',
+        'w-48 rounded-3xl border border-border/10 bg-background/50 backdrop-blur-md shadow-xl',
+        'p-1.5 hidden'
+      )}
+      role="menu"
+      aria-label={triggerLabel}
+    >
+      {locales.map((locale) => {
+        const href = resolvedAlternates[locale];
+        const isActive = locale === currentLocale;
+        return (
+          <a
+            href={href}
+            hreflang={locale}
+            lang={locale}
+            class="lang-row"
+            role="menuitemradio"
+            aria-checked={isActive ? 'true' : 'false'}
+            data-locale={locale}
+          >
+            <span class="lang-row-code">{locale.toUpperCase()}</span>
+            <span class="lang-row-name">{getLocaleName(locale)}</span>
+            <svg
+              class="lang-check h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
             >
-              <span class="lang-row-code">{locale.toUpperCase()}</span>
-              <span class="lang-row-name">{getLocaleName(locale)}</span>
-              <svg
-                class="lang-check h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M20 6L9 17l-5-5" />
-              </svg>
-            </a>
-          );
-        })}
-      </div>
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </a>
+        );
+      })}
     </div>
-  )
-}
+  </div>
+)}
 
 <style>
   .lang-wrapper[data-placement='top'] .lang-trigger[aria-expanded='false'] .lang-chevron,
@@ -220,11 +224,15 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
     const wrappers = document.querySelectorAll<HTMLElement>('.lang-wrapper');
     if (!wrappers.length) return;
 
-      document.querySelectorAll('.lang-row').forEach((row) => {
+    document.querySelectorAll('.lang-row').forEach((row) => {
       row.addEventListener('click', () => {
         const locale = row.getAttribute('data-locale');
         if (locale) {
-          try { localStorage.setItem('preferred_locale', locale); } catch { /* Storage may be unavailable. */ }
+          try {
+            localStorage.setItem('preferred_locale', locale);
+          } catch {
+            /* Storage may be unavailable. */
+          }
         }
       });
     });
@@ -262,7 +270,9 @@ const currentLanguageLabel = t('nav.currentLanguage', currentLocale);
         if (e.key === 'Escape') {
           const open = document.querySelector<HTMLElement>('.lang-panel:not(.hidden)');
           if (!open) return;
-          const trigger = open.closest('.lang-wrapper')?.querySelector<HTMLButtonElement>('.lang-trigger');
+          const trigger = open
+            .closest('.lang-wrapper')
+            ?.querySelector<HTMLButtonElement>('.lang-trigger');
           closeAllLangPanels();
           trigger?.focus();
         }

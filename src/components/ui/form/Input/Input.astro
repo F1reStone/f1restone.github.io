@@ -15,7 +15,17 @@ interface Props extends HTMLAttributes<'input'> {
   trailingIcon?: string;
 }
 
-const { label, error, hint, size = 'md', leadingIcon, trailingIcon, class: className, id, ...attrs } = Astro.props;
+const {
+  label,
+  error,
+  hint,
+  size = 'md',
+  leadingIcon,
+  trailingIcon,
+  class: className,
+  id,
+  ...attrs
+} = Astro.props;
 
 const inputId = id || generateId('input');
 const config = inputSizeConfig[size];
@@ -38,22 +48,18 @@ import Icon from '../../primitives/Icon/Icon.astro';
 ---
 
 <div class={cn('space-y-1.5', className)}>
-  {
-    label && (
-      <label for={inputId} class="text-sm font-medium leading-none">
-        {label}
-      </label>
-    )
-  }
+  {label && (
+    <label for={inputId} class="text-sm font-medium leading-none">
+      {label}
+    </label>
+  )}
 
   <div class="relative">
-    {
-      leadingIcon && (
-        <div class={cn(iconStyles, 'left-0')}>
-          <Icon name={leadingIcon} size="sm" />
-        </div>
-      )
-    }
+    {leadingIcon && (
+      <div class={cn(iconStyles, 'left-0')}>
+        <Icon name={leadingIcon} size="sm" />
+      </div>
+    )}
 
     <input
       id={inputId}
@@ -63,28 +69,22 @@ import Icon from '../../primitives/Icon/Icon.astro';
       {...attrs}
     />
 
-    {
-      trailingIcon && (
-        <div class={cn(iconStyles, 'right-0')}>
-          <Icon name={trailingIcon} size="sm" />
-        </div>
-      )
-    }
+    {trailingIcon && (
+      <div class={cn(iconStyles, 'right-0')}>
+        <Icon name={trailingIcon} size="sm" />
+      </div>
+    )}
   </div>
 
-  {
-    error && (
-      <p id={`${inputId}-error`} class="text-sm text-destructive">
-        {error}
-      </p>
-    )
-  }
+  {error && (
+    <p id={`${inputId}-error`} class="text-sm text-destructive">
+      {error}
+    </p>
+  )}
 
-  {
-    hint && !error && (
-      <p id={`${inputId}-hint`} class="text-sm text-muted-foreground">
-        {hint}
-      </p>
-    )
-  }
+  {hint && !error && (
+    <p id={`${inputId}-hint`} class="text-sm text-muted-foreground">
+      {hint}
+    </p>
+  )}
 </div>

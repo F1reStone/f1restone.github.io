@@ -23,9 +23,9 @@ const carouselId = `carousel-${Math.random().toString(36).slice(2, 9)}`;
 const hasMultiple = slides.length > 1;
 // Single screenshots keep their full frame; only swipeable galleries share a crop.
 const imageClass = hasMultiple ? 'aspect-video w-full object-cover' : 'w-full h-auto';
-const posters = await Promise.all(slides.map(slide =>
-  isVideoSlide(slide) ? getImage({ src: slide.poster, width: 1280 }) : null
-));
+const posters = await Promise.all(
+  slides.map((slide) => (isVideoSlide(slide) ? getImage({ src: slide.poster, width: 1280 }) : null))
+);
 const dotsWidth = 12 * (slides.length - 1) + 24;
 ---
 
@@ -89,7 +89,14 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
         aria-controls={carouselId}
         disabled
       >
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
@@ -105,17 +112,17 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           >
             {slides.map((_, i) => (
               // 初始化首屏 X 坐标 (12px 跨度，排在激活点后加推 18px 差值)
-                <button
-                  type="button"
-                  class="absolute left-0 top-0 h-1.5 rounded-full bg-border-strong transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 w-1.5 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
-                  data-carousel-dot
-                  data-index={i}
-                  role="tab"
-                  aria-label={t('projects.goToSlide', locale, { number: i + 1 })}
-                  aria-selected={i === 0 ? 'true' : 'false'}
-                  data-active={i === 0 ? 'true' : 'false'}
-                ></button>
-              ))}
+              <button
+                type="button"
+                class="absolute left-0 top-0 h-1.5 rounded-full bg-border-strong transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-brand-400 w-1.5 data-[active=true]:w-6 data-[active=true]:rounded-[3px] data-[active=true]:bg-brand-500 data-[active=true]:shadow-[0_0_8px_var(--color-brand-500)]"
+                data-carousel-dot
+                data-index={i}
+                role="tab"
+                aria-label={t('projects.goToSlide', locale, { number: i + 1 })}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                data-active={i === 0 ? 'true' : 'false'}
+              ></button>
+            ))}
           </div>
         </div>
         <span
@@ -123,7 +130,8 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           data-carousel-counter
           aria-hidden="true"
         >
-          <span data-carousel-current>{String(1).padStart(String(slides.length).length, '0')}</span> / {slides.length}
+          <span data-carousel-current>{String(1).padStart(String(slides.length).length, '0')}</span>{' '}
+          / {slides.length}
         </span>
       </div>
 
@@ -134,7 +142,14 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
         aria-label={t('projects.carouselNextSlide', locale)}
         aria-controls={carouselId}
       >
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </button>
@@ -180,35 +195,38 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
           if (i !== index) slide.querySelector('video')?.pause();
         });
         if (immediate) {
-          dots.forEach(dot => dot.style.transition = 'none');
+          dots.forEach((dot) => (dot.style.transition = 'none'));
         }
 
         dots.forEach((dot, j) => {
           const active = index === j;
           dot.dataset.active = active ? 'true' : 'false';
           dot.setAttribute('aria-selected', active ? 'true' : 'false');
-          
+
           // 计算绝对位移：跨度为 12px，激活后的膨胀宽度差值为 18px
           const x = j < index ? j * 12 : j === index ? j * 12 : j * 12 + 18;
           dot.style.transform = `translate3d(${x}px, 0, 0)`;
         });
-        
+
         // 动态补零，保证宽度死锁，绝不跳变
         if (counter) counter.textContent = String(index + 1).padStart(padLen, '0');
-        
+
         if (prevBtn) prevBtn.disabled = index === 0;
         if (nextBtn) nextBtn.disabled = index === total - 1;
 
         if (immediate) {
           void track.offsetHeight; // 强制浏览器立即执行渲染管线 (Reflow)，消除动画差
-          dots.forEach(dot => dot.style.transition = ''); // 恢复平滑动画
+          dots.forEach((dot) => (dot.style.transition = '')); // 恢复平滑动画
         }
       };
 
       const scrollToIndex = (index: number) => {
         const slide = slides[index];
         if (!slide) return;
-        track.scrollTo({ left: slide.offsetLeft, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+        track.scrollTo({
+          left: slide.offsetLeft,
+          behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        });
         updateUI(index);
       };
 
@@ -253,12 +271,16 @@ const dotsWidth = 12 * (slides.length - 1) + 24;
 
       // 仅保留给原生手指滑动的 UI 同步（降低延迟提高跟手度）
       let scrollTimeout: number | undefined;
-      track.addEventListener('scroll', () => {
-        if (scrollTimeout) window.clearTimeout(scrollTimeout);
-        scrollTimeout = window.setTimeout(() => {
-          updateUI(currentIndex());
-        }, 50);
-      }, { passive: true });
+      track.addEventListener(
+        'scroll',
+        () => {
+          if (scrollTimeout) window.clearTimeout(scrollTimeout);
+          scrollTimeout = window.setTimeout(() => {
+            updateUI(currentIndex());
+          }, 50);
+        },
+        { passive: true }
+      );
 
       updateUI(currentIndex(), true);
     });

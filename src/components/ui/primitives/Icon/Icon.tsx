@@ -32,21 +32,21 @@ const sizes: Record<string, string> = {
  */
 const iconMap: Record<string, string> = {
   // Social & brand → Simple Icons
-  github:           'simple-icons:github',
-  'x-twitter':      'simple-icons:x',
-  twitter:          'simple-icons:x',
-  instagram:        'simple-icons:instagram',
-  linkedin:         'simple-icons:linkedin',
-  bluesky:          'simple-icons:bluesky',
+  github: 'simple-icons:github',
+  'x-twitter': 'simple-icons:x',
+  twitter: 'simple-icons:x',
+  instagram: 'simple-icons:instagram',
+  linkedin: 'simple-icons:linkedin',
+  bluesky: 'simple-icons:bluesky',
   // Tech stack → Simple Icons
-  'brand-astro':      'simple-icons:astro',
-  'brand-tailwind':   'simple-icons:tailwindcss',
+  'brand-astro': 'simple-icons:astro',
+  'brand-tailwind': 'simple-icons:tailwindcss',
   'brand-typescript': 'simple-icons:typescript',
-  'brand-react':      'simple-icons:react',
-  'brand-github':     'simple-icons:github',
-  'brand-figma':      'simple-icons:figma',
-  'brand-vercel':     'simple-icons:vercel',
-  'brand-davinciresolve':    'simple-icons:davinciresolve',
+  'brand-react': 'simple-icons:react',
+  'brand-github': 'simple-icons:github',
+  'brand-figma': 'simple-icons:figma',
+  'brand-vercel': 'simple-icons:vercel',
+  'brand-davinciresolve': 'simple-icons:davinciresolve',
 };
 
 export function Icon({

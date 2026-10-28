@@ -100,80 +100,70 @@ const gridClasses = cn(
   {showHeroHalo && <HeroGrid />}
   {showHeroHalo && <HeroBeam />}
 
-  {
-    showGrid && (
+  {showGrid && (
+    <div
+      class="bg-grid-pattern pointer-events-none absolute inset-x-0 -inset-y-[20%] hidden opacity-30 md:dark:block"
+      style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"
+      aria-hidden="true"
+    />
+  )}
+
+  {showGlow && (
+    <>
       <div
-        class="bg-grid-pattern pointer-events-none absolute inset-x-0 -inset-y-[20%] hidden opacity-30 md:dark:block"
-        style="mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 40%, black 0%, transparent 70%);"
+        class="bg-brand-500/15 pointer-events-none absolute top-1/4 left-1/2 hidden h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px] dark:block"
         aria-hidden="true"
       />
-    )
-  }
-
-  {
-    showGlow && (
-      <>
-        <div
-          class="bg-brand-500/15 pointer-events-none absolute top-1/4 left-1/2 hidden h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px] dark:block"
-          aria-hidden="true"
-        />
-        <div
-          class="bg-brand-600/10 pointer-events-none absolute right-1/4 bottom-1/4 hidden h-[400px] w-[400px] rounded-full blur-[100px] dark:block"
-          aria-hidden="true"
-        />
-      </>
-    )
-  }
-
-  {
-    showBlob && (
-      <>
-        <div
-          class="pointer-events-none absolute top-0 -left-20 hidden h-[500px] w-[500px] -translate-y-1/4 rounded-full blur-[120px] dark:block dark:opacity-[0.20]"
-          style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
-          aria-hidden="true"
-        />
-        <div
-          class="pointer-events-none absolute top-0 -right-20 hidden h-[500px] w-[500px] -translate-y-1/4 rounded-full blur-[120px] dark:block dark:opacity-[0.20]"
-          style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
-          aria-hidden="true"
-        />
-      </>
-    )
-  }
-
-  {
-    bottomFade && (
       <div
-        class="to-background-secondary pointer-events-none absolute inset-x-0 bottom-0 hidden h-40 bg-gradient-to-b from-transparent dark:block"
+        class="bg-brand-600/10 pointer-events-none absolute right-1/4 bottom-1/4 hidden h-[400px] w-[400px] rounded-full blur-[100px] dark:block"
         aria-hidden="true"
       />
-    )
-  }
+    </>
+  )}
 
-  {
-    showScrollIndicator && (
+  {showBlob && (
+    <>
       <div
-        class="scroll-indicator-wrapper absolute bottom-4 left-1/2 z-10 -translate-x-1/2"
+        class="pointer-events-none absolute top-0 -left-20 hidden h-[500px] w-[500px] -translate-y-1/4 rounded-full blur-[120px] dark:block dark:opacity-[0.20]"
+        style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
         aria-hidden="true"
-      >
-        <div class="scroll-indicator flex flex-col items-center gap-0.5">
-          <svg
-            class="scroll-indicator-chevron h-7 w-7 text-white/60"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 10"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M3 2L12 8L21 2" />
-          </svg>
-        </div>
+      />
+      <div
+        class="pointer-events-none absolute top-0 -right-20 hidden h-[500px] w-[500px] -translate-y-1/4 rounded-full blur-[120px] dark:block dark:opacity-[0.20]"
+        style="background: radial-gradient(ellipse at center, var(--color-brand-400) 0%, transparent 70%);"
+        aria-hidden="true"
+      />
+    </>
+  )}
+
+  {bottomFade && (
+    <div
+      class="to-background-secondary pointer-events-none absolute inset-x-0 bottom-0 hidden h-40 bg-gradient-to-b from-transparent dark:block"
+      aria-hidden="true"
+    />
+  )}
+
+  {showScrollIndicator && (
+    <div
+      class="scroll-indicator-wrapper absolute bottom-4 left-1/2 z-10 -translate-x-1/2"
+      aria-hidden="true"
+    >
+      <div class="scroll-indicator flex flex-col items-center gap-0.5">
+        <svg
+          class="scroll-indicator-chevron h-7 w-7 text-white/60"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 10"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 2L12 8L21 2" />
+        </svg>
       </div>
-    )
-  }
+    </div>
+  )}
 
   <div class={gridClasses}>
     {/* Content Column */}
@@ -185,91 +175,77 @@ const gridClasses = cn(
       )}
     >
       {/* Badge Slot */}
-      {
-        hasBadgeSlot && (
-          <div class="hero-badge-slot mb-[var(--space-heading-gap)]">
-            <slot name="badge" />
-          </div>
-        )
-      }
+      {hasBadgeSlot && (
+        <div class="hero-badge-slot mb-[var(--space-heading-gap)]">
+          <slot name="badge" />
+        </div>
+      )}
 
       {/* Title Slot */}
-      {
-        hasTitleSlot && (
-          <div
-            class={cn(
-              'hero-title-slot mb-[var(--space-heading-gap)]',
-              '[&>h1]:font-display [&>h1]:text-foreground [&>h1]:text-5xl [&>h1]:leading-[1.1] [&>h1]:font-bold [&>h1]:tracking-tight [&>h1]:text-balance md:[&>h1]:text-6xl lg:[&>h1]:text-7xl',
-              '[&>h2]:font-display [&>h2]:text-foreground [&>h2]:text-4xl [&>h2]:leading-[1.1] [&>h2]:font-bold [&>h2]:tracking-tight [&>h2]:text-balance md:[&>h2]:text-5xl lg:[&>h2]:text-6xl'
-            )}
-          >
-            <slot name="title" />
-          </div>
-        )
-      }
+      {hasTitleSlot && (
+        <div
+          class={cn(
+            'hero-title-slot mb-[var(--space-heading-gap)]',
+            '[&>h1]:font-display [&>h1]:text-foreground [&>h1]:text-5xl [&>h1]:leading-[1.1] [&>h1]:font-bold [&>h1]:tracking-tight [&>h1]:text-balance md:[&>h1]:text-6xl lg:[&>h1]:text-7xl',
+            '[&>h2]:font-display [&>h2]:text-foreground [&>h2]:text-4xl [&>h2]:leading-[1.1] [&>h2]:font-bold [&>h2]:tracking-tight [&>h2]:text-balance md:[&>h2]:text-5xl lg:[&>h2]:text-6xl'
+          )}
+        >
+          <slot name="title" />
+        </div>
+      )}
 
       {/* Description Slot */}
-      {
-        hasDescriptionSlot && (
-          <div
-            class={cn(
-              'hero-description-slot text-foreground-muted mb-[var(--space-stack-lg)] max-w-xl text-lg leading-relaxed',
-              '[&>p]:text-foreground-muted [&>p]:text-lg [&>p]:leading-relaxed',
-              isCentered && 'mx-auto'
-            )}
-          >
-            <slot name="description" />
-          </div>
-        )
-      }
+      {hasDescriptionSlot && (
+        <div
+          class={cn(
+            'hero-description-slot text-foreground-muted mb-[var(--space-stack-lg)] max-w-xl text-lg leading-relaxed',
+            '[&>p]:text-foreground-muted [&>p]:text-lg [&>p]:leading-relaxed',
+            isCentered && 'mx-auto'
+          )}
+        >
+          <slot name="description" />
+        </div>
+      )}
 
       {/* Actions Slot */}
-      {
-        hasActionsSlot && (
-          <div
-            class={cn(
-              'hero-actions-slot flex w-full flex-col gap-4 sm:w-auto sm:flex-row',
-              isCentered && 'justify-center'
-            )}
-          >
-            <slot name="actions" />
-          </div>
-        )
-      }
+      {hasActionsSlot && (
+        <div
+          class={cn(
+            'hero-actions-slot flex w-full flex-col gap-4 sm:w-auto sm:flex-row',
+            isCentered && 'justify-center'
+          )}
+        >
+          <slot name="actions" />
+        </div>
+      )}
 
       {/* Default slot for additional content (social proof, etc.) */}
       <slot />
     </div>
 
     {/* Aside Column (for split layout) */}
-    {
-      layout === 'split' && hasAsideSlot && (
-        <div class="relative z-10 order-2 w-full lg:order-none">
-          <slot name="aside" />
-        </div>
-      )
-    }
+    {layout === 'split' && hasAsideSlot && (
+      <div class="relative z-10 order-2 w-full lg:order-none">
+        <slot name="aside" />
+      </div>
+    )}
   </div>
 
-  {
-    /* Bottom slot — e.g. the homepage tech-stack marquee, in place of the scroll
+  {/* Bottom slot — e.g. the homepage tech-stack marquee, in place of the scroll
       indicator. In a full-height hero it's the last flex child, pushed to the
       floor with mt-auto so the content stays at the top and leftover height opens
       up between them; the section's column `gap` guarantees a minimum gap so it
-      never crowds on short windows. Outside full-height it falls back to absolute. */
-  }
-  {
-    hasBottomSlot && (
-      <div
-        class={cn(
-          'hero-bottom-slot z-10 w-full',
-          isFlooredBottom ? 'relative mt-auto' : 'absolute inset-x-0 bottom-0'
-        )}
-      >
-        <slot name="bottom" />
-      </div>
-    )
-  }
+      never crowds on short windows. Outside full-height it falls back to absolute. */}
+  {hasBottomSlot && (
+    <div
+      class={cn(
+        'hero-bottom-slot z-10 w-full',
+        isFlooredBottom ? 'relative mt-auto' : 'absolute inset-x-0 bottom-0'
+      )}
+    >
+      <slot name="bottom" />
+    </div>
+  )}
 </section>
 
 <style>

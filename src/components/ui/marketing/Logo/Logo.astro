@@ -15,12 +15,11 @@ interface Props {
 const size = Astro.props.size ?? 'lg';
 const className = Astro.props.class;
 
-
 const sizeClasses: Record<string, string> = {
-  sm:    'h-6 w-auto',
-  md:    'h-7 w-auto',
-  lg:    'h-8 w-auto',
-  xl:    'h-12 w-auto',
+  sm: 'h-6 w-auto',
+  md: 'h-7 w-auto',
+  lg: 'h-8 w-auto',
+  xl: 'h-12 w-auto',
   '2xl': 'h-24 w-auto',
 };
 
@@ -40,9 +39,18 @@ const dimensions = sizeClasses[size] ?? sizeClasses.lg;
     aria-label={siteConfig.name}
     role="img"
   >
-    <path d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z" fill="currentColor"/>
-    <path d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z" fill="currentColor"/>
-    <path d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z" fill="currentColor"/>
-    <path d="M0 56.823L14.2634 69.9948L20.8454 70L48.7419 2.12105L47.2519 0H34.2695L0.00381908 32.0278L0 56.823Z" fill="currentColor"/>
+    <path
+      d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z"
+      fill="currentColor"
+    />
+    <path d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z" fill="currentColor" />
+    <path
+      d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z"
+      fill="currentColor"
+    />
+    <path
+      d="M0 56.823L14.2634 69.9948L20.8454 70L48.7419 2.12105L47.2519 0H34.2695L0.00381908 32.0278L0 56.823Z"
+      fill="currentColor"
+    />
   </svg>
 </span>

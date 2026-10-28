@@ -1,6 +1,8 @@
 ---
 import { defaultLocale, localizedPath, getLocaleFromPath } from '@/i18n';
-interface Props { locale?: string; }
+interface Props {
+  locale?: string;
+}
 const locale = getLocaleFromPath(Astro.originPathname);
 Astro.locals.contentLocale = defaultLocale;
 /**
@@ -40,6 +42,7 @@ const recoveryLinks = [
   },
 ];
 ---
+
 <PageLayout
   title="FireStone AI"
   description="此页面仍在积极开发中 // 敬请期待"
@@ -51,26 +54,35 @@ const recoveryLinks = [
       <Icon name="triangle-alert" size="sm" />
       Work in Progress
     </Badge>
-    
-    <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+
+    <h1
+      slot="title"
+      class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative"
+    >
       <span class="hero-title-text">Coming Soon</span>
     </h1>
 
-    <p slot="description" class="hero-description-text">此页面仍在积极开发中 // 敬请期待</p>
+    <p slot="description" class="hero-description-text">
+      此页面仍在积极开发中 // 敬请期待
+    </p>
   </Hero>
 
   <!-- Recovery Section -->
   <section class="py-[var(--space-section-md)] bg-background">
     <div class="mx-auto max-w-8xl px-6">
       <div class="mb-8 text-center" data-reveal>
-        <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
-          不妨…看看这些？
-        </h2>
+        <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">不妨…看看这些？</h2>
       </div>
 
       <div class="grid gap-6 lg:grid-cols-3">
         {recoveryLinks.map((link, i) => (
-          <Card hover href={localizedPath(link.href, locale)} class="group" data-reveal data-reveal-delay={i}>
+          <Card
+            hover
+            href={localizedPath(link.href, locale)}
+            class="group"
+            data-reveal
+            data-reveal-delay={i}
+          >
             <div class="flex items-start gap-4">
               <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
                 <Icon name={link.icon} size="sm" />
@@ -81,7 +93,11 @@ const recoveryLinks = [
                   {link.description}
                 </p>
               </div>
-              <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0" />
+              <Icon
+                name="arrow-up-right"
+                size="sm"
+                class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0"
+              />
             </div>
           </Card>
         ))}

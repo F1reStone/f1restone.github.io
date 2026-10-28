@@ -180,7 +180,7 @@ const stack = defineCollection({
     description: z.string(),
     url: z.string().url(),
     // FireStone: 移除了外置 icon、colorOklch 和无用的 version，改用自定义矢量 logo 文件名
-    logo: z.string(), 
+    logo: z.string(),
     order: z.number().default(0),
   }),
 });

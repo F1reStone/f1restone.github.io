@@ -50,17 +50,27 @@ const Wrapper = collapsible ? 'details' : 'nav';
           <Icon name="chevron-down" class="toc-chevron h-4 w-4" />
         </span>
       </summary>
-    ) : <p
-      id={headingId}
-      class="text-xs font-semibold uppercase tracking-[0.15em] text-foreground-muted mb-3"
-    >
-      {title}
-    </p>}
+    ) : (
+      <p
+        id={headingId}
+        class="text-xs font-semibold uppercase tracking-[0.15em] text-foreground-muted mb-3"
+      >
+        {title}
+      </p>
+    )}
     <ul class:list={['space-y-1.5 text-sm border-l border-border relative', collapsible && 'mt-4']}>
       <!-- FireStone: 永久常驻的双节点设计，解决 appendChild 导致的滚动锚定 Bug，支持硬件加速 -->
-      <li class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-ghost aria-hidden="true"></li>
-      <li class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0" data-toc-main aria-hidden="true"></li>
-      
+      <li
+        class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0"
+        data-toc-ghost
+        aria-hidden="true"
+      ></li>
+      <li
+        class="list-none toc-indicator absolute top-0 left-0 w-[4px] rounded-full bg-brand-500 opacity-0"
+        data-toc-main
+        aria-hidden="true"
+      ></li>
+
       {items.map((h) => (
         <li
           class="toc-item"
@@ -82,13 +92,26 @@ const Wrapper = collapsible ? 'details' : 'nav';
 )}
 
 <style>
-  .toc-hide, details[open] .toc-show { display: none; }
-  details[open] .toc-hide { display: inline; }
-  .toc-chevron { transition: transform 300ms var(--ease-default); }
-  details[open] .toc-chevron { transform: rotate(180deg); }
+  .toc-hide,
+  details[open] .toc-show {
+    display: none;
+  }
+  details[open] .toc-hide {
+    display: inline;
+  }
+  .toc-chevron {
+    transition: transform 300ms var(--ease-default);
+  }
+  details[open] .toc-chevron {
+    transform: rotate(180deg);
+  }
   @media (prefers-reduced-motion: reduce) {
-    .toc-chevron { transition: none; }
-    .toc-indicator { transition: none !important; }
+    .toc-chevron {
+      transition: none;
+    }
+    .toc-indicator {
+      transition: none !important;
+    }
   }
   .toc-sticky {
     position: sticky;
@@ -101,7 +124,8 @@ const Wrapper = collapsible ? 'details' : 'nav';
     font-weight: 400;
   }
 
-  .toc-link:hover, .toc-link:focus-visible {
+  .toc-link:hover,
+  .toc-link:focus-visible {
     color: var(--color-foreground);
     font-weight: 550;
     text-shadow: 0 0 5px currentColor;
@@ -126,31 +150,36 @@ const Wrapper = collapsible ? 'details' : 'nav';
   // - Zero DOM insertion (保留了解决滚动条闪烁和 Layout Thrashing)
   // - Pure Scale Morphing 恢复了去除错误的 opacity 渐隐，并恢复物理坍缩
   // =========================================================================
-  
+
   let isJumping = false;
   let scrollStopTimer: ReturnType<typeof setTimeout>;
 
   // 监听页面滚动：识别“点击跳转”何时结束，恢复 IO 监听
-  window.addEventListener('scroll', () => {
-    if (isJumping) {
-      clearTimeout(scrollStopTimer);
-      scrollStopTimer = setTimeout(() => {
-        isJumping = false;
-      }, 150);
-    }
-  }, { passive: true });
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (isJumping) {
+        clearTimeout(scrollStopTimer);
+        scrollStopTimer = setTimeout(() => {
+          isJumping = false;
+        }, 150);
+      }
+    },
+    { passive: true }
+  );
 
   const tocs = document.querySelectorAll<HTMLElement>('[data-toc]');
   for (const toc of tocs) {
     // Close a mobile disclosure after choosing a section, retaining native anchor navigation.
     toc.addEventListener('click', (event) => {
-      if (toc instanceof HTMLDetailsElement && (event.target as Element).closest('[data-toc-link]')) {
+      if (
+        toc instanceof HTMLDetailsElement &&
+        (event.target as Element).closest('[data-toc-link]')
+      ) {
         toc.open = false;
       }
     });
-    const links = Array.from(
-      toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'),
-    );
+    const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
     const mainInd = toc.querySelector<HTMLElement>('[data-toc-main]');
     const ghostInd = toc.querySelector<HTMLElement>('[data-toc-ghost]');
     const slugs = links.map((a) => a.getAttribute('data-toc-link')!);
@@ -168,7 +197,7 @@ const Wrapper = collapsible ? 'details' : 'nav';
       if (slug === activeSlug) return;
       activeSlug = slug;
       let newLink: HTMLAnchorElement | null = null;
-      
+
       for (const a of links) {
         const isActive = a.getAttribute('data-toc-link') === slug;
         a.setAttribute('data-active', isActive ? 'true' : 'false');
@@ -213,19 +242,19 @@ const Wrapper = collapsible ? 'details' : 'nav';
 
             mainInd.style.transition = 'transform 500ms var(--ease-fluid)';
             mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
-
           } else {
             /* === Standard Slide === */
             ghostInd.style.opacity = '0'; // 同层级滑动时立刻隐藏残影
             ghostInd.style.transition = 'none';
-            
+
             mainInd.style.transformOrigin = 'center';
-            mainInd.style.transition = 'transform 500ms var(--ease-fluid), height 500ms var(--ease-fluid)';
+            mainInd.style.transition =
+              'transform 500ms var(--ease-fluid), height 500ms var(--ease-fluid)';
             mainInd.style.height = `${newLink.offsetHeight}px`;
             mainInd.style.transform = `translate3d(${newLink.offsetLeft}px, ${newLink.offsetTop}px, 0) scaleY(1)`;
           }
         }
-        
+
         currentLink = newLink;
 
         // Auto-scroll 仅在目录本身有滚动条时生效 (完美解决手机端乱滚导致卡死的 Bug)
@@ -240,7 +269,12 @@ const Wrapper = collapsible ? 'details' : 'nav';
             delta = linkRect.bottom - tocRect.bottom + padding;
           }
           if (delta !== 0) {
-            toc.scrollBy({ top: delta, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+            toc.scrollBy({
+              top: delta,
+              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                ? 'instant'
+                : 'smooth',
+            });
           }
         }
       }
@@ -259,7 +293,7 @@ const Wrapper = collapsible ? 'details' : 'nav';
     }
 
     // 点击锁定逻辑 (恢复！)
-    links.forEach(link => {
+    links.forEach((link) => {
       link.addEventListener('click', () => {
         isJumping = true; // 锁定滚动嗅探
         const slug = link.getAttribute('data-toc-link');
@@ -274,10 +308,10 @@ const Wrapper = collapsible ? 'details' : 'nav';
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-          
+
         if (visible.length > 0 && visible[0].target.id) {
           const targetId = visible[0].target.id;
-          
+
           // 防抖逻辑 (恢复！) 降低快速滚动时的性能开销
           clearTimeout(ioTimeout);
           ioTimeout = setTimeout(() => {
@@ -285,7 +319,7 @@ const Wrapper = collapsible ? 'details' : 'nav';
           }, 50);
         }
       },
-      { rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+      { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
     );
 
     for (const h of headings) io.observe(h);

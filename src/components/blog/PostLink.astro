@@ -29,4 +29,6 @@ const targetLocale = locale ?? getLocaleFromPath(Astro.originPathname);
 const { url, title } = await resolvePostUrl(uid, targetLocale);
 ---
 
-<a href={url} class={className}><slot>{title}</slot></a>
+<a href={url} class={className}>
+  <slot>{title}</slot>
+</a>

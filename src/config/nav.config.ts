@@ -100,8 +100,18 @@ export const footerNavItems: NavItem[] = [
 export const legalLinks: LegalLink[] = [
   { label: 'Cookie 首选项', action: 'openConsentSettings', labelKey: 'footer.cookiePreferences' },
   { label: '动态效果', action: 'openDynamicEffects', labelKey: 'effects.trigger' },
-  { label: '隐私政策', href: '/legal/privacy-policy/', availableLocales: ['zh-CN'], labelKey: 'footer.privacyPolicy' },
-  { label: '服务状态', href: 'https://www.cloudflarestatus.com/services?group=cdn-performance', external: true, labelKey: 'footer.serviceStatus' },
+  {
+    label: '隐私政策',
+    href: '/legal/privacy-policy/',
+    availableLocales: ['zh-CN'],
+    labelKey: 'footer.privacyPolicy',
+  },
+  {
+    label: '服务状态',
+    href: 'https://www.cloudflarestatus.com/services?group=cdn-performance',
+    external: true,
+    labelKey: 'footer.serviceStatus',
+  },
 ];
 
 export const footerLinkGroups: FooterLinkGroup[] = [
@@ -118,23 +128,52 @@ export const footerLinkGroups: FooterLinkGroup[] = [
     title: '项目',
     titleKey: 'footer.groups.projects',
     links: [
-      { label: 'FireStone 网站', href: '/projects/firestone-website/', availableLocales: ['zh-CN'], order: 1, labelKey: 'footer.groups.links.firestoneWebsite' },
-      { label: 'SparkForge 燧光', href: '/projects/sparkforge/', availableLocales: ['zh-CN'], order: 2, labelKey: 'footer.groups.links.sparkforge' },
+      {
+        label: 'FireStone 网站',
+        href: '/projects/firestone-website/',
+        availableLocales: ['zh-CN'],
+        order: 1,
+        labelKey: 'footer.groups.links.firestoneWebsite',
+      },
+      {
+        label: 'SparkForge 燧光',
+        href: '/projects/sparkforge/',
+        availableLocales: ['zh-CN'],
+        order: 2,
+        labelKey: 'footer.groups.links.sparkforge',
+      },
     ],
   },
   {
     title: '关于',
     titleKey: 'footer.groups.about',
     links: [
-      { label: '关于 FireStone', href: '/about/', order: 1, labelKey: 'footer.groups.links.aboutFirestone' },
+      {
+        label: '关于 FireStone',
+        href: '/about/',
+        order: 1,
+        labelKey: 'footer.groups.links.aboutFirestone',
+      },
     ],
   },
   {
     title: '法律',
     titleKey: 'footer.groups.legal',
     links: [
-      { label: '法律信息', href: '/legal/', availableLocales: ['zh-CN'], order: 1, labelKey: 'footer.groups.links.legalInfo' },
-      { label: '隐私政策', href: '/legal/privacy-policy/', availableLocales: ['zh-CN'], order: 2, labelKey: 'footer.groups.links.privacyPolicy' },
+      {
+        label: '法律信息',
+        href: '/legal/',
+        availableLocales: ['zh-CN'],
+        order: 1,
+        labelKey: 'footer.groups.links.legalInfo',
+      },
+      {
+        label: '隐私政策',
+        href: '/legal/privacy-policy/',
+        availableLocales: ['zh-CN'],
+        order: 2,
+        labelKey: 'footer.groups.links.privacyPolicy',
+      },
     ],
   },
   {
@@ -178,9 +217,25 @@ export function resolveNavItem(item: NavItem | LegalLink, locale: Locale): Resol
   const label = override?.label ?? (item.labelKey ? t(item.labelKey, locale) : item.label);
   const rawHref = override?.href ?? item.href;
   const href = rawHref
-    ? (item.external || isExternalOrAnchorHref(rawHref) ? rawHref : localizedPath(rawHref, !item.availableLocales || item.availableLocales.includes(locale) ? locale : defaultLocale))
+    ? item.external || isExternalOrAnchorHref(rawHref)
+      ? rawHref
+      : localizedPath(
+          rawHref,
+          !item.availableLocales || item.availableLocales.includes(locale) ? locale : defaultLocale
+        )
     : '#';
-  return { label, href: rawHref && !item.external && !isExternalOrAnchorHref(rawHref) && item.availableLocales && !item.availableLocales.includes(locale) ? withLocaleFallback(href, defaultLocale, locale) : href, external: item.external };
+  return {
+    label,
+    href:
+      rawHref &&
+      !item.external &&
+      !isExternalOrAnchorHref(rawHref) &&
+      item.availableLocales &&
+      !item.availableLocales.includes(locale)
+        ? withLocaleFallback(href, defaultLocale, locale)
+        : href,
+    external: item.external,
+  };
 }
 
 /**

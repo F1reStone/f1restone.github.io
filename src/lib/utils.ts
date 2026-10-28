@@ -44,11 +44,7 @@ export function getReadingTime(content: string): number {
     .replace(/[#>*_~]/g, ' '); // common Markdown markers
 
   const cjkChars = (text.match(CJK_PATTERN) || []).length;
-  const words = text
-    .replace(CJK_PATTERN, ' ')
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean).length;
+  const words = text.replace(CJK_PATTERN, ' ').trim().split(/\s+/).filter(Boolean).length;
 
   const minutes = words / WORDS_PER_MINUTE + cjkChars / CJK_CHARS_PER_MINUTE;
   return Math.max(1, Math.ceil(minutes));
@@ -73,13 +69,18 @@ export function isExternalUrl(url: string): boolean {
  * Matches each URL against known platforms to derive icon name and label.
  */
 const SOCIAL_PLATFORMS = [
-  { key: 'github',    match: /github\.com/i,                  label: 'GitHub',      icon: 'github'    },
-  { key: 'x-twitter',   match: /x\.com|twitter\.com/i,          label: 'X', icon: 'x-twitter' },
-  { key: 'bilibili',  match: /bilibili\.com/i,                label: '哔哩哔哩',    icon: 'bilibili'  },
-  { key: 'zhihu',     match: /zhihu\.com/i,                   label: '知乎',        icon: 'zhihu'     },
-  { key: 'neteasecloudmusic', match: /music\.163\.com/i,      label: '网易云音乐',    icon: 'neteasecloudmusic' },
-  { key: 'weibo',     match: /weibo\.com/i,                   label: '微博',        icon: 'weibo'     },
-  { key: 'youtube',   match: /youtube\.com/i,                 label: 'YouTube',     icon: 'youtube'   },
+  { key: 'github', match: /github\.com/i, label: 'GitHub', icon: 'github' },
+  { key: 'x-twitter', match: /x\.com|twitter\.com/i, label: 'X', icon: 'x-twitter' },
+  { key: 'bilibili', match: /bilibili\.com/i, label: '哔哩哔哩', icon: 'bilibili' },
+  { key: 'zhihu', match: /zhihu\.com/i, label: '知乎', icon: 'zhihu' },
+  {
+    key: 'neteasecloudmusic',
+    match: /music\.163\.com/i,
+    label: '网易云音乐',
+    icon: 'neteasecloudmusic',
+  },
+  { key: 'weibo', match: /weibo\.com/i, label: '微博', icon: 'weibo' },
+  { key: 'youtube', match: /youtube\.com/i, label: 'YouTube', icon: 'youtube' },
 ] as const;
 
 export interface ResolvedSocialLink {
@@ -89,12 +90,20 @@ export interface ResolvedSocialLink {
   icon: string;
 }
 
-export function resolveSocialLinks(urls: string[], locale: string = defaultLocale): ResolvedSocialLink[] {
+export function resolveSocialLinks(
+  urls: string[],
+  locale: string = defaultLocale
+): ResolvedSocialLink[] {
   // FireStone: [Optimized to map all URLs. Returns a fallback icon for unknown platforms]
   return urls.map((href) => {
     const platform = SOCIAL_PLATFORMS.find((p) => p.match.test(href));
     if (platform) {
-      return { key: platform.key, href, label: t(`social.${platform.key}`, locale), icon: platform.icon };
+      return {
+        key: platform.key,
+        href,
+        label: t(`social.${platform.key}`, locale),
+        icon: platform.icon,
+      };
     }
     // Fallback for unknown links
     return { key: 'link', href, label: t('footer.socialMedia', locale), icon: 'link' };

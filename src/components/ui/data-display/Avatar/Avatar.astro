@@ -17,27 +17,35 @@ interface Props extends HTMLAttributes<'div'> {
 const { src, alt = '', fallback, size = 'md', class: className, ...attrs } = Astro.props;
 
 // Generate initials from alt text or fallback
-const initials = fallback || alt
-  .split(' ')
-  .map((word) => word[0])
-  .join('')
-  .slice(0, 2)
-  .toUpperCase();
+const initials =
+  fallback ||
+  alt
+    .split(' ')
+    .map((word) => word[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 ---
 
 <div class={cn(avatarVariants({ size }), className)} {...attrs}>
   {src ? (
-    <img
-      src={src}
-      alt={alt}
-      class="w-full h-full object-cover"
-      loading="lazy"
-      decoding="async"
-      data-avatar-img
-    />
-    <span class="hidden items-center justify-center w-full h-full" aria-hidden="true" data-avatar-fallback>
-      {initials || '?'}
-    </span>
+    <>
+      <img
+        src={src}
+        alt={alt}
+        class="w-full h-full object-cover"
+        loading="lazy"
+        decoding="async"
+        data-avatar-img
+      />
+      <span
+        class="hidden items-center justify-center w-full h-full"
+        aria-hidden="true"
+        data-avatar-fallback
+      >
+        {initials || '?'}
+      </span>
+    </>
   ) : (
     <span aria-hidden="true">{initials || '?'}</span>
   )}

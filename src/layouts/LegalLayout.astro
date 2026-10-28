@@ -47,9 +47,7 @@ const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'legal');
 
 const localizedHeadings = headings.map((heading) =>
-  heading.slug === 'footnote-label'
-    ? { ...heading, text: t('common.footnotes', locale) }
-    : heading
+  heading.slug === 'footnote-label' ? { ...heading, text: t('common.footnotes', locale) } : heading
 );
 ---
 
@@ -59,12 +57,7 @@ const localizedHeadings = headings.map((heading) =>
   description={description}
   article={undefined}
 >
-  <Header
-    slot="header"
-    position="fixed"
-    showCta={false}
-    maxWidth="8xl"
-  />
+  <Header slot="header" position="fixed" showCta={false} maxWidth="8xl" />
 
   <div class="min-h-screen">
     <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
@@ -73,33 +66,51 @@ const localizedHeadings = headings.map((heading) =>
         {title}
       </Badge>
 
-      <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <h1
+        slot="title"
+        class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative"
+      >
         <span class="hero-title-text">{displayTitleEn}</span>
       </h1>
 
-      <p slot="description" class="hero-description-text">{description}</p>
+      <p slot="description" class="hero-description-text">
+        {description}
+      </p>
 
       {updatedAt && (
-          <>
-            <div class="flex items-center gap-2 font-mono text-foreground/75">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-              </svg>
-              <time datetime={updatedAt.toISOString()}>
-                {t('blog.updatedOn', locale, { date: formatDate(updatedAt, locale) })}
-              </time>
-            </div>
-          </>
-        )}
+        <>
+          <div class="flex items-center gap-2 font-mono text-foreground/75">
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+              />
+            </svg>
+            <time datetime={updatedAt.toISOString()}>
+              {t('blog.updatedOn', locale, { date: formatDate(updatedAt, locale) })}
+            </time>
+          </div>
+        </>
+      )}
     </Hero>
 
     <article class="pt-8 pb-[var(--space-section-md)]">
-      <div class:list={[
-        'mx-auto px-6 max-w-8xl',
-        sidebarActive && (sidebarOnLeft
-          ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
-          : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
-      ]}>
+      <div
+        class:list={[
+          'mx-auto px-6 max-w-8xl',
+          sidebarActive &&
+            (sidebarOnLeft
+              ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
+              : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
+        ]}
+      >
         {sidebarActive && sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
             <TableOfContents
@@ -112,12 +123,13 @@ const localizedHeadings = headings.map((heading) =>
         )}
 
         <div class:list={['min-w-0 max-w-8xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
-
           {inlineActive && (
-            <div class:list={[
-              'mb-10 rounded-xl border border-border bg-background-secondary p-5',
-              tocLayout === 'auto' && 'xl:hidden',
-            ]}>
+            <div
+              class:list={[
+                'mb-10 rounded-xl border border-border bg-background-secondary p-5',
+                tocLayout === 'auto' && 'xl:hidden',
+              ]}
+            >
               <TableOfContents
                 headings={localizedHeadings}
                 maxDepth={tocConfig?.maxDepth ?? 3}
@@ -159,8 +171,5 @@ const localizedHeadings = headings.map((heading) =>
     </article>
   </div>
 
-  <Footer 
-    slot="footer" 
-    breadcrumbs={breadcrumbs} 
-  />
+  <Footer slot="footer" breadcrumbs={breadcrumbs} />
 </BaseLayout>

@@ -491,7 +491,9 @@ input[type='reset'] {
     transition: --header-top-color 800ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  header[data-header-color-scheme='auto'][data-header-position='fixed']:not([data-scrolled]):not([data-menu-expanded]):not([data-search-expanded]) {
+  header[data-header-color-scheme='auto'][data-header-position='fixed']:not([data-scrolled]):not(
+      [data-menu-expanded]
+    ):not([data-search-expanded]) {
     --color-foreground: var(--header-top-color);
     --color-foreground-secondary: color-mix(in srgb, var(--header-top-color) 85%, transparent);
     --color-foreground-muted: color-mix(in srgb, var(--header-top-color) 70%, transparent);
@@ -1574,7 +1576,8 @@ input[type='reset'] {
   --engine-transition-no-font-weight:
     transform 500ms var(--ease-fluid), box-shadow 500ms var(--ease-fluid),
     border-color 400ms var(--ease-fluid), background-color 200ms linear, color 200ms linear,
-    text-shadow 500ms var(--ease-fluid), filter 400ms var(--ease-fluid), opacity 500ms var(--ease-fluid);
+    text-shadow 500ms var(--ease-fluid), filter 400ms var(--ease-fluid),
+    opacity 500ms var(--ease-fluid);
 }
 
 /* 1. 基础 SparkGlass 材质 */
@@ -1653,7 +1656,10 @@ input[type='reset'] {
 :is(svg.hover-glow-icon, .hover-glow-icon svg) {
   scale: 1;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
-  transition: color 200ms linear, filter 400ms var(--ease-fluid), scale 500ms var(--ease-fluid);
+  transition:
+    color 200ms linear,
+    filter 400ms var(--ease-fluid),
+    scale 500ms var(--ease-fluid);
 }
 
 /* Parent interaction also reaches icons with pointer-events: none. Keyboard focus
@@ -1756,7 +1762,13 @@ input[type='reset'] {
 
 /* Animate the variable font's weight axis directly to avoid Blink's font-weight repaint path for CJK glyphs. */
 @media (prefers-reduced-motion: no-preference) {
-  html[data-browser-engine='chromium'] :is(.weight-shift, .weight-shift-non-centered, .hero-title-text, .hero-title-serif)[data-ws-variable-axis] {
+  html[data-browser-engine='chromium']
+    :is(
+      .weight-shift,
+      .weight-shift-non-centered,
+      .hero-title-text,
+      .hero-title-serif
+    )[data-ws-variable-axis] {
     font-weight: var(--ws-base) !important;
     font-variation-settings: 'wght' var(--ws-base);
     transition:
@@ -1764,14 +1776,27 @@ input[type='reset'] {
       font-variation-settings 700ms var(--ease-bouncy) !important;
   }
 
-  html[data-browser-engine='chromium'] :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis]::after {
+  html[data-browser-engine='chromium']
+    :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis]::after {
     font-variation-settings: 'wght' 900;
   }
 
-  html[data-browser-engine='chromium'] :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis]:is(:hover, :active, :focus-visible, .active),
-  html[data-browser-engine='chromium'] .group:hover :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis],
-  html[data-browser-engine='chromium'] .group:focus-visible :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis],
-  html[data-browser-engine='chromium'] :is(.hero-title-wrapper:hover, .hero-title-wrapper:active) :is(.hero-title-text, .hero-title-serif)[data-ws-variable-axis] {
+  html[data-browser-engine='chromium']
+    :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis]:is(
+      :hover,
+      :active,
+      :focus-visible,
+      .active
+    ),
+  html[data-browser-engine='chromium']
+    .group:hover
+    :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis],
+  html[data-browser-engine='chromium']
+    .group:focus-visible
+    :is(.weight-shift, .weight-shift-non-centered)[data-ws-variable-axis],
+  html[data-browser-engine='chromium']
+    :is(.hero-title-wrapper:hover, .hero-title-wrapper:active)
+    :is(.hero-title-text, .hero-title-serif)[data-ws-variable-axis] {
     font-variation-settings: 'wght' var(--ws-target);
   }
 }

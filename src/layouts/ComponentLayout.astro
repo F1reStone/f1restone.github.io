@@ -24,10 +24,23 @@ interface Props {
   footerBackground?: 'default' | 'secondary' | 'invert';
 }
 
-const { title, description, image, imageAlt, noindex, nofollow, showScrollProgress = false, eagerReveal = false } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  imageAlt,
+  noindex,
+  nofollow,
+  showScrollProgress = false,
+  eagerReveal = false,
+} = Astro.props;
 
 const locale = getLocaleFromPath(Astro.url.pathname);
-const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcrumbs ?? buildBreadcrumbs(Astro.props.breadcrumbLabel ?? title, Astro.url.pathname, locale);
+const breadcrumbs =
+  Astro.props.breadcrumbs === false
+    ? []
+    : (Astro.props.breadcrumbs ??
+      buildBreadcrumbs(Astro.props.breadcrumbLabel ?? title, Astro.url.pathname, locale));
 ---
 
 <BaseLayout
@@ -43,7 +56,7 @@ const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcr
   <Header
     slot="header"
     position="sticky"
-    colorScheme='default'
+    colorScheme="default"
     showActiveState
     showCta={false}
     showScrollProgress={showScrollProgress}
@@ -53,7 +66,5 @@ const breadcrumbs = Astro.props.breadcrumbs === false ? [] : Astro.props.breadcr
     <slot />
   </main>
 
-  <Footer breadcrumbs={breadcrumbs}
-    slot="footer"
-  />
+  <Footer breadcrumbs={breadcrumbs} slot="footer" />
 </BaseLayout>

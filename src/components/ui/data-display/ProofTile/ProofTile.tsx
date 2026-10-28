@@ -41,20 +41,29 @@ export function ProofTile({
       className={cn(proofTileVariants({ size }), !href && 'cursor-default', className)}
       {...rest}
     >
-      {icon && <span className="w-10 h-10 text-brand-500 [&>svg]:w-full [&>svg]:h-full">{icon}</span>}
+      {icon && (
+        <span className="text-brand-500 h-10 w-10 [&>svg]:h-full [&>svg]:w-full">{icon}</span>
+      )}
       {number !== undefined && (
-        <span className="font-display text-3xl font-bold text-brand-500 leading-none">{number}</span>
+        <span className="font-display text-brand-500 text-3xl leading-none font-bold">
+          {number}
+        </span>
       )}
       {(title || children) && (
         <div>
           {title &&
             createElement(
               titleTag,
-              { className: cn('font-semibold text-foreground', size === 'sm' ? 'text-sm' : 'text-base') },
+              {
+                className: cn(
+                  'font-semibold text-foreground',
+                  size === 'sm' ? 'text-sm' : 'text-base'
+                ),
+              },
               title
             )}
           {children && (
-            <p className={cn('text-sm text-foreground-muted leading-relaxed', title && 'mt-1.5')}>
+            <p className={cn('text-foreground-muted text-sm leading-relaxed', title && 'mt-1.5')}>
               {children}
             </p>
           )}

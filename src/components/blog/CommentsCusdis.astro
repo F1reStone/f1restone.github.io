@@ -28,8 +28,7 @@ const isConfigured = !!(cusdis && cusdis.appId);
 const locale = getLocaleFromPath(Astro.url.pathname);
 const commentsTitle = t('comments.title', locale);
 
-const host =
-  cusdis?.host && cusdis.host.length > 0 ? cusdis.host : 'https://cusdis.com';
+const host = cusdis?.host && cusdis.host.length > 0 ? cusdis.host : 'https://cusdis.com';
 
 // Empty (or unset) `theme` => follow the site's light/dark mode: the client
 // resolves it from the DOM and re-renders on toggle. A specific value
@@ -38,15 +37,12 @@ const adaptiveTheme = !cusdis?.theme;
 
 // Empty (or unset) `lang` => follow the site's current locale. Navigation is a
 // full page load, so the server-resolved locale is always correct.
-const lang = cusdis?.lang && cusdis.lang.length > 0 ? cusdis.lang : (locale === 'en-US' ? 'en' : locale);
+const lang =
+  cusdis?.lang && cusdis.lang.length > 0 ? cusdis.lang : locale === 'en-US' ? 'en' : locale;
 ---
 
 {isConfigured && (
-  <section
-    id="comments"
-    class="mx-auto max-w-8xl px-6 mt-12"
-    aria-label={commentsTitle}
-  >
+  <section id="comments" class="mx-auto max-w-8xl px-6 mt-12" aria-label={commentsTitle}>
     <h2 class="text-xl font-semibold mb-4 text-foreground">{commentsTitle}</h2>
     <div
       class="cusdis-mount"
@@ -138,7 +134,7 @@ const lang = cusdis?.lang && cusdis.lang.length > 0 ? cusdis.lang : (locale === 
             io.disconnect();
           }
         },
-        { rootMargin: '300px' },
+        { rootMargin: '300px' }
       );
       io.observe(mount);
     } else {

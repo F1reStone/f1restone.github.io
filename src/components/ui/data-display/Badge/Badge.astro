@@ -15,22 +15,41 @@ interface Props extends HTMLAttributes<'span'>, HTMLAttributes<'a'> {
   href?: string;
 }
 
-const { variant = 'default', size = 'md', pulse = false, pill = false, href, class: className, ...attrs } = Astro.props;
+const {
+  variant = 'default',
+  size = 'md',
+  pulse = false,
+  pill = false,
+  href,
+  class: className,
+  ...attrs
+} = Astro.props;
 
 const Element = href ? 'a' : 'span';
 
 // FireStone: [Dynamically apply hover color & STRONGER glow ONLY if the badge is an active link]
-const interactiveClasses = href ? {
-  default: 'hover:text-foreground focus-visible:text-foreground hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
-  success: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
-  warning: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
-  error: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
-  info: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
-  brand: 'hover:text-brand-500 focus-visible:text-brand-500 dark:hover:text-brand-300 dark:focus-visible:text-brand-300 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
-}[variant] : '';
+const interactiveClasses = href
+  ? {
+      default:
+        'hover:text-foreground focus-visible:text-foreground hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+      success:
+        'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+      warning:
+        'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+      error:
+        'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+      info: 'hover:brightness-125 focus-visible:brightness-125 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+      brand:
+        'hover:text-brand-500 focus-visible:text-brand-500 dark:hover:text-brand-300 dark:focus-visible:text-brand-300 hover:drop-shadow-[0_0_12px_currentColor] focus-visible:drop-shadow-[0_0_12px_currentColor]',
+    }[variant]
+  : '';
 ---
 
-<Element href={href} class={cn(badgeVariants({ variant, size, pill }), interactiveClasses, className)} {...attrs}>
+<Element
+  href={href}
+  class={cn(badgeVariants({ variant, size, pill }), interactiveClasses, className)}
+  {...attrs}
+>
   {pulse && (
     <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
       <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-current opacity-75" />

@@ -45,12 +45,12 @@ pnpm up
 
 ### 3. 版本策略
 
-| 规则 | 说明 |
-|------|------|
-| Astro 核心 | 采用最新兼容稳定版本；高风险主版本需明确升级范围与验证 |
-| ESLint / TypeScript 等 | 不因上游较旧而降级；当前 TS 6，暂不升级 TS 7 |
-| 其他插件 | 优先最新兼容稳定版本，逐项核对主要变更 |
-| Expressive Code | 三个配套包同步到最新兼容版本，特别验证 Markdown/MDX 升级后的实际代码块 |
+| 规则                   | 说明                                                                   |
+| ---------------------- | ---------------------------------------------------------------------- |
+| Astro 核心             | 采用最新兼容稳定版本；高风险主版本需明确升级范围与验证                 |
+| ESLint / TypeScript 等 | 不因上游较旧而降级；当前 TS 6，暂不升级 TS 7                           |
+| 其他插件               | 优先最新兼容稳定版本，逐项核对主要变更                                 |
+| Expressive Code        | 三个配套包同步到最新兼容版本，特别验证 Markdown/MDX 升级后的实际代码块 |
 
 ---
 
@@ -71,17 +71,18 @@ pnpm up
 
 这些文件中的 UI 设计**绝不**接受上游覆盖：
 
-| 文件 | 原因 |
-|------|------|
-| `src/pages/index.astro` | FireStone 首页，完全自定义 |
-| `src/pages/about.astro` | FireStone 关于页 |
-| `src/pages/ai.astro` | FireStone AI 页面 |
-| `src/pages/blog/*` | 博客路由（zh-CN 过滤、自定义 Hero） |
-| `src/pages/projects/*` | 项目路由（soloPage 过滤、自定义样式） |
-| `src/pages/404.astro` | 自定义 404 页 |
-| `src/pages/projects/sparkforge.astro` | Solo 项目页 |
+| 文件                                  | 原因                                  |
+| ------------------------------------- | ------------------------------------- |
+| `src/pages/index.astro`               | FireStone 首页，完全自定义            |
+| `src/pages/about.astro`               | FireStone 关于页                      |
+| `src/pages/ai.astro`                  | FireStone AI 页面                     |
+| `src/pages/blog/*`                    | 博客路由（zh-CN 过滤、自定义 Hero）   |
+| `src/pages/projects/*`                | 项目路由（soloPage 过滤、自定义样式） |
+| `src/pages/404.astro`                 | 自定义 404 页                         |
+| `src/pages/projects/sparkforge.astro` | Solo 项目页                           |
 
 **处理方法**：
+
 ```bash
 git checkout --ours <file>
 git add <file>
@@ -91,15 +92,15 @@ git add <file>
 
 #### B 类：我们的定制组件 — 以我们为准
 
-| 文件 | 定制内容 |
-|------|----------|
-| `src/components/layout/Header.astro` | 二级 Logo、移动端 Logo 轮播、hdr-glass-pill、中文 CTA、自定义滚动行为 |
-| `src/components/layout/Footer.astro` | 中文页脚链接组、法律链接带图标+Cookie 操作 |
-| `src/components/layout/SearchModal.astro` | FireStone 自定义搜索 UI：毛玻璃面板、品牌色图标辉光、平滑高度过渡、移动端防软键盘 |
-| `src/components/blog/ArticleHero.astro` | 沉浸式全屏 Hero、invert-section、毛玻璃背景 |
-| `src/components/blog/Comments.astro` | 中文 Giscus 配置、自定义主题 |
-| `src/components/projects/ProjectHero.astro` | 项目 Logo 支持、自定义 meta 行 |
-| `src/components/patterns/ContactForm.astro` | 中文表单 |
+| 文件                                        | 定制内容                                                                          |
+| ------------------------------------------- | --------------------------------------------------------------------------------- |
+| `src/components/layout/Header.astro`        | 二级 Logo、移动端 Logo 轮播、hdr-glass-pill、中文 CTA、自定义滚动行为             |
+| `src/components/layout/Footer.astro`        | 中文页脚链接组、法律链接带图标+Cookie 操作                                        |
+| `src/components/layout/SearchModal.astro`   | FireStone 自定义搜索 UI：毛玻璃面板、品牌色图标辉光、平滑高度过渡、移动端防软键盘 |
+| `src/components/blog/ArticleHero.astro`     | 沉浸式全屏 Hero、invert-section、毛玻璃背景                                       |
+| `src/components/blog/Comments.astro`        | 中文 Giscus 配置、自定义主题                                                      |
+| `src/components/projects/ProjectHero.astro` | 项目 Logo 支持、自定义 meta 行                                                    |
+| `src/components/patterns/ContactForm.astro` | 中文表单                                                                          |
 
 **处理方法**：同上 `--ours`，然后融合上游改进。
 
@@ -107,17 +108,18 @@ git add <file>
 
 这些文件我们没有深度定制，直接用上游版本获得最新功能和修复：
 
-| 文件 | 说明 |
-|------|------|
+| 文件                                           | 说明                                             |
+| ---------------------------------------------- | ------------------------------------------------ |
 | `src/components/ui/primitives/Icon/Icon.astro` | 图标映射 — **但必须合并我们的 `iconMap` 条目！** |
-| `src/components/ui/primitives/Icon/Icon.tsx` | React 版图标 |
-| `src/components/blog/ShareButtons.astro` | 分享按钮 |
-| `src/components/blog/Pagination.astro` | 分页 |
-| `src/components/seo/SEO.astro` | SEO 元标签 |
-| `src/components/hero/Hero.astro` | Hero 布局 |
-| `src/lib/*` (未改动的) | 工具库 |
+| `src/components/ui/primitives/Icon/Icon.tsx`   | React 版图标                                     |
+| `src/components/blog/ShareButtons.astro`       | 分享按钮                                         |
+| `src/components/blog/Pagination.astro`         | 分页                                             |
+| `src/components/seo/SEO.astro`                 | SEO 元标签                                       |
+| `src/components/hero/Hero.astro`               | Hero 布局                                        |
+| `src/lib/*` (未改动的)                         | 工具库                                           |
 
 **处理方法**：
+
 ```bash
 git checkout --theirs <file>
 git add <file>
@@ -132,6 +134,7 @@ git add <file>
 #### E 类：上游删除、我们保留的文件 — 确认是否需要
 
 如果上游删除了某个文件但我们需要它，从备份恢复：
+
 ```bash
 git show backup-before-astroX-upgrade:<path> > <path>
 ```
@@ -214,10 +217,11 @@ git show backup-before-astroX-upgrade:<path> > <path>
 **原因**：`post.id` 中的 locale 是大写 `zh-CN/` 但 `post.data.locale` 可能是小写 `zh-cn`。`getPostSlug` 的正则需要 `i` 标志
 
 **修复**：
+
 ```ts
 // src/lib/blog.ts
 export function getPostSlug(postId: string, locale: string = defaultLocale): string {
-  return postId.replace(new RegExp(`^${locale}/`, 'i'), '');  // ← 注意 'i' 标志
+  return postId.replace(new RegExp(`^${locale}/`, 'i'), ''); // ← 注意 'i' 标志
 }
 ```
 
@@ -275,14 +279,14 @@ export function getPostSlug(postId: string, locale: string = defaultLocale): str
 
 ### 样式分层
 
-| 复杂度 | 实现方式 | 示例 |
-|--------|----------|------|
-| 布局、间距、颜色 | Tailwind 工具类 | `flex items-center gap-3 px-5` |
-| 简单悬停 | Tailwind 状态变体 | `hover:bg-secondary hover:text-foreground` |
-| 发光、模糊 | 全局 CSS 类 | `.hdr-glass-pill`、`.hdr-logo-glow` |
-| 动画/关键帧 | scoped `<style>` | `@keyframes logo-fade-main` |
-| GPU 加速效果 | `will-change` + `translateZ(0)` | `.hdr-logo-glow` |
-| 可变字重锁定 | `::after` 伪元素 + `data-text` | `.interactive-glow-center` |
+| 复杂度           | 实现方式                        | 示例                                       |
+| ---------------- | ------------------------------- | ------------------------------------------ |
+| 布局、间距、颜色 | Tailwind 工具类                 | `flex items-center gap-3 px-5`             |
+| 简单悬停         | Tailwind 状态变体               | `hover:bg-secondary hover:text-foreground` |
+| 发光、模糊       | 全局 CSS 类                     | `.hdr-glass-pill`、`.hdr-logo-glow`        |
+| 动画/关键帧      | scoped `<style>`                | `@keyframes logo-fade-main`                |
+| GPU 加速效果     | `will-change` + `translateZ(0)` | `.hdr-logo-glow`                           |
+| 可变字重锁定     | `::after` 伪元素 + `data-text`  | `.interactive-glow-center`                 |
 
 ### 关键 CSS 类（位于 `src/styles/global.css`）
 
@@ -339,13 +343,14 @@ const { title, size = 'md', class: className } = Astro.props;
 
 ```css
 /* 主品牌色 */
---brand-500: oklch(62.5% 0.22 289);  /* 紫色 */
+--brand-500: oklch(62.5% 0.22 289); /* 紫色 */
 /* 强调色 */
-color: var(--color-brand-500);  /* 通过 Tailwind: text-brand-500 */
+color: var(--color-brand-500); /* 通过 Tailwind: text-brand-500 */
 /* 自定义缓动 */
 --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
 --ease-bouncy: cubic-bezier(0.22, 1.6, 0.36, 1);
 ```
+
 修改时可能会疏忽此文档的内容，以最新版本颜色主题（firestone.css）为准
 
 ---

@@ -48,9 +48,13 @@ const classes = ['hero-beam pointer-events-none absolute inset-0 overflow-hidden
   }
 
   /* Dark-mode only — the light-mode HeroGrid covers light pages. */
-  :global(html:not(.dark)) .hero-beam { display: none; }
+  :global(html:not(.dark)) .hero-beam {
+    display: none;
+  }
 
-  .hero-beam > div { position: absolute; }
+  .hero-beam > div {
+    position: absolute;
+  }
 
   /* Brand grid — brightest just under the header, dissolving outward. */
   .hero-beam__grid {

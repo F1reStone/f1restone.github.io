@@ -1,5 +1,7 @@
 ---
-interface Props { locale?: string; }
+interface Props {
+  locale?: string;
+}
 import ComponentLayout from '@/layouts/ComponentLayout.astro';
 // Form Components
 import Button from '@/components/ui/form/Button/Button.astro';
@@ -57,25 +59,28 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
   noindex={true}
   footerBackground="secondary"
 >
-
   <!-- Hero Section -->
   <Hero layout="split" size="lg">
-    <Badge slot="badge" variant="brand" pill>50+ 生产就绪的组件</Badge>
+    <Badge slot="badge" variant="brand" pill>
+      50+ 生产就绪的组件
+    </Badge>
 
     <h1 slot="title">
       <span class="text-brand-500">组件</span>库
     </h1>
 
-    <p slot="description">
-      SparkFlow UI 基本组件，兼顾易用性和性能。可复制、粘贴并自定义。
-    </p>
+    <p slot="description">SparkFlow UI 基本组件，兼顾易用性和性能。可复制、粘贴并自定义。</p>
 
     <Fragment slot="actions">
       <Button href="#sparkflow" variant="primary">
         浏览组件
         <Icon name="chevron-right" size="sm" />
       </Button>
-      <Button href="https://github.com/hansmartensdev/Astro-Rocket" target="_blank" variant="outline">
+      <Button
+        href="https://github.com/hansmartensdev/Astro-Rocket"
+        target="_blank"
+        variant="outline"
+      >
         <Icon name="github" size="sm" />
         访问源代码
         <Icon name="arrow-up-right" size="sm" />
@@ -83,58 +88,96 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
     </Fragment>
   </Hero>
 
-
-
   <!-- Components Showcase -->
   <div class="mx-auto max-w-8xl px-6 py-20 space-y-32">
-
     <!-- SparkFlow interaction primitives are shown first because they power the site-wide motion language. -->
     <section id="sparkflow" class="component-showcase scroll-mt-32">
       <div class="showcase-header flex-wrap gap-2">
         <span class="showcase-label">SparkFlow Interactions</span>
-        <span class="showcase-hint">网站的核心交互效果。字重示例遵循“动态效果”设置；减少运动时停用位移和字重动画。</span>
+        <span class="showcase-hint">
+          网站的核心交互效果。字重示例遵循“动态效果”设置；减少运动时停用位移和字重动画。
+        </span>
       </div>
       <div class="showcase-content grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <div class="space-y-3">
           <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Icon</p>
           <code class="block text-xs text-foreground-muted">hover-glow-icon</code>
-          <button type="button" aria-label="体验图标发光" class="inline-flex items-center text-foreground-muted hover:text-foreground focus-visible:text-foreground hover-glow-icon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">
+          <button
+            type="button"
+            aria-label="体验图标发光"
+            class="inline-flex items-center text-foreground-muted hover:text-foreground focus-visible:text-foreground hover-glow-icon focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2"
+          >
             <Icon name="sparkles" size="lg" />
           </button>
         </div>
         <div class="space-y-3">
           <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Text</p>
           <code class="block text-xs text-foreground-muted">hover-glow-text</code>
-          <button type="button" class="inline-flex text-foreground-muted hover-glow-text hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">Text glow</button>
+          <button
+            type="button"
+            class="inline-flex text-foreground-muted hover-glow-text hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2"
+          >
+            Text glow
+          </button>
         </div>
         <div class="space-y-3">
           <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Box</p>
           <code class="block text-xs text-foreground-muted">hover-glow-box</code>
-          <Button type="button" class="hover-glow-box">Box glow</Button>
+          <Button type="button" class="hover-glow-box">
+            Box glow
+          </Button>
         </div>
         <div class="space-y-3">
           <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Outline</p>
           <code class="block text-xs text-foreground-muted">hover-glow-outline</code>
           <!-- Isolate outline glow from the solid fill bundled with the outline Button variant. -->
-          <button type="button" class="glass-panel hover-glow-outline rounded-full px-5 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Outline glow</button>
+          <button
+            type="button"
+            class="glass-panel hover-glow-outline rounded-full px-5 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Outline glow
+          </button>
         </div>
         <div class="space-y-3">
-          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Solid fill</p>
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">
+            Solid fill
+          </p>
           <code class="block text-xs text-foreground-muted">hover-solid-fill</code>
-          <button type="button" class="glass-panel hover-solid-fill rounded-full px-5 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Solid fill</button>
+          <button
+            type="button"
+            class="glass-panel hover-solid-fill rounded-full px-5 py-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Solid fill
+          </button>
         </div>
         <div class="space-y-3">
-          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Weight shift</p>
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">
+            Weight shift
+          </p>
           <code class="block text-xs text-foreground-muted">weight-shift</code>
           <div class="flex justify-center border-y border-border/50 py-3">
-            <button type="button" data-text="Centered weight shift" class="text-foreground-muted weight-shift hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">Centered weight shift</button>
+            <button
+              type="button"
+              data-text="Centered weight shift"
+              class="text-foreground-muted weight-shift hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2"
+            >
+              Centered weight shift
+            </button>
           </div>
         </div>
         <div class="space-y-3">
-          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">Non-centered</p>
+          <p class="text-xs font-mono uppercase tracking-widest text-foreground-muted">
+            Non-centered
+          </p>
           <code class="block text-xs text-foreground-muted">weight-shift-non-centered</code>
           <div class="flex justify-start border-l border-border/50 py-3">
-            <button type="button" data-text="Left aligned weight shift" class="text-foreground-muted weight-shift-non-centered hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2">Left aligned weight shift</button>
+            <button
+              type="button"
+              data-text="Left aligned weight shift"
+              class="text-foreground-muted weight-shift-non-centered hover:text-foreground focus-visible:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-2"
+            >
+              Left aligned weight shift
+            </button>
           </div>
         </div>
       </div>
@@ -152,34 +195,44 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           <h3 class="mb-3 font-semibold text-foreground">YouTube Embed</h3>
           <YouTube id="QONgJurkigk" title="YouTube embed preview" />
         </div>
-          <div class="flex flex-col">
-            <h3 class="mb-3 font-semibold text-foreground">Proof Tile</h3>
-          <ProofTile icon="sparkles" title="Proof tile">A compact, reusable fact tile.</ProofTile>
+        <div class="flex flex-col">
+          <h3 class="mb-3 font-semibold text-foreground">Proof Tile</h3>
+          <ProofTile icon="sparkles" title="Proof tile">
+            A compact, reusable fact tile.
+          </ProofTile>
         </div>
       </div>
     </section>
 
-      <!-- Showcase both authoring layouts without configuring a live signup endpoint. -->
-      <section class="component-showcase">
-        <div class="showcase-header">
-          <span class="showcase-label">Newsletter</span>
-          <span class="showcase-hint">Auto / Stacked</span>
-        </div>
-        <div class="showcase-content grid gap-8 lg:grid-cols-2">
-          <NewsletterForm heading="Auto layout" description="Responsive inline signup form." />
-          <NewsletterForm heading="Stacked layout" layout="stacked" description="For narrow columns and footers." size="sm" />
-        </div>
-      </section>
+    <!-- Showcase both authoring layouts without configuring a live signup endpoint. -->
+    <section class="component-showcase">
+      <div class="showcase-header">
+        <span class="showcase-label">Newsletter</span>
+        <span class="showcase-hint">Auto / Stacked</span>
+      </div>
+      <div class="showcase-content grid gap-8 lg:grid-cols-2">
+        <NewsletterForm heading="Auto layout" description="Responsive inline signup form." />
+        <NewsletterForm
+          heading="Stacked layout"
+          layout="stacked"
+          description="For narrow columns and footers."
+          size="sm"
+        />
+      </div>
+    </section>
 
-      <!-- Hero Section -->
-      <section id="hero" class="scroll-mt-32 flex flex-col gap-10">
+    <!-- Hero Section -->
+    <section id="hero" class="scroll-mt-32 flex flex-col gap-10">
       <div class="flex items-start gap-5">
         <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500/10 text-brand-500 shrink-0">
           <Icon name="star" size="lg" />
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Hero</h2>
-          <p class="text-foreground-muted mt-1">Flexible hero sections with multiple layouts, backgrounds, and slot-based content injection.</p>
+          <p class="text-foreground-muted mt-1">
+            Flexible hero sections with multiple layouts, backgrounds, and slot-based content
+            injection.
+          </p>
         </div>
       </div>
 
@@ -192,22 +245,27 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <Hero layout="split" size="md" class="!pt-12 !pb-12">
-              <Badge slot="badge" variant="brand" pill>New release</Badge>
+              <Badge slot="badge" variant="brand" pill>
+                New release
+              </Badge>
 
               <h2 slot="title">
                 Build faster with <span class="text-brand-500">Astro Rocket</span>
               </h2>
 
-              <p slot="description">
-                A modern starter kit for production websites.
-              </p>
+              <p slot="description">A modern starter kit for production websites.</p>
 
               <Fragment slot="actions">
                 <Button size="sm">Get Started</Button>
-                <Button size="sm" variant="outline">Learn More</Button>
+                <Button size="sm" variant="outline">
+                  Learn More
+                </Button>
               </Fragment>
 
-              <div slot="aside" class="bg-background-secondary border border-border rounded-lg p-6 text-center">
+              <div
+                slot="aside"
+                class="bg-background-secondary border border-border rounded-lg p-6 text-center"
+              >
                 <Icon name="code" size="lg" class="text-brand-500 mx-auto mb-2" />
                 <p class="text-sm text-foreground-muted">Aside content slot</p>
               </div>
@@ -233,19 +291,24 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <Hero layout="centered" size="md" class="!pt-12 !pb-12">
-              <Badge slot="badge" variant="brand" pill>About us</Badge>
+              <Badge slot="badge" variant="brand" pill>
+                About us
+              </Badge>
 
               <h2 slot="title">
                 We're on a <span class="text-brand-500">mission</span>
               </h2>
 
               <p slot="description">
-                Building the tools developers love to use. Our team is dedicated to creating exceptional experiences.
+                Building the tools developers love to use. Our team is dedicated to creating
+                exceptional experiences.
               </p>
 
               <Fragment slot="actions">
                 <Button size="sm">Meet the Team</Button>
-                <Button size="sm" variant="ghost">Our Story</Button>
+                <Button size="sm" variant="ghost">
+                  Our Story
+                </Button>
               </Fragment>
             </Hero>
           </div>
@@ -255,7 +318,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         <div class="component-showcase">
           <div class="showcase-header">
             <span class="showcase-label">Stack Marquee</span>
-            <span class="showcase-hint">Two rows of stack cards scrolling opposite ways — driven by src/content/stack, themed for light &amp; dark</span>
+            <span class="showcase-hint">
+              Two rows of stack cards scrolling opposite ways — driven by src/content/stack, themed
+              for light &amp; dark
+            </span>
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <div class="w-full py-[var(--space-stack-lg)]">
@@ -285,7 +351,11 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <span class="showcase-label">Gradient Background</span>
             </div>
             <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
-              <Hero layout="split" size="sm" class="!pt-8 !pb-8 bg-gradient-to-br from-background via-background to-background-secondary">
+              <Hero
+                layout="split"
+                size="sm"
+                class="!pt-8 !pb-8 bg-gradient-to-br from-background via-background to-background-secondary"
+              >
                 <h2 slot="title">Gradient Background</h2>
                 <p slot="description">Smooth gradient transition effect.</p>
               </Hero>
@@ -302,7 +372,8 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <Hero layout="centered" size="sm" class="invert-section !pt-10 !pb-10 bg-background">
               <h2 slot="title">
-                <span class="text-foreground">Dark mode </span><span class="text-brand-400">always</span>
+                <span class="text-foreground">Dark mode </span>
+                <span class="text-brand-400">always</span>
               </h2>
 
               <p slot="description" class="text-foreground-secondary">
@@ -367,28 +438,51 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Props</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> centered | split</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">size</code> sm | md | lg | xl</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showGrid</code> boolean</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> centered
+                    | split
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">size</code> sm | md |
+                    lg | xl
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showGrid</code> boolean
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Slots</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">badge</code> Use Badge component</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">title</code> Use h1/h2 directly</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">description</code> Use p directly</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">actions</code> CTA buttons</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">aside</code> Side content (split only)</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">badge</code> Use Badge
+                    component
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">title</code> Use h1/h2
+                    directly
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">description</code> Use
+                    p directly
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">actions</code> CTA
+                    buttons
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">aside</code> Side
+                    content (split only)
+                  </li>
                 </ul>
               </div>
             </div>
             <p class="text-xs text-foreground-subtle mt-4">
-              <strong>Backgrounds:</strong> Use CSS classes for custom backgrounds (e.g., <code class="bg-secondary px-1 rounded">class="bg-surface-invert"</code>)
+              <strong>Backgrounds:</strong> Use CSS classes for custom backgrounds (e.g.,{' '}
+              <code class="bg-secondary px-1 rounded">class="bg-surface-invert"</code>)
             </p>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -400,7 +494,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Layout</h2>
-          <p class="text-foreground-muted mt-1">Header and Footer components for consistent page structure. Variant-based with full customization via design tokens.</p>
+          <p class="text-foreground-muted mt-1">
+            Header and Footer components for consistent page structure. Variant-based with full
+            customization via design tokens.
+          </p>
         </div>
       </div>
 
@@ -417,7 +514,12 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               showMobileMenu={false}
               showCta
               cta={{ label: 'Get Started', href: '#' }}
-              nav={[{ label: 'Features', href: '#' }, { label: 'Pricing', href: '#' }, { label: 'Docs', href: '#' }, { label: 'Blog', href: '#' }]}
+              nav={[
+                { label: 'Features', href: '#' },
+                { label: 'Pricing', href: '#' },
+                { label: 'Docs', href: '#' },
+                { label: 'Blog', href: '#' },
+              ]}
               actions={[{ icon: 'github', href: '#', label: 'GitHub', iconOnly: true }]}
             />
           </div>
@@ -452,7 +554,12 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               showMobileMenu={false}
               showThemeToggle={false}
               showCta={false}
-              nav={[{ label: '首页', href: '#' }, { label: '关于', href: '#' }, { label: '服务', href: '#' }, { label: '联系', href: '#' }]}
+              nav={[
+                { label: '首页', href: '#' },
+                { label: '关于', href: '#' },
+                { label: '服务', href: '#' },
+                { label: '联系', href: '#' },
+              ]}
             />
           </div>
         </div>
@@ -479,7 +586,11 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                     position="static"
                     size={size}
                     showMobileMenu={false}
-                    nav={[{ label: 'Features', href: '#' }, { label: 'Pricing', href: '#' }, { label: 'Docs', href: '#' }]}
+                    nav={[
+                      { label: 'Features', href: '#' },
+                      { label: 'Pricing', href: '#' },
+                      { label: 'Docs', href: '#' },
+                    ]}
                     showCta
                     cta={{ label: 'Get Started', href: '#' }}
                   />
@@ -503,9 +614,21 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 <div class="relative">
                   <div class="bg-background/80 backdrop-blur-sm px-4 py-2 border-b border-border">
                     <span class="text-xs font-mono text-foreground-muted">background="blur"</span>
-                    <span class="text-xs text-foreground-subtle ml-2">— backdrop blur + transparency</span>
+                    <span class="text-xs text-foreground-subtle ml-2">
+                      — backdrop blur + transparency
+                    </span>
                   </div>
-                  <Header position="static" size="sm" background="blur" colorScheme="default" showMobileMenu={false} nav={[{ label: 'Home', href: '#' }, { label: 'About', href: '#' }]} />
+                  <Header
+                    position="static"
+                    size="sm"
+                    background="blur"
+                    colorScheme="default"
+                    showMobileMenu={false}
+                    nav={[
+                      { label: 'Home', href: '#' },
+                      { label: 'About', href: '#' },
+                    ]}
+                  />
                 </div>
               </div>
               <!-- Solid -->
@@ -514,7 +637,17 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                   <span class="text-xs font-mono text-foreground-muted">background="solid"</span>
                   <span class="text-xs text-foreground-subtle ml-2">— opaque background</span>
                 </div>
-                <Header position="static" size="sm" background="solid" colorScheme="default" showMobileMenu={false} nav={[{ label: 'Home', href: '#' }, { label: 'About', href: '#' }]} />
+                <Header
+                  position="static"
+                  size="sm"
+                  background="solid"
+                  colorScheme="default"
+                  showMobileMenu={false}
+                  nav={[
+                    { label: 'Home', href: '#' },
+                    { label: 'About', href: '#' },
+                  ]}
+                />
               </div>
               <!-- Transparent on light image -->
               <div class="relative overflow-hidden">
@@ -536,7 +669,11 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                     showMobileMenu={false}
                     showCta
                     cta={{ label: 'Explore', href: '#' }}
-                    nav={[{ label: 'Home', href: '#' }, { label: 'Gallery', href: '#' }, { label: 'Contact', href: '#' }]}
+                    nav={[
+                      { label: 'Home', href: '#' },
+                      { label: 'Gallery', href: '#' },
+                      { label: 'Contact', href: '#' },
+                    ]}
                   />
                 </div>
               </div>
@@ -548,7 +685,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 <div class="absolute inset-0 bg-black/40"></div>
                 <div class="relative">
                   <div class="bg-black/30 backdrop-blur-sm px-4 py-2 border-b border-white/10">
-                    <span class="text-xs font-mono text-white/90">background="progressive" colorScheme="invert"</span>
+                    <span class="text-xs font-mono text-white/90">
+                      background="progressive" colorScheme="invert"
+                    </span>
                     <span class="text-xs text-white/70 ml-2">— for dark backgrounds</span>
                   </div>
                   <Header
@@ -559,14 +698,17 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                     showMobileMenu={false}
                     showCta
                     cta={{ label: 'Explore', href: '#' }}
-                    nav={[{ label: 'Home', href: '#' }, { label: 'Gallery', href: '#' }, { label: 'Contact', href: '#' }]}
+                    nav={[
+                      { label: 'Home', href: '#' },
+                      { label: 'Gallery', href: '#' },
+                      { label: 'Contact', href: '#' },
+                    ]}
                   />
                 </div>
               </div>
             </div>
           </div>
         </div>
-
 
         <!-- Header Props Reference -->
         <div class="component-showcase">
@@ -579,31 +721,77 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Layout & Position</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> default | centered | minimal</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">position</code> fixed | sticky | static</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">size</code> sm | md | lg</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">background</code> progressive | blur | solid</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">colorScheme</code> auto | default | invert</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">topColor</code> fixed header color before scrolling</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showScrollProgress</code> legacy; avoid with progressive</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> default |
+                    centered | minimal
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">position</code> fixed |
+                    sticky | static
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">size</code> sm | md |
+                    lg
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">background</code>{' '}
+                    progressive | blur | solid
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">colorScheme</code> auto
+                    | default | invert
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">topColor</code> fixed
+                    header color before scrolling
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">
+                      showScrollProgress
+                    </code>{' '}
+                    legacy; avoid with progressive
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Navigation</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">nav</code> NavItem[] (overrides routes)</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">extraNav</code> NavItem[] (adds to routes)</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showActiveState</code> boolean</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showMobileMenu</code> boolean</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">nav</code> NavItem[]
+                    (overrides routes)
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">extraNav</code>{' '}
+                    NavItem[] (adds to routes)
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showActiveState</code>{' '}
+                    boolean
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showMobileMenu</code>{' '}
+                    boolean
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Actions</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showCta</code> boolean</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">cta</code> {'{ label, href }'}</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">actions</code> HeaderAction[]</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showThemeToggle</code> boolean</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showCta</code> boolean
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">cta</code>{' '}
+                    {'{ label, href }'}
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">actions</code>{' '}
+                    HeaderAction[]
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showThemeToggle</code>{' '}
+                    boolean
+                  </li>
                 </ul>
               </div>
             </div>
@@ -636,10 +824,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             <span class="showcase-hint">Copyright only — perfect for simple sites</span>
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
-            <Footer
-              layout="minimal"
-              copyright="© {year} {siteName}"
-            />
+            <Footer layout="minimal" copyright="© {year} {siteName}" />
           </div>
         </div>
 
@@ -647,7 +832,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         <div class="component-showcase">
           <div class="showcase-header">
             <span class="showcase-label">Stacked Layout</span>
-            <span class="showcase-hint">Vertically stacked, centered — great for landing pages</span>
+            <span class="showcase-hint">
+              Vertically stacked, centered — great for landing pages
+            </span>
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <Footer
@@ -724,26 +911,54 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Layout</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> simple | columns | minimal | stacked</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">columns</code> 2 | 3 | 4</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">background</code> default | secondary | invert</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">layout</code> simple |
+                    columns | minimal | stacked
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">columns</code> 2 | 3 |
+                    4
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">background</code>{' '}
+                    default | secondary | invert
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Content</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">nav</code> NavItem[]</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">linkGroups</code> FooterLinkGroup[]</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">socialLinks</code> SocialLink[]</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">tagline</code> string</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">nav</code> NavItem[]
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">linkGroups</code>{' '}
+                    FooterLinkGroup[]
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">socialLinks</code>{' '}
+                    SocialLink[]
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">tagline</code> string
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Copyright & Legal</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showCopyright</code> boolean</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">copyright</code> string (supports {'{year}'}, {'{siteName}'})</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">legalLinks</code> LegalLink[]</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">showCopyright</code>{' '}
+                    boolean
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">copyright</code> string
+                    (supports {'{year}'}, {'{siteName}'})
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">legalLinks</code>{' '}
+                    LegalLink[]
+                  </li>
                 </ul>
               </div>
             </div>
@@ -773,7 +988,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         <div class="component-showcase">
           <div class="showcase-header">
             <span class="showcase-label">CTA - Default Variant</span>
-            <span class="showcase-hint">Light background with heading, description, and action buttons</span>
+            <span class="showcase-hint">
+              Light background with heading, description, and action buttons
+            </span>
           </div>
           <div class="showcase-content !p-0 overflow-hidden rounded-b-xl">
             <CTA variant="default" size="md" maxWidth="lg">
@@ -785,7 +1002,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               </p>
               <Fragment slot="actions">
                 <Button size="lg">Get Started</Button>
-                <Button variant="outline" size="lg">Learn More</Button>
+                <Button variant="outline" size="lg">
+                  Learn More
+                </Button>
               </Fragment>
             </CTA>
           </div>
@@ -801,7 +1020,8 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             <CTA variant="invert" size="md" maxWidth="md">
               <h2 slot="heading">Ready to build?</h2>
               <p slot="description">
-                These components are just the beginning. Clone Astro Rocket and start shipping faster.
+                These components are just the beginning. Clone Astro Rocket and start shipping
+                faster.
               </p>
               <Fragment slot="actions">
                 <Button>
@@ -827,7 +1047,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <p>md: 'py-20 md:py-24'</p>
               <p>lg: 'py-24 md:py-32' (default)</p>
               <p>xl: 'py-32 md:py-40'</p>
-              <p class="mt-2 text-foreground-subtle">/* MaxWidth variants control content width */</p>
+              <p class="mt-2 text-foreground-subtle">
+                /* MaxWidth variants control content width */
+              </p>
               <p>sm: 'max-w-xl' | md: 'max-w-2xl' | lg: 'max-w-3xl' | xl: 'max-w-4xl'</p>
             </div>
           </div>
@@ -843,7 +1065,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Buttons</h2>
-          <p class="text-foreground-muted mt-1">Interactive elements for actions and navigation. All variants support icons, loading states, and full accessibility.</p>
+          <p class="text-foreground-muted mt-1">
+            Interactive elements for actions and navigation. All variants support icons, loading
+            states, and full accessibility.
+          </p>
         </div>
       </div>
 
@@ -892,7 +1117,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 <Button>Default</Button>
                 <Button loading>Loading</Button>
                 <Button disabled>Disabled</Button>
-                <Button icon><Icon name="plus" /></Button>
+                <Button icon>
+                  <Icon name="plus" />
+                </Button>
               </div>
             </div>
           </div>
@@ -903,9 +1130,15 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             </div>
             <div class="showcase-content">
               <div class="flex flex-wrap items-center gap-3">
-                <Button><Icon name="mail" size="sm" /> Send</Button>
-                <Button variant="outline"><Icon name="download" size="sm" /> Export</Button>
-                <Button variant="ghost"><Icon name="star" size="sm" /> Star</Button>
+                <Button>
+                  <Icon name="mail" size="sm" /> Send
+                </Button>
+                <Button variant="outline">
+                  <Icon name="download" size="sm" /> Export
+                </Button>
+                <Button variant="ghost">
+                  <Icon name="star" size="sm" /> Star
+                </Button>
               </div>
             </div>
           </div>
@@ -921,7 +1154,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Form Inputs</h2>
-          <p class="text-foreground-muted mt-1">Text fields, selects, checkboxes, and more. Built with native validation and ARIA support.</p>
+          <p class="text-foreground-muted mt-1">
+            Text fields, selects, checkboxes, and more. Built with native validation and ARIA
+            support.
+          </p>
         </div>
       </div>
 
@@ -935,7 +1171,12 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             </div>
             <div class="showcase-content space-y-5">
               <Input label="Email address" type="email" placeholder="you@example.com" />
-              <Input label="Password" type="password" placeholder="••••••••" hint="Must be at least 8 characters" />
+              <Input
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                hint="Must be at least 8 characters"
+              />
               <Input label="Disabled" placeholder="Cannot edit" disabled />
             </div>
           </div>
@@ -949,7 +1190,12 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             <div class="showcase-content space-y-5">
               <Input label="Search" placeholder="搜索…" leadingIcon="search" />
               <Input label="Email" type="email" placeholder="you@example.com" leadingIcon="mail" />
-              <Input label="Website" placeholder="https://example.com" leadingIcon="globe" trailingIcon="arrow-up-right" />
+              <Input
+                label="Website"
+                placeholder="https://example.com"
+                leadingIcon="globe"
+                trailingIcon="arrow-up-right"
+              />
             </div>
           </div>
 
@@ -960,7 +1206,12 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <span class="showcase-hint">Multi-line text input</span>
             </div>
             <div class="showcase-content">
-              <Textarea label="Message" placeholder="Write your message here..." rows={5} hint="Supports markdown formatting" />
+              <Textarea
+                label="Message"
+                placeholder="Write your message here..."
+                rows={5}
+                hint="Supports markdown formatting"
+              />
             </div>
           </div>
 
@@ -971,14 +1222,17 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <span class="showcase-hint">Native dropdown</span>
             </div>
             <div class="showcase-content">
-              <Select label="Country" options={[
-                { value: '', label: 'Select a country...' },
-                { value: 'us', label: 'United States' },
-                { value: 'uk', label: 'United Kingdom' },
-                { value: 'ca', label: 'Canada' },
-                { value: 'de', label: 'Germany' },
-                { value: 'fr', label: 'France' },
-              ]} />
+              <Select
+                label="Country"
+                options={[
+                  { value: '', label: 'Select a country...' },
+                  { value: 'us', label: 'United States' },
+                  { value: 'uk', label: 'United Kingdom' },
+                  { value: 'ca', label: 'Canada' },
+                  { value: 'de', label: 'Germany' },
+                  { value: 'fr', label: 'France' },
+                ]}
+              />
             </div>
           </div>
 
@@ -991,7 +1245,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             <div class="showcase-content space-y-4">
               <Checkbox label="I agree to the terms of service" />
               <Checkbox label="Send me product updates" checked />
-              <Checkbox label="Enable notifications" description="Receive alerts for important updates" />
+              <Checkbox
+                label="Enable notifications"
+                description="Receive alerts for important updates"
+              />
               <Checkbox label="Disabled checkbox" disabled />
             </div>
           </div>
@@ -1004,7 +1261,12 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             </div>
             <div class="showcase-content space-y-4">
               <Radio name="notify-default" value="all" label="All notifications" checked />
-              <Radio name="notify-default" value="important" label="Important only" description="Only critical updates" />
+              <Radio
+                name="notify-default"
+                value="important"
+                label="Important only"
+                description="Only critical updates"
+              />
               <Radio name="notify-default" value="none" label="None" />
             </div>
           </div>
@@ -1018,9 +1280,28 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content">
             <div class="grid gap-4 sm:grid-cols-3">
-              <Radio variant="card" name="plan-cards" value="free" label="Free" description="Basic features for personal projects" checked />
-              <Radio variant="card" name="plan-cards" value="pro" label="Pro" description="Advanced tools for professionals" />
-              <Radio variant="card" name="plan-cards" value="team" label="Team" description="Collaboration features for teams" />
+              <Radio
+                variant="card"
+                name="plan-cards"
+                value="free"
+                label="Free"
+                description="Basic features for personal projects"
+                checked
+              />
+              <Radio
+                variant="card"
+                name="plan-cards"
+                value="pro"
+                label="Pro"
+                description="Advanced tools for professionals"
+              />
+              <Radio
+                variant="card"
+                name="plan-cards"
+                value="team"
+                label="Team"
+                description="Collaboration features for teams"
+              />
             </div>
           </div>
         </div>
@@ -1033,8 +1314,15 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <span class="showcase-hint">Toggle on/off states</span>
             </div>
             <div class="showcase-content space-y-5">
-              <Switch label="Email notifications" description="Receive email alerts for important updates" checked />
-              <Switch label="Marketing emails" description="Get product news and feature announcements" />
+              <Switch
+                label="Email notifications"
+                description="Receive email alerts for important updates"
+                checked
+              />
+              <Switch
+                label="Marketing emails"
+                description="Get product news and feature announcements"
+              />
               <Switch label="SMS alerts" description="Receive text messages for critical events" />
             </div>
           </div>
@@ -1107,7 +1395,8 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                 class="w-full max-w-sm"
               />
               <p class="text-foreground-subtle text-xs leading-relaxed">
-                Use the arrow keys to move between options. Home and End select the first and last option.
+                Use the arrow keys to move between options. Home and End select the first and last
+                option.
               </p>
             </div>
           </div>
@@ -1123,7 +1412,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Feedback</h2>
-          <p class="text-foreground-muted mt-1">Badges, alerts, and status indicators to communicate state and guide user actions.</p>
+          <p class="text-foreground-muted mt-1">
+            Badges, alerts, and status indicators to communicate state and guide user actions.
+          </p>
         </div>
       </div>
 
@@ -1136,9 +1427,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content">
             <div class="flex flex-wrap items-center gap-3">
-              <Badge>
-                默认
-              </Badge>
+              <Badge>默认</Badge>
               <Badge variant="success">
                 <Icon name="check" size="xs" />
                 成功
@@ -1167,16 +1456,22 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content space-y-4">
             <Alert variant="info" title="提示">
-              使用键盘快捷键可以更流畅地进行导航。按 <kbd class="px-1.5 py-0.5 text-xs font-mono bg-background-secondary rounded border border-border">⌘ + K</kbd> 打开命令面板。
+              使用键盘快捷键可以更流畅地进行导航。按{' '}
+              <kbd class="px-1.5 py-0.5 text-xs font-mono bg-background-secondary rounded border border-border">
+                ⌘ + K
+              </kbd>{' '}
+              打开命令面板。
             </Alert>
             <Alert variant="success" title="部署成功">
-              您的更改现已在 <span class="underline underline-offset-2">www.fire-stone.co</span> 生效。
+              您的更改现已在 <span class="underline underline-offset-2">www.fire-stone.co</span>{' '}
+              生效。
             </Alert>
             <Alert variant="warning" title="即将达到上限">
               您已使用本月 API 配额的 80%。请考虑升级您的计划。
             </Alert>
             <Alert variant="error" title="构建失败" dismissible>
-              错误发生在 <code class="text-xs font-mono">src/components/Button.tsx</code> — 缺少必要的属性「variant」。
+              错误发生在 <code class="text-xs font-mono">src/components/Button.tsx</code> —
+              缺少必要的属性「variant」。
             </Alert>
           </div>
         </div>
@@ -1202,7 +1497,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Overlays</h2>
-          <p class="text-foreground-muted mt-1">Dialogs, dropdowns, tooltips, and tabs. Full keyboard navigation and focus management.</p>
+          <p class="text-foreground-muted mt-1">
+            Dialogs, dropdowns, tooltips, and tabs. Full keyboard navigation and focus management.
+          </p>
         </div>
       </div>
 
@@ -1219,12 +1516,20 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               Open Dialog
             </Button>
 
-            <Dialog id="demo-dialog" title="Delete project?" description="This action cannot be undone.">
+            <Dialog
+              id="demo-dialog"
+              title="Delete project?"
+              description="This action cannot be undone."
+            >
               <p class="text-foreground-muted text-sm">
-                Are you sure you want to delete <strong class="text-foreground">astro-rocket-demo</strong>? All files, deployments, and analytics data will be permanently removed.
+                Are you sure you want to delete{' '}
+                <strong class="text-foreground">astro-rocket-demo</strong>? All files, deployments,
+                and analytics data will be permanently removed.
               </p>
               <div class="flex justify-end gap-3 pt-6">
-                <Button variant="outline" onclick="closeDialog('demo-dialog')">Cancel</Button>
+                <Button variant="outline" onclick="closeDialog('demo-dialog')">
+                  Cancel
+                </Button>
                 <Button variant="destructive" onclick="closeDialog('demo-dialog')">
                   <Icon name="x" size="sm" />
                   Delete Project
@@ -1268,16 +1573,24 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           <div class="showcase-content">
             <div class="flex flex-wrap items-center gap-4">
               <Tooltip content="Tooltip on top" position="top">
-                <Button variant="outline" size="sm">Top</Button>
+                <Button variant="outline" size="sm">
+                  Top
+                </Button>
               </Tooltip>
               <Tooltip content="Tooltip on bottom" position="bottom">
-                <Button variant="outline" size="sm">Bottom</Button>
+                <Button variant="outline" size="sm">
+                  Bottom
+                </Button>
               </Tooltip>
               <Tooltip content="Tooltip on left" position="left">
-                <Button variant="outline" size="sm">Left</Button>
+                <Button variant="outline" size="sm">
+                  Left
+                </Button>
               </Tooltip>
               <Tooltip content="Tooltip on right" position="right">
-                <Button variant="outline" size="sm">Right</Button>
+                <Button variant="outline" size="sm">
+                  Right
+                </Button>
               </Tooltip>
             </div>
           </div>
@@ -1298,10 +1611,16 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               ]}
             >
               <div data-tab-content="overview" class="text-sm text-foreground-muted">
-                <p>Project overview with key metrics and recent activity. Tabs support full keyboard navigation.</p>
+                <p>
+                  Project overview with key metrics and recent activity. Tabs support full keyboard
+                  navigation.
+                </p>
               </div>
               <div data-tab-content="analytics" class="text-sm text-foreground-muted">
-                <p>Analytics data with charts and performance insights. Press arrow keys to navigate between tabs.</p>
+                <p>
+                  Analytics data with charts and performance insights. Press arrow keys to navigate
+                  between tabs.
+                </p>
               </div>
               <div data-tab-content="settings" class="text-sm text-foreground-muted">
                 <p>Configure your project settings. Use Home/End to jump to first/last tab.</p>
@@ -1320,7 +1639,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Navigation</h2>
-          <p class="text-foreground-muted mt-1">Vertical tabs and navigation patterns with responsive mobile behavior.</p>
+          <p class="text-foreground-muted mt-1">
+            Vertical tabs and navigation patterns with responsive mobile behavior.
+          </p>
         </div>
       </div>
 
@@ -1336,20 +1657,39 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               tabs={[
                 { id: 'account', label: 'Account', description: 'Manage your profile' },
                 { id: 'security', label: 'Security', description: 'Password & 2FA settings' },
-                { id: 'notifications', label: 'Notifications', description: 'Email & push preferences' },
+                {
+                  id: 'notifications',
+                  label: 'Notifications',
+                  description: 'Email & push preferences',
+                },
               ]}
             >
               <div data-tab-content="account" class="text-sm text-foreground-muted">
-                <p class="mb-2"><strong class="text-foreground">Account Settings</strong></p>
-                <p>Update your profile information, email address, and personal details. Changes are saved automatically.</p>
+                <p class="mb-2">
+                  <strong class="text-foreground">Account Settings</strong>
+                </p>
+                <p>
+                  Update your profile information, email address, and personal details. Changes are
+                  saved automatically.
+                </p>
               </div>
               <div data-tab-content="security" class="text-sm text-foreground-muted">
-                <p class="mb-2"><strong class="text-foreground">Security Settings</strong></p>
-                <p>Configure password requirements, enable two-factor authentication, and manage active sessions.</p>
+                <p class="mb-2">
+                  <strong class="text-foreground">Security Settings</strong>
+                </p>
+                <p>
+                  Configure password requirements, enable two-factor authentication, and manage
+                  active sessions.
+                </p>
               </div>
               <div data-tab-content="notifications" class="text-sm text-foreground-muted">
-                <p class="mb-2"><strong class="text-foreground">Notification Preferences</strong></p>
-                <p>Choose which notifications you receive via email, push, or in-app. You can also set quiet hours.</p>
+                <p class="mb-2">
+                  <strong class="text-foreground">Notification Preferences</strong>
+                </p>
+                <p>
+                  Choose which notifications you receive via email, push, or in-app. You can also
+                  set quiet hours.
+                </p>
               </div>
             </VerticalTabs>
           </div>
@@ -1364,15 +1704,32 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           <div class="showcase-content">
             <VerticalTabs
               tabs={[
-                { id: 'overview', label: 'Overview', description: 'Project summary', icon: 'layout' },
-                { id: 'analytics', label: 'Analytics', description: 'Traffic & insights', icon: 'zap' },
-                { id: 'settings', label: 'Settings', description: 'Configuration', icon: 'settings' },
+                {
+                  id: 'overview',
+                  label: 'Overview',
+                  description: 'Project summary',
+                  icon: 'layout',
+                },
+                {
+                  id: 'analytics',
+                  label: 'Analytics',
+                  description: 'Traffic & insights',
+                  icon: 'zap',
+                },
+                {
+                  id: 'settings',
+                  label: 'Settings',
+                  description: 'Configuration',
+                  icon: 'settings',
+                },
               ]}
             >
               <div data-tab-content="overview" class="text-sm text-foreground-muted">
                 <div class="grid gap-4 sm:grid-cols-3">
                   <Card variant="solid" padding="sm">
-                    <p class="text-xs text-foreground-subtle uppercase tracking-wider">Total Views</p>
+                    <p class="text-xs text-foreground-subtle uppercase tracking-wider">
+                      Total Views
+                    </p>
                     <p class="text-2xl font-bold font-mono text-foreground mt-1">24,521</p>
                   </Card>
                   <Card variant="solid" padding="sm">
@@ -1380,16 +1737,24 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                     <p class="text-2xl font-bold font-mono text-foreground mt-1">3m 42s</p>
                   </Card>
                   <Card variant="solid" padding="sm">
-                    <p class="text-xs text-foreground-subtle uppercase tracking-wider">Bounce Rate</p>
+                    <p class="text-xs text-foreground-subtle uppercase tracking-wider">
+                      Bounce Rate
+                    </p>
                     <p class="text-2xl font-bold font-mono text-foreground mt-1">32.4%</p>
                   </Card>
                 </div>
               </div>
               <div data-tab-content="analytics" class="text-sm text-foreground-muted">
-                <p>Detailed analytics with charts, traffic sources, and user behavior insights. Real-time data updates every minute.</p>
+                <p>
+                  Detailed analytics with charts, traffic sources, and user behavior insights.
+                  Real-time data updates every minute.
+                </p>
               </div>
               <div data-tab-content="settings" class="text-sm text-foreground-muted">
-                <p>Configure project settings including domain, team permissions, and deployment preferences.</p>
+                <p>
+                  Configure project settings including domain, team permissions, and deployment
+                  preferences.
+                </p>
               </div>
             </VerticalTabs>
           </div>
@@ -1405,22 +1770,47 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
             <VerticalTabs
               mobileVariant="sheet"
               tabs={[
-                { id: 'general', label: 'General', description: 'Basic preferences', icon: 'settings' },
-                { id: 'privacy', label: 'Privacy', description: 'Data & permissions', icon: 'shield' },
+                {
+                  id: 'general',
+                  label: 'General',
+                  description: 'Basic preferences',
+                  icon: 'settings',
+                },
+                {
+                  id: 'privacy',
+                  label: 'Privacy',
+                  description: 'Data & permissions',
+                  icon: 'shield',
+                },
                 { id: 'billing', label: 'Billing', description: 'Payment methods', icon: 'wallet' },
               ]}
             >
               <div data-tab-content="general" class="text-sm text-foreground-muted">
-                <p class="mb-2"><strong class="text-foreground">General Settings</strong></p>
-                <p>Configure your basic preferences including language, timezone, and display options. Changes are saved automatically.</p>
+                <p class="mb-2">
+                  <strong class="text-foreground">General Settings</strong>
+                </p>
+                <p>
+                  Configure your basic preferences including language, timezone, and display
+                  options. Changes are saved automatically.
+                </p>
               </div>
               <div data-tab-content="privacy" class="text-sm text-foreground-muted">
-                <p class="mb-2"><strong class="text-foreground">Privacy Controls</strong></p>
-                <p>Manage data sharing, third-party access, and communication preferences. Your privacy matters to us.</p>
+                <p class="mb-2">
+                  <strong class="text-foreground">Privacy Controls</strong>
+                </p>
+                <p>
+                  Manage data sharing, third-party access, and communication preferences. Your
+                  privacy matters to us.
+                </p>
               </div>
               <div data-tab-content="billing" class="text-sm text-foreground-muted">
-                <p class="mb-2"><strong class="text-foreground">Billing Information</strong></p>
-                <p>View invoices, update payment methods, and manage your subscription plan. All payments are securely processed.</p>
+                <p class="mb-2">
+                  <strong class="text-foreground">Billing Information</strong>
+                </p>
+                <p>
+                  View invoices, update payment methods, and manage your subscription plan. All
+                  payments are securely processed.
+                </p>
               </div>
             </VerticalTabs>
           </div>
@@ -1437,25 +1827,50 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Core Props</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">tabs</code> Tab[] (required)</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">defaultValue</code> string</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">mobileVariant</code> 'dropdown' | 'sheet'</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">class</code> string</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">tabs</code> Tab[]
+                    (required)
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">defaultValue</code>{' '}
+                    string
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">mobileVariant</code>{' '}
+                    'dropdown' | 'sheet'
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">class</code> string
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Tab Interface</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">id</code> string (required)</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">label</code> string (required)</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">description</code> string</li>
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">icon</code> string (Icon name)</li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">id</code> string
+                    (required)
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">label</code> string
+                    (required)
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">description</code>{' '}
+                    string
+                  </li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">icon</code> string
+                    (Icon name)
+                  </li>
                 </ul>
               </div>
               <div>
                 <h4 class="font-semibold text-foreground mb-2">Content Panels</h4>
                 <ul class="space-y-1 text-foreground-muted">
-                  <li><code class="text-xs bg-secondary px-1.5 py-0.5 rounded">data-tab-content</code></li>
+                  <li>
+                    <code class="text-xs bg-secondary px-1.5 py-0.5 rounded">data-tab-content</code>
+                  </li>
                   <li class="text-xs">Match tab id for each panel</li>
                 </ul>
               </div>
@@ -1519,7 +1934,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Data Display</h2>
-          <p class="text-foreground-muted mt-1">Cards, avatars, and icons for presenting content and user information.</p>
+          <p class="text-foreground-muted mt-1">
+            Cards, avatars, and icons for presenting content and user information.
+          </p>
         </div>
       </div>
 
@@ -1571,11 +1988,14 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="text-base font-semibold text-foreground">Performance</h3>
-                    <p class="text-xs text-foreground-subtle mt-0.5 font-medium">100/100 Lighthouse</p>
+                    <p class="text-xs text-foreground-subtle mt-0.5 font-medium">
+                      100/100 Lighthouse
+                    </p>
                   </div>
                 </div>
                 <p class="text-sm text-foreground-muted leading-relaxed mt-4">
-                  Zero JavaScript by default. Islands architecture with selective hydration for optimal speed.
+                  Zero JavaScript by default. Islands architecture with selective hydration for
+                  optimal speed.
                 </p>
               </Card>
 
@@ -1655,7 +2075,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <!-- Stats Card -->
               <Card>
                 <div class="text-center">
-                  <p class="text-xs font-medium text-foreground-subtle uppercase tracking-wider">Total Revenue</p>
+                  <p class="text-xs font-medium text-foreground-subtle uppercase tracking-wider">
+                    Total Revenue
+                  </p>
                   <p class="text-3xl font-bold font-mono text-foreground mt-1">$11,451</p>
                   <p class="text-xs text-success mt-2 flex items-center justify-center gap-1">
                     <Icon name="arrow-right" size="xs" class="rotate-[-45deg]" />
@@ -1672,7 +2094,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
                     <h3 class="text-sm font-semibold text-foreground">Sarah Chen</h3>
                     <p class="text-xs text-foreground-muted">Product Designer</p>
                     <div class="flex items-center gap-2 mt-2">
-                      <Badge variant="success" class="text-[10px] px-1.5 py-0.5">Pro</Badge>
+                      <Badge variant="success" class="text-[10px] px-1.5 py-0.5">
+                        Pro
+                      </Badge>
                       <span class="text-xs text-foreground-subtle">San Francisco, CA</span>
                     </div>
                   </div>
@@ -1733,10 +2157,27 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               </div>
               <div class="pl-4 border-l border-border">
                 <div class="flex -space-x-3">
-                  <Avatar size="md" src="https://i.pravatar.cc/150?img=12" alt="User 1" class="ring-2 ring-background" />
-                  <Avatar size="md" src="https://i.pravatar.cc/150?img=33" alt="User 2" class="ring-2 ring-background" />
-                  <Avatar size="md" src="https://i.pravatar.cc/150?img=47" alt="User 3" class="ring-2 ring-background" />
-                  <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-xs font-medium ring-2 ring-background">+5</div>
+                  <Avatar
+                    size="md"
+                    src="https://i.pravatar.cc/150?img=12"
+                    alt="User 1"
+                    class="ring-2 ring-background"
+                  />
+                  <Avatar
+                    size="md"
+                    src="https://i.pravatar.cc/150?img=33"
+                    alt="User 2"
+                    class="ring-2 ring-background"
+                  />
+                  <Avatar
+                    size="md"
+                    src="https://i.pravatar.cc/150?img=47"
+                    alt="User 3"
+                    class="ring-2 ring-background"
+                  />
+                  <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-xs font-medium ring-2 ring-background">
+                    +5
+                  </div>
                 </div>
                 <span class="text-xs text-foreground-muted mt-2 block">Stacked</span>
               </div>
@@ -1752,10 +2193,39 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content">
             <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
-              {['menu', 'x', 'chevron-down', 'arrow-right', 'search', 'plus', 'check', 'mail', 'phone', 'github', 'twitter', 'linkedin', 'sun', 'moon', 'zap', 'globe', 'shield', 'code', 'heart', 'star', 'alert-circle', 'check-circle', 'info', 'loader'].map((icon) => (
+              {[
+                'menu',
+                'x',
+                'chevron-down',
+                'arrow-right',
+                'search',
+                'plus',
+                'check',
+                'mail',
+                'phone',
+                'github',
+                'twitter',
+                'linkedin',
+                'sun',
+                'moon',
+                'zap',
+                'globe',
+                'shield',
+                'code',
+                'heart',
+                'star',
+                'alert-circle',
+                'check-circle',
+                'info',
+                'loader',
+              ].map((icon) => (
                 <Tooltip content={icon} position="top">
                   <div class="flex items-center justify-center w-10 h-10 rounded-lg border border-border bg-background hover:bg-secondary hover:border-border-strong transition-all cursor-pointer group">
-                    <Icon name={icon} size="md" class="text-foreground-muted group-hover:text-foreground group-focus-visible:text-foreground transition-colors" />
+                    <Icon
+                      name={icon}
+                      size="md"
+                      class="text-foreground-muted group-hover:text-foreground group-focus-visible:text-foreground transition-colors"
+                    />
                   </div>
                 </Tooltip>
               ))}
@@ -1811,8 +2281,18 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               ]}
               rows={[
                 { name: 'Sarah Chen', email: 'sarah@example.com', role: 'Admin', status: 'Active' },
-                { name: 'Alex Johnson', email: 'alex@example.com', role: 'Editor', status: 'Active' },
-                { name: 'Sam Wilson', email: 'sam@example.com', role: 'Viewer', status: 'Inactive' },
+                {
+                  name: 'Alex Johnson',
+                  email: 'alex@example.com',
+                  role: 'Editor',
+                  status: 'Active',
+                },
+                {
+                  name: 'Sam Wilson',
+                  email: 'sam@example.com',
+                  role: 'Viewer',
+                  status: 'Inactive',
+                },
               ]}
             />
           </div>
@@ -1894,7 +2374,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Loading</h2>
-          <p class="text-foreground-muted mt-1">Skeleton loaders for perceived performance while content is being fetched.</p>
+          <p class="text-foreground-muted mt-1">
+            Skeleton loaders for perceived performance while content is being fetched.
+          </p>
         </div>
       </div>
 
@@ -2016,7 +2498,9 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Toggles</h2>
-          <p class="text-foreground-muted mt-1">Accordion and expandable content patterns with native HTML details/summary.</p>
+          <p class="text-foreground-muted mt-1">
+            Accordion and expandable content patterns with native HTML details/summary.
+          </p>
         </div>
       </div>
 
@@ -2030,9 +2514,21 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           <div class="showcase-content">
             <Accordion
               items={[
-                { title: 'What is Astro Rocket?', content: 'Astro Rocket is a modern Astro starter template with Tailwind CSS v4, React islands, and a comprehensive component library. It includes everything you need to build production-ready websites.' },
-                { title: 'Is it free to use?', content: 'Yes! Astro Rocket is open source and completely free. You can use it for personal and commercial projects without any restrictions.' },
-                { title: 'How do I customize the theme?', content: 'Astro Rocket uses CSS custom properties (design tokens) for theming. Edit the token files in src/styles/tokens/ to customize colors, spacing, typography, and more.' },
+                {
+                  title: 'What is Astro Rocket?',
+                  content:
+                    'Astro Rocket is a modern Astro starter template with Tailwind CSS v4, React islands, and a comprehensive component library. It includes everything you need to build production-ready websites.',
+                },
+                {
+                  title: 'Is it free to use?',
+                  content:
+                    'Yes! Astro Rocket is open source and completely free. You can use it for personal and commercial projects without any restrictions.',
+                },
+                {
+                  title: 'How do I customize the theme?',
+                  content:
+                    'Astro Rocket uses CSS custom properties (design tokens) for theming. Edit the token files in src/styles/tokens/ to customize colors, spacing, typography, and more.',
+                },
               ]}
             />
           </div>
@@ -2049,9 +2545,22 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <Accordion
                 variant="card"
                 items={[
-                  { title: 'Getting Started', content: 'Run the CLI scaffolding command to create a new project. Customize with flags like --demo, --components, and --i18n.', defaultOpen: true },
-                  { title: 'Deployment', content: 'Deploy to Vercel, Netlify, or any static host. The build output is optimized for performance out of the box.' },
-                  { title: 'Support', content: 'Join our GitHub discussions or file an issue for bugs and feature requests.' },
+                  {
+                    title: 'Getting Started',
+                    content:
+                      'Run the CLI scaffolding command to create a new project. Customize with flags like --demo, --components, and --i18n.',
+                    defaultOpen: true,
+                  },
+                  {
+                    title: 'Deployment',
+                    content:
+                      'Deploy to Vercel, Netlify, or any static host. The build output is optimized for performance out of the box.',
+                  },
+                  {
+                    title: 'Support',
+                    content:
+                      'Join our GitHub discussions or file an issue for bugs and feature requests.',
+                  },
                 ]}
               />
             </div>
@@ -2067,9 +2576,21 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
               <Accordion
                 exclusive
                 items={[
-                  { title: 'Free Plan', content: 'Perfect for personal projects and learning. Includes all core components and basic templates.' },
-                  { title: 'Pro Plan', content: 'Advanced components, premium templates, priority support, and commercial license.' },
-                  { title: 'Enterprise', content: 'Custom development, dedicated support, SLA guarantees, and team training workshops.' },
+                  {
+                    title: 'Free Plan',
+                    content:
+                      'Perfect for personal projects and learning. Includes all core components and basic templates.',
+                  },
+                  {
+                    title: 'Pro Plan',
+                    content:
+                      'Advanced components, premium templates, priority support, and commercial license.',
+                  },
+                  {
+                    title: 'Enterprise',
+                    content:
+                      'Custom development, dedicated support, SLA guarantees, and team training workshops.',
+                  },
                 ]}
               />
             </div>
@@ -2086,7 +2607,10 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
         <div>
           <h2 class="font-display text-2xl font-bold text-foreground">Patterns</h2>
-          <p class="text-foreground-muted mt-1">Pre-composed component patterns for common UI needs — search, passwords, stats, and empty states.</p>
+          <p class="text-foreground-muted mt-1">
+            Pre-composed component patterns for common UI needs — search, passwords, stats, and
+            empty states.
+          </p>
         </div>
       </div>
 
@@ -2138,10 +2662,34 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
           </div>
           <div class="showcase-content">
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard label="Total Revenue" value="$45,231" trend="up" trendText="+12.5% from last month" icon="trending-up" />
-              <StatCard label="Active Users" value="2,338" trend="up" trendText="+8.2% from last week" icon="users" />
-              <StatCard label="Bounce Rate" value="24.3%" trend="down" trendText="-3.1% from last month" icon="trending-down" />
-              <StatCard label="Avg. Session" value="3m 42s" trend="neutral" trendText="No change" icon="loader" />
+              <StatCard
+                label="Total Revenue"
+                value="$45,231"
+                trend="up"
+                trendText="+12.5% from last month"
+                icon="trending-up"
+              />
+              <StatCard
+                label="Active Users"
+                value="2,338"
+                trend="up"
+                trendText="+8.2% from last week"
+                icon="users"
+              />
+              <StatCard
+                label="Bounce Rate"
+                value="24.3%"
+                trend="down"
+                trendText="-3.1% from last month"
+                icon="trending-down"
+              />
+              <StatCard
+                label="Avg. Session"
+                value="3m 42s"
+                trend="neutral"
+                trendText="No change"
+                icon="loader"
+              />
             </div>
           </div>
         </div>
@@ -2171,10 +2719,7 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
         </div>
       </div>
     </section>
-
   </div>
-
-
 </ComponentLayout>
 
 <style>
@@ -2228,5 +2773,4 @@ import StackMarquee from '@/components/landing/StackMarquee.astro';
   kbd {
     font-family: var(--font-mono);
   }
-
 </style>

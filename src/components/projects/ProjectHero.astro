@@ -65,16 +65,11 @@ const cleanLogoSvg = logoSvg
 // Prefer gallery when provided; fall back to the single hero image; build a
 // 1-slide carousel out of the image so the visual frame stays consistent.
 const slides: GallerySlide[] =
-  gallery.length > 0
-    ? gallery
-    : image
-      ? [{ src: image, alt: imageAlt || title }]
-      : [];
+  gallery.length > 0 ? gallery : image ? [{ src: image, alt: imageAlt || title }] : [];
 const hasMedia = slides.length > 0;
 ---
 
 <header class="relative isolate overflow-hidden pt-[var(--space-page-top-sm)] pb-[var(--space-section-md)]">
-
   <div class="relative z-10 mx-auto max-w-8xl px-6">
     <div
       class:list={[
@@ -124,10 +119,13 @@ const hasMedia = slides.length > 0;
             {meta.map((item, index) => (
               <>
                 {/* FireStone: [Replace text character '·' with precise geometric dot separator] */}
-                {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
-                <Badge variant="brand">
-                  {item}
-                </Badge>
+                {index > 0 && (
+                  <span
+                    class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0"
+                    aria-hidden="true"
+                  />
+                )}
+                <Badge variant="brand">{item}</Badge>
               </>
             ))}
           </div>
@@ -142,7 +140,13 @@ const hasMedia = slides.length > 0;
               </Button>
             )}
             {repo && (
-              <Button href={repo} target="_blank" rel="noopener noreferrer" variant="outline" size="md">
+              <Button
+                href={repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outline"
+                size="md"
+              >
                 <Icon name="github" size="sm" />
                 {t('projects.viewSource', locale)}
                 <Icon name="arrow-up-right" size="xs" />

@@ -1,4 +1,10 @@
-import { SITE_URL, GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, REPOSITORY_ID, CATEGORY_ID } from 'astro:env/server';
+import {
+  SITE_URL,
+  GOOGLE_SITE_VERIFICATION,
+  BING_SITE_VERIFICATION,
+  REPOSITORY_ID,
+  CATEGORY_ID,
+} from 'astro:env/server';
 import i18nConfig, { type I18nConfig } from './i18n.config';
 
 export { i18nConfig };
@@ -265,12 +271,12 @@ const siteConfig: SiteConfig = {
     country: '中国',
   },
   socialLinks: [
-    'https://github.com/f1restone',// GitHub
-    'https://space.bilibili.com/299649937',// Bilibili
-    'https://www.zhihu.com/people/FireStone',// Zhihu
-    'https://music.163.com/#/user/home?id=435228979',// NetEase Cloud Music
-    'https://www.youtube.com/@FSFireStone',// YouTube
-    'https://x.com/FSFireStone',// X (Twitter)
+    'https://github.com/f1restone', // GitHub
+    'https://space.bilibili.com/299649937', // Bilibili
+    'https://www.zhihu.com/people/FireStone', // Zhihu
+    'https://music.163.com/#/user/home?id=435228979', // NetEase Cloud Music
+    'https://www.youtube.com/@FSFireStone', // YouTube
+    'https://x.com/FSFireStone', // X (Twitter)
   ],
   header: {
     // Flip to `true` to show the social icons (incl. GitHub) in the header.
@@ -345,7 +351,11 @@ const siteConfig: SiteConfig = {
     tagCloudLimit: 10,
   },
   newsletter: { enabled: false },
-  blogCta: { enabled: false, href: 'https://github.com/f1restone/f1restone.github.io', icon: 'github' },
+  blogCta: {
+    enabled: false,
+    href: 'https://github.com/f1restone/f1restone.github.io',
+    icon: 'github',
+  },
   projects: {
     perPage: 12,
     tagCloudLimit: 10,

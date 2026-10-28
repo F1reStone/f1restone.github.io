@@ -5,12 +5,14 @@
 Astro Rocket is an open-source project and everyone who participates — whether through issues, pull requests, discussions, or any other channel — is expected to treat others with respect and professionalism.
 
 **Expected behaviour:**
+
 - Be welcoming and considerate in your language and actions
 - Offer and accept constructive feedback graciously
 - Focus on what is best for the project and the community
 - Show patience with contributors of all experience levels
 
 **Unacceptable behaviour:**
+
 - Personal attacks, insults, or derogatory comments
 - Public or private intimidation of any kind
 - Sharing others' private information without permission

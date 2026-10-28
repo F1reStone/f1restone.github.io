@@ -24,34 +24,32 @@ const language = fallback
   : '';
 ---
 
-{
-  fallback && (
-    <section
-      class:list={[bannerPanelClass, 'floating-banner--visible']}
-      data-locale-fallback
-      lang={locale}
-      aria-labelledby="locale-fallback-heading"
-      data-pagefind-ignore
-    >
-      <div class={bannerContentClass}>
-        <p id="locale-fallback-heading" class={bannerHeadingClass}>
-          {t('localeFallback.heading', locale)}
-        </p>
-        <p class={bannerDescriptionClass}>{t('localeFallback.page', locale, { language })}</p>
-      </div>
-      <div class={bannerActionsClass}>
-        <Button variant="primary" size="sm" data-dismiss-fallback>
-          <Icon name="check" size="sm" />
-          {t('localeFallback.confirm', locale)}
-        </Button>
-        <Button variant="secondary" size="sm" href={localizedPath('/', locale)}>
-          <Icon name="house" size="sm" />
-          {t('localeFallback.backToHome', locale)}
-        </Button>
-      </div>
-    </section>
-  )
-}
+{fallback && (
+  <section
+    class:list={[bannerPanelClass, 'floating-banner--visible']}
+    data-locale-fallback
+    lang={locale}
+    aria-labelledby="locale-fallback-heading"
+    data-pagefind-ignore
+  >
+    <div class={bannerContentClass}>
+      <p id="locale-fallback-heading" class={bannerHeadingClass}>
+        {t('localeFallback.heading', locale)}
+      </p>
+      <p class={bannerDescriptionClass}>{t('localeFallback.page', locale, { language })}</p>
+    </div>
+    <div class={bannerActionsClass}>
+      <Button variant="primary" size="sm" data-dismiss-fallback>
+        <Icon name="check" size="sm" />
+        {t('localeFallback.confirm', locale)}
+      </Button>
+      <Button variant="secondary" size="sm" href={localizedPath('/', locale)}>
+        <Icon name="house" size="sm" />
+        {t('localeFallback.backToHome', locale)}
+      </Button>
+    </div>
+  </section>
+)}
 
 <script>
   import { hideFloatingBanner } from '@/components/ui/overlay/FloatingBanner/visibility';

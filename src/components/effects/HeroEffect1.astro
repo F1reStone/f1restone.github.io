@@ -39,31 +39,29 @@ const fallbackProps = {
   aria-hidden="true"
 >
   <div class="hero-effect-1__fallback">
-    {
-      !customPalette &&
-        fallbackImages.map(({ src, widths, orientation }) => (
-          <Fragment>
-            <template data-hero-fallback={orientation}>
-              <Picture
-                {...fallbackProps}
-                formats={['avif', 'webp']}
-                src={src}
-                widths={widths}
-                pictureAttributes={{ class: `hero-effect-1__picture--${orientation}` }}
-              />
-            </template>
-            <noscript>
-              <Picture
-                {...fallbackProps}
-                formats={['avif', 'webp']}
-                src={src}
-                widths={widths}
-                pictureAttributes={{ class: `hero-effect-1__picture--${orientation}` }}
-              />
-            </noscript>
-          </Fragment>
-        ))
-    }
+    {!customPalette &&
+      fallbackImages.map(({ src, widths, orientation }) => (
+        <Fragment>
+          <template data-hero-fallback={orientation}>
+            <Picture
+              {...fallbackProps}
+              formats={['avif', 'webp']}
+              src={src}
+              widths={widths}
+              pictureAttributes={{ class: `hero-effect-1__picture--${orientation}` }}
+            />
+          </template>
+          <noscript>
+            <Picture
+              {...fallbackProps}
+              formats={['avif', 'webp']}
+              src={src}
+              widths={widths}
+              pictureAttributes={{ class: `hero-effect-1__picture--${orientation}` }}
+            />
+          </noscript>
+        </Fragment>
+      ))}
   </div>
 </firestone-hero-effect-1>
 

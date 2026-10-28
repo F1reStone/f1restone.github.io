@@ -85,7 +85,7 @@ export function getSecondaryLocales(): string[] {
  * out in production, kept visible in dev so authors can preview them.
  */
 export async function getPublishedPosts(
-  locale: string = defaultLocale,
+  locale: string = defaultLocale
 ): Promise<CollectionEntry<'blog'>[]> {
   const all = await getCollection('blog', ({ data }) => {
     return data.locale === locale && (import.meta.env.PROD ? data.draft !== true : true);
@@ -127,10 +127,7 @@ export function collectTagsWithCounts(
 }
 
 /** The most-used tags across the given posts, capped at `limit`. */
-export function collectTopTags(
-  posts: CollectionEntry<'blog'>[],
-  limit: number
-): string[] {
+export function collectTopTags(posts: CollectionEntry<'blog'>[], limit: number): string[] {
   return collectTagsWithCounts(posts)
     .slice(0, limit)
     .map((t) => t.tag);

@@ -37,9 +37,7 @@ const {
     <Icon name={icon} size="lg" />
   </div>
   <h3 class="text-base font-semibold text-foreground mb-1">{title}</h3>
-  {description && (
-    <p class="text-sm text-foreground-muted max-w-sm mb-4">{description}</p>
-  )}
+  {description && <p class="text-sm text-foreground-muted max-w-sm mb-4">{description}</p>}
   {actionLabel && (
     <Button variant="secondary" size="sm" href={actionHref}>
       {actionLabel}

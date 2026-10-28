@@ -24,7 +24,10 @@ const id = `typing-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 <span id={id} class="typing-effect" aria-label={words.join(', ')}>
-  <span class="typing-text"></span><span class="typing-cursor" aria-hidden="true">|</span>
+  <span class="typing-text"></span>
+  <span class="typing-cursor" aria-hidden="true">
+    |
+  </span>
 </span>
 
 <style>
@@ -43,12 +46,20 @@ const id = `typing-${Math.random().toString(36).slice(2, 8)}`;
   }
 
   @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
   }
 </style>
 
-<script is:inline define:vars={{ id, words, typeSpeed, deleteSpeed, pauseAfterType, pauseAfterDelete }}>
+<script
+  is:inline
+  define:vars={{ id, words, typeSpeed, deleteSpeed, pauseAfterType, pauseAfterDelete }}
+>
   function startTyping() {
     const root = document.getElementById(id);
     if (!root) return;
@@ -57,7 +68,8 @@ const id = `typing-${Math.random().toString(36).slice(2, 8)}`;
     // Lock the element width to the widest word so the layout never shifts
     const measurer = document.createElement('span');
     measurer.setAttribute('aria-hidden', 'true');
-    measurer.style.cssText = 'visibility:hidden;position:absolute;white-space:nowrap;pointer-events:none;';
+    measurer.style.cssText =
+      'visibility:hidden;position:absolute;white-space:nowrap;pointer-events:none;';
     const cs = getComputedStyle(root);
     measurer.style.font = cs.font;
     measurer.style.letterSpacing = cs.letterSpacing;
@@ -72,7 +84,7 @@ const id = `typing-${Math.random().toString(36).slice(2, 8)}`;
     root.style.minWidth = maxWidth + 'px';
 
     let wordIndex = 0;
-    let charIndex = 0;       // start empty — cursor only, then type the first word
+    let charIndex = 0; // start empty — cursor only, then type the first word
     let isDeleting = false;
 
     function tick() {

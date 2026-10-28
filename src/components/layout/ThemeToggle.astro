@@ -16,7 +16,7 @@ const { class: className } = Astro.props;
   id="theme-toggle"
   class={cn(
     'theme-toggle inline-flex items-center justify-center rounded-md p-2',
-      'text-muted-foreground hover:text-foreground focus-visible:text-foreground hover:bg-secondary',
+    'text-muted-foreground hover:text-foreground focus-visible:text-foreground hover:bg-secondary',
     'transition-colors duration-(--transition-fast)',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     className
@@ -77,10 +77,12 @@ const { class: className } = Astro.props;
   /* Show exactly one icon based on the saved colour-mode. The bootstrap
      sets data-theme-mode synchronously before paint, so the right icon is
      visible from frame 0 (no flash). */
-  .theme-toggle__icon { display: none; }
+  .theme-toggle__icon {
+    display: none;
+  }
   :global(html[data-theme-mode='system']) .theme-toggle .theme-toggle__icon--system,
-  :global(html[data-theme-mode='light'])  .theme-toggle .theme-toggle__icon--light,
-  :global(html[data-theme-mode='dark'])   .theme-toggle .theme-toggle__icon--dark {
+  :global(html[data-theme-mode='light']) .theme-toggle .theme-toggle__icon--light,
+  :global(html[data-theme-mode='dark']) .theme-toggle .theme-toggle__icon--dark {
     display: block;
   }
 </style>

@@ -49,10 +49,14 @@ const PARTICLE_COUNT = 16;
 
 <style>
   @media (hover: none), (pointer: coarse) {
-    .cursor-fx { display: none !important; }
+    .cursor-fx {
+      display: none !important;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
-    .cursor-fx { display: none !important; }
+    .cursor-fx {
+      display: none !important;
+    }
   }
 
   /* FireStone: 悬停时，光标环放大，不仅填充背景，还要爆发出同款品牌色辉光！ */
@@ -84,12 +88,15 @@ const PARTICLE_COUNT = 16;
     }
     let particleIdx = 0;
     let lastSpawn = 0;
-    const SPAWN_INTERVAL = 22; 
-    const FADE_RATE = 0.025;   
+    const SPAWN_INTERVAL = 22;
+    const FADE_RATE = 0.025;
 
-    const INTERACTIVE = 'a, button, [role="button"], input:not([type="hidden"]), textarea, select, summary, label[for]';
-    let mouseX = -100, mouseY = -100;
-    let ringX = -100, ringY = -100;
+    const INTERACTIVE =
+      'a, button, [role="button"], input:not([type="hidden"]), textarea, select, summary, label[for]';
+    let mouseX = -100,
+      mouseY = -100;
+    let ringX = -100,
+      ringY = -100;
     let visible = false;
     let hovering = null;
 
@@ -101,7 +108,7 @@ const PARTICLE_COUNT = 16;
         dot.style.opacity = '1';
         ringWrap.style.opacity = '1';
       }
-      
+
       /* FireStone: 性能优化
          使用 translate3d 激活 GPU 独立图层硬件加速
          使光标的移动也完全在 GPU 合成器上跑
@@ -136,7 +143,7 @@ const PARTICLE_COUNT = 16;
     function tick() {
       ringX += (mouseX - ringX) * 0.18;
       ringY += (mouseY - ringY) * 0.18;
-      
+
       // FireStone: 同步应用 translate3d 到跟踪环
       ringWrap.style.transform = 'translate3d(' + (ringX - 20) + 'px,' + (ringY - 20) + 'px, 0)';
 
@@ -145,10 +152,10 @@ const PARTICLE_COUNT = 16;
         if (p.life <= 0) continue;
         p.life -= FADE_RATE;
         if (p.life < 0) p.life = 0;
-        const op = p.life * 0.7; 
-        const sc = 0.4 + p.life * 0.6; 
+        const op = p.life * 0.7;
+        const sc = 0.4 + p.life * 0.6;
         p.el.style.opacity = String(op);
-        
+
         // FireStone: 同步应用 translate3d 到拖尾
         p.el.style.transform =
           'translate3d(' + (p.x - 3) + 'px,' + (p.y - 3) + 'px, 0) scale(' + sc + ')';

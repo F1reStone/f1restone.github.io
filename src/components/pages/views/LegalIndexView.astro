@@ -21,12 +21,7 @@ const breadcrumbs = [
   title="法律信息"
   description="查看本网站的隐私政策、使用条款与相关说明。"
 >
-  <Header
-    slot="header"
-    position="fixed"
-    showCta={false}
-    maxWidth="8xl"
-  />
+  <Header slot="header" position="fixed" showCta={false} maxWidth="8xl" />
 
   <main class="min-h-screen">
     <Hero layout="split" size="xl" class="invert-section" showEffect1 showScrollIndicator>
@@ -35,13 +30,18 @@ const breadcrumbs = [
         法律信息
       </Badge>
 
-      <h1 slot="title" class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative">
+      <h1
+        slot="title"
+        class="hero-title-wrapper !text-[clamp(2.5rem,12vw,4rem)] sm:!text-6xl md:!text-7xl lg:!text-8xl tracking-tight z-10 relative"
+      >
         <span class="hero-title-text">Legal Information</span>
       </h1>
 
-      <p slot="description" class="hero-description-text">与 FireStone 网站相关的法律信息。</p>
+      <p slot="description" class="hero-description-text">
+        与 FireStone 网站相关的法律信息。
+      </p>
 
-      <p class="text-sm text-foreground-muted"> 共 {legalPages.length} 项 </p>
+      <p class="text-sm text-foreground-muted">共 {legalPages.length} 项</p>
     </Hero>
 
     <section class="mt-8 pb-[var(--space-section-md)]">
@@ -64,11 +64,7 @@ const breadcrumbs = [
                         {page.titleEn}
                       </h3>
 
-                      {page.title && (
-                        <p class="mt-1 text-sm text-foreground-muted">
-                          {page.title}
-                        </p>
-                      )}
+                      {page.title && <p class="mt-1 text-sm text-foreground-muted">{page.title}</p>}
                     </div>
 
                     <span class="rounded-full border border-border bg-background p-3 text-foreground-muted transition-colors group-hover:text-brand-500">
@@ -76,9 +72,7 @@ const breadcrumbs = [
                     </span>
                   </div>
 
-                  <p class="mt-4 flex-1 leading-7 text-foreground-muted">
-                    {page.description}
-                  </p>
+                  <p class="mt-4 flex-1 leading-7 text-foreground-muted">{page.description}</p>
 
                   <div class="mt-6 border-t border-border pt-4 text-sm text-foreground-muted">
                     最后更新于{' '}
@@ -100,8 +94,5 @@ const breadcrumbs = [
     </section>
   </main>
 
-  <Footer 
-    slot="footer" 
-    breadcrumbs={breadcrumbs} 
-  />
+  <Footer slot="footer" breadcrumbs={breadcrumbs} />
 </BaseLayout>

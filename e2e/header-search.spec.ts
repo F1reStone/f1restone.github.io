@@ -6,7 +6,9 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-test('sticky headers keep their inverted tone and occupy layout while fixed headers use immersive contrast', async ({ page }) => {
+test('sticky headers keep their inverted tone and occupy layout while fixed headers use immersive contrast', async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/projects/firestone-website/');
@@ -17,13 +19,18 @@ test('sticky headers keep their inverted tone and occupy layout while fixed head
   const stickyLayout = await page.evaluate(() => {
     const header = document.querySelector<HTMLElement>('body > header')!;
     const main = document.querySelector<HTMLElement>('body > main')!;
-    return { headerBottom: header.getBoundingClientRect().bottom, mainTop: main.getBoundingClientRect().top };
+    return {
+      headerBottom: header.getBoundingClientRect().bottom,
+      mainTop: main.getBoundingClientRect().top,
+    };
   });
   expect(stickyLayout.mainTop).toBeCloseTo(stickyLayout.headerBottom, 0);
 
   await page.evaluate(() => window.scrollTo(0, 400));
   await expect(stickyHeader).toHaveAttribute('data-scrolled', '');
-  await expect.poll(() => stickyHeader.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(0, 0);
+  await expect
+    .poll(() => stickyHeader.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(0, 0);
 
   await page.goto('/');
   const fixedHeader = page.locator('body > header');
@@ -33,7 +40,9 @@ test('sticky headers keep their inverted tone and occupy layout while fixed head
   expect(initialColour).toBe('rgba(255, 255, 255, 0.85)');
 });
 
-test('searching from a top-of-page sticky header keeps the page content in place', async ({ page }) => {
+test('searching from a top-of-page sticky header keeps the page content in place', async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/projects/sparkforge/');
@@ -46,29 +55,44 @@ test('searching from a top-of-page sticky header keeps the page content in place
   await header.locator('.search-trigger').click();
   await expect(header).toHaveAttribute('data-search-active', '');
   await expect(header).toHaveCSS('position', 'sticky');
-  await expect.poll(() => content.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(before, 0);
+  await expect
+    .poll(() => content.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(before, 0);
 
   await page.keyboard.press('Escape');
   await expect(page.locator('.search-modal')).toBeHidden();
-  await expect.poll(() => content.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(before, 0);
+  await expect
+    .poll(() => content.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(before, 0);
 
   await page.evaluate(() => window.scrollTo(0, 400));
-  await expect.poll(() => header.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(0, 0);
+  await expect
+    .poll(() => header.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(0, 0);
   const scrolledContentTop = await content.evaluate((el) => el.getBoundingClientRect().top);
   const scrolledY = await page.evaluate(() => window.scrollY);
   const triggerBox = await header.locator('.search-trigger').boundingBox();
-  await page.mouse.click(triggerBox!.x + triggerBox!.width / 2, triggerBox!.y + triggerBox!.height / 2);
+  await page.mouse.click(
+    triggerBox!.x + triggerBox!.width / 2,
+    triggerBox!.y + triggerBox!.height / 2
+  );
   await expect(header).toHaveAttribute('data-search-active', '');
   await expect(header).toHaveCSS('position', 'sticky');
-  await expect.poll(() => header.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(0, 0);
+  await expect
+    .poll(() => header.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(0, 0);
   await page.mouse.move(20, 700);
   await page.mouse.wheel(0, 300);
-  await expect.poll(() => content.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(scrolledContentTop, 0);
+  await expect
+    .poll(() => content.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(scrolledContentTop, 0);
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrolledY);
 
   await page.keyboard.press('Escape');
   await expect(page.locator('.search-modal')).toBeHidden();
-  await expect.poll(() => content.evaluate((el) => el.getBoundingClientRect().top)).toBeCloseTo(scrolledContentTop, 0);
+  await expect
+    .poll(() => content.evaluate((el) => el.getBoundingClientRect().top))
+    .toBeCloseTo(scrolledContentTop, 0);
 });
 
 for (const width of [390, 1440]) {
@@ -116,9 +140,11 @@ for (const width of [390, 1440]) {
     await input.fill('');
     await expect(modal.locator('.search-result')).toHaveCount(0);
     const heightTransition = await panel.evaluate((element) => {
-      const animation = element.getAnimations().find((animation) =>
-        (animation.effect as KeyframeEffect).getKeyframes().some((frame) => 'height' in frame)
-      )!;
+      const animation = element
+        .getAnimations()
+        .find((animation) =>
+          (animation.effect as KeyframeEffect).getKeyframes().some((frame) => 'height' in frame)
+        )!;
       animation.pause();
       animation.currentTime = 0;
       const start = element.getBoundingClientRect().height;
@@ -158,7 +184,8 @@ for (const width of [390, 1440]) {
     await expect(page.locator('body > header .hdr-menu-surface')).toHaveCSS('opacity', '1');
     const colors = await panel.evaluate((element) => ({
       panel: getComputedStyle(element).backgroundColor,
-      header: getComputedStyle(document.querySelector('body > header .hdr-menu-surface')!).backgroundColor,
+      header: getComputedStyle(document.querySelector('body > header .hdr-menu-surface')!)
+        .backgroundColor,
     }));
     expect(colors.panel).toBe(colors.header);
     await page.screenshot({ path: `test-results/search-dark-${width}.png` });

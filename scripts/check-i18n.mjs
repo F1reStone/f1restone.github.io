@@ -52,7 +52,9 @@ try {
     '---\ntitle: Draft must not publish\ndescription: Temporary draft\nlocale: en-US\npublishedAt: 2026-01-01\ndraft: true\n---\nDraft.\n'
   );
   // Exercise globally injected MDX helpers and mixed galleries on a rewritten fallback page.
-  fixture('src/content/blog/zh-CN/as260-patterns.mdx', `---
+  fixture(
+    'src/content/blog/zh-CN/as260-patterns.mdx',
+    `---
 title: Migration content patterns
 description: Temporary MDX integration coverage
 locale: zh-CN
@@ -70,7 +72,8 @@ import screenshot from '@/assets/projects/firestone-website/website-screenshot-1
 
 ## Gallery
 <ProjectGallery images={[{ src: screenshot, alt: 'Fixture screenshot' }, { video: '/videos/as260-fixture.mp4', poster: screenshot, alt: 'Fixture video' }]} />
-`);
+`
+  );
   const env = {
     PUBLIC_CONSENT_ENABLED: 'true',
     PUBLIC_UMAMI_WEBSITE_ID: 'as260-test',

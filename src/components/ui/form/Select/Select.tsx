@@ -20,7 +20,18 @@ interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'ref
   placeholder?: string;
 }
 
-export function Select({ ref, label, error, hint, size = 'md', options, placeholder, className, id, ...props }: SelectProps) {
+export function Select({
+  ref,
+  label,
+  error,
+  hint,
+  size = 'md',
+  options,
+  placeholder,
+  className,
+  id,
+  ...props
+}: SelectProps) {
   const generatedId = useId();
   const selectId = id || generatedId;
 
@@ -32,7 +43,7 @@ export function Select({ ref, label, error, hint, size = 'md', options, placehol
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={selectId} className="text-sm font-medium leading-none">
+        <label htmlFor={selectId} className="text-sm leading-none font-medium">
           {label}
         </label>
       )}
@@ -60,7 +71,7 @@ export function Select({ ref, label, error, hint, size = 'md', options, placehol
 
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
           <svg
-            className="h-4 w-4 text-muted-foreground"
+            className="text-muted-foreground h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -76,13 +87,13 @@ export function Select({ ref, label, error, hint, size = 'md', options, placehol
       </div>
 
       {error && (
-        <p id={`${selectId}-error`} className="text-sm text-destructive">
+        <p id={`${selectId}-error`} className="text-destructive text-sm">
           {error}
         </p>
       )}
 
       {hint && !error && (
-        <p id={`${selectId}-hint`} className="text-sm text-muted-foreground">
+        <p id={`${selectId}-hint`} className="text-muted-foreground text-sm">
           {hint}
         </p>
       )}

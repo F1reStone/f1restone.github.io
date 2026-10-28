@@ -1,6 +1,8 @@
 ---
 import { defaultLocale, localizedPath, getLocaleFromPath } from '@/i18n';
-interface Props { locale?: string; }
+interface Props {
+  locale?: string;
+}
 const { locale = defaultLocale } = Astro.props;
 const requestedLocale = getLocaleFromPath(Astro.originPathname);
 Astro.locals.contentLocale = defaultLocale;
@@ -36,19 +38,13 @@ const posts = blogItems
   includePersonSchema={true}
 >
   <!-- Hero -->
-  <Hero
-    layout="split"
-    size="xl"
-    class="invert-section"
-    fullHeight
-    showEffect1
-    showScrollIndicator
-  >
+  <Hero layout="split" size="xl" class="invert-section" fullHeight showEffect1 showScrollIndicator>
     <h1
       slot="title"
       class="hero-title-wrapper relative z-10 !text-4xl tracking-normal sm:!text-6xl md:!text-7xl lg:!text-8xl"
     >
-      <span class="hero-title-text text-[0.6em] whitespace-nowrap">To the</span><br />
+      <span class="hero-title-text text-[0.6em] whitespace-nowrap">To the</span>
+      <br />
       <span class="hero-title-text">Infinite Future</span>
     </h1>
 
@@ -74,7 +70,9 @@ const posts = blogItems
       </div>
 
       <div class="grid gap-6 md:grid-cols-2">
-        {featuredProjects.map((project, i) => <ProjectCard locale={requestedLocale} project={project} index={i} />)}
+        {featuredProjects.map((project, i) => (
+          <ProjectCard locale={requestedLocale} project={project} index={i} />
+        ))}
       </div>
 
       <div class="mt-4 text-center">
@@ -87,18 +85,19 @@ const posts = blogItems
   </section>
 
   <!-- About Teaser -->
-  <section
-    class="bg-background-secondary border-border relative z-10 border-t py-[var(--space-section-md)]"
-  >
+  <section class="bg-background-secondary border-border relative z-10 border-t py-[var(--space-section-md)]">
     <div class="max-w-8xl mx-auto px-6">
       <div class="grid gap-12 lg:grid-cols-2">
         <div class="flex flex-col justify-center" data-reveal="right" data-reveal-ease="smooth">
           <div class="mb-6 flex flex-col gap-6">
-            <Badge variant="brand" pill class="self-start">关于 FireStone</Badge>
+            <Badge variant="brand" pill class="self-start">
+              关于 FireStone
+            </Badge>
             <h2 class="font-display text-foreground text-3xl font-bold md:text-4xl">
-              一位兴趣使然的<br />
-              <span class="text-brand-500"
-                ><TypingEffect
+              一位兴趣使然的
+              <br />
+              <span class="text-brand-500">
+                <TypingEffect
                   words={[
                     '业余设计师',
                     '业余开发者',
@@ -112,11 +111,15 @@ const posts = blogItems
                     '《赛博朋克 2077》预购冤种',
                     '《边境》首发冤种',
                   ]}
-                /></span
-              >
+                />
+              </span>
             </h2>
           </div>
-          <Button variant="outline" href={localizedPath('/about', requestedLocale) + ''} class="self-start">
+          <Button
+            variant="outline"
+            href={localizedPath('/about', requestedLocale) + ''}
+            class="self-start"
+          >
             进一步了解
             <Icon name="chevron-right" size="sm" />
           </Button>
@@ -133,24 +136,26 @@ const posts = blogItems
       </div>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          posts.map((post, index) => (
-            <BlogCard
-              title={post.data.title}
-              description={post.data.description}
-              body={post.body}
-              locale={locale}
-              href={withLocaleFallback(getPostUrl(post.id, post.data.locale), post.data.locale, requestedLocale)}
-              publishedAt={post.data.publishedAt}
-              tags={post.data.tags}
-              author={post.data.author}
-              image={post.data.image}
-              svgSlug={post.data.svgSlug}
-              revealDelay={index}
-              class={index === 3 ? 'hidden sm:block lg:hidden' : undefined}
-            />
-          ))
-        }
+        {posts.map((post, index) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            body={post.body}
+            locale={locale}
+            href={withLocaleFallback(
+              getPostUrl(post.id, post.data.locale),
+              post.data.locale,
+              requestedLocale
+            )}
+            publishedAt={post.data.publishedAt}
+            tags={post.data.tags}
+            author={post.data.author}
+            image={post.data.image}
+            svgSlug={post.data.svgSlug}
+            revealDelay={index}
+            class={index === 3 ? 'hidden sm:block lg:hidden' : undefined}
+          />
+        ))}
       </div>
 
       <div class="flex justify-center">

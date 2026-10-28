@@ -98,7 +98,9 @@ interface Props extends HTMLAttributes<'footer'> {
 const locale = getLocaleFromPath(Astro.originPathname);
 const configuredGroups = getFooterLinkGroups(locale);
 // Explicit props (including an empty list) override both configured and derived groups.
-const defaultGroups = Astro.props.linkGroups ?? (configuredGroups.length ? configuredGroups : await getDerivedFooterGroups(locale));
+const defaultGroups =
+  Astro.props.linkGroups ??
+  (configuredGroups.length ? configuredGroups : await getDerivedFooterGroups(locale));
 
 const {
   layout = 'asymmetricColumns',
@@ -114,9 +116,9 @@ const {
   languageAlternates,
   hideLogo = false,
   tagline = '',
-  maxWidth = '9xl',// FireStone: Change max width to 9xl to adapt out designs and wider footer.
+  maxWidth = '9xl', // FireStone: Change max width to 9xl to adapt out designs and wider footer.
   breadcrumbs: explicitBreadcrumbs, // 接收手动传入的面包屑
-  hideBreadcrumbs = false,          // 接收强制隐藏指令
+  hideBreadcrumbs = false, // 接收强制隐藏指令
   giantLogoSvg: _giantLogoSvg,
   class: className,
   ...attrs
@@ -158,7 +160,8 @@ const legalLinkClass =
 const legalSeparatorClass = 'mx-3 h-4 w-[1.5px] bg-foreground-subtle/30';
 
 // External arrows share the separator tone; SVG strokes use color, not background-color.
-const externalArrowClass = 'text-foreground-muted/60 hover:text-foreground focus-visible:text-foreground';
+const externalArrowClass =
+  'text-foreground-muted/60 hover:text-foreground focus-visible:text-foreground';
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -197,7 +200,7 @@ const footerClasses = cn(footerVariants({ background }), className);
 }*/
 ---
 
-<footer class={cn(footerClasses, "relative overflow-hidden")} data-pagefind-ignore {...attrs}>
+<footer class={cn(footerClasses, 'relative overflow-hidden')} data-pagefind-ignore {...attrs}>
   {background === 'glow' && (
     <div
       class="footer-aurora-high-layer absolute inset-0 z-0 overflow-hidden pointer-events-none"
@@ -211,7 +214,6 @@ const footerClasses = cn(footerVariants({ background }), className);
     </div>
   )}
   <div class={cn('mx-auto px-6 relative z-10', maxWidthClass)}>
-
     {showBreadcrumbs && (
       <div class="mb-6">
         <Breadcrumbs items={resolvedBreadcrumbs || []} />
@@ -222,66 +224,81 @@ const footerClasses = cn(footerVariants({ background }), className);
 
     {layout === 'simple' && (
       <>
-      <div class="flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-lg)]">
-        {/* Logo & Tagline */}
-        {!hideLogo && (
-          <div class="flex flex-col items-center md:items-start gap-2">
-            {hasLogoSlot ? (
-              <slot name="logo" />
-            ) : (
-              <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
-                <Logo size="md" class="text-foreground hdr-logo-glow" />
+        <div class="flex flex-col md:flex-row justify-between items-center gap-[var(--space-stack-lg)]">
+          {/* Logo & Tagline */}
+          {!hideLogo && (
+            <div class="flex flex-col items-center md:items-start gap-2">
+              {hasLogoSlot ? (
+                <slot name="logo" />
+              ) : (
+                <a
+                  href={localizedPath('/', locale)}
+                  class="flex items-center w-fit justify-self-start"
+                  aria-label={t('common.logo', locale)}
+                >
+                  <Logo size="md" class="text-foreground hdr-logo-glow" />
+                </a>
+              )}
+              {(hasTaglineSlot || tagline) && (
+                <p class="text-sm text-foreground-muted">
+                  {hasTaglineSlot ? <slot name="tagline" /> : tagline}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Navigation Links */}
+          <nav class="flex flex-wrap justify-center gap-[var(--space-inline-lg)] md:gap-[var(--space-stack-lg)] text-sm font-medium text-foreground-muted">
+            {allNavItems.map((item) => (
+              <a
+                href={item.href}
+                class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
+                rel={
+                  item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined
+                }
+              >
+                {item.label}
+                {item.external && (
+                  <Icon
+                    name="arrow-up-right"
+                    size="sm"
+                    class={externalArrowClass}
+                    aria-hidden="true"
+                  />
+                )}
               </a>
-            )}
-            {(hasTaglineSlot || tagline) && (
-              <p class="text-sm text-foreground-muted">
-                {hasTaglineSlot ? <slot name="tagline" /> : tagline}
-              </p>
-            )}
+            ))}
+          </nav>
+
+          {/* Social Links */}
+          {showSocial &&
+            socialLinks.length > 0 &&
+            (hasSocialSlot ? (
+              <slot name="social" />
+            ) : (
+              <div class="flex items-center gap-[var(--space-stack-md)]">
+                {socialLinks.map((social) => (
+                  <a
+                    href={social.href}
+                    class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={
+                      social.label || t('footer.followOn', locale, { platform: social.key })
+                    }
+                  >
+                    <Icon name={social.icon} size="md" />
+                  </a>
+                ))}
+              </div>
+            ))}
+        </div>
+        {showCopyright && (
+          <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border text-center">
+            <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
           </div>
         )}
-
-        {/* Navigation Links */}
-        <nav class="flex flex-wrap justify-center gap-[var(--space-inline-lg)] md:gap-[var(--space-stack-lg)] text-sm font-medium text-foreground-muted">
-          {allNavItems.map((item) => (
-            <a
-              href={item.href}
-              class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
-              target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
-              rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            >
-              {item.label}
-              {item.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
-            </a>
-          ))}
-        </nav>
-
-        {/* Social Links */}
-        {showSocial && socialLinks.length > 0 && (
-          hasSocialSlot ? (
-            <slot name="social" />
-          ) : (
-            <div class="flex items-center gap-[var(--space-stack-md)]">
-              {socialLinks.map((social) => (
-                <a
-                  href={social.href}
-                  class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
-                >
-                  <Icon name={social.icon} size="md" />
-                </a>
-              ))}
-            </div>
-          )
-        )}
-      </div>
-      {showCopyright && (
-        <div class="mt-[var(--space-stack-lg)] pt-[var(--space-stack-lg)] border-t border-border text-center">
-          <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
-        </div>
-      )}
       </>
     )}
 
@@ -294,7 +311,11 @@ const footerClasses = cn(footerVariants({ background }), className);
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
+                <a
+                  href={localizedPath('/', locale)}
+                  class="flex items-center w-fit justify-self-start"
+                  aria-label={t('common.logo', locale)}
+                >
                   <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
@@ -314,7 +335,9 @@ const footerClasses = cn(footerVariants({ background }), className);
                         class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
+                        aria-label={
+                          social.label || t('footer.followOn', locale, { platform: social.key })
+                        }
                       >
                         <Icon name={social.icon} size="md" />
                       </a>
@@ -341,11 +364,24 @@ const footerClasses = cn(footerVariants({ background }), className);
                         href={link.href}
                         class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         data-text={link.label}
-                        target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
-                        rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        target={
+                          link.external || link.href.startsWith('http') ? '_blank' : undefined
+                        }
+                        rel={
+                          link.external || link.href.startsWith('http')
+                            ? 'noopener noreferrer'
+                            : undefined
+                        }
                       >
                         <span>{link.label}</span>
-                        {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
+                        {link.external && (
+                          <Icon
+                            name="arrow-up-right"
+                            size="sm"
+                            class={externalArrowClass}
+                            aria-hidden="true"
+                          />
+                        )}
                       </a>
                     </li>
                   ))}
@@ -363,50 +399,75 @@ const footerClasses = cn(footerVariants({ background }), className);
             ) : (
               <>
                 {showCopyright && (
-                  <p class="text-sm font-semibold text-foreground-subtle" set:html={processedCopyright} />
+                  <p
+                    class="text-sm font-semibold text-foreground-subtle"
+                    set:html={processedCopyright}
+                  />
                 )}
                 <div class="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center">
-                {resolvedLegalLinks.length > 0 && (
-                  <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
-                    {resolvedLegalLinks.map((link, index) => (
-                      <div class="contents">
-                        {index > 0 && (
-                          <span aria-hidden="true" class={legalSeparatorClass} />
-                        )}
+                  {resolvedLegalLinks.length > 0 && (
+                    <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
+                      {resolvedLegalLinks.map((link, index) => (
+                        <div class="contents">
+                          {index > 0 && <span aria-hidden="true" class={legalSeparatorClass} />}
 
-                        {link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
-                          <button
-                            type="button"
-                            class={legalLinkClass}
-                            data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
-                            data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
-                            aria-haspopup={link.action === 'openDynamicEffects' ? 'dialog' : undefined}
-                            aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
-                          >
-                            {link.icon && (
-                              <Icon name={link.icon} size="sm" />
-                            )}
-                            <span>{link.label}</span>
-                          </button>
-                        ) : (
-                          <a
-                            href={link.href}
-                            class={legalLinkClass}
-                            target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                          >
-                            {link.icon && (
-                              <Icon name={link.icon} size="sm" />
-                            )}
-                            <span>{link.label}</span>
-                            {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
-                          </a>
-                        )}
-                      </div>
+                          {link.action === 'openConsentSettings' ||
+                          link.action === 'openDynamicEffects' ? (
+                            <button
+                              type="button"
+                              class={legalLinkClass}
+                              data-consent-settings-trigger={
+                                link.action === 'openConsentSettings' ? true : undefined
+                              }
+                              data-dynamic-effects-trigger={
+                                link.action === 'openDynamicEffects'
+                                  ? 'dynamic-effects-settings'
+                                  : undefined
+                              }
+                              aria-haspopup={
+                                link.action === 'openDynamicEffects' ? 'dialog' : undefined
+                              }
+                              aria-controls={
+                                link.action === 'openDynamicEffects'
+                                  ? 'dynamic-effects-settings'
+                                  : undefined
+                              }
+                            >
+                              {link.icon && <Icon name={link.icon} size="sm" />}
+                              <span>{link.label}</span>
+                            </button>
+                          ) : (
+                            <a
+                              href={link.href}
+                              class={legalLinkClass}
+                              target={
+                                link.external || link.href?.startsWith('http')
+                                  ? '_blank'
+                                  : undefined
+                              }
+                              rel={
+                                link.external || link.href?.startsWith('http')
+                                  ? 'noopener noreferrer'
+                                  : undefined
+                              }
+                            >
+                              {link.icon && <Icon name={link.icon} size="sm" />}
+                              <span>{link.label}</span>
+                              {link.external && (
+                                <Icon
+                                  name="arrow-up-right"
+                                  size="sm"
+                                  class={externalArrowClass}
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </a>
+                          )}
+                        </div>
                       ))}
-                  </div>
-                )}
-                <LanguageSwitcher placement="top" alternates={languageAlternates} />
+                    </div>
+                  )}
+                  <LanguageSwitcher placement="top" alternates={languageAlternates} />
                 </div>
               </>
             )}
@@ -425,7 +486,11 @@ const footerClasses = cn(footerVariants({ background }), className);
               {hasLogoSlot ? (
                 <slot name="logo" />
               ) : (
-                <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
+                <a
+                  href={localizedPath('/', locale)}
+                  class="flex items-center w-fit justify-self-start"
+                  aria-label={t('common.logo', locale)}
+                >
                   <Logo size="md" class="text-foreground hdr-logo-glow" />
                 </a>
               )}
@@ -445,7 +510,9 @@ const footerClasses = cn(footerVariants({ background }), className);
                         class="transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={social.label || t('footer.followOn', locale, { platform: social.key })}
+                        aria-label={
+                          social.label || t('footer.followOn', locale, { platform: social.key })
+                        }
                       >
                         <Icon name={social.icon} size="md" />
                       </a>
@@ -473,11 +540,24 @@ const footerClasses = cn(footerVariants({ background }), className);
                           href={link.href}
                           class="footer-group-link text-sm transition-colors text-foreground-muted weight-shift-non-centered hover-glow-text hover-glow-icon hover:text-foreground focus-visible:text-foreground"
                           data-text={link.label}
-                          target={link.external || link.href.startsWith('http') ? '_blank' : undefined}
-                          rel={link.external || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          target={
+                            link.external || link.href.startsWith('http') ? '_blank' : undefined
+                          }
+                          rel={
+                            link.external || link.href.startsWith('http')
+                              ? 'noopener noreferrer'
+                              : undefined
+                          }
                         >
                           <span>{link.label}</span>
-                          {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
+                          {link.external && (
+                            <Icon
+                              name="arrow-up-right"
+                              size="sm"
+                              class={externalArrowClass}
+                              aria-hidden="true"
+                            />
+                          )}
                         </a>
                       </li>
                     ))}
@@ -491,7 +571,10 @@ const footerClasses = cn(footerVariants({ background }), className);
         {/* FireStone: 巨型品牌 Logo */}
         {cleanGiantLogoSvg && (
           <div class="mt-16 w-full flex justify-center items-center pointer-events-none select-none">
-            <div class="w-full [&>svg]:w-full [&>svg]:h-auto [&>svg]:text-foreground" set:html={cleanGiantLogoSvg} />
+            <div
+              class="w-full [&>svg]:w-full [&>svg]:h-auto [&>svg]:text-foreground"
+              set:html={cleanGiantLogoSvg}
+            />
           </div>
         )}
 
@@ -506,47 +589,69 @@ const footerClasses = cn(footerVariants({ background }), className);
                   <p class="text-sm font-medium text-foreground/60" set:html={processedCopyright} />
                 )}
                 <div class="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-center">
-                {resolvedLegalLinks.length > 0 && (
-                  <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
-                    {resolvedLegalLinks.map((link, index) => (
-                      <div class="contents">
-                        {index > 0 && (
-                          <span aria-hidden="true" class={legalSeparatorClass} />
-                        )}
+                  {resolvedLegalLinks.length > 0 && (
+                    <div class="footer-legal-links flex flex-wrap items-center gap-y-2">
+                      {resolvedLegalLinks.map((link, index) => (
+                        <div class="contents">
+                          {index > 0 && <span aria-hidden="true" class={legalSeparatorClass} />}
 
-                        {link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
-                          <button
-                            type="button"
-                            class={legalLinkClass}
-                            data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
-                            data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
-                            aria-haspopup={link.action === 'openDynamicEffects' ? 'dialog' : undefined}
-                            aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
-                          >
-                            {link.icon && (
-                              <Icon name={link.icon} size="sm" />
-                            )}
-                            <span>{link.label}</span>
-                          </button>
-                        ) : (
-                          <a
-                            href={link.href}
-                            class={legalLinkClass}
-                            target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
-                            rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                          >
-                            {link.icon && (
-                              <Icon name={link.icon} size="sm" />
-                            )}
-                            <span>{link.label}</span>
-                            {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
-                          </a>
-                        )}
-                      </div>
+                          {link.action === 'openConsentSettings' ||
+                          link.action === 'openDynamicEffects' ? (
+                            <button
+                              type="button"
+                              class={legalLinkClass}
+                              data-consent-settings-trigger={
+                                link.action === 'openConsentSettings' ? true : undefined
+                              }
+                              data-dynamic-effects-trigger={
+                                link.action === 'openDynamicEffects'
+                                  ? 'dynamic-effects-settings'
+                                  : undefined
+                              }
+                              aria-haspopup={
+                                link.action === 'openDynamicEffects' ? 'dialog' : undefined
+                              }
+                              aria-controls={
+                                link.action === 'openDynamicEffects'
+                                  ? 'dynamic-effects-settings'
+                                  : undefined
+                              }
+                            >
+                              {link.icon && <Icon name={link.icon} size="sm" />}
+                              <span>{link.label}</span>
+                            </button>
+                          ) : (
+                            <a
+                              href={link.href}
+                              class={legalLinkClass}
+                              target={
+                                link.external || link.href?.startsWith('http')
+                                  ? '_blank'
+                                  : undefined
+                              }
+                              rel={
+                                link.external || link.href?.startsWith('http')
+                                  ? 'noopener noreferrer'
+                                  : undefined
+                              }
+                            >
+                              {link.icon && <Icon name={link.icon} size="sm" />}
+                              <span>{link.label}</span>
+                              {link.external && (
+                                <Icon
+                                  name="arrow-up-right"
+                                  size="sm"
+                                  class={externalArrowClass}
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </a>
+                          )}
+                        </div>
                       ))}
-                  </div>
-                )}
-                <LanguageSwitcher placement="top" alternates={languageAlternates} />
+                    </div>
+                  )}
+                  <LanguageSwitcher placement="top" alternates={languageAlternates} />
                 </div>
               </>
             )}
@@ -557,24 +662,25 @@ const footerClasses = cn(footerVariants({ background }), className);
 
     {layout === 'minimal' && (
       <div class="text-center">
-        {showCopyright && (
-          <p class="text-sm text-foreground-muted" set:html={processedCopyright} />
-        )}
+        {showCopyright && <p class="text-sm text-foreground-muted" set:html={processedCopyright} />}
       </div>
     )}
 
     {layout === 'stacked' && (
       <div class="flex flex-col items-center gap-[var(--space-stack-lg)] text-center">
         {/* Logo */}
-        {!hideLogo && (
-          hasLogoSlot ? (
+        {!hideLogo &&
+          (hasLogoSlot ? (
             <slot name="logo" />
           ) : (
-            <a href={localizedPath('/', locale)} class="flex items-center w-fit justify-self-start" aria-label={t('common.logo', locale)}>
+            <a
+              href={localizedPath('/', locale)}
+              class="flex items-center w-fit justify-self-start"
+              aria-label={t('common.logo', locale)}
+            >
               <Logo size="md" class="text-foreground hdr-logo-glow" />
             </a>
-          )
-        )}
+          ))}
 
         {/* Tagline */}
         {(hasTaglineSlot || tagline) && (
@@ -590,10 +696,19 @@ const footerClasses = cn(footerVariants({ background }), className);
               href={item.href}
               class="inline-flex items-center gap-2 transition-colors hover-glow-icon hover:text-foreground focus-visible:text-foreground"
               target={item.external || item.href.startsWith('http') ? '_blank' : undefined}
-              rel={item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              rel={
+                item.external || item.href.startsWith('http') ? 'noopener noreferrer' : undefined
+              }
             >
               {item.label}
-              {item.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
+              {item.external && (
+                <Icon
+                  name="arrow-up-right"
+                  size="sm"
+                  class={externalArrowClass}
+                  aria-hidden="true"
+                />
+              )}
             </a>
           ))}
         </nav>
@@ -623,30 +738,53 @@ const footerClasses = cn(footerVariants({ background }), className);
             )}
             {resolvedLegalLinks.length > 0 && (
               <div class="flex flex-wrap justify-center items-center gap-[var(--space-inline-lg)]">
-                {resolvedLegalLinks.map((link) => link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
-                  <button
-                    type="button"
-                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
-                    data-consent-settings-trigger={link.action === 'openConsentSettings' ? true : undefined}
-                    data-dynamic-effects-trigger={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
-                    aria-haspopup="dialog"
-                    aria-controls={link.action === 'openDynamicEffects' ? 'dynamic-effects-settings' : undefined}
-                  >
-                    {link.icon && <Icon name={link.icon} size="sm" />}
-                    <span>{link.label}</span>
-                  </button>
-                ) : (
-                  <a
-                    href={link.href}
-                    class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
-                    target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
-                    rel={link.external || link.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  >
-                    {link.icon && <Icon name={link.icon} size="sm" />}
-                    <span>{link.label}</span>
-                    {link.external && <Icon name="arrow-up-right" size="sm" class={externalArrowClass} aria-hidden="true" />}
-                  </a>
-                ))}
+                {resolvedLegalLinks.map((link) =>
+                  link.action === 'openConsentSettings' || link.action === 'openDynamicEffects' ? (
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                      data-consent-settings-trigger={
+                        link.action === 'openConsentSettings' ? true : undefined
+                      }
+                      data-dynamic-effects-trigger={
+                        link.action === 'openDynamicEffects'
+                          ? 'dynamic-effects-settings'
+                          : undefined
+                      }
+                      aria-haspopup="dialog"
+                      aria-controls={
+                        link.action === 'openDynamicEffects'
+                          ? 'dynamic-effects-settings'
+                          : undefined
+                      }
+                    >
+                      {link.icon && <Icon name={link.icon} size="sm" />}
+                      <span>{link.label}</span>
+                    </button>
+                  ) : (
+                    <a
+                      href={link.href}
+                      class="inline-flex items-center gap-2 text-sm transition-colors text-foreground-muted hover-glow-icon hover:text-foreground focus-visible:text-foreground"
+                      target={link.external || link.href?.startsWith('http') ? '_blank' : undefined}
+                      rel={
+                        link.external || link.href?.startsWith('http')
+                          ? 'noopener noreferrer'
+                          : undefined
+                      }
+                    >
+                      {link.icon && <Icon name={link.icon} size="sm" />}
+                      <span>{link.label}</span>
+                      {link.external && (
+                        <Icon
+                          name="arrow-up-right"
+                          size="sm"
+                          class={externalArrowClass}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </a>
+                  )
+                )}
               </div>
             )}
           </div>
@@ -658,7 +796,12 @@ const footerClasses = cn(footerVariants({ background }), className);
   {/* Opt-in signup stays inside the footer's mobile gutters. */}
   {siteConfig.newsletter?.enabled && (
     <div class="mx-auto mt-8 w-full max-w-lg px-6 pb-8">
-      <NewsletterForm action={siteConfig.newsletter.action} heading={t('newsletter.heading', locale)} description={t('newsletter.description', locale)} layout="stacked" />
+      <NewsletterForm
+        action={siteConfig.newsletter.action}
+        heading={t('newsletter.heading', locale)}
+        description={t('newsletter.description', locale)}
+        layout="stacked"
+      />
     </div>
   )}
   {/* Default slot for additional content */}
@@ -668,9 +811,10 @@ const footerClasses = cn(footerVariants({ background }), className);
       window.__footerConsentSettingsBound = true;
 
       document.addEventListener('click', (event) => {
-        const target = event.target instanceof Element
-          ? event.target.closest('[data-consent-settings-trigger]')
-          : null;
+        const target =
+          event.target instanceof Element
+            ? event.target.closest('[data-consent-settings-trigger]')
+            : null;
 
         if (!target) return;
 
@@ -746,31 +890,35 @@ const footerClasses = cn(footerVariants({ background }), className);
 
     window.addEventListener('firestone-effects-change', refreshFooterAuroras);
     document.addEventListener('visibilitychange', refreshFooterAuroras);
-    document.addEventListener('astro:before-swap', () => {
-      document
-        .querySelectorAll<HTMLElement>('footer.footer-aurora[data-aurora-observed]')
-        .forEach((footer) => footerAuroraObserver?.unobserve(footer));
-    }, { once: true });
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        document
+          .querySelectorAll<HTMLElement>('footer.footer-aurora[data-aurora-observed]')
+          .forEach((footer) => footerAuroraObserver?.unobserve(footer));
+      },
+      { once: true }
+    );
     document.addEventListener('astro:page-load', initFooterAuroras);
     initFooterAuroras();
   </script>
-  
+
   <style is:global>
-  /* Reserve the heaviest label width independently of the trailing icon. */
-  footer .footer-group-link {
-    display: inline-grid !important;
-    grid-template-columns: auto max-content;
-    align-items: center;
-  }
+    /* Reserve the heaviest label width independently of the trailing icon. */
+    footer .footer-group-link {
+      display: inline-grid !important;
+      grid-template-columns: auto max-content;
+      align-items: center;
+    }
 
-  footer .footer-group-link > span,
-  footer .footer-group-link::after {
-    grid-area: 1 / 1;
-  }
+    footer .footer-group-link > span,
+    footer .footer-group-link::after {
+      grid-area: 1 / 1;
+    }
 
-  footer .footer-group-link > svg {
-    grid-area: 1 / 2;
-  }
+    footer .footer-group-link > svg {
+      grid-area: 1 / 2;
+    }
 
     /* FireStone: Social links follow text*/
     .footer-social-link-intro {
@@ -781,259 +929,285 @@ const footerClasses = cn(footerVariants({ background }), className);
       color: var(--color-foreground-subtle);
     }
 
+    /* =========================================================================
+       FireStone: Footer Aurora
 
+       A static full-height spectrum guarantees presence at every aspect ratio.
+       One compact gradient layer adds slow ambient drift only while the footer is
+       near the viewport. No blur, mask, background-position, or layout property
+       is animated.
+       ========================================================================= */
 
-  /* =========================================================================
-     FireStone: Footer Aurora
-
-     A static full-height spectrum guarantees presence at every aspect ratio.
-     One compact gradient layer adds slow ambient drift only while the footer is
-     near the viewport. No blur, mask, background-position, or layout property
-     is animated.
-     ========================================================================= */
-
-  .footer-aurora {
-    --footer-cyan-alpha: 0.22;
-    --footer-purple-alpha: 0.34;
-    --footer-pink-alpha: 0.16;
-    --footer-drift-opacity: 0.28;
-    isolation: isolate;
-    contain: paint;
-    background:
-      radial-gradient(
-        ellipse 86% 68% at 4% 106%,
-        rgb(0 195 255 / var(--footer-cyan-alpha)) 0%,
-        rgb(0 195 255 / 0.07) 44%,
-        transparent 74%
-      ),
-      radial-gradient(
-        ellipse 92% 76% at 56% 112%,
-        rgb(120 50 255 / var(--footer-purple-alpha)) 0%,
-        rgb(120 50 255 / 0.1) 48%,
-        transparent 76%
-      ),
-      radial-gradient(
-        ellipse 72% 58% at 106% 94%,
-        rgb(253 87 156 / var(--footer-pink-alpha)) 0%,
-        rgb(253 87 156 / 0.05) 46%,
-        transparent 74%
-      ),
-      linear-gradient(
-        180deg,
-        var(--color-background) 0%,
-        var(--color-background) 30%,
-        color-mix(in srgb, var(--color-background) 96%, rgb(120 50 255)) 58%,
-        color-mix(in srgb, var(--color-background) 86%, rgb(120 50 255)) 100%
-      );
-  }
-
-  html.dark .footer-aurora {
-    --footer-cyan-alpha: 0.3;
-    --footer-purple-alpha: 0.48;
-    --footer-pink-alpha: 0.22;
-    --footer-drift-opacity: 0.42;
-  }
-
-  /* High quality keeps the original three-layer aurora; motion is controlled separately. */
-  .footer-aurora[data-aurora-quality='high'] {
-    background: var(--color-background);
-  }
-
-  .footer-aurora-high-layer {
-    display: none;
-  }
-
-  .footer-aurora[data-aurora-quality='high'] .footer-aurora-high-layer {
-    display: block;
-  }
-
-  .footer-mask-layer {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
-  }
-
-  .aurora-blob {
-    position: absolute;
-    bottom: -10%;
-    left: 0;
-    width: 400vw;
-    height: clamp(300px, 40vw, 600px);
-    background-repeat: repeat-x;
-    opacity: 0.35;
-    filter: blur(90px);
-    animation-play-state: paused;
-  }
-
-  html.dark .aurora-blob {
-    opacity: 0.45;
-  }
-
-  .aurora-cyan {
-    background-image: radial-gradient(ellipse at 50% 75%, #00c3ff 0%, transparent 60%);
-    background-size: 150vw 100%;
-    animation: flow-cyan 20s linear infinite;
-  }
-
-  .aurora-pink {
-    background-image: radial-gradient(ellipse at 50% 80%, #fd579c 0%, transparent 60%);
-    background-size: 180vw 100%;
-    animation: flow-pink 24s linear infinite reverse;
-    animation-delay: -7s;
-  }
-
-  .aurora-purple {
-    background-image: radial-gradient(ellipse at 50% 85%, #7832ff 0%, transparent 65%);
-    background-size: 200vw 100%;
-    animation: flow-purple 28s linear infinite;
-    animation-delay: -14s;
-  }
-
-  .footer-aurora .aurora-blob {
-    animation-play-state: paused;
-  }
-
-  .footer-aurora[data-aurora-motion='dynamic'][data-aurora-active] .aurora-blob {
-    animation-play-state: running;
-    will-change: transform;
-  }
-
-  .footer-aurora::before {
-    content: '';
-    position: absolute;
-    z-index: 0;
-    right: -12%;
-    bottom: -12%;
-    left: -12%;
-    height: min(72%, 720px);
-    pointer-events: none;
-    transform-origin: 50% 100%;
-    animation-play-state: paused;
-    background:
-      radial-gradient(
-        ellipse 44% 76% at 12% 104%,
-        rgb(0 195 255 / 0.62) 0%,
-        rgb(0 195 255 / 0.18) 42%,
-        transparent 74%
-      ),
-      radial-gradient(
-        ellipse 58% 92% at 62% 112%,
-        rgb(120 50 255 / 0.86) 0%,
-        rgb(120 50 255 / 0.26) 44%,
-        transparent 76%
-      ),
-      radial-gradient(
-        ellipse 42% 72% at 96% 92%,
-        rgb(253 87 156 / 0.58) 0%,
-        rgb(253 87 156 / 0.16) 42%,
-        transparent 74%
-      );
-    opacity: var(--footer-drift-opacity);
-    animation: footer-aurora-drift 32s var(--ease-fluid) -9s infinite alternate;
-    animation-play-state: paused;
-  }
-
-  .footer-aurora[data-aurora-active]::before {
-    animation-play-state: running;
-    will-change: transform;
-  }
-
-  .footer-aurora[data-aurora-quality='high']::before,
-  .footer-aurora[data-aurora-motion='static']::before {
-    display: none;
-    animation: none;
-  }
-
-  @keyframes footer-aurora-drift {
-    0% {
-      transform: translate3d(-4%, 10px, 0) scale3d(1.04, 1, 1);
-    }
-    50% {
-      transform: translate3d(1%, -8px, 0) scale3d(1.07, 1.04, 1);
-    }
-    100% {
-      transform: translate3d(4%, 6px, 0) scale3d(1.04, 1.02, 1);
-    }
-  }
-
-  @keyframes flow-cyan {
-    0% { transform: translate3d(0vw, 20px, 0); }
-    25% { transform: translate3d(-37.5vw, -10px, 0); }
-    50% { transform: translate3d(-75vw, 20px, 0); }
-    75% { transform: translate3d(-112.5vw, -10px, 0); }
-    100% { transform: translate3d(-150vw, 20px, 0); }
-  }
-
-  @keyframes flow-pink {
-    0% { transform: translate3d(0vw, -15px, 0); }
-    25% { transform: translate3d(-45vw, 15px, 0); }
-    50% { transform: translate3d(-90vw, -15px, 0); }
-    75% { transform: translate3d(-135vw, 15px, 0); }
-    100% { transform: translate3d(-180vw, -15px, 0); }
-  }
-
-  @keyframes flow-purple {
-    0% { transform: translate3d(0vw, 10px, 0); }
-    25% { transform: translate3d(-50vw, -20px, 0); }
-    50% { transform: translate3d(-100vw, 10px, 0); }
-    75% { transform: translate3d(-150vw, -20px, 0); }
-    100% { transform: translate3d(-200vw, 10px, 0); }
-  }
-
-  @media (max-width: 767px) {
     .footer-aurora {
-      --footer-cyan-alpha: 0.34;
-      --footer-purple-alpha: 0.52;
-      --footer-pink-alpha: 0.24;
-      --footer-drift-opacity: 0.46;
+      --footer-cyan-alpha: 0.22;
+      --footer-purple-alpha: 0.34;
+      --footer-pink-alpha: 0.16;
+      --footer-drift-opacity: 0.28;
+      isolation: isolate;
+      contain: paint;
       background:
         radial-gradient(
-          ellipse 118% 64% at -8% 102%,
+          ellipse 86% 68% at 4% 106%,
           rgb(0 195 255 / var(--footer-cyan-alpha)) 0%,
-          rgb(0 195 255 / 0.1) 44%,
-          transparent 72%
+          rgb(0 195 255 / 0.07) 44%,
+          transparent 74%
         ),
         radial-gradient(
-          ellipse 138% 78% at 70% 108%,
+          ellipse 92% 76% at 56% 112%,
           rgb(120 50 255 / var(--footer-purple-alpha)) 0%,
-          rgb(120 50 255 / 0.16) 48%,
+          rgb(120 50 255 / 0.1) 48%,
           transparent 76%
         ),
         radial-gradient(
-          ellipse 104% 56% at 112% 76%,
+          ellipse 72% 58% at 106% 94%,
           rgb(253 87 156 / var(--footer-pink-alpha)) 0%,
-          rgb(253 87 156 / 0.07) 46%,
+          rgb(253 87 156 / 0.05) 46%,
           transparent 74%
         ),
         linear-gradient(
           180deg,
           var(--color-background) 0%,
-          var(--color-background) 22%,
-          color-mix(in srgb, var(--color-background) 95%, rgb(0 195 255)) 50%,
-          color-mix(in srgb, var(--color-background) 82%, rgb(120 50 255)) 100%
+          var(--color-background) 30%,
+          color-mix(in srgb, var(--color-background) 96%, rgb(120 50 255)) 58%,
+          color-mix(in srgb, var(--color-background) 86%, rgb(120 50 255)) 100%
         );
     }
 
-    .footer-aurora::before {
-      top: 20%;
-      right: -36%;
-      bottom: -8%;
-      left: -36%;
-      height: auto;
+    html.dark .footer-aurora {
+      --footer-cyan-alpha: 0.3;
+      --footer-purple-alpha: 0.48;
+      --footer-pink-alpha: 0.22;
+      --footer-drift-opacity: 0.42;
     }
-  }
 
-  @media (prefers-reduced-motion: reduce) {
-    .footer-aurora::before {
-      animation: none;
-      will-change: auto;
+    /* High quality keeps the original three-layer aurora; motion is controlled separately. */
+    .footer-aurora[data-aurora-quality='high'] {
+      background: var(--color-background);
+    }
+
+    .footer-aurora-high-layer {
+      display: none;
+    }
+
+    .footer-aurora[data-aurora-quality='high'] .footer-aurora-high-layer {
+      display: block;
+    }
+
+    .footer-mask-layer {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
     }
 
     .aurora-blob {
-      animation: none !important;
-      will-change: auto;
+      position: absolute;
+      bottom: -10%;
+      left: 0;
+      width: 400vw;
+      height: clamp(300px, 40vw, 600px);
+      background-repeat: repeat-x;
+      opacity: 0.35;
+      filter: blur(90px);
+      animation-play-state: paused;
     }
-  }
 
+    html.dark .aurora-blob {
+      opacity: 0.45;
+    }
+
+    .aurora-cyan {
+      background-image: radial-gradient(ellipse at 50% 75%, #00c3ff 0%, transparent 60%);
+      background-size: 150vw 100%;
+      animation: flow-cyan 20s linear infinite;
+    }
+
+    .aurora-pink {
+      background-image: radial-gradient(ellipse at 50% 80%, #fd579c 0%, transparent 60%);
+      background-size: 180vw 100%;
+      animation: flow-pink 24s linear infinite reverse;
+      animation-delay: -7s;
+    }
+
+    .aurora-purple {
+      background-image: radial-gradient(ellipse at 50% 85%, #7832ff 0%, transparent 65%);
+      background-size: 200vw 100%;
+      animation: flow-purple 28s linear infinite;
+      animation-delay: -14s;
+    }
+
+    .footer-aurora .aurora-blob {
+      animation-play-state: paused;
+    }
+
+    .footer-aurora[data-aurora-motion='dynamic'][data-aurora-active] .aurora-blob {
+      animation-play-state: running;
+      will-change: transform;
+    }
+
+    .footer-aurora::before {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      right: -12%;
+      bottom: -12%;
+      left: -12%;
+      height: min(72%, 720px);
+      pointer-events: none;
+      transform-origin: 50% 100%;
+      animation-play-state: paused;
+      background:
+        radial-gradient(
+          ellipse 44% 76% at 12% 104%,
+          rgb(0 195 255 / 0.62) 0%,
+          rgb(0 195 255 / 0.18) 42%,
+          transparent 74%
+        ),
+        radial-gradient(
+          ellipse 58% 92% at 62% 112%,
+          rgb(120 50 255 / 0.86) 0%,
+          rgb(120 50 255 / 0.26) 44%,
+          transparent 76%
+        ),
+        radial-gradient(
+          ellipse 42% 72% at 96% 92%,
+          rgb(253 87 156 / 0.58) 0%,
+          rgb(253 87 156 / 0.16) 42%,
+          transparent 74%
+        );
+      opacity: var(--footer-drift-opacity);
+      animation: footer-aurora-drift 32s var(--ease-fluid) -9s infinite alternate;
+      animation-play-state: paused;
+    }
+
+    .footer-aurora[data-aurora-active]::before {
+      animation-play-state: running;
+      will-change: transform;
+    }
+
+    .footer-aurora[data-aurora-quality='high']::before,
+    .footer-aurora[data-aurora-motion='static']::before {
+      display: none;
+      animation: none;
+    }
+
+    @keyframes footer-aurora-drift {
+      0% {
+        transform: translate3d(-4%, 10px, 0) scale3d(1.04, 1, 1);
+      }
+      50% {
+        transform: translate3d(1%, -8px, 0) scale3d(1.07, 1.04, 1);
+      }
+      100% {
+        transform: translate3d(4%, 6px, 0) scale3d(1.04, 1.02, 1);
+      }
+    }
+
+    @keyframes flow-cyan {
+      0% {
+        transform: translate3d(0vw, 20px, 0);
+      }
+      25% {
+        transform: translate3d(-37.5vw, -10px, 0);
+      }
+      50% {
+        transform: translate3d(-75vw, 20px, 0);
+      }
+      75% {
+        transform: translate3d(-112.5vw, -10px, 0);
+      }
+      100% {
+        transform: translate3d(-150vw, 20px, 0);
+      }
+    }
+
+    @keyframes flow-pink {
+      0% {
+        transform: translate3d(0vw, -15px, 0);
+      }
+      25% {
+        transform: translate3d(-45vw, 15px, 0);
+      }
+      50% {
+        transform: translate3d(-90vw, -15px, 0);
+      }
+      75% {
+        transform: translate3d(-135vw, 15px, 0);
+      }
+      100% {
+        transform: translate3d(-180vw, -15px, 0);
+      }
+    }
+
+    @keyframes flow-purple {
+      0% {
+        transform: translate3d(0vw, 10px, 0);
+      }
+      25% {
+        transform: translate3d(-50vw, -20px, 0);
+      }
+      50% {
+        transform: translate3d(-100vw, 10px, 0);
+      }
+      75% {
+        transform: translate3d(-150vw, -20px, 0);
+      }
+      100% {
+        transform: translate3d(-200vw, 10px, 0);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .footer-aurora {
+        --footer-cyan-alpha: 0.34;
+        --footer-purple-alpha: 0.52;
+        --footer-pink-alpha: 0.24;
+        --footer-drift-opacity: 0.46;
+        background:
+          radial-gradient(
+            ellipse 118% 64% at -8% 102%,
+            rgb(0 195 255 / var(--footer-cyan-alpha)) 0%,
+            rgb(0 195 255 / 0.1) 44%,
+            transparent 72%
+          ),
+          radial-gradient(
+            ellipse 138% 78% at 70% 108%,
+            rgb(120 50 255 / var(--footer-purple-alpha)) 0%,
+            rgb(120 50 255 / 0.16) 48%,
+            transparent 76%
+          ),
+          radial-gradient(
+            ellipse 104% 56% at 112% 76%,
+            rgb(253 87 156 / var(--footer-pink-alpha)) 0%,
+            rgb(253 87 156 / 0.07) 46%,
+            transparent 74%
+          ),
+          linear-gradient(
+            180deg,
+            var(--color-background) 0%,
+            var(--color-background) 22%,
+            color-mix(in srgb, var(--color-background) 95%, rgb(0 195 255)) 50%,
+            color-mix(in srgb, var(--color-background) 82%, rgb(120 50 255)) 100%
+          );
+      }
+
+      .footer-aurora::before {
+        top: 20%;
+        right: -36%;
+        bottom: -8%;
+        left: -36%;
+        height: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .footer-aurora::before {
+        animation: none;
+        will-change: auto;
+      }
+
+      .aurora-blob {
+        animation: none !important;
+        will-change: auto;
+      }
+    }
   </style>
-
 </footer>

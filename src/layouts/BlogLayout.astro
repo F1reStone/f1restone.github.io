@@ -85,7 +85,9 @@ const sidebarOnLeft = (tocConfig?.sidebarPosition ?? 'right') === 'left';
 // Prefer the post's own image; otherwise serve the per-post dynamic OG image
 // generated at build time (see src/pages/og/blog/[slug].svg.ts). Falls back to
 // the site-wide default only when slug is missing.
-const ogImage = (image && image.format !== 'svg' ? image.src : undefined) || (slug ? getBlogOgPath(getPostSlug(slug, locale), locale) : siteConfig.ogImage);
+const ogImage =
+  (image && image.format !== 'svg' ? image.src : undefined) ||
+  (slug ? getBlogOgPath(getPostSlug(slug, locale), locale) : siteConfig.ogImage);
 
 const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'blog');
 
@@ -93,13 +95,14 @@ const breadcrumbs = buildBreadcrumbs(title, Astro.url.pathname, locale, 'blog');
 const postTranslations = await getPostTranslations(slug, locale, uid);
 const translationByLocale = new Map(postTranslations.map((tr) => [tr.locale, tr.url]));
 const languageAlternates = Object.fromEntries(
-  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? withLocaleFallback(Astro.url.pathname, locale, loc)])
+  getLocales().map((loc) => [
+    loc,
+    translationByLocale.get(loc) ?? withLocaleFallback(Astro.url.pathname, locale, loc),
+  ])
 );
 
 const localizedHeadings = headings.map((heading) =>
-  heading.slug === 'footnote-label'
-    ? { ...heading, text: t('common.footnotes', locale) }
-    : heading
+  heading.slug === 'footnote-label' ? { ...heading, text: t('common.footnotes', locale) } : heading
 );
 
 // Get full URL for sharing
@@ -134,119 +137,108 @@ const schemas = faqSchema ? [blogPostingSchema, faqSchema] : [blogPostingSchema]
   extraSchemas={schemas}
   localeAlternates={postTranslations}
 >
-  <Header
-    slot="header"
-    position="fixed"
-    showCta={false}
-    maxWidth="8xl"
-  />
+  <Header slot="header" position="fixed" showCta={false} maxWidth="8xl" />
   <!-- FireStone: [Update Header maxWidth] -->
 
   <div class="min-h-screen">
-  <!-- Article Hero -->
-  <ArticleHero
-    title={title}
-    description={description}
-    publishedAt={publishedAt}
-    updatedAt={updatedAt}
-    author={author}
-    tags={tags}
-    image={image}
-    imageAlt={imageAlt}
-    svgSlug={svgSlug}
-    body={body}
-    locale={locale}
-  />
+    <!-- Article Hero -->
+    <ArticleHero
+      title={title}
+      description={description}
+      publishedAt={publishedAt}
+      updatedAt={updatedAt}
+      author={author}
+      tags={tags}
+      image={image}
+      imageAlt={imageAlt}
+      svgSlug={svgSlug}
+      body={body}
+      locale={locale}
+    />
 
-  <article class="pt-8 pb-[var(--space-section-md)]">
-    <div class:list={[
-      // FireStone: [Update main article wrapper to 8xl]
-      'mx-auto px-6 max-w-8xl',
-      sidebarActive && (sidebarOnLeft
-        ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
-        : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
-    ]}>
-      {sidebarActive && sidebarOnLeft && (
-        <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
-          <TableOfContents
-            headings={localizedHeadings}
-            maxDepth={tocConfig?.maxDepth ?? 3}
-            minHeadings={tocConfig?.minHeadings ?? 3}
-            sticky
-          />
-        </aside>
-      )}
-
-      <div class:list={['min-w-0 max-w-8xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
-
-      {inlineActive && (
-        <div class:list={[
-          'mb-10 rounded-xl border border-border bg-background-secondary p-5',
-          sidebarActive && 'xl:hidden',
-        ]}>
-          <TableOfContents
-            collapsible
-            headings={localizedHeadings}
-            maxDepth={tocConfig?.maxDepth ?? 3}
-            minHeadings={tocConfig?.minHeadings ?? 3}
-          />
-        </div>
-      )}
-
-      <!-- Article Content -->
+    <article class="pt-8 pb-[var(--space-section-md)]">
       <div
-        class="prose prose-lg max-w-none"
-        data-reveal-content
+        class:list={[
+          // FireStone: [Update main article wrapper to 8xl]
+          'mx-auto px-6 max-w-8xl',
+          sidebarActive &&
+            (sidebarOnLeft
+              ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
+              : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
+        ]}
       >
-        <slot />
-      </div>
+        {sidebarActive && sidebarOnLeft && (
+          <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
+            <TableOfContents
+              headings={localizedHeadings}
+              maxDepth={tocConfig?.maxDepth ?? 3}
+              minHeadings={tocConfig?.minHeadings ?? 3}
+              sticky
+            />
+          </aside>
+        )}
 
-      <!-- Article Footer -->
-      <footer class="border-border mt-12 border-t pt-8" data-reveal>
-        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <!-- Back link -->
-          <Button href={localizedPath('/blog', locale)} variant="secondary" size="sm">
-            <Icon name="chevron-left" size="sm" />
-            {t('blog.backToBlog', locale)}
-          </Button>
+        <div class:list={['min-w-0 max-w-8xl w-full mx-auto', sidebarActive && 'xl:mx-0']}>
+          {inlineActive && (
+            <div
+              class:list={[
+                'mb-10 rounded-xl border border-border bg-background-secondary p-5',
+                sidebarActive && 'xl:hidden',
+              ]}
+            >
+              <TableOfContents
+                collapsible
+                headings={localizedHeadings}
+                maxDepth={tocConfig?.maxDepth ?? 3}
+                minHeadings={tocConfig?.minHeadings ?? 3}
+              />
+            </div>
+          )}
 
-          <!-- Share buttons -->
-          <ShareButtons title={title} url={fullUrl} />
+          <!-- Article Content -->
+          <div class="prose prose-lg max-w-none" data-reveal-content>
+            <slot />
+          </div>
+
+          <!-- Article Footer -->
+          <footer class="border-border mt-12 border-t pt-8" data-reveal>
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+              <!-- Back link -->
+              <Button href={localizedPath('/blog', locale)} variant="secondary" size="sm">
+                <Icon name="chevron-left" size="sm" />
+                {t('blog.backToBlog', locale)}
+              </Button>
+
+              <!-- Share buttons -->
+              <ShareButtons title={title} url={fullUrl} />
+            </div>
+          </footer>
         </div>
-      </footer>
+
+        {sidebarActive && !sidebarOnLeft && (
+          <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
+            <TableOfContents
+              headings={localizedHeadings}
+              maxDepth={tocConfig?.maxDepth ?? 3}
+              minHeadings={tocConfig?.minHeadings ?? 3}
+              sticky
+            />
+          </aside>
+        )}
       </div>
+    </article>
 
-      {sidebarActive && !sidebarOnLeft && (
-        <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
-          <TableOfContents
-            headings={localizedHeadings}
-            maxDepth={tocConfig?.maxDepth ?? 3}
-            minHeadings={tocConfig?.minHeadings ?? 3}
-            sticky
-          />
-        </aside>
-      )}
-    </div>
-  </article>
+    {showComments && <Comments />}
 
-  {showComments && (
-    <Comments />
-  )}
-
-  <!-- Related Posts -->
-  {tags.length > 0 && (
-    <div class="mx-auto max-w-8xl px-6" data-reveal>
-      <RelatedPosts currentSlug={slug} tags={tags} locale={locale} maxPosts={3} />
-    </div>
-  )}
-
+    <!-- Related Posts -->
+    {tags.length > 0 && (
+      <div class="mx-auto max-w-8xl px-6" data-reveal>
+        <RelatedPosts currentSlug={slug} tags={tags} locale={locale} maxPosts={3} />
+      </div>
+    )}
   </div>
 
   <BlogCta />
 
-  <Footer
-    slot="footer"
-    languageAlternates={languageAlternates}
-    breadcrumbs={breadcrumbs}
-  />
+  <Footer slot="footer" languageAlternates={languageAlternates} breadcrumbs={breadcrumbs} />
 </BaseLayout>

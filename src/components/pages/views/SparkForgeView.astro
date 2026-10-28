@@ -47,12 +47,11 @@ const { Content, headings } = await render(project);
 const { title, description, repo, year, meta, image, imageAlt, gallery, logo } = project.data;
 
 // Build carousel slides (same logic as the generic ProjectHero)
-const slides: GallerySlide[] =
-  (gallery as GallerySlide[] | undefined)?.length
-    ? (gallery as GallerySlide[])
-    : image
-      ? [{ src: image, alt: imageAlt || title } as GallerySlide]
-      : [];
+const slides: GallerySlide[] = (gallery as GallerySlide[] | undefined)?.length
+  ? (gallery as GallerySlide[])
+  : image
+    ? [{ src: image, alt: imageAlt || title } as GallerySlide]
+    : [];
 
 // Mirror the blog TOC wiring — projects use the same site-wide config.
 const tocConfig = siteConfig.articleFeatures?.toc;
@@ -61,9 +60,7 @@ const showToc = !!tocConfig?.enabled;
 const ogImage = image?.src;
 
 const localizedHeadings = headings.map((heading) =>
-  heading.slug === 'footnote-label'
-    ? { ...heading, text: '尾注' }
-    : heading
+  heading.slug === 'footnote-label' ? { ...heading, text: '尾注' } : heading
 );
 ---
 
@@ -114,7 +111,12 @@ const localizedHeadings = headings.map((heading) =>
               <div class="mb-[var(--space-stack-lg)] flex flex-wrap items-center gap-2">
                 {meta.map((item, index) => (
                   <>
-                    {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                    {index > 0 && (
+                      <span
+                        class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0"
+                        aria-hidden="true"
+                      />
+                    )}
                     <Badge variant="brand">{item}</Badge>
                   </>
                 ))}
@@ -122,24 +124,33 @@ const localizedHeadings = headings.map((heading) =>
             )}
 
             {repo && (
-                  // FireStone: [Structured the CTA button into a column layout to place a subtle, high-priority helper text right below it]
-                  <div class="flex flex-col gap-2.5">
-                    <div class="flex flex-wrap gap-3">
-                      <Button href={repo} target="_blank" rel="noopener noreferrer" size="md">
-                        <Icon name="github" size="sm" />
-                        访问源代码
-                        <Icon name="arrow-up-right" size="xs" />
-                      </Button>
-                    </div>
-                    {/* Subtle micro-tip to guide users on joining Epic Games GitHub organization, critical for resolving potential 404s */}
-                    <p class="text-[11px] text-foreground-subtle leading-normal flex items-center gap-1.5 pl-0.5 animate-hero-slide-up [animation-delay:150ms]">
-                      <Icon name="info" size="xs" class="shrink-0" />
-                      <span>
-                        访问源代码需要拥有 GitHub 账号，并将其关联至您的 Epic Games 账号。<a href="https://www.unrealengine.com/ue-on-github" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors">进一步了解</a>。
-                      </span>
-                    </p>
-                  </div>
-                )}
+              // FireStone: [Structured the CTA button into a column layout to place a subtle, high-priority helper text right below it]
+              <div class="flex flex-col gap-2.5">
+                <div class="flex flex-wrap gap-3">
+                  <Button href={repo} target="_blank" rel="noopener noreferrer" size="md">
+                    <Icon name="github" size="sm" />
+                    访问源代码
+                    <Icon name="arrow-up-right" size="xs" />
+                  </Button>
+                </div>
+                {/* Subtle micro-tip to guide users on joining Epic Games GitHub organization, critical for resolving potential 404s */}
+                <p class="text-[11px] text-foreground-subtle leading-normal flex items-center gap-1.5 pl-0.5 animate-hero-slide-up [animation-delay:150ms]">
+                  <Icon name="info" size="xs" class="shrink-0" />
+                  <span>
+                    访问源代码需要拥有 GitHub 账号，并将其关联至您的 Epic Games 账号。
+                    <a
+                      href="https://www.unrealengine.com/ue-on-github"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors"
+                    >
+                      进一步了解
+                    </a>
+                    。
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
 
           <!-- Media column -->
@@ -171,7 +182,12 @@ const localizedHeadings = headings.map((heading) =>
         <div class="min-w-0 max-w-8xl w-full mx-auto xl:mx-0">
           {showToc && (
             <div class="mb-10 xl:hidden">
-              <TableOfContents headings={localizedHeadings} maxDepth={tocConfig?.maxDepth ?? 3} minHeadings={tocConfig?.minHeadings ?? 3} collapsible />
+              <TableOfContents
+                headings={localizedHeadings}
+                maxDepth={tocConfig?.maxDepth ?? 3}
+                minHeadings={tocConfig?.minHeadings ?? 3}
+                collapsible
+              />
             </div>
           )}
           <div class="prose prose-lg max-w-none" data-reveal-content>
@@ -203,8 +219,44 @@ const localizedHeadings = headings.map((heading) =>
     <!-- Back link and footnotes -->
     <div class="mx-auto max-w-8xl px-6">
       <div class="pt-[var(--space-stack-lg)] border-t border-foreground-subtle/25 text-[11px] leading-relaxed text-foreground-subtle space-y-3">
-        <p>访问项目源代码需要拥有 GitHub 账号，并将其关联至您的 Epic Games 账号。详情请参阅<a href="https://www.unrealengine.com/ue-on-github" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors" target="_blank" rel="noopener noreferrer">虚幻引擎 GitHub 关联指南</a>。下载、安装或使用本项目源代码，即代表您已阅读并同意<a href="https://www.unrealengine.com/eula/unreal" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors" target="_blank" rel="noopener noreferrer">《虚幻引擎 (Unreal® Engine) 终端用户许可协议》</a>以及<a href="/legal/sparkforge-amla" class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors" rel="noopener noreferrer">《SparkForge 附加修改内容许可协议》</a>。</p>
-        <p>本项目与 Epic Games, Inc. 无任何商业关联。访问、下载及使用本项目源码须遵守适用的许可协议。版权所有 © 2026 FireStone. 保留所有权利。FireStone 及 FireStone 标志是 FireStone 的商标或注册商标。Unreal Engine © {year} Epic Games, Inc. 保留所有权利。Unreal、Unreal Engine、虚幻、虚幻引擎及其各自标志是 Epic Games, Inc. 在美国专利商标局及其他地区的商标或注册商标。NVIDIA 及 NVIDIA 标志是 NVIDIA Corporation 在美国及其他国家的商标和/或注册商标。所有其他商标均为其各自所有者的财产。</p>
+        <p>
+          访问项目源代码需要拥有 GitHub 账号，并将其关联至您的 Epic Games 账号。详情请参阅
+          <a
+            href="https://www.unrealengine.com/ue-on-github"
+            class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            虚幻引擎 GitHub 关联指南
+          </a>
+          。下载、安装或使用本项目源代码，即代表您已阅读并同意
+          <a
+            href="https://www.unrealengine.com/eula/unreal"
+            class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            《虚幻引擎 (Unreal® Engine) 终端用户许可协议》
+          </a>
+          以及
+          <a
+            href="/legal/sparkforge-amla"
+            class="text-primary underline underline-offset-4 hover-glow-text hover:text-brand-500 focus-visible:text-brand-500 font-medium transition-colors"
+            rel="noopener noreferrer"
+          >
+            《SparkForge 附加修改内容许可协议》
+          </a>
+          。
+        </p>
+        <p>
+          本项目与 Epic Games, Inc.
+          无任何商业关联。访问、下载及使用本项目源码须遵守适用的许可协议。版权所有 © 2026 FireStone.
+          保留所有权利。FireStone 及 FireStone 标志是 FireStone 的商标或注册商标。Unreal Engine ©{' '}
+          {year} Epic Games, Inc. 保留所有权利。Unreal、Unreal Engine、虚幻、虚幻引擎及其各自标志是
+          Epic Games, Inc. 在美国专利商标局及其他地区的商标或注册商标。NVIDIA 及 NVIDIA 标志是
+          NVIDIA Corporation
+          在美国及其他国家的商标和/或注册商标。所有其他商标均为其各自所有者的财产。
+        </p>
       </div>
     </div>
   </main>

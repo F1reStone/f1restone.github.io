@@ -6,7 +6,8 @@ import { buttonVariants } from './button.variants';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
 interface Props extends HTMLAttributes<'button'> {
-  variant?: 'primary' | 'secondary' | 'brand-outline' | 'outline' | 'ghost' | 'link' | 'destructive';
+  variant?:
+    'primary' | 'secondary' | 'brand-outline' | 'outline' | 'ghost' | 'link' | 'destructive';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   fullWidth?: boolean;
@@ -55,9 +56,6 @@ const classes = cn(
   tabindex={isDisabledLink ? '-1' : undefined}
   {...attrs}
 >
-  {
-    loading ? <Icon name="loader" size="sm" class="animate-spin" /> : null
-  }
+  {loading ? <Icon name="loader" size="sm" class="animate-spin" /> : null}
   <slot />
 </Element>
-

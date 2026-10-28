@@ -20,7 +20,7 @@ const dictionaries: Record<string, Dictionary> = Object.fromEntries(
   Object.entries(modules).map(([filePath, mod]) => {
     const locale = filePath.slice(filePath.lastIndexOf('/') + 1).replace(/\.json$/, '');
     return [locale, mod.default];
-  }),
+  })
 );
 
 export const defaultLocale: Locale = i18nConfig.defaultLocale;
@@ -89,10 +89,15 @@ function interpolate(template: string, vars?: Record<string, string | number>): 
  * value, then to the key itself, so missing translations are visible but
  * non-fatal. Supports `{name}` placeholders via `vars`.
  */
-export function t(key: string, locale: Locale = defaultLocale, vars?: Record<string, string | number>): string {
+export function t(
+  key: string,
+  locale: Locale = defaultLocale,
+  vars?: Record<string, string | number>
+): string {
   const dict = dictionaries[locale] ?? dictionaries[defaultLocale];
   const fallback = dictionaries[defaultLocale];
-  const value = asString(getNestedValue(dict, key)) ?? asString(getNestedValue(fallback, key)) ?? key;
+  const value =
+    asString(getNestedValue(dict, key)) ?? asString(getNestedValue(fallback, key)) ?? key;
   return interpolate(value, vars);
 }
 

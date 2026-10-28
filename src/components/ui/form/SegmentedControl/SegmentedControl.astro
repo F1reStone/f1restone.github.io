@@ -69,28 +69,26 @@ const optionSizes: Record<SegmentedControlSize, string> = {
 >
   <!-- One shared indicator slides beneath every option; buttons only animate text color. -->
   <span class="segmented-indicator bg-foreground" aria-hidden="true"></span>
-  {
-    options.map((option) => (
-      <button
-        type="button"
-        class={cn(
-          'text-foreground-muted relative z-10 rounded-full font-medium',
-          optionSizes[size],
-          'hover:text-foreground focus-visible:text-foreground transition-colors duration-300 weight-shift ease-[var(--ease-fluid)]',
-          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
-          'data-[selected=true]:text-background data-[selected=true]:font-extrabold data-[selected=true]:hover:text-background motion-reduce:transition-none'
-        )}
-        role="radio"
-        aria-checked={option.value === selectedValue ? 'true' : 'false'}
-        tabindex={option.value === selectedValue ? 0 : -1}
-        data-segment-option
-        data-segment-value={option.value}
-        data-selected={option.value === selectedValue ? 'true' : 'false'}
-      >
-        {option.label}
-      </button>
-    ))
-  }
+  {options.map((option) => (
+    <button
+      type="button"
+      class={cn(
+        'text-foreground-muted relative z-10 rounded-full font-medium',
+        optionSizes[size],
+        'hover:text-foreground focus-visible:text-foreground transition-colors duration-300 weight-shift ease-[var(--ease-fluid)]',
+        'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+        'data-[selected=true]:text-background data-[selected=true]:font-extrabold data-[selected=true]:hover:text-background motion-reduce:transition-none'
+      )}
+      role="radio"
+      aria-checked={option.value === selectedValue ? 'true' : 'false'}
+      tabindex={option.value === selectedValue ? 0 : -1}
+      data-segment-option
+      data-segment-value={option.value}
+      data-selected={option.value === selectedValue ? 'true' : 'false'}
+    >
+      {option.label}
+    </button>
+  ))}
 </div>
 
 <style>

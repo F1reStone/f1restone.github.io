@@ -17,12 +17,7 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 const giscus = siteConfig.articleFeatures?.comments?.giscus;
 
 // Don't render anything if config is incomplete — fail soft.
-const isConfigured =
-  giscus &&
-  giscus.repo &&
-  giscus.repoId &&
-  giscus.category &&
-  giscus.categoryId;
+const isConfigured = giscus && giscus.repo && giscus.repoId && giscus.category && giscus.categoryId;
 
 const dataAttrs = isConfigured
   ? {
@@ -140,7 +135,7 @@ const dataAttrs = isConfigured
             io.disconnect();
           }
         },
-        { rootMargin: '300px' },
+        { rootMargin: '300px' }
       );
       io.observe(mount);
     } else {

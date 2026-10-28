@@ -2,7 +2,12 @@
 import { buildBreadcrumbs } from '@/lib/breadcrumbs';
 import { t } from '@/i18n';
 import { defaultLocale, localizedPath } from '@/i18n';
-interface Props { locale?: string; tag: string; projects: import('astro:content').CollectionEntry<'projects'>[]; visibleTags: string[]; }
+interface Props {
+  locale?: string;
+  tag: string;
+  projects: import('astro:content').CollectionEntry<'projects'>[];
+  visibleTags: string[];
+}
 const { locale = defaultLocale } = Astro.props;
 /**
  * Project tag archive
@@ -16,8 +21,6 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import { Hero } from '@/components/hero';
 import { getProjectTagUrl } from '@/lib/projects';
-
-
 
 const { tag, projects, visibleTags } = Astro.props;
 ---
@@ -38,10 +41,15 @@ const { tag, projects, visibleTags } = Astro.props;
     <h1
       slot="title"
       class="!text-4xl sm:!text-5xl md:!text-6xl lg:!text-7xl break-words [overflow-wrap:anywhere]"
-    >#{tag}</h1>
+    >
+      #{tag}
+    </h1>
 
     <p slot="description">
-      {t(projects.length === 1 ? 'projects.tagCountOne' : 'projects.tagCountOther', locale, { count: projects.length, tag })}
+      {t(projects.length === 1 ? 'projects.tagCountOne' : 'projects.tagCountOther', locale, {
+        count: projects.length,
+        tag,
+      })}
     </p>
   </Hero>
 
@@ -54,7 +62,13 @@ const { tag, projects, visibleTags } = Astro.props;
         </Button>
 
         {visibleTags.length > 0 && (
-          <TagList locale={locale} tags={visibleTags} active={tag} hrefForTag={getProjectTagUrl} class="justify-center" />
+          <TagList
+            locale={locale}
+            tags={visibleTags}
+            active={tag}
+            hrefForTag={getProjectTagUrl}
+            class="justify-center"
+          />
         )}
       </div>
 

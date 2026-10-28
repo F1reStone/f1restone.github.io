@@ -1,12 +1,7 @@
 ---
 import BlogTagView from '@/components/blog/views/BlogTagView.astro';
 import { defaultLocale } from '@/i18n';
-import {
-  collectTags,
-  collectTopTags,
-  getPublishedPosts,
-  tagToSlug,
-} from '@/lib/blog';
+import { collectTags, collectTopTags, getPublishedPosts, tagToSlug } from '@/lib/blog';
 
 export async function getStaticPaths() {
   // Inlined because Astro's getStaticPaths runs in its own isolated
@@ -29,10 +24,12 @@ export async function getStaticPaths() {
       ? topTags
       : [tag, ...topTags.slice(0, TAG_CLOUD_LIMIT - 1)];
 
-    return [{
-      params: { tag: slug },
-      props: { tag, posts: postsForTag, visibleTags },
-    }];
+    return [
+      {
+        params: { tag: slug },
+        props: { tag, posts: postsForTag, visibleTags },
+      },
+    ];
   });
 }
 ---

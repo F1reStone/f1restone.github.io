@@ -23,7 +23,6 @@
   <em>Upstream demo result; this is not a measurement of the customized FireStone site.</em>
 </p>
 
-
 ---
 
 ## FireStone adaptation — v2.6.0
@@ -52,49 +51,49 @@ It ships with a full blog, a complete component library, a built-in SEO layer, d
 
 The following changes were made to the free Velocity theme to create Astro Rocket:
 
-| Change | Velocity | Astro Rocket |
-|--------|----------|--------------|
-| **Theme switching** | Edit a CSS import file and rebuild | 12 colour swatches in the header — click one and the logo badge, blog images, and every brand color update live on screen. No file edits, no rebuilds. Selector can be removed from the header once you've chosen a color. |
-| **Colour themes** | 1 default theme | 12 Tailwind-based themes — all 12 shown as swatches in the header selector (Orange, Amber, Lime, Emerald, Teal, Cyan, Sky, Blue, Indigo, Violet, Purple, Magenta) |
-| **Logo badge** | Requires a custom logo file | Auto-generated monogram badge — first letter of your site name on brand color, live-updates with active theme |
-| **Favicon** | Static file to replace manually | Auto-generated SVG favicon — first letter + brand color, pre-rendered at build time from `site.config.ts`, no design tools needed |
-| **Blog image gradients** | Plain image containers | Every blog cover and card uses a brand-color gradient background that updates live when the active theme changes |
-| **Icon system** | Basic SVG `Icon` component | Unified `Icon` component powered by Iconify — 350+ Lucide UI icons + 3000+ Simple Icons brand icons |
-| **Typing effect** | Not included | Hero section includes an animated typing effect |
-| **Colour mode** | Binary `localStorage` toggle | 3-state picker — System / Light / Dark in `localStorage`, with `prefers-color-scheme` live tracking under 'System' (see [Colour Mode](#colour-mode)) |
-| **Target audience** | Developers & agencies | Web designers, developers, bloggers, and portfolio sites |
-| **Ready to launch** | Boilerplate starting point | Fully styled pages — replace the text and your site is live |
-| **Maintained by** | Southwell Media | Hans Martens |
+| Change                   | Velocity                           | Astro Rocket                                                                                                                                                                                                               |
+| ------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Theme switching**      | Edit a CSS import file and rebuild | 12 colour swatches in the header — click one and the logo badge, blog images, and every brand color update live on screen. No file edits, no rebuilds. Selector can be removed from the header once you've chosen a color. |
+| **Colour themes**        | 1 default theme                    | 12 Tailwind-based themes — all 12 shown as swatches in the header selector (Orange, Amber, Lime, Emerald, Teal, Cyan, Sky, Blue, Indigo, Violet, Purple, Magenta)                                                          |
+| **Logo badge**           | Requires a custom logo file        | Auto-generated monogram badge — first letter of your site name on brand color, live-updates with active theme                                                                                                              |
+| **Favicon**              | Static file to replace manually    | Auto-generated SVG favicon — first letter + brand color, pre-rendered at build time from `site.config.ts`, no design tools needed                                                                                          |
+| **Blog image gradients** | Plain image containers             | Every blog cover and card uses a brand-color gradient background that updates live when the active theme changes                                                                                                           |
+| **Icon system**          | Basic SVG `Icon` component         | Unified `Icon` component powered by Iconify — 350+ Lucide UI icons + 3000+ Simple Icons brand icons                                                                                                                        |
+| **Typing effect**        | Not included                       | Hero section includes an animated typing effect                                                                                                                                                                            |
+| **Colour mode**          | Binary `localStorage` toggle       | 3-state picker — System / Light / Dark in `localStorage`, with `prefers-color-scheme` live tracking under 'System' (see [Colour Mode](#colour-mode))                                                                       |
+| **Target audience**      | Developers & agencies              | Web designers, developers, bloggers, and portfolio sites                                                                                                                                                                   |
+| **Ready to launch**      | Boilerplate starting point         | Fully styled pages — replace the text and your site is live                                                                                                                                                                |
+| **Maintained by**        | Southwell Media                    | Hans Martens                                                                                                                                                                                                               |
 
 ---
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **Astro 7** | Latest version with the Rust compiler, Vite 8, Content Layer API, and performance optimizations |
-| **Tailwind CSS v4** | CSS-first configuration with OKLCH color system and fluid typography |
-| **12 Colour Themes** | All 12 colour swatches are shown in the header dropdown — click one and the logo badge, blog image gradients, and every brand color update live instantly. No file edits, no rebuilds. The selector can be removed from the header once you've settled on a color. |
-| **Scroll Progress Bar** | A thin 2px brand-coloured bar on the header edge that fills as you scroll. Enabled on the homepage (above the floating header), blog index, and post pages (below the solid header). Controlled via `showScrollProgress` and `scrollProgressPosition` props on the Header component. |
-| **Design Tokens** | Three-tier token architecture (reference → semantic → component) |
-| **Component Library** | Astro primitives and optional React islands; the registry lists reusable files, including ProofTile and YouTube |
-| **Branding & Favicon** | FireStone custom SVG logos; ICO, Apple touch and manifest PNG variants generated from its favicon SVG during build |
-| **Icon System** | Unified `Icon` component (Astro + React) — 350+ [Lucide](https://lucide.dev) UI icons and 3000+ [Simple Icons](https://simpleicons.org) brand icons via Iconify |
-| **Typing Effect** | Animated typing effect in the hero section |
-| **Page Animations** | Scroll-triggered reveals, counters, score animations, scroll-reactive Header, and SparkFlow interactions with reduced-motion support. ClientRouter is disabled, matching the v2.6.0 release code |
-| **SEO Toolkit** | Meta tags, JSON-LD structured data, sitemap, and robots.txt |
-| **OG Images** | Default and content-specific sharing images, with CJK-aware font outlines and PNG output generated during build |
-| **Colour Mode** | 3-state picker — **System / Light / Dark** with `localStorage` persistence and live OS-preference tracking under 'System'; surfaced as a pill dropdown in the header (and inside the mobile menu) |
-| **Content Collections** | Type-safe blog, pages, authors, and FAQs with Zod validation |
-| **Forms** | Reusable contact/newsletter forms require an explicitly configured external endpoint; no server API is shipped |
-| **Table of Contents** | Optional table of contents on blog posts, auto-generated from MDX headings, with three layouts: inline card, sticky desktop sidebar, or `auto` (sidebar on `xl+`, inline card below). Includes `IntersectionObserver` scroll-spy. Off by default; per-post `toc: false` in frontmatter hides on a single post |
+| Feature                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Astro 7**                         | Latest version with the Rust compiler, Vite 8, Content Layer API, and performance optimizations                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Tailwind CSS v4**                 | CSS-first configuration with OKLCH color system and fluid typography                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **12 Colour Themes**                | All 12 colour swatches are shown in the header dropdown — click one and the logo badge, blog image gradients, and every brand color update live instantly. No file edits, no rebuilds. The selector can be removed from the header once you've settled on a color.                                                                                                                                                                                                                      |
+| **Scroll Progress Bar**             | A thin 2px brand-coloured bar on the header edge that fills as you scroll. Enabled on the homepage (above the floating header), blog index, and post pages (below the solid header). Controlled via `showScrollProgress` and `scrollProgressPosition` props on the Header component.                                                                                                                                                                                                    |
+| **Design Tokens**                   | Three-tier token architecture (reference → semantic → component)                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Component Library**               | Astro primitives and optional React islands; the registry lists reusable files, including ProofTile and YouTube                                                                                                                                                                                                                                                                                                                                                                         |
+| **Branding & Favicon**              | FireStone custom SVG logos; ICO, Apple touch and manifest PNG variants generated from its favicon SVG during build                                                                                                                                                                                                                                                                                                                                                                      |
+| **Icon System**                     | Unified `Icon` component (Astro + React) — 350+ [Lucide](https://lucide.dev) UI icons and 3000+ [Simple Icons](https://simpleicons.org) brand icons via Iconify                                                                                                                                                                                                                                                                                                                         |
+| **Typing Effect**                   | Animated typing effect in the hero section                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Page Animations**                 | Scroll-triggered reveals, counters, score animations, scroll-reactive Header, and SparkFlow interactions with reduced-motion support. ClientRouter is disabled, matching the v2.6.0 release code                                                                                                                                                                                                                                                                                        |
+| **SEO Toolkit**                     | Meta tags, JSON-LD structured data, sitemap, and robots.txt                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| **OG Images**                       | Default and content-specific sharing images, with CJK-aware font outlines and PNG output generated during build                                                                                                                                                                                                                                                                                                                                                                         |
+| **Colour Mode**                     | 3-state picker — **System / Light / Dark** with `localStorage` persistence and live OS-preference tracking under 'System'; surfaced as a pill dropdown in the header (and inside the mobile menu)                                                                                                                                                                                                                                                                                       |
+| **Content Collections**             | Type-safe blog, pages, authors, and FAQs with Zod validation                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **Forms**                           | Reusable contact/newsletter forms require an explicitly configured external endpoint; no server API is shipped                                                                                                                                                                                                                                                                                                                                                                          |
+| **Table of Contents**               | Optional table of contents on blog posts, auto-generated from MDX headings, with three layouts: inline card, sticky desktop sidebar, or `auto` (sidebar on `xl+`, inline card below). Includes `IntersectionObserver` scroll-spy. Off by default; per-post `toc: false` in frontmatter hides on a single post                                                                                                                                                                           |
 | **Blog Comments (Giscus / Cusdis)** | Optional comments at the bottom of blog posts via a pluggable provider — [Giscus](https://giscus.app) (GitHub Discussions) or the privacy-friendly [Cusdis](https://cusdis.com) (hosted or self-hosted). Choose with `comments.provider`. **Lazy-loaded** so readers who don't scroll to comments pay zero network cost; reserved `min-height` prevents CLS. Theme follows the site's light/dark mode. Off by default; per-post `comments: false` in frontmatter hides on a single post |
-| **Durable Internal Links** | Link between posts by a stable canonical id with `<PostLink uid="…">` instead of a slug, so changing its filename does not break references authored with PostLink. Public URLs still use slugs; old external URLs require explicit redirects. Ids resolve to the correct locale-aware URL at build time, and a broken reference **fails the build** rather than shipping a 404. Add an optional `uid` to a post's frontmatter to make it linkable |
-| **Build-Time Content Validation** | The build fails with a clear error if two pieces of content resolve to the same URL within a locale (duplicate slugs across posts, projects, and pages), or if two posts claim the same canonical id — catching silent content mistakes before they ship |
-| **Independent Footer Menu** | Header and footer navigation configured separately in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`) — add a Privacy or Imprint link to the footer without cluttering the main nav |
-| **Static Search (Pagefind)** | Site-wide search in the header — a ⌘K / Ctrl+K Header dropdown powered by a [Pagefind](https://pagefind.app) index generated at build time. Pagefind loads when search opens; works on every deploy target. Hide it with `showSearch={false}` on the Header |
-| **Project Galleries** | Multiple images per project: a `gallery` array in frontmatter swaps the hero image for a swipeable carousel, and the `<ProjectGallery>` MDX component renders an in-body carousel with a click-to-zoom lightbox. See [Project Galleries](#project-galleries) |
-| **React Islands** | Optional client-side interactivity where needed |
+| **Durable Internal Links**          | Link between posts by a stable canonical id with `<PostLink uid="…">` instead of a slug, so changing its filename does not break references authored with PostLink. Public URLs still use slugs; old external URLs require explicit redirects. Ids resolve to the correct locale-aware URL at build time, and a broken reference **fails the build** rather than shipping a 404. Add an optional `uid` to a post's frontmatter to make it linkable                                      |
+| **Build-Time Content Validation**   | The build fails with a clear error if two pieces of content resolve to the same URL within a locale (duplicate slugs across posts, projects, and pages), or if two posts claim the same canonical id — catching silent content mistakes before they ship                                                                                                                                                                                                                                |
+| **Independent Footer Menu**         | Header and footer navigation configured separately in `nav.config.ts` (`navItems`, `footerNavItems`, `legalLinks`) — add a Privacy or Imprint link to the footer without cluttering the main nav                                                                                                                                                                                                                                                                                        |
+| **Static Search (Pagefind)**        | Site-wide search in the header — a ⌘K / Ctrl+K Header dropdown powered by a [Pagefind](https://pagefind.app) index generated at build time. Pagefind loads when search opens; works on every deploy target. Hide it with `showSearch={false}` on the Header                                                                                                                                                                                                                             |
+| **Project Galleries**               | Multiple images per project: a `gallery` array in frontmatter swaps the hero image for a swipeable carousel, and the `<ProjectGallery>` MDX component renders an in-body carousel with a click-to-zoom lightbox. See [Project Galleries](#project-galleries)                                                                                                                                                                                                                            |
+| **React Islands**                   | Optional client-side interactivity where needed                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ### Internationalization (i18n)
 
@@ -114,6 +113,7 @@ to retain the requested UI language.
 import { t, getLocaleFromPath, localizedPath } from '@/i18n';
 const locale = getLocaleFromPath(Astro.originPathname);
 ---
+
 <a href={localizedPath('/blog', locale)}>{t('common.readMore', locale)}</a>
 ```
 
@@ -219,21 +219,21 @@ astro-rocket/
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start development server with hot reload |
-| `pnpm build` | Build for production |
-| `pnpm preview` | Preview production build locally |
-| `pnpm check` | Run Astro type checker |
-| `pnpm lint` | Run ESLint |
-| `pnpm lint:fix` | Fix ESLint issues |
-| `pnpm format` | Format code with Prettier |
-| `pnpm format:check` | Check code formatting |
-| `pnpm test` | Run Vitest in watch mode |
-| `pnpm test:run` | Run Vitest once |
-| `pnpm test:i18n` | Build bilingual fixtures and run browser checks, then restore config |
-| `pnpm validate` | Lint, type-check, unit tests, then production build |
-| `pnpm test:e2e` | Run Playwright E2E tests |
+| Command             | Description                                                          |
+| ------------------- | -------------------------------------------------------------------- |
+| `pnpm dev`          | Start development server with hot reload                             |
+| `pnpm build`        | Build for production                                                 |
+| `pnpm preview`      | Preview production build locally                                     |
+| `pnpm check`        | Run Astro type checker                                               |
+| `pnpm lint`         | Run ESLint                                                           |
+| `pnpm lint:fix`     | Fix ESLint issues                                                    |
+| `pnpm format`       | Format code with Prettier                                            |
+| `pnpm format:check` | Check code formatting                                                |
+| `pnpm test`         | Run Vitest in watch mode                                             |
+| `pnpm test:run`     | Run Vitest once                                                      |
+| `pnpm test:i18n`    | Build bilingual fixtures and run browser checks, then restore config |
+| `pnpm validate`     | Lint, type-check, unit tests, then production build                  |
+| `pnpm test:e2e`     | Run Playwright E2E tests                                             |
 
 ---
 
@@ -324,12 +324,12 @@ Edit `src/styles/tokens/primitives.css` and update the `--brand-*` OKLCH values:
 
 ```css
 :root {
-  --brand-50:  oklch(97.5% 0.02 45);  /* lightest tint */
+  --brand-50: oklch(97.5% 0.02 45); /* lightest tint */
   --brand-100: oklch(94.8% 0.04 45);
   --brand-200: oklch(87.5% 0.08 45);
   --brand-300: oklch(77.8% 0.14 45);
   --brand-400: oklch(68.5% 0.19 40);
-  --brand-500: oklch(62.5% 0.22 38);  /* primary brand color */
+  --brand-500: oklch(62.5% 0.22 38); /* primary brand color */
   --brand-600: oklch(53.2% 0.19 38);
   --brand-700: oklch(45.5% 0.16 38);
   --brand-800: oklch(37.2% 0.13 38);
@@ -368,16 +368,16 @@ Astro Rocket ships a 3-state colour-mode system — **System / Light / Dark** �
 
 State contract:
 
-| Storage / DOM | Values | Role |
-|---|---|---|
-| `localStorage.theme` | `'system' \| 'light' \| 'dark'` | The user's saved choice (default `'system'`) |
-| `<html data-theme-mode="…">` | mirrors the saved mode | Drives the trigger icon (monitor / sun / moon) via CSS |
-| `<html>.dark` | present or absent | Resolved appearance — Tailwind dark variant keys off this |
+| Storage / DOM                | Values                          | Role                                                      |
+| ---------------------------- | ------------------------------- | --------------------------------------------------------- |
+| `localStorage.theme`         | `'system' \| 'light' \| 'dark'` | The user's saved choice (default `'system'`)              |
+| `<html data-theme-mode="…">` | mirrors the saved mode          | Drives the trigger icon (monitor / sun / moon) via CSS    |
+| `<html>.dark`                | present or absent               | Resolved appearance — Tailwind dark variant keys off this |
 
 Defaults are seeded directly on the `<html>` element in `src/layouts/BaseLayout.astro` so JS-disabled visitors still see a sensible state:
 
 ```html
-<html lang="en" class="scroll-smooth dark" data-theme="blue" data-theme-mode="system">
+<html lang="en" class="dark scroll-smooth" data-theme="blue" data-theme-mode="system"></html>
 ```
 
 Flash-of-wrong-theme is prevented by an inline `<script>` in `<head>` that runs synchronously before body paint, reads `localStorage.theme`, and reconciles `data-theme-mode` + `.dark`. The same script also re-applies on `astro:before-swap` / `astro:after-swap` to handle view transitions, and subscribes once to the OS-preference media query.
@@ -400,13 +400,13 @@ The full design — bootstrap script, dropdown anatomy, the live "Currently dark
 
 Foreground tokens are documented with their contrast ratios inline. When customizing, maintain these minimums:
 
-| Token | Minimum ratio | Standard |
-|-------|:---:|:---:|
-| `--foreground` | 7:1 | WCAG AAA |
-| `--foreground-secondary` | 7:1 | WCAG AAA |
-| `--foreground-muted` | 4.5:1 | WCAG AA |
-| `--foreground-subtle` | 4.5:1 | WCAG AA |
-| Status `-foreground` tokens | 4.5:1 | WCAG AA (on their `-light` bg) |
+| Token                       | Minimum ratio |            Standard            |
+| --------------------------- | :-----------: | :----------------------------: |
+| `--foreground`              |      7:1      |            WCAG AAA            |
+| `--foreground-secondary`    |      7:1      |            WCAG AAA            |
+| `--foreground-muted`        |     4.5:1     |            WCAG AA             |
+| `--foreground-subtle`       |     4.5:1     |            WCAG AA             |
+| Status `-foreground` tokens |     4.5:1     | WCAG AA (on their `-light` bg) |
 
 ### Using Design Tokens
 
@@ -435,102 +435,102 @@ Astro Rocket includes 57 components across 7 categories. All UI components use [
 
 #### Form (`ui/form/`)
 
-| Component | Description |
-|-----------|-------------|
-| Button | Interactive button with primary, secondary, outline, ghost, destructive variants and loading state |
-| Input | Text input with label, hint, and error states |
-| Textarea | Multi-line text input |
-| Select | Dropdown selection |
-| Checkbox | Boolean toggle with indeterminate state |
-| Radio | Single selection from group |
-| Switch | Toggle switch input |
+| Component | Description                                                                                        |
+| --------- | -------------------------------------------------------------------------------------------------- |
+| Button    | Interactive button with primary, secondary, outline, ghost, destructive variants and loading state |
+| Input     | Text input with label, hint, and error states                                                      |
+| Textarea  | Multi-line text input                                                                              |
+| Select    | Dropdown selection                                                                                 |
+| Checkbox  | Boolean toggle with indeterminate state                                                            |
+| Radio     | Single selection from group                                                                        |
+| Switch    | Toggle switch input                                                                                |
 
 #### Data Display (`ui/data-display/`)
 
-| Component | Description |
-|-----------|-------------|
-| Card | Content container with variant, padding, and hover options |
-| Badge | Status labels and tags with contextual variants |
-| Avatar | User images with fallback |
-| AvatarGroup | Grouped avatar display with overlap |
-| Table | Styled data table |
-| Pagination | Page navigation controls |
-| Progress | Progress bar indicator |
-| Skeleton | Loading placeholders |
+| Component   | Description                                                |
+| ----------- | ---------------------------------------------------------- |
+| Card        | Content container with variant, padding, and hover options |
+| Badge       | Status labels and tags with contextual variants            |
+| Avatar      | User images with fallback                                  |
+| AvatarGroup | Grouped avatar display with overlap                        |
+| Table       | Styled data table                                          |
+| Pagination  | Page navigation controls                                   |
+| Progress    | Progress bar indicator                                     |
+| Skeleton    | Loading placeholders                                       |
 
 #### Feedback (`ui/feedback/`)
 
-| Component | Description |
-|-----------|-------------|
-| Alert | Contextual feedback messages (info, success, warning, error) |
-| Toast | Temporary notification messages |
-| Tooltip | Hover tooltips with positioning |
+| Component | Description                                                  |
+| --------- | ------------------------------------------------------------ |
+| Alert     | Contextual feedback messages (info, success, warning, error) |
+| Toast     | Temporary notification messages                              |
+| Tooltip   | Hover tooltips with positioning                              |
 
 #### Overlay (`ui/overlay/`)
 
-| Component | Description |
-|-----------|-------------|
-| Dialog | Modal overlay |
-| Dropdown | Menu with trigger |
-| Tabs | Horizontal tabbed content panels |
-| VerticalTabs | Vertical tab navigation |
-| Accordion | Collapsible content sections |
+| Component    | Description                      |
+| ------------ | -------------------------------- |
+| Dialog       | Modal overlay                    |
+| Dropdown     | Menu with trigger                |
+| Tabs         | Horizontal tabbed content panels |
+| VerticalTabs | Vertical tab navigation          |
+| Accordion    | Collapsible content sections     |
 
 #### Layout (`ui/layout/`)
 
-| Component | Description |
-|-----------|-------------|
+| Component | Description                     |
+| --------- | ------------------------------- |
 | Separator | Visual divider between sections |
 
 #### Primitives (`ui/primitives/`)
 
-| Component | Description |
-|-----------|-------------|
-| Icon | Unified icon component (Astro + React) powered by Iconify. Supports all [Lucide](https://lucide.dev) icons (`lucide:*`) and all [Simple Icons](https://simpleicons.org) brand icons (`simple-icons:*`). Includes shorthand names for common social and brand icons. Five size variants: `xs`, `sm`, `md`, `lg`, `xl`. |
+| Component | Description                                                                                                                                                                                                                                                                                                           |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Icon      | Unified icon component (Astro + React) powered by Iconify. Supports all [Lucide](https://lucide.dev) icons (`lucide:*`) and all [Simple Icons](https://simpleicons.org) brand icons (`simple-icons:*`). Includes shorthand names for common social and brand icons. Five size variants: `xs`, `sm`, `md`, `lg`, `xl`. |
 
 #### Content (`ui/content/`)
 
-| Component | Description |
-|-----------|-------------|
+| Component | Description                     |
+| --------- | ------------------------------- |
 | CodeBlock | Syntax-highlighted code display |
 
 #### Marketing (`ui/marketing/`)
 
-| Component | Description |
-|-----------|-------------|
-| Logo | Auto-generated monogram badge — renders the first letter of `siteConfig.name` on the active brand color. Five sizes: `sm`, `md`, `lg`, `xl`, `2xl`. No logo file required — or set `branding.logo.image` in `site.config.ts` to use a custom image instead. |
-| CTA | Call-to-action sections with slot-based composition |
-| NpmCopyButton | NPM install command with copy-to-clipboard |
-| SocialProof | Testimonial and trust indicator cards |
-| TerminalDemo | Animated terminal demonstration (React) |
+| Component     | Description                                                                                                                                                                                                                                                 |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Logo          | Auto-generated monogram badge — renders the first letter of `siteConfig.name` on the active brand color. Five sizes: `sm`, `md`, `lg`, `xl`, `2xl`. No logo file required — or set `branding.logo.image` in `site.config.ts` to use a custom image instead. |
+| CTA           | Call-to-action sections with slot-based composition                                                                                                                                                                                                         |
+| NpmCopyButton | NPM install command with copy-to-clipboard                                                                                                                                                                                                                  |
+| SocialProof   | Testimonial and trust indicator cards                                                                                                                                                                                                                       |
+| TerminalDemo  | Animated terminal demonstration (React)                                                                                                                                                                                                                     |
 
 ### Patterns and Content Components
 
-| Component | Description |
-|-----------|-------------|
-| ContactForm | Complete contact form with validation |
-| ProofTile | Compact icon/number/title fact tile; Astro and React variants |
-| BlogCta | Shared opt-in closing block on blog indexes, archives and articles |
-| NewsletterForm | Configurable email signup block with heading, description, note, size, stacked layout, custom submit classes, honeypot and reserved status line; requires an explicit endpoint in this static fork |
-| YouTube | Click-to-play thumbnail facade with localized labels and a no-JavaScript link |
-| ProjectImageSVG | Inline, theme-aware project artwork loaded from `src/assets/projects/<slug>.svg`; import explicitly and provide `slug` and accessible `title` |
-| FormField | Reusable form field wrapper |
-| SearchInput | Search input with icon |
-| PasswordInput | Password input with visibility toggle |
-| StatCard | Statistics display card |
-| EmptyState | Empty state placeholder with icon and action |
+| Component       | Description                                                                                                                                                                                        |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ContactForm     | Complete contact form with validation                                                                                                                                                              |
+| ProofTile       | Compact icon/number/title fact tile; Astro and React variants                                                                                                                                      |
+| BlogCta         | Shared opt-in closing block on blog indexes, archives and articles                                                                                                                                 |
+| NewsletterForm  | Configurable email signup block with heading, description, note, size, stacked layout, custom submit classes, honeypot and reserved status line; requires an explicit endpoint in this static fork |
+| YouTube         | Click-to-play thumbnail facade with localized labels and a no-JavaScript link                                                                                                                      |
+| ProjectImageSVG | Inline, theme-aware project artwork loaded from `src/assets/projects/<slug>.svg`; import explicitly and provide `slug` and accessible `title`                                                      |
+| FormField       | Reusable form field wrapper                                                                                                                                                                        |
+| SearchInput     | Search input with icon                                                                                                                                                                             |
+| PasswordInput   | Password input with visibility toggle                                                                                                                                                              |
+| StatCard        | Statistics display card                                                                                                                                                                            |
+| EmptyState      | Empty state placeholder with icon and action                                                                                                                                                       |
 
 ### Other Categories
 
 The following is a selection, not a count of all exported components.
 
-| Category | Components |
-|----------|------------|
-| Hero | Hero section with centered/split layouts, grid pattern, and typing effect |
-| Layout | Header (with scroll progress bar), Footer, ThemeModeDropdown, ThemeSelector, ThemeSelectorDropdown, Analytics |
-| Blog | ArticleHero, BlogCard, ShareButtons, RelatedPosts |
-| Landing | Credibility, LighthouseScores, TechStack, FeatureTabs, and more |
-| SEO | SEO, JsonLd, Breadcrumbs |
+| Category | Components                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------- |
+| Hero     | Hero section with centered/split layouts, grid pattern, and typing effect                                     |
+| Layout   | Header (with scroll progress bar), Footer, ThemeModeDropdown, ThemeSelector, ThemeSelectorDropdown, Analytics |
+| Blog     | ArticleHero, BlogCard, ShareButtons, RelatedPosts                                                             |
+| Landing  | Credibility, LighthouseScores, TechStack, FeatureTabs, and more                                               |
+| SEO      | SEO, JsonLd, Breadcrumbs                                                                                      |
 
 ### Usage Example
 
@@ -580,12 +580,12 @@ Create posts in `src/content/blog/[locale]/`:
 
 ```markdown
 ---
-title: "Your Post Title"
-description: "Brief description for SEO"
+title: 'Your Post Title'
+description: 'Brief description for SEO'
 publishedAt: 2026-01-30
-author: "Author Name"
-tags: ["astro", "tutorial"]
-uid: "your-post-id"        # optional — stable id used by <PostLink> for internal links
+author: 'Author Name'
+tags: ['astro', 'tutorial']
+uid: 'your-post-id' # optional — stable id used by <PostLink> for internal links
 locale: en
 ---
 
@@ -602,13 +602,13 @@ Projects live in `src/content/projects/<locale>/` (the bundled ones in `src/cont
 
 ```yaml
 ---
-title: "My Product"
-description: "..."
+title: 'My Product'
+description: '...'
 gallery:
-  - src: "../../assets/projects/shot-1.jpg"
-    alt: "Dashboard view"
-  - src: "../../assets/projects/shot-2.jpg"
-    alt: "Settings page"
+  - src: '../../assets/projects/shot-1.jpg'
+    alt: 'Dashboard view'
+  - src: '../../assets/projects/shot-2.jpg'
+    alt: 'Settings page'
 ---
 ```
 
@@ -633,11 +633,11 @@ import shot2 from '@/assets/projects/shot-2.jpg';
 
 ```yaml
 gallery:
-  - video: "/videos/demo.mp4"
-    poster: "../../assets/projects/demo-poster.jpg"
-    alt: "30-second product demo"
-  - src: "../../assets/projects/shot-1.jpg"
-    alt: "Dashboard view"
+  - video: '/videos/demo.mp4'
+    poster: '../../assets/projects/demo-poster.jpg'
+    alt: '30-second product demo'
+  - src: '../../assets/projects/shot-1.jpg'
+    alt: 'Dashboard view'
 ```
 
 The same shape works in `<ProjectGallery>` (`{ video, poster, alt, caption? }`). Video slides use optimized posters and `preload="none"`; navigating away pauses playback. A single project-hero image keeps its natural aspect ratio. Multiple images and videos keep a shared 16:9 frame. YouTube is available separately through the click-to-play facade; Vimeo embeds are not built in.
@@ -678,10 +678,7 @@ import SEO from '@/components/seo/SEO.astro';
 ---
 
 <head>
-  <SEO
-    title="Page Title"
-    description="Page description"
-  />
+  <SEO title="Page Title" description="Page description" />
 </head>
 ```
 
@@ -805,9 +802,9 @@ The floating header changes its appearance as the user scrolls. When the page is
 
 A thin 2px brand-coloured bar on the header edge that grows from left to right as the user scrolls, showing reading progress at a glance. Enable it with two props on the `<Header>` component:
 
-| Prop | Type | Default | What it does |
-|------|------|:-------:|--------------|
-| `showScrollProgress` | `boolean` | `false` | Renders the progress bar |
+| Prop                     | Type                  |  Default   | What it does                          |
+| ------------------------ | --------------------- | :--------: | ------------------------------------- |
+| `showScrollProgress`     | `boolean`             |  `false`   | Renders the progress bar              |
 | `scrollProgressPosition` | `'top'` \| `'bottom'` | `'bottom'` | Edge of the header where the bar sits |
 
 The bar is enabled by default on three page types: the **homepage** (above the floating header), the **blog index**, and **individual blog posts** (both below the solid bar header). Use `scrollProgressPosition="top"` on a floating capsule header and `'bottom'` on a solid bar header. The bar colour always matches `--color-brand-500` and updates instantly when the visitor switches themes.
@@ -820,21 +817,21 @@ Cards throughout the site lift slightly on hover (`-translate-y-1`) and gain a s
 
 The full animation library is defined in `src/styles/global.css`. These classes are used by components throughout the site:
 
-| Class | What it does |
-|-------|-------------|
-| `animate-fade-in` | Fades an element from transparent to visible (0.5s ease-out) |
-| `animate-slide-up` | Slides an element up from 12px below while fading in (0.5s ease-out) |
-| `animate-slide-down` | Slides an element down from 12px above while fading in (0.5s ease-out) |
-| `animate-dropdown-in` | Slides and scales a dropdown menu into view (0.2s spring) |
-| `animate-dropdown-out` | Collapses a dropdown menu out of view (0.15s) |
-| `animate-sheet-up` | Slides a bottom sheet up from off-screen (0.25s spring) |
-| `animate-menu-down` | Slides the mobile navigation drawer open (0.25s spring) |
-| `animate-tab-enter` | Crossfades tab panel content when switching tabs |
-| `animate-toast-in` | Slides a toast notification in from the right (350ms spring) |
-| `animate-tooltip-in` | Fades and scales a tooltip into view |
-| `animate-pulse` | Breathing pulse for skeleton loading states |
-| `animate-spin` | Continuous rotation for loading spinners |
-| `animate-shake` | Brief shake for error feedback (400ms) |
+| Class                  | What it does                                                           |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `animate-fade-in`      | Fades an element from transparent to visible (0.5s ease-out)           |
+| `animate-slide-up`     | Slides an element up from 12px below while fading in (0.5s ease-out)   |
+| `animate-slide-down`   | Slides an element down from 12px above while fading in (0.5s ease-out) |
+| `animate-dropdown-in`  | Slides and scales a dropdown menu into view (0.2s spring)              |
+| `animate-dropdown-out` | Collapses a dropdown menu out of view (0.15s)                          |
+| `animate-sheet-up`     | Slides a bottom sheet up from off-screen (0.25s spring)                |
+| `animate-menu-down`    | Slides the mobile navigation drawer open (0.25s spring)                |
+| `animate-tab-enter`    | Crossfades tab panel content when switching tabs                       |
+| `animate-toast-in`     | Slides a toast notification in from the right (350ms spring)           |
+| `animate-tooltip-in`   | Fades and scales a tooltip into view                                   |
+| `animate-pulse`        | Breathing pulse for skeleton loading states                            |
+| `animate-spin`         | Continuous rotation for loading spinners                               |
+| `animate-shake`        | Brief shake for error feedback (400ms)                                 |
 
 Animation delay utilities (`.delay-0` through `.delay-5`, in 50ms steps) let you stagger multiple elements into view.
 

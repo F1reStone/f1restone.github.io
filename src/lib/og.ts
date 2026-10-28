@@ -80,13 +80,12 @@ export function renderOgSvg({
   const lineHeight = 92;
   const blockHeight = lines.length * lineHeight;
   // Centre the title block vertically; shift up slightly when a subtitle is shown.
-  const baseTitleY =
-    (HEIGHT - blockHeight) / 2 + lineHeight * 0.78 + (subtitle ? -28 : 0);
+  const baseTitleY = (HEIGHT - blockHeight) / 2 + lineHeight * 0.78 + (subtitle ? -28 : 0);
 
   const titleEls = lines
     .map(
       (line, i) =>
-        `<text x="80" y="${baseTitleY + i * lineHeight}" font-size="76" fill="#ffffff" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="800" letter-spacing="-2.5">${escapeXml(line)}</text>`,
+        `<text x="80" y="${baseTitleY + i * lineHeight}" font-size="76" fill="#ffffff" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="800" letter-spacing="-2.5">${escapeXml(line)}</text>`
     )
     .join('\n  ');
 

@@ -119,7 +119,12 @@ const {
   nav,
   extraNav = [],
   showCta = false,
-  cta = { label: t('header.exploreProjects', locale), href: localizedPath('/projects', locale), icon: undefined, trailingIcon: undefined },
+  cta = {
+    label: t('header.exploreProjects', locale),
+    href: localizedPath('/projects', locale),
+    icon: undefined,
+    trailingIcon: undefined,
+  },
   actions = [],
   showSearch = true,
   showThemeToggle = true,
@@ -135,7 +140,7 @@ const {
   secondaryLogo,
   secondaryLogoSvg,
   secondaryLogoHref,
-  maxWidth = '8xl',// FireStone: Change max width to full to adapt out designs.
+  maxWidth = '8xl', // FireStone: Change max width to full to adapt out designs.
   class: className,
   ...attrs
 } = Astro.props;
@@ -158,7 +163,6 @@ const maxWidthClass = {
   full: 'max-w-full',
 }[maxWidth];
 const isInvert = colorScheme === 'invert';
-
 
 const defaultNav = getNavItems(locale).map((item: ResolvedNavItem) => ({
   label: item.label,
@@ -184,9 +188,9 @@ const hasMobileMenuSlot = Astro.slots.has('mobile-menu');
 if (import.meta.env.DEV && Astro.slots.has('default')) {
   console.warn(
     '[Header] Received content in the default slot, which Header does not render — ' +
-    'it only outputs the named slots (logo, nav, actions, mobile-menu), so this content is dropped. ' +
-    'A common cause is a misplaced </Header> wrapping the page <slot /> or <Footer>: ' +
-    'make sure those sit OUTSIDE <Header> and that only slotted children (e.g. <img slot="logo" />) sit inside it.'
+      'it only outputs the named slots (logo, nav, actions, mobile-menu), so this content is dropped. ' +
+      'A common cause is a misplaced </Header> wrapping the page <slot /> or <Footer>: ' +
+      'make sure those sit OUTSIDE <Header> and that only slotted children (e.g. <img slot="logo" />) sit inside it.'
   );
 }
 
@@ -218,17 +222,25 @@ function getSocialIconData(url: string): { icon: string; label: string } {
 function getNavIcon(href: string): string {
   if (href.startsWith('/')) href = stripLocaleFromPath(href);
   if (href === '/' || href === '') return 'home';
-  if (href.startsWith('/blog'))     return 'pen-line';
+  if (href.startsWith('/blog')) return 'pen-line';
   if (href.startsWith('/projects')) return 'layers';
   if (href.startsWith('/ai')) return 'sparkles';
-  if (href.startsWith('/about'))    return 'user';
-  if (href.startsWith('/contact'))  return 'mail';
-  if (href.startsWith('#'))         return 'hash';
-  if (href.startsWith('http'))      return 'arrow-up-right';
+  if (href.startsWith('/about')) return 'user';
+  if (href.startsWith('/contact')) return 'mail';
+  if (href.startsWith('#')) return 'hash';
+  if (href.startsWith('http')) return 'arrow-up-right';
   return 'chevron-right';
 }
 
-const mobileSocialOrder = ['github.com', 'bilibili.com', 'zhihu.com', 'music.163.com', 'weibo.com', 'youtube.com', 'x.com'];
+const mobileSocialOrder = [
+  'github.com',
+  'bilibili.com',
+  'zhihu.com',
+  'music.163.com',
+  'weibo.com',
+  'youtube.com',
+  'x.com',
+];
 const mobileSocialLinks = mobileSocialOrder
   .map((host) => siteConfig.socialLinks.find((u) => u.includes(host)))
   .filter((u): u is string => Boolean(u));
@@ -259,31 +271,32 @@ const buttonId = `${menuId}-button`;
     <div class="hdr-menu-surface" aria-hidden="true" />
   )}
   <div class={cn(innerClasses, 'hdr-inner')}>
-    {
-      !hideLogo && (
-        <div class="flex items-center justify-self-start">
-          {/* FireStone: Use CSS Grid on mobile to stack logos for crossfade, and Flexbox on desktop to put them side-by-side */}
-          <div class="mobile-logo-wrapper grid items-center lg:flex lg:flex-row">
-            
-            {/* Main Logo Container */}
-            {/* FireStone: [Conditionally apply the crossfade animation ONLY if a secondary logo exists] */}
-            <div class={cn(
-              "col-start-1 row-start-1 flex items-center",
-              (cleanSecondaryLogoSvg || secondaryLogo) && "animate-logo-main lg:!animate-none"
-            )}>
-              {hasLogoSlot ? (
-                <slot name="logo" />
-              ) : (
-                <a href={localizedPath('/', locale)} class="flex items-center w-fit" aria-label={t('common.logo', locale)}>
-                  <Logo
-                    size={size === 'sm' ? 'md' : 'lg'}
-                    class="text-foreground hdr-logo-glow"
-                  />
-                </a>
-              )}
-            </div>
+    {!hideLogo && (
+      <div class="flex items-center justify-self-start">
+        {/* FireStone: Use CSS Grid on mobile to stack logos for crossfade, and Flexbox on desktop to put them side-by-side */}
+        <div class="mobile-logo-wrapper grid items-center lg:flex lg:flex-row">
+          {/* Main Logo Container */}
+          {/* FireStone: [Conditionally apply the crossfade animation ONLY if a secondary logo exists] */}
+          <div
+            class={cn(
+              'col-start-1 row-start-1 flex items-center',
+              (cleanSecondaryLogoSvg || secondaryLogo) && 'animate-logo-main lg:!animate-none'
+            )}
+          >
+            {hasLogoSlot ? (
+              <slot name="logo" />
+            ) : (
+              <a
+                href={localizedPath('/', locale)}
+                class="flex items-center w-fit"
+                aria-label={t('common.logo', locale)}
+              >
+                <Logo size={size === 'sm' ? 'md' : 'lg'} class="text-foreground hdr-logo-glow" />
+              </a>
+            )}
+          </div>
 
-            {/* Secondary logo — rendered to the right of the main site logo with a
+          {/* Secondary logo — rendered to the right of the main site logo with a
               vertical divider.  Same glow + scale hover as the main logo.
 
               **Chameleon pattern (preferred):** Pass `secondaryLogoSvg` (raw SVG
@@ -292,40 +305,23 @@ const buttonId = `${menuId}-button`;
 
               **Legacy fallback:** Pass `secondaryLogo` (ImageMetadata) for <img>
               rendering with a CSS filter. */}
-            {(cleanSecondaryLogoSvg || secondaryLogo) && (
-              <>
-                {/* Divider (Hidden on mobile) */}
-                <span
-                  class="hidden lg:block mx-3.5 h-6 w-px bg-foreground-subtle/50 shrink-0"
-                  aria-hidden="true"
-                ></span>
+          {(cleanSecondaryLogoSvg || secondaryLogo) && (
+            <>
+              {/* Divider (Hidden on mobile) */}
+              <span
+                class="hidden lg:block mx-3.5 h-6 w-px bg-foreground-subtle/50 shrink-0"
+                aria-hidden="true"
+              ></span>
 
-                {/* Secondary Logo Container */}
-                <div class="col-start-1 row-start-1 flex items-center opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto animate-logo-secondary lg:!animate-none">
-                  {secondaryLogoHref ? (
-                    <a
-                      href={secondaryLogoHref}
-                      class="flex items-center shrink-0"
-                      aria-label={secondaryLogoHref.replace(/^\//, '')}
-                    >
-                      {cleanSecondaryLogoSvg ? (
-                        <span
-                          class="inline-block text-foreground shrink-0"
-                          set:html={cleanSecondaryLogoSvg}
-                        />
-                      ) : secondaryLogo ? (
-                        <img
-                          src={secondaryLogo.src}
-                          alt=""
-                          width={secondaryLogo.width}
-                          height={secondaryLogo.height}
-                          class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
-                          decoding="async"
-                        />
-                      ) : null}
-                    </a>
-                  ) : (
-                    cleanSecondaryLogoSvg ? (
+              {/* Secondary Logo Container */}
+              <div class="col-start-1 row-start-1 flex items-center opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto animate-logo-secondary lg:!animate-none">
+                {secondaryLogoHref ? (
+                  <a
+                    href={secondaryLogoHref}
+                    class="flex items-center shrink-0"
+                    aria-label={secondaryLogoHref.replace(/^\//, '')}
+                  >
+                    {cleanSecondaryLogoSvg ? (
                       <span
                         class="inline-block text-foreground shrink-0"
                         set:html={cleanSecondaryLogoSvg}
@@ -336,313 +332,318 @@ const buttonId = `${menuId}-button`;
                         alt=""
                         width={secondaryLogo.width}
                         height={secondaryLogo.height}
-                        class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
+                        class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow"
                         decoding="async"
                       />
-                    ) : null
-                  )}
-                </div>
-              </>
-            )}
-          </div>
+                    ) : null}
+                  </a>
+                ) : cleanSecondaryLogoSvg ? (
+                  <span
+                    class="inline-block text-foreground shrink-0"
+                    set:html={cleanSecondaryLogoSvg}
+                  />
+                ) : secondaryLogo ? (
+                  <img
+                    src={secondaryLogo.src}
+                    alt=""
+                    width={secondaryLogo.width}
+                    height={secondaryLogo.height}
+                    class="hdr-secondary-logo h-8 w-auto object-contain hdr-logo-glow shrink-0"
+                    decoding="async"
+                  />
+                ) : null}
+              </div>
+            </>
+          )}
         </div>
-      )
-    }
+      </div>
+    )}
 
-    {
-      layout !== 'minimal' &&
-        (hasNavSlot ? (
-          <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
-            <slot name="nav" />
-          </nav>
-        ) : (
-          <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
-            {navItems.map(({ label, href }) => (
-              <a
-                href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
-                class={cn(
-                  'relative rounded-full px-3 py-2 text-sm',
-                  'hover-glow-text weight-shift',
-                  isActive(href)
-                    ? 'hdr-nav-active text-foreground text-shadow-[0_0_10px_currentColor] font-bold'
-                    : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground font-medium'
-                )}
-                aria-current={isActive(href) ? 'page' : undefined}
-                data-text={label}
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-        ))
-    }
+    {layout !== 'minimal' &&
+      (hasNavSlot ? (
+        <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
+          <slot name="nav" />
+        </nav>
+      ) : (
+        <nav class="hidden items-center gap-1 lg:flex" aria-label={t('nav.mainNav', locale)}>
+          {navItems.map(({ label, href }) => (
+            <a
+              href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
+              class={cn(
+                'relative rounded-full px-3 py-2 text-sm',
+                'hover-glow-text weight-shift',
+                isActive(href)
+                  ? 'hdr-nav-active text-foreground text-shadow-[0_0_10px_currentColor] font-bold'
+                  : 'text-foreground-secondary hover:text-foreground focus-visible:text-foreground font-medium'
+              )}
+              aria-current={isActive(href) ? 'page' : undefined}
+              data-text={label}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+      ))}
 
     <div class="flex items-center gap-2 justify-self-end">
-      {
-        hasActionsSlot ? (
-          <slot name="actions" />
-        ) : (
-          <>
-            {showSearch && (
-              <div class="flex">
-                <SearchModal />
-              </div>
-            )}
+      {hasActionsSlot ? (
+        <slot name="actions" />
+      ) : (
+        <>
+          {showSearch && (
+            <div class="flex">
+              <SearchModal />
+            </div>
+          )}
 
-            {showThemeToggle && (
-              <div class="flex">
-                <ThemeModeDropdown />
-              </div>
-            )}
+          {showThemeToggle && (
+            <div class="flex">
+              <ThemeModeDropdown />
+            </div>
+          )}
 
-            {showThemeSelector && (
-              <div class="hidden lg:flex">
-                <ThemeSelectorDropdown />
-              </div>
-            )}
+          {showThemeSelector && (
+            <div class="hidden lg:flex">
+              <ThemeSelectorDropdown />
+            </div>
+          )}
 
-            {showLanguageSwitcher && (
-              <div class="hidden lg:flex">
-                <LanguageSwitcher alternates={languageAlternates} />
-              </div>
-            )}
+          {showLanguageSwitcher && (
+            <div class="hidden lg:flex">
+              <LanguageSwitcher alternates={languageAlternates} />
+            </div>
+          )}
 
-            {showSocialLinks && siteConfig.socialLinks.length > 0 && (
-              <div class="hidden lg:flex items-center gap-0.5">
-                {siteConfig.socialLinks.map((url) => {
-                  const { icon, label } = getSocialIconData(url);
-                  return (
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      class={cn(
-                        'rounded-full p-2',
-                        'hover-glow-icon',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                        'text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
-                      )}
-                    >
-                      <Icon name={icon} size="md" />
-                    </a>
-                  );
-                })}
-              </div>
-            )}
+          {showSocialLinks && siteConfig.socialLinks.length > 0 && (
+            <div class="hidden lg:flex items-center gap-0.5">
+              {siteConfig.socialLinks.map((url) => {
+                const { icon, label } = getSocialIconData(url);
+                return (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    class={cn(
+                      'rounded-full p-2',
+                      'hover-glow-icon',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                      'text-foreground-secondary hover:text-foreground focus-visible:text-foreground'
+                    )}
+                  >
+                    <Icon name={icon} size="md" />
+                  </a>
+                );
+              })}
+            </div>
+          )}
 
-            {actions.map((action) => (
+          {actions.map((action) => (
+            <Button
+              variant="ghost"
+              size="sm"
+              icon={action.iconOnly}
+              href={action.href}
+              target={action.target}
+              aria-label={action.label}
+            >
+              <Icon name={action.icon} size="sm" />
+              {!action.iconOnly && action.label}
+            </Button>
+          ))}
+
+          {showCta && (
+            <div class="hidden lg:flex">
               <Button
-                variant="ghost"
                 size="sm"
-                icon={action.iconOnly}
-                href={action.href}
-                target={action.target}
-                aria-label={action.label}
+                href={ctaHref}
+                target={ctaHref?.startsWith('http') ? '_blank' : undefined}
+                class="hdr-cta-brand"
               >
-                <Icon name={action.icon} size="sm" />
-                {!action.iconOnly && action.label}
+                {cta.icon && <Icon name={cta.icon} size="sm" />}
+                {cta.label}
+                {cta.trailingIcon && <Icon name={cta.trailingIcon} size="sm" />}
               </Button>
-            ))}
+            </div>
+          )}
+        </>
+      )}
 
-            {showCta && (
-              <div class="hidden lg:flex">
-                <Button
-                  size="sm"
-                  href={ctaHref}
-                  target={ctaHref?.startsWith('http') ? '_blank' : undefined}
-                  class="hdr-cta-brand"
-                >
-                  {cta.icon && <Icon name={cta.icon} size="sm" />}
-                  {cta.label}
-                  {cta.trailingIcon && <Icon name={cta.trailingIcon} size="sm" />}
-                </Button>
-              </div>
-            )}
-          </>
-        )
-      }
-
-      {
-        showMobileMenu && layout !== 'minimal' && (
-          <button
-            type="button"
-            id={buttonId}
-            class={cn(
-              'hdr-hamburger inline-flex items-center justify-center rounded-full p-2 lg:hidden',
-              'hover-glow-icon', /* FireStone: Hamburger 菜单应用统一交互引擎 */
-              'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
-            )}
-            aria-expanded="false"
-            aria-controls={menuId}
-            aria-label={t('nav.toggleMenu', locale)}
-          >
-            <span class="menu-icon">
-              <Icon name="menu" size="md" />
-            </span>
-            <span class="close-icon hidden">
-              <Icon name="x" size="md" />
-            </span>
-          </button>
-        )
-      }
+      {showMobileMenu && layout !== 'minimal' && (
+        <button
+          type="button"
+          id={buttonId}
+          class={cn(
+            'hdr-hamburger inline-flex items-center justify-center rounded-full p-2 lg:hidden',
+            'hover-glow-icon' /* FireStone: Hamburger 菜单应用统一交互引擎 */,
+            'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none'
+          )}
+          aria-expanded="false"
+          aria-controls={menuId}
+          aria-label={t('nav.toggleMenu', locale)}
+        >
+          <span class="menu-icon">
+            <Icon name="menu" size="md" />
+          </span>
+          <span class="close-icon hidden">
+            <Icon name="x" size="md" />
+          </span>
+        </button>
+      )}
     </div>
   </div>
 
   {/* Legacy indicator: its line competes visually with progressive blur. */}
   {showScrollProgress && (
-      <div
-        id="scroll-progress-bar"
-        class={`absolute left-0 h-0.5 w-0 bg-brand-500 transition-none ${scrollProgressPosition === 'top' ? 'top-0' : 'bottom-0'}`}
-        aria-hidden="true"
-      />
-  )}
-
-  {
-    showMobileMenu &&
-      layout !== 'minimal' &&
-      (hasMobileMenuSlot ? (
-        <div
-          id={menuId}
-          class={cn(
-            'mobile-menu-panel', // FireStone: Target class for theme protection
-            'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
-            'border-border bg-background border-t'
-          )}
-          role="navigation"
-          inert
-          aria-label={t('nav.mobileNav', locale)}
-        >
-          <slot name="mobile-menu" />
-        </div>
-      ) : (
-        <div
-          id={menuId}
-          class={cn(
-            'mobile-menu-panel', // FireStone: Target class for theme protection
-            'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
-            'border-border bg-background border-t'
-          )}
-          role="navigation"
-          inert
-          aria-label={t('nav.mobileNav', locale)}
-        >
-          <div class={cn(
-            'mobile-menu-body py-3',
-            cn('mx-auto px-4', maxWidthClass)
-          )}>
-            <section class="mobile-menu-section">
-              <p class="mobile-menu-label">{t('nav.sectionNavigate', locale)}</p>
-              <ul class="space-y-0.5">
-                {navItems.map(({ label, href }, idx) => {
-                  const active = isActive(href);
-                  const resolvedHref = href.startsWith('#') && !isLandingPage ? `/${href}` : href;
-                  return (
-                    <li>
-                      <a
-                        href={resolvedHref}
-                        class={cn(
-                          'mobile-menu-row mobile-menu-stagger group flex items-center gap-3 rounded-xl px-3 py-3 text-base transition-colors',
-                          active
-                            ? 'mobile-menu-row-active'
-                            : 'mobile-menu-row-inactive'
-                        )}
-                        style={`--stagger-index: ${idx}`}
-                        aria-current={active ? 'page' : undefined}
-                      >
-                        <span class="mobile-menu-tile">
-                          <Icon name={getNavIcon(href)} size="sm" />
-                        </span>
-                        <span class="flex-1">{label}</span>
-                        <Icon name="chevron-right" size="sm" class="mobile-menu-chevron" />
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-
-            {showThemeSelector && (
-              <section class="mobile-menu-section">
-                <p class="mobile-menu-label">{t('nav.sectionTheme', locale)}</p>
-                <div
-                  class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
-                  style={`--stagger-index: ${navItems.length}`}
-                >
-                  <span class="text-sm text-foreground-muted">{t('theme.colourTheme', locale)}</span>
-                  <ThemeSelector />
-                </div>
-              </section>
-            )}
-
-            {showLanguageSwitcher && (
-              <section class="mobile-menu-section">
-                <p class="mobile-menu-label">{t('nav.sectionLanguage', locale)}</p>
-                <div
-                  class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
-                  style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0)}`}
-                >
-                  <span class="text-sm text-foreground-muted">{t('nav.sectionLanguage', locale)}</span>
-                  <LanguageSwitcher alternates={languageAlternates} />
-                </div>
-              </section>
-            )}
-
-            {mobileSocialLinks.length > 0 && (
-              <section class="mobile-menu-section">
-                <p class="mobile-menu-label">{t('footer.socialMedia', locale)}</p>
-                <div class="flex flex-wrap items-center gap-2 px-2 pt-1 pb-2">
-                  {mobileSocialLinks.map((url, sIdx) => {
-                    const { icon, label } = getSocialIconData(url);
-                    return (
-                      <span
-                        class="mobile-menu-stagger mobile-menu-social inline-flex"
-                        style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0) + (showLanguageSwitcher ? 1 : 0) + sIdx}`}
-                      >
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={label}
-                          title={label}
-                          class="glass-panel hover-glow-box hover-solid-fill inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-foreground-muted transition-colors"
-                        >
-                          <Icon name={icon} size="md" />
-                        </a>
-                      </span>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
-
-            {showCta && (
-              <div
-                class="mobile-menu-stagger mobile-menu-cta-wrap pt-2"
-                style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0) + (showLanguageSwitcher ? 1 : 0) + mobileSocialLinks.length}`}
-              >
-                <Button fullWidth href={ctaHref} target={ctaHref?.startsWith('http') ? '_blank' : undefined}>
-                  {cta.icon && <Icon name={cta.icon} size="sm" />}
-                  {cta.label}
-                  {cta.trailingIcon && <Icon name={cta.trailingIcon} size="sm" />}
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      ))
-  }
-</header>
-
-{
-  showMobileMenu && layout !== 'minimal' && (
     <div
-      id={`${menuId}-backdrop`}
-      class="mobile-menu-backdrop pointer-events-none fixed inset-0 z-40 bg-background/40 backdrop-blur-md lg:hidden"
+      id="scroll-progress-bar"
+      class={`absolute left-0 h-0.5 w-0 bg-brand-500 transition-none ${scrollProgressPosition === 'top' ? 'top-0' : 'bottom-0'}`}
       aria-hidden="true"
     />
-  )
-}
+  )}
+
+  {showMobileMenu &&
+    layout !== 'minimal' &&
+    (hasMobileMenuSlot ? (
+      <div
+        id={menuId}
+        class={cn(
+          'mobile-menu-panel', // FireStone: Target class for theme protection
+          'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
+          'border-border bg-background border-t'
+        )}
+        role="navigation"
+        inert
+        aria-label={t('nav.mobileNav', locale)}
+      >
+        <slot name="mobile-menu" />
+      </div>
+    ) : (
+      <div
+        id={menuId}
+        class={cn(
+          'mobile-menu-panel', // FireStone: Target class for theme protection
+          'hidden absolute inset-x-0 top-full shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] lg:hidden',
+          'border-border bg-background border-t'
+        )}
+        role="navigation"
+        inert
+        aria-label={t('nav.mobileNav', locale)}
+      >
+        <div class={cn('mobile-menu-body py-3', cn('mx-auto px-4', maxWidthClass))}>
+          <section class="mobile-menu-section">
+            <p class="mobile-menu-label">{t('nav.sectionNavigate', locale)}</p>
+            <ul class="space-y-0.5">
+              {navItems.map(({ label, href }, idx) => {
+                const active = isActive(href);
+                const resolvedHref = href.startsWith('#') && !isLandingPage ? `/${href}` : href;
+                return (
+                  <li>
+                    <a
+                      href={resolvedHref}
+                      class={cn(
+                        'mobile-menu-row mobile-menu-stagger group flex items-center gap-3 rounded-xl px-3 py-3 text-base transition-colors',
+                        active ? 'mobile-menu-row-active' : 'mobile-menu-row-inactive'
+                      )}
+                      style={`--stagger-index: ${idx}`}
+                      aria-current={active ? 'page' : undefined}
+                    >
+                      <span class="mobile-menu-tile">
+                        <Icon name={getNavIcon(href)} size="sm" />
+                      </span>
+                      <span class="flex-1">{label}</span>
+                      <Icon name="chevron-right" size="sm" class="mobile-menu-chevron" />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+
+          {showThemeSelector && (
+            <section class="mobile-menu-section">
+              <p class="mobile-menu-label">{t('nav.sectionTheme', locale)}</p>
+              <div
+                class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
+                style={`--stagger-index: ${navItems.length}`}
+              >
+                <span class="text-sm text-foreground-muted">{t('theme.colourTheme', locale)}</span>
+                <ThemeSelector />
+              </div>
+            </section>
+          )}
+
+          {showLanguageSwitcher && (
+            <section class="mobile-menu-section">
+              <p class="mobile-menu-label">{t('nav.sectionLanguage', locale)}</p>
+              <div
+                class="mobile-menu-stagger flex items-center justify-between rounded-xl px-3 py-2.5"
+                style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0)}`}
+              >
+                <span class="text-sm text-foreground-muted">
+                  {t('nav.sectionLanguage', locale)}
+                </span>
+                <LanguageSwitcher alternates={languageAlternates} />
+              </div>
+            </section>
+          )}
+
+          {mobileSocialLinks.length > 0 && (
+            <section class="mobile-menu-section">
+              <p class="mobile-menu-label">{t('footer.socialMedia', locale)}</p>
+              <div class="flex flex-wrap items-center gap-2 px-2 pt-1 pb-2">
+                {mobileSocialLinks.map((url, sIdx) => {
+                  const { icon, label } = getSocialIconData(url);
+                  return (
+                    <span
+                      class="mobile-menu-stagger mobile-menu-social inline-flex"
+                      style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0) + (showLanguageSwitcher ? 1 : 0) + sIdx}`}
+                    >
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        title={label}
+                        class="glass-panel hover-glow-box hover-solid-fill inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-strong text-foreground-muted transition-colors"
+                      >
+                        <Icon name={icon} size="md" />
+                      </a>
+                    </span>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {showCta && (
+            <div
+              class="mobile-menu-stagger mobile-menu-cta-wrap pt-2"
+              style={`--stagger-index: ${navItems.length + (showThemeSelector ? 1 : 0) + (showLanguageSwitcher ? 1 : 0) + mobileSocialLinks.length}`}
+            >
+              <Button
+                fullWidth
+                href={ctaHref}
+                target={ctaHref?.startsWith('http') ? '_blank' : undefined}
+              >
+                {cta.icon && <Icon name={cta.icon} size="sm" />}
+                {cta.label}
+                {cta.trailingIcon && <Icon name={cta.trailingIcon} size="sm" />}
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+</header>
+
+{showMobileMenu && layout !== 'minimal' && (
+  <div
+    id={`${menuId}-backdrop`}
+    class="mobile-menu-backdrop pointer-events-none fixed inset-0 z-40 bg-background/40 backdrop-blur-md lg:hidden"
+    aria-hidden="true"
+  />
+)}
 
 <script>
   import { headerMotionTiming } from '@/lib/headerMotion';
@@ -669,7 +670,10 @@ const buttonId = `${menuId}-button`;
 
       function fitMenu() {
         const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-        menu!.style.setProperty('--mobile-menu-height', `${Math.max(0, viewportHeight - header.getBoundingClientRect().bottom - 12)}px`);
+        menu!.style.setProperty(
+          '--mobile-menu-height',
+          `${Math.max(0, viewportHeight - header.getBoundingClientRect().bottom - 12)}px`
+        );
       }
 
       function animateMenu(opening: boolean) {
@@ -677,16 +681,24 @@ const buttonId = `${menuId}-button`;
         const style = getComputedStyle(menu!);
         const from = wasHidden
           ? { opacity: '0', clipPath: 'inset(0 0 100% 0)' }
-          : { opacity: style.opacity, clipPath: style.clipPath === 'none' ? 'inset(0 0 0% 0)' : style.clipPath };
+          : {
+              opacity: style.opacity,
+              clipPath: style.clipPath === 'none' ? 'inset(0 0 0% 0)' : style.clipPath,
+            };
         menuAnimation?.cancel();
         menu!.classList.remove('hidden');
         header.toggleAttribute('data-menu-expanded', opening);
         const timing = headerMotionTiming();
         // Reveal the panel without scaling its text or changing the page layout.
-        menuAnimation = menu!.animate([
-          from,
-          opening ? { opacity: '1', clipPath: 'inset(0 0 0% 0)' } : { opacity: '0', clipPath: 'inset(0 0 100% 0)' },
-        ], timing);
+        menuAnimation = menu!.animate(
+          [
+            from,
+            opening
+              ? { opacity: '1', clipPath: 'inset(0 0 0% 0)' }
+              : { opacity: '0', clipPath: 'inset(0 0 100% 0)' },
+          ],
+          timing
+        );
         return menuAnimation.finished;
       }
 
@@ -704,13 +716,16 @@ const buttonId = `${menuId}-button`;
         fitMenu();
         menu!.inert = false;
         menu!.dataset.menuState = 'open';
-        void animateMenu(true).then(() => {
-          if (isOpen) {
-            menuAnimation?.cancel();
-          }
-        }, () => {});
+        void animateMenu(true).then(
+          () => {
+            if (isOpen) {
+              menuAnimation?.cancel();
+            }
+          },
+          () => {}
+        );
         // A reversed close keeps the same DOM/CSS state; restart each stagger explicitly.
-        menu!.getAnimations({ subtree: true }).forEach(animation => {
+        menu!.getAnimations({ subtree: true }).forEach((animation) => {
           if (animation instanceof CSSAnimation && animation.animationName === 'mobileMenuItemIn') {
             animation.currentTime = 0;
             animation.play();
@@ -734,26 +749,41 @@ const buttonId = `${menuId}-button`;
         menu!.inert = true;
         backdrop?.removeAttribute('data-open');
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          socialExits = [...menu!.querySelectorAll<HTMLElement>('.mobile-menu-social')].reverse().map((item, index) => {
-            const style = getComputedStyle(item);
-            return item.animate([
-              { opacity: style.opacity, transform: style.transform },
-              { opacity: 0, transform: 'translateY(6px)' },
-            ], { duration: 600, delay: index * 75, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
-          });
+          socialExits = [...menu!.querySelectorAll<HTMLElement>('.mobile-menu-social')]
+            .reverse()
+            .map((item, index) => {
+              const style = getComputedStyle(item);
+              return item.animate(
+                [
+                  { opacity: style.opacity, transform: style.transform },
+                  { opacity: 0, transform: 'translateY(6px)' },
+                ],
+                {
+                  duration: 600,
+                  delay: index * 75,
+                  easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                  fill: 'forwards',
+                }
+              );
+            });
         }
-        void Promise.all([animateMenu(false), ...socialExits.map((animation) => animation.finished)]).then(() => {
-          if (isOpen) return;
-          menu!.classList.add('hidden');
-          delete menu!.dataset.menuState;
-          menuAnimation?.cancel();
-          socialExits.forEach((animation) => animation.cancel());
-          socialExits = [];
-          if (backdrop) {
-            backdrop.classList.add('pointer-events-none');
-          }
-
-        }, () => {});
+        void Promise.all([
+          animateMenu(false),
+          ...socialExits.map((animation) => animation.finished),
+        ]).then(
+          () => {
+            if (isOpen) return;
+            menu!.classList.add('hidden');
+            delete menu!.dataset.menuState;
+            menuAnimation?.cancel();
+            socialExits.forEach((animation) => animation.cancel());
+            socialExits = [];
+            if (backdrop) {
+              backdrop.classList.add('pointer-events-none');
+            }
+          },
+          () => {}
+        );
       }
 
       function toggle() {
@@ -771,7 +801,9 @@ const buttonId = `${menuId}-button`;
         if (matchMedia('(min-width: 1024px)').matches) close();
         else fitMenu();
       });
-      window.visualViewport?.addEventListener('resize', () => { if (isOpen) fitMenu(); });
+      window.visualViewport?.addEventListener('resize', () => {
+        if (isOpen) fitMenu();
+      });
 
       if (backdrop) {
         backdrop.addEventListener('click', close);
@@ -795,7 +827,7 @@ const buttonId = `${menuId}-button`;
 </script>
 
 <script>
-// Header scroll state and the optional legacy progress bar share one rAF.
+  // Header scroll state and the optional legacy progress bar share one rAF.
   // All layout reads are taken before any DOM writes. `docMaxScrollY` is
   // cached; the first read is deferred to a rAF so it runs AFTER first
   // paint instead of forcing a synchronous layout before it. ResizeObserver
@@ -881,7 +913,7 @@ const buttonId = `${menuId}-button`;
             requestAnimationFrame(updateProgress);
           }
         },
-        { passive: true },
+        { passive: true }
       );
       requestAnimationFrame(() => {
         updateDocMaxScrollY();
@@ -896,163 +928,178 @@ const buttonId = `${menuId}-button`;
 </script>
 
 <style is:global>
+  /* =========================================================================
+      FireStone: Progressive Background Blur (渐进式毛玻璃)
+      ========================================================================= */
+  /* Keep the original glass stable beneath the independently animated menu surface. */
+  header.hdr-progressive-glass {
+    background-color: transparent !important;
+    border: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
 
-/* =========================================================================
-    FireStone: Progressive Background Blur (渐进式毛玻璃)
-    ========================================================================= */
-/* Keep the original glass stable beneath the independently animated menu surface. */
-header.hdr-progressive-glass {
-  background-color: transparent !important;
-  border: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  box-shadow: none !important;
-}
+  header.hdr-blur-glass {
+    background: color-mix(in oklab, var(--color-background) 82%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
 
-header.hdr-blur-glass {
-  background: color-mix(in oklab, var(--color-background) 82%, transparent);
-  border-bottom: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-}
+  /* One solid surface fades over the existing transparent/glass header. */
+  .hdr-menu-surface {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: var(--background);
+    opacity: 0;
+    transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface {
+    opacity: 1;
+  }
+  header[data-search-active] {
+    z-index: 101;
+  }
+  header[data-search-active] > .hdr-inner {
+    pointer-events: auto;
+  }
+  header > .hdr-inner {
+    position: relative;
+    z-index: 1;
+  }
+  header > .mobile-menu-panel {
+    z-index: 2;
+  }
 
-/* One solid surface fades over the existing transparent/glass header. */
-.hdr-menu-surface {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: var(--background);
-  opacity: 0;
-  transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-header:is([data-menu-expanded], [data-search-expanded]) > .hdr-menu-surface { opacity: 1; }
-header[data-search-active] { z-index: 101; }
-header[data-search-active] > .hdr-inner { pointer-events: auto; }
-header > .hdr-inner { position: relative; z-index: 1; }
-header > .mobile-menu-panel { z-index: 2; }
+  .hdr-progressive-blur {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+  }
 
-.hdr-progressive-blur {
-  position: absolute;
-  inset: 0 0 auto;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-}
+  /* Menu contrast changes must not recolour the glass being revealed underneath. */
+  header.invert-section > .hdr-progressive-blur {
+    --color-background: var(--surface-invert);
+  }
 
-/* Menu contrast changes must not recolour the glass being revealed underneath. */
-header.invert-section > .hdr-progressive-blur {
-  --color-background: var(--surface-invert);
-}
-
-/* Keep opacity and masks on individual layers: a faded wrapper would become
-   a backdrop root and prevent its children from sampling the page behind it. */
-.hdr-progressive-blur-layer,
-.hdr-progressive-blur::after {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 400ms var(--ease-fluid), visibility 400ms;
-}
-
-.hdr-progressive-blur::after {
-  content: '';
-  border-radius: inherit;
-  /* Fade the tint directly so a filter cannot soften the viewport edges or
-     extend the color beyond the header's height. */
-  background: linear-gradient(
-    to bottom in oklab,
-    color-mix(in oklab, var(--color-background) 65%, transparent) 0%,
-    color-mix(in oklab, var(--color-background) 62%, transparent) 12%,
-    color-mix(in oklab, var(--color-background) 56%, transparent) 25%,
-    color-mix(in oklab, var(--color-background) 45%, transparent) 40%,
-    color-mix(in oklab, var(--color-background) 32%, transparent) 55%,
-    color-mix(in oklab, var(--color-background) 20%, transparent) 70%,
-    color-mix(in oklab, var(--color-background) 7%, transparent) 85%,
-    transparent 100%
-  );
-}
-
-.hdr-progressive-blur-layer {
-  -webkit-backdrop-filter: blur(var(--hdr-blur));
-  backdrop-filter: blur(var(--hdr-blur));
-  -webkit-mask-image: var(--hdr-blur-mask);
-  mask-image: var(--hdr-blur-mask);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
-
-/* Overlapping bands reproduce the reference's strong-to-soft blur profile. */
-.hdr-progressive-blur-layer--1 {
-  --hdr-blur: 4px;
-  --hdr-blur-mask: linear-gradient(to bottom, transparent 40%, black 60% 80%, transparent 100%);
-}
-
-.hdr-progressive-blur-layer--2 {
-  --hdr-blur: 6px;
-  --hdr-blur-mask: linear-gradient(to bottom, transparent 20%, black 40% 60%, transparent 80%);
-}
-
-.hdr-progressive-blur-layer--3 {
-  --hdr-blur: 10px;
-  --hdr-blur-mask: linear-gradient(to bottom, transparent 0%, black 20% 40%, transparent 60%);
-}
-
-.hdr-progressive-blur-layer--4 {
-  --hdr-blur: 18px;
-  --hdr-blur-mask: linear-gradient(to bottom, black 0% 20%, transparent 40%);
-}
-
-.hdr-progressive-blur-layer--5 {
-  --hdr-blur: 34px;
-  --hdr-blur-mask: linear-gradient(to bottom, black 0%, transparent 20%);
-}
-
-/* 当页面发生滚动时，渐进式模糊平滑显现 */
-header[data-scrolled] > .hdr-progressive-blur > .hdr-progressive-blur-layer,
-header[data-scrolled] > .hdr-progressive-blur::after {
-  opacity: 1;
-  visibility: visible;
-}
-
-@media (prefers-reduced-motion: reduce) {
+  /* Keep opacity and masks on individual layers: a faded wrapper would become
+     a backdrop root and prevent its children from sampling the page behind it. */
   .hdr-progressive-blur-layer,
   .hdr-progressive-blur::after {
-    transition: none;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 400ms var(--ease-fluid),
+      visibility 400ms;
   }
-}
 
-.mobile-menu-panel {
-  max-height: var(--mobile-menu-height, calc(100svh - 6rem));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
+  .hdr-progressive-blur::after {
+    content: '';
+    border-radius: inherit;
+    /* Fade the tint directly so a filter cannot soften the viewport edges or
+       extend the color beyond the header's height. */
+    background: linear-gradient(
+      to bottom in oklab,
+      color-mix(in oklab, var(--color-background) 65%, transparent) 0%,
+      color-mix(in oklab, var(--color-background) 62%, transparent) 12%,
+      color-mix(in oklab, var(--color-background) 56%, transparent) 25%,
+      color-mix(in oklab, var(--color-background) 45%, transparent) 40%,
+      color-mix(in oklab, var(--color-background) 32%, transparent) 55%,
+      color-mix(in oklab, var(--color-background) 20%, transparent) 70%,
+      color-mix(in oklab, var(--color-background) 7%, transparent) 85%,
+      transparent 100%
+    );
+  }
 
-.mobile-menu-backdrop {
-  opacity: 0;
-  transition: opacity 800ms var(--ease-default);
-  touch-action: none;
-}
+  .hdr-progressive-blur-layer {
+    -webkit-backdrop-filter: blur(var(--hdr-blur));
+    backdrop-filter: blur(var(--hdr-blur));
+    -webkit-mask-image: var(--hdr-blur-mask);
+    mask-image: var(--hdr-blur-mask);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
 
-.mobile-menu-backdrop[data-open] {
-  opacity: 1;
-}
+  /* Overlapping bands reproduce the reference's strong-to-soft blur profile. */
+  .hdr-progressive-blur-layer--1 {
+    --hdr-blur: 4px;
+    --hdr-blur-mask: linear-gradient(to bottom, transparent 40%, black 60% 80%, transparent 100%);
+  }
 
-@media (prefers-reduced-motion: reduce) {
-  .mobile-menu-backdrop { transition: none; }
-  .hdr-menu-surface { transition: none; }
-}
+  .hdr-progressive-blur-layer--2 {
+    --hdr-blur: 6px;
+    --hdr-blur-mask: linear-gradient(to bottom, transparent 20%, black 40% 60%, transparent 80%);
+  }
 
+  .hdr-progressive-blur-layer--3 {
+    --hdr-blur: 10px;
+    --hdr-blur-mask: linear-gradient(to bottom, transparent 0%, black 20% 40%, transparent 60%);
+  }
+
+  .hdr-progressive-blur-layer--4 {
+    --hdr-blur: 18px;
+    --hdr-blur-mask: linear-gradient(to bottom, black 0% 20%, transparent 40%);
+  }
+
+  .hdr-progressive-blur-layer--5 {
+    --hdr-blur: 34px;
+    --hdr-blur-mask: linear-gradient(to bottom, black 0%, transparent 20%);
+  }
+
+  /* 当页面发生滚动时，渐进式模糊平滑显现 */
+  header[data-scrolled] > .hdr-progressive-blur > .hdr-progressive-blur-layer,
+  header[data-scrolled] > .hdr-progressive-blur::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hdr-progressive-blur-layer,
+    .hdr-progressive-blur::after {
+      transition: none;
+    }
+  }
+
+  .mobile-menu-panel {
+    max-height: var(--mobile-menu-height, calc(100svh - 6rem));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-menu-backdrop {
+    opacity: 0;
+    transition: opacity 800ms var(--ease-default);
+    touch-action: none;
+  }
+
+  .mobile-menu-backdrop[data-open] {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu-backdrop {
+      transition: none;
+    }
+    .hdr-menu-surface {
+      transition: none;
+    }
+  }
 
   /* ============================================================
-     Mobile dropdown menu — sectioned layout with icons + socials
-     ============================================================ */
+       Mobile dropdown menu — sectioned layout with icons + socials
+       ============================================================ */
 
   .mobile-menu-body {
     display: flex;
@@ -1103,7 +1150,9 @@ header[data-scrolled] > .hdr-progressive-blur::after {
     border-radius: 0.625rem;
     background-color: color-mix(in oklch, var(--color-secondary) 70%, transparent);
     color: var(--color-foreground-muted);
-    transition: background-color 200ms ease, color 200ms ease;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
   }
   .mobile-menu-row-inactive:hover .mobile-menu-tile {
     background-color: var(--color-secondary);
@@ -1120,7 +1169,9 @@ header[data-scrolled] > .hdr-progressive-blur::after {
 
   .mobile-menu-chevron {
     opacity: 0.4;
-    transition: opacity 200ms ease, transform 200ms ease;
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
   }
   .mobile-menu-row:hover .mobile-menu-chevron {
     opacity: 0.8;
@@ -1136,7 +1187,6 @@ header[data-scrolled] > .hdr-progressive-blur::after {
     border-top: 1px solid color-mix(in oklch, var(--color-border) 60%, transparent);
   }
 
-
   @media (prefers-reduced-motion: no-preference) {
     [data-menu-state='open'] .mobile-menu-stagger {
       opacity: 0;
@@ -1146,9 +1196,9 @@ header[data-scrolled] > .hdr-progressive-blur::after {
   }
 
   /* End at `transform: none` (not translateY(0)) so each row drops its
-     stacking context after the entry animation. Otherwise the
-     ThemeModeDropdown panel's z-50 is trapped inside its row and the
-     colour-theme swatches in the next row paint through it. */
+       stacking context after the entry animation. Otherwise the
+       ThemeModeDropdown panel's z-50 is trapped inside its row and the
+       colour-theme swatches in the next row paint through it. */
   @keyframes mobileMenuItemIn {
     from {
       opacity: 0;
@@ -1161,34 +1211,34 @@ header[data-scrolled] > .hdr-progressive-blur::after {
   }
 
   /* While the theme-mode dropdown is open, promote its row to a positioned
-     stacking context above sibling rows. The row sits in a non-flex
-     <section>, so a bare `z-index` is inert — `position: relative` is what
-     lets the panel paint above the colour-theme swatches below it. */
+       stacking context above sibling rows. The row sits in a non-flex
+       <section>, so a bare `z-index` is inert — `position: relative` is what
+       lets the panel paint above the colour-theme swatches below it. */
   .mobile-menu-stagger:has(.ttg-panel:not(.hidden)) {
     position: relative;
     z-index: 60;
   }
 
   /* -----------------------------------------------------------------------
-     Secondary logo (Header)
-     ----------------------------------------------------------------------- */
+       Secondary logo (Header)
+       ----------------------------------------------------------------------- */
 
   /* Light-mode adaptation for legacy <img>-based secondary logos.
-     Chameleon-pattern SVGs (secondaryLogoSvg + fill="currentColor") don't
-     need this — they inherit text-foreground directly.
-     Keep this rule for backward compat with `secondaryLogo` (ImageMetadata). */
+       Chameleon-pattern SVGs (secondaryLogoSvg + fill="currentColor") don't
+       need this — they inherit text-foreground directly.
+       Keep this rule for backward compat with `secondaryLogo` (ImageMetadata). */
   html:not(.dark) .hdr-secondary-logo {
     filter: invert(1) hue-rotate(180deg);
   }
 
   /* =========================================================================
-     FireStone: Dropdown Panels Theme Protection
-     防止下拉菜单、搜索框和手机端菜单继承顶栏的 Invert (反色) 状态。
-     强行阻断 CSS 变量继承，确保所有面板永远读取真实的全局深浅模式。
-     ========================================================================= */
+       FireStone: Dropdown Panels Theme Protection
+       防止下拉菜单、搜索框和手机端菜单继承顶栏的 Invert (反色) 状态。
+       强行阻断 CSS 变量继承，确保所有面板永远读取真实的全局深浅模式。
+       ========================================================================= */
   header .ttg-panel,
   header .lang-panel,
-  header [id*="theme-dropdown"],
+  header [id*='theme-dropdown'],
   header dialog,
   header .mobile-menu-panel {
     /* 洗掉 .invert-section 带来的污染，恢复到 :root 全局变量 */
@@ -1210,17 +1260,17 @@ header[data-scrolled] > .hdr-progressive-blur::after {
     --color-primary-hover: var(--primary-hover);
     --color-primary-foreground: var(--primary-foreground);
     --color-ring: var(--ring);
-    
+
     /* 修正面板内部基准字体颜色 */
     color: var(--color-foreground);
   }
 
-/* =========================================================================
-     FireStone: Mobile Menu Open State Theme Protection & Progressive Glass Override
-     当移动端菜单展开时，Header 自动执行以下顶级动效：
-     1. 从 progressive 渐进透明无缝过渡到 solid 纯色背景 (防止与下方菜单割裂)
-     2. 自动临时关闭整个 Header 的 invert (反色) 模式，以保证对比度与可读性
-     ========================================================================= */
+  /* =========================================================================
+       FireStone: Mobile Menu Open State Theme Protection & Progressive Glass Override
+       当移动端菜单展开时，Header 自动执行以下顶级动效：
+       1. 从 progressive 渐进透明无缝过渡到 solid 纯色背景 (防止与下方菜单割裂)
+       2. 自动临时关闭整个 Header 的 invert (反色) 模式，以保证对比度与可读性
+       ========================================================================= */
 
   /* 1. 菜单激活时：重置 Header 的所有局部 CSS 变量，关闭反色逻辑 (de-invert) */
   header.invert-section:is([data-menu-expanded], [data-search-expanded]) {
@@ -1253,29 +1303,39 @@ header[data-scrolled] > .hdr-progressive-blur::after {
 
   @media screen {
     header > .hdr-inner :is(.search-trigger, .ttg-trigger, .hdr-hamburger, .hdr-invert-text) {
-      transition: var(--engine-transition), color 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+      transition:
+        var(--engine-transition),
+        color 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-    header > .hdr-inner .hdr-hamburger { color: var(--color-foreground); }
+    header > .hdr-inner .hdr-hamburger {
+      color: var(--color-foreground);
+    }
     /* Match the layer of the shared logo's important transition. */
     @layer utilities {
       header > .hdr-inner .hdr-logo-glow {
-        transition: filter 400ms var(--ease-fluid), transform 400ms var(--ease-fluid),
+        transition:
+          filter 400ms var(--ease-fluid),
+          transform 400ms var(--ease-fluid),
           color 800ms cubic-bezier(0.16, 1, 0.3, 1) !important;
       }
       @media (prefers-reduced-motion: reduce) {
-        header > .hdr-inner .hdr-logo-glow { transition: none !important; }
+        header > .hdr-inner .hdr-logo-glow {
+          transition: none !important;
+        }
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      header > .hdr-inner :is(.search-trigger, .ttg-trigger, .hdr-hamburger, .hdr-invert-text, .hdr-logo-glow) {
+      header
+        > .hdr-inner
+        :is(.search-trigger, .ttg-trigger, .hdr-hamburger, .hdr-invert-text, .hdr-logo-glow) {
         transition: none !important;
       }
     }
   }
 
   /* =======================================================================
-     FireStone: Mobile Logo Sequential Crossfade Animation
-     ======================================================================= */
+       FireStone: Mobile Logo Sequential Crossfade Animation
+       ======================================================================= */
   @media (max-width: 1023px) {
     .animate-logo-main {
       /* 总时长为 8s（每个 Logo 4s 周期） */
@@ -1296,30 +1356,54 @@ header[data-scrolled] > .hdr-progressive-blur::after {
     }
   }
 
-  /* 
-     10秒无缝循环设计 (一个完全淡出后，另一个立刻淡入，无多余留白):
-     0% - 40% (0s-4.0s): 主Logo停留显示
-     40% - 45% (4.0s-4.5s): 主Logo平滑淡出
-     45% - 50% (4.5s-5.0s): 副Logo马上平滑淡入
-     50% - 90% (5.0s-9.0s): 副Logo停留显示
-     90% - 95% (9.0s-9.5s): 副Logo平滑淡出
-     95% - 100% (9.5s-10s): 主Logo马上平滑淡入 (周期无缝闭环)
-  */
+  /*
+       10秒无缝循环设计 (一个完全淡出后，另一个立刻淡入，无多余留白):
+       0% - 40% (0s-4.0s): 主Logo停留显示
+       40% - 45% (4.0s-4.5s): 主Logo平滑淡出
+       45% - 50% (4.5s-5.0s): 副Logo马上平滑淡入
+       50% - 90% (5.0s-9.0s): 副Logo停留显示
+       90% - 95% (9.0s-9.5s): 副Logo平滑淡出
+       95% - 100% (9.5s-10s): 主Logo马上平滑淡入 (周期无缝闭环)
+    */
   @keyframes logo-fade-main {
-    0%, 40%   { opacity: 1; pointer-events: auto; }
-    45%, 95%  { opacity: 0; pointer-events: none; }
-    100%      { opacity: 1; pointer-events: auto; }
+    0%,
+    40% {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    45%,
+    95% {
+      opacity: 0;
+      pointer-events: none;
+    }
+    100% {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
   @keyframes logo-fade-secondary {
-    0%, 45%   { opacity: 0; pointer-events: none; }
-    50%, 90%  { opacity: 1; pointer-events: auto; }
-    95%, 100% { opacity: 0; pointer-events: none; }
+    0%,
+    45% {
+      opacity: 0;
+      pointer-events: none;
+    }
+    50%,
+    90% {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    95%,
+    100% {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
   /* 优雅降级：遵循系统的减弱动态效果 (Reduced Motion) 设置 */
   @media (prefers-reduced-motion: reduce) {
-    .animate-logo-main, .animate-logo-secondary {
+    .animate-logo-main,
+    .animate-logo-secondary {
       animation: none !important;
     }
     @media (max-width: 1023px) {

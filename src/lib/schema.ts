@@ -34,7 +34,9 @@ export function createPersonSchema(): WithContext<Person> {
     jobTitle: siteConfig.description,
     url: siteConfig.url,
     email: siteConfig.email,
-    ...(siteConfig.authorImage ? { image: new URL(siteConfig.authorImage, siteConfig.url).toString() } : {}),
+    ...(siteConfig.authorImage
+      ? { image: new URL(siteConfig.authorImage, siteConfig.url).toString() }
+      : {}),
     ...(siteConfig.address?.city
       ? {
           address: {
@@ -60,7 +62,9 @@ export function createProfessionalServiceSchema(): WithContext<LocalBusiness> {
     url: siteConfig.url,
     email: siteConfig.email,
     ...(siteConfig.phone ? { telephone: siteConfig.phone } : {}),
-    ...(siteConfig.authorImage ? { image: new URL(siteConfig.authorImage, siteConfig.url).toString() } : {}),
+    ...(siteConfig.authorImage
+      ? { image: new URL(siteConfig.authorImage, siteConfig.url).toString() }
+      : {}),
     ...(siteConfig.address?.city
       ? {
           address: {

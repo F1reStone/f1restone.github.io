@@ -68,30 +68,20 @@ const checkboxId = id || generateId('checkbox');
     </div>
 
     <!-- Label and description -->
-    {
-      (label || description) && (
-        <div class="grid gap-0.5 leading-tight">
-          {label && (
-            <span class="text-sm font-medium text-foreground">
-              {label}
-            </span>
-          )}
-          {description && (
-            <span
-              id={`${checkboxId}-description`}
-              class="text-xs text-foreground-subtle leading-normal"
-            >
-              {description}
-            </span>
-          )}
-        </div>
-      )
-    }
+    {(label || description) && (
+      <div class="grid gap-0.5 leading-tight">
+        {label && <span class="text-sm font-medium text-foreground">{label}</span>}
+        {description && (
+          <span
+            id={`${checkboxId}-description`}
+            class="text-xs text-foreground-subtle leading-normal"
+          >
+            {description}
+          </span>
+        )}
+      </div>
+    )}
   </label>
 
-  {
-    error && (
-      <p class="mt-2 text-sm text-destructive pl-[30px]">{error}</p>
-    )
-  }
+  {error && <p class="mt-2 text-sm text-destructive pl-[30px]">{error}</p>}
 </div>

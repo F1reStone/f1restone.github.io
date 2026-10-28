@@ -34,9 +34,7 @@ interface UidEntryLike {
  * id must point to a single post per locale (the same uid across *different*
  * locales is expected — those are translations of one logical post).
  */
-export function buildUidIndex(
-  posts: UidEntryLike[]
-): Map<string, Map<string, ResolvedPost>> {
+export function buildUidIndex(posts: UidEntryLike[]): Map<string, Map<string, ResolvedPost>> {
   const index = new Map<string, Map<string, ResolvedPost>>();
   for (const post of posts) {
     const { uid, locale, title } = post.data;
@@ -167,13 +165,15 @@ export async function resolvePostUrl(
 
   const resolved = byLocale.get(locale) ?? byLocale.get(defaultLocale);
   if (!resolved) {
-    throw new Error(
-      `<PostLink>: canonical id "${uid}" has no variant for locale "${locale}".`
-    );
+    throw new Error(`<PostLink>: canonical id "${uid}" has no variant for locale "${locale}".`);
   }
 
   return {
-    url: withLocaleFallback(localizedPath(`/blog/${resolved.slug}`, byLocale.has(locale) ? locale : defaultLocale), byLocale.has(locale) ? locale : defaultLocale, locale),
+    url: withLocaleFallback(
+      localizedPath(`/blog/${resolved.slug}`, byLocale.has(locale) ? locale : defaultLocale),
+      byLocale.has(locale) ? locale : defaultLocale,
+      locale
+    ),
     title: resolved.title,
   };
 }

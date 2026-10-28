@@ -1,19 +1,16 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
-export const accordionItemVariants = cva(
-  'border-b border-border',
-  {
-    variants: {
-      variant: {
-        default: '',
-        card: 'border rounded-lg mb-2 last:mb-0 px-4',
-      },
+export const accordionItemVariants = cva('border-b border-border', {
+  variants: {
+    variant: {
+      default: '',
+      card: 'border rounded-lg mb-2 last:mb-0 px-4',
     },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 export const accordionTriggerVariants = cva(
   [

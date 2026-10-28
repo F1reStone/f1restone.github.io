@@ -3,7 +3,12 @@ import { generateOgImages } from './scripts/og-images.mjs';
 import { generateFaviconImages } from './scripts/favicon-images.mjs';
 import { indexablePages } from './scripts/indexable-pages.mjs';
 import { readdir, readFile } from 'node:fs/promises';
-import { canonicalOf, jsonLdUrlOf, siteUrlDisagreement, disagreementMessage } from './scripts/site-url-agreement.mjs';
+import {
+  canonicalOf,
+  jsonLdUrlOf,
+  siteUrlDisagreement,
+  disagreementMessage,
+} from './scripts/site-url-agreement.mjs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, envField } from 'astro/config';
@@ -110,7 +115,6 @@ function verifySiteUrl() {
 
           const found = siteUrlDisagreement(html);
           if (found) throw new Error(disagreementMessage(page.replace(`${root}`, ''), found));
-
         }
 
         logger.info(`checked canonical and JSON-LD site addresses across ${pages.length} pages`);
@@ -128,7 +132,7 @@ export default defineConfig({
   //adapter: isNetlify ? netlify() : vercel(),
   //site: process.env.SITE_URL || 'https://fire-stone.co/',
   site: process.env.SITE_URL || 'https://fire-stone.co/',
-  base: '/',// FireStone: Adapt for GitHub Pages deployment.
+  base: '/', // FireStone: Adapt for GitHub Pages deployment.
   ...(astroI18nOptions ? { i18n: astroI18nOptions } : {}),
 
   // Astro 7 changed the default to `jsx`, which strips whitespace between
@@ -140,7 +144,6 @@ export default defineConfig({
   // Do not change this to `true` unless you have a specific reason to preserve whitespace.
   compressHTML: 'jsx',
 
-
   build: {
     inlineStylesheets: 'always',
   },
@@ -148,20 +151,65 @@ export default defineConfig({
   env: {
     schema: {
       SITE_URL: envField.string({ context: 'server', access: 'public', optional: true }),
-      PUBLIC_GA_MEASUREMENT_ID: envField.string({ context: 'client', access: 'public', optional: true }),
+      PUBLIC_GA_MEASUREMENT_ID: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+      }),
       PUBLIC_GTM_ID: envField.string({ context: 'client', access: 'public', optional: true }),
-      PUBLIC_UMAMI_WEBSITE_ID: envField.string({ context: 'client', access: 'public', optional: true }),
-      PUBLIC_UMAMI_SRC: envField.string({ context: 'client', access: 'public', default: 'https://cloud.umami.is/script.js' }),
+      PUBLIC_UMAMI_WEBSITE_ID: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+      }),
+      PUBLIC_UMAMI_SRC: envField.string({
+        context: 'client',
+        access: 'public',
+        default: 'https://cloud.umami.is/script.js',
+      }),
       RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
       RESEND_FROM_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       NEWSLETTER_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
-      GOOGLE_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
-      BING_SITE_VERIFICATION: envField.string({ context: 'server', access: 'public', optional: true }),
-      REPOSITORY_ID: envField.string({ context: 'server', access: 'public', optional: true, default: ''}),
-      CATEGORY_ID: envField.string({ context: 'server', access: 'public', optional: true, default: '' }),
-      PUBLIC_GOOGLE_MAPS_API_KEY: envField.string({ context: 'client', access: 'public', optional: true, default: '' }),
-      PUBLIC_CONSENT_ENABLED: envField.boolean({ context: 'client', access: 'public', optional: true, default: false }),
-      PUBLIC_PRIVACY_POLICY_URL: envField.string({ context: 'client', access: 'public', optional: true, default: '' }),
+      GOOGLE_SITE_VERIFICATION: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+      }),
+      BING_SITE_VERIFICATION: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+      }),
+      REPOSITORY_ID: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+        default: '',
+      }),
+      CATEGORY_ID: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+        default: '',
+      }),
+      PUBLIC_GOOGLE_MAPS_API_KEY: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+        default: '',
+      }),
+      PUBLIC_CONSENT_ENABLED: envField.boolean({
+        context: 'client',
+        access: 'public',
+        optional: true,
+        default: false,
+      }),
+      PUBLIC_PRIVACY_POLICY_URL: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
+        default: '',
+      }),
     },
   },
 
@@ -187,10 +235,15 @@ export default defineConfig({
     sitemap({ filter: searchablePages.filter }),
     icon(),
     pagefind(),
-    { name: 'firestone-og-images', hooks: { 'astro:build:done': async ({ dir, logger }) => {
-      logger.info(`generated ${await generateOgImages(fileURLToPath(dir))} PNG sharing images`);
-      await generateFaviconImages(fileURLToPath(dir));
-    } } },
+    {
+      name: 'firestone-og-images',
+      hooks: {
+        'astro:build:done': async ({ dir, logger }) => {
+          logger.info(`generated ${await generateOgImages(fileURLToPath(dir))} PNG sharing images`);
+          await generateFaviconImages(fileURLToPath(dir));
+        },
+      },
+    },
     verifySiteUrl(),
   ],
 
@@ -208,5 +261,4 @@ export default defineConfig({
       wrap: true,
     },
   },
-
 });

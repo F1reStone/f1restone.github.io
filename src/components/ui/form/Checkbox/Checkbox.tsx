@@ -8,7 +8,15 @@ interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'typ
   error?: string;
 }
 
-export function Checkbox({ ref, label, description, error, className, id, ...props }: CheckboxProps) {
+export function Checkbox({
+  ref,
+  label,
+  description,
+  error,
+  className,
+  id,
+  ...props
+}: CheckboxProps) {
   const generatedId = useId();
   const checkboxId = id || generatedId;
 
@@ -17,13 +25,13 @@ export function Checkbox({ ref, label, description, error, className, id, ...pro
       <label
         htmlFor={checkboxId}
         className={cn(
-          'relative flex items-start gap-3 cursor-pointer',
+          'relative flex cursor-pointer items-start gap-3',
           'select-none',
           props.disabled && 'cursor-not-allowed opacity-50'
         )}
       >
         {/* Custom checkbox visual */}
-        <div className="relative flex items-center justify-center mt-0.5">
+        <div className="relative mt-0.5 flex items-center justify-center">
           <input
             ref={ref}
             type="checkbox"
@@ -37,10 +45,10 @@ export function Checkbox({ ref, label, description, error, className, id, ...pro
           <div
             className={cn(
               'h-[18px] w-[18px] shrink-0 rounded-[5px]',
-              'border-2 border-border',
+              'border-border border-2',
               'bg-background',
               'transition-all duration-150 ease-out',
-              'peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background',
+              'peer-focus-visible:ring-ring peer-focus-visible:ring-offset-background peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2',
               'peer-checked:bg-foreground peer-checked:border-foreground',
               'peer-hover:border-foreground-muted',
               'peer-checked:peer-hover:bg-foreground/90',
@@ -50,10 +58,10 @@ export function Checkbox({ ref, label, description, error, className, id, ...pro
           {/* Checkmark icon */}
           <svg
             className={cn(
-              'absolute h-3 w-3 text-background',
-              'opacity-0 scale-50',
+              'text-background absolute h-3 w-3',
+              'scale-50 opacity-0',
               'transition-all duration-150 ease-out',
-              'peer-checked:opacity-100 peer-checked:scale-100'
+              'peer-checked:scale-100 peer-checked:opacity-100'
             )}
             viewBox="0 0 12 12"
             fill="none"
@@ -69,15 +77,11 @@ export function Checkbox({ ref, label, description, error, className, id, ...pro
         {/* Label and description */}
         {(label || description) && (
           <div className="grid gap-0.5 leading-tight">
-            {label && (
-              <span className="text-sm font-medium text-foreground">
-                {label}
-              </span>
-            )}
+            {label && <span className="text-foreground text-sm font-medium">{label}</span>}
             {description && (
               <span
                 id={`${checkboxId}-description`}
-                className="text-xs text-foreground-subtle leading-normal"
+                className="text-foreground-subtle text-xs leading-normal"
               >
                 {description}
               </span>
@@ -86,9 +90,7 @@ export function Checkbox({ ref, label, description, error, className, id, ...pro
         )}
       </label>
 
-      {error && (
-        <p className="mt-2 text-sm text-destructive pl-[30px]">{error}</p>
-      )}
+      {error && <p className="text-destructive mt-2 pl-[30px] text-sm">{error}</p>}
     </div>
   );
 }

@@ -1,8 +1,8 @@
 ---
 /**
- * Project listing card. 
+ * Project listing card.
  * FireStone Refactored: Interactive Glass Reveal Card (Fluid Engine)
- * 
+ *
  * - Full background image with smart hover-blur and gradient transition.
  * - Interactive CSS Grid `1fr` expansion for sliding content with fluid staggered enter/exit.
  * - CSS Mask-Image injection for automatic dark/light mode logo adaptation.
@@ -35,7 +35,11 @@ const { data } = project;
   <Card
     variant="default"
     padding="none"
-    href={data.placeholder ? undefined : withLocaleFallback(getProjectUrl(project.id, data.locale), data.locale, locale)}
+    href={
+      data.placeholder
+        ? undefined
+        : withLocaleFallback(getProjectUrl(project.id, data.locale), data.locale, locale)
+    }
     class="group relative overflow-hidden aspect-[4/3] sm:aspect-[16/10] lg:aspect-video bg-background-tertiary border-border/50 hover-glow-box block w-full h-full"
   >
     <!-- 1. 物理层：背景大图 / 占位符 -->
@@ -68,11 +72,9 @@ const { data } = project;
 
     <!-- 5. 内容层：精确控制的防裁切出入场布局 -->
     <div class="absolute inset-0 flex flex-col justify-end p-5 sm:p-7 z-10 pointer-events-none">
-      
       <!-- FireStone 修复：移除了多余的 gap-2.5 和生硬的 -translate-y-1，
           让内容的上升完全由下方 Grid 高度展开自然推起，极其丝滑！ -->
       <div class="flex flex-col">
-        
         <!-- Logo 或 标题回退 -->
         <div class="origin-left">
           {data.logo ? (
@@ -84,29 +86,41 @@ const { data } = project;
             />
           ) : (
             /* FireStone 修复：放大了回退文字标题字号 */
-            <h3 class="font-display text-4xl sm:text-3xl font-bold text-foreground drop-shadow-md tracking-tight leading-[0.75]">{data.title}</h3>
+            <h3 class="font-display text-4xl sm:text-3xl font-bold text-foreground drop-shadow-md tracking-tight leading-[0.75]">
+              {data.title}
+            </h3>
           )}
         </div>
 
         <!-- 动态推挤内容区 (CSS Grid 1fr 魔法) -->
         <div class="project-desc-wrapper">
           <div class="overflow-hidden">
-            
             <div class="project-desc-inner pt-3 flex flex-col gap-2.5">
-              
               <!-- Tags & Year -->
               <div class="flex items-center flex-wrap gap-2 text-[9px] sm:text-xs tracking-[0.1em] font-mono text-foreground-subtle uppercase">
                 {data.tags && data.tags.length > 0 && (
                   <div class="flex items-center gap-1.5">
                     {data.tags.map((tag, i) => (
                       <>
-                        {i > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                        {i > 0 && (
+                          <span
+                            class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0"
+                            aria-hidden="true"
+                          />
+                        )}
                         <span class="text-foreground-muted font-medium">{tag}</span>
                       </>
                     ))}
                   </div>
                 )}
-                {data.tags?.length && data.year && <span class="text-foreground-subtle/50 select-none shrink-0 mx-1" aria-hidden="true" >/</span>}
+                {data.tags?.length && data.year && (
+                  <span
+                    class="text-foreground-subtle/50 select-none shrink-0 mx-1"
+                    aria-hidden="true"
+                  >
+                    /
+                  </span>
+                )}
                 {data.year && <span class="font-semibold text-foreground-muted">{data.year}</span>}
               </div>
 
@@ -114,9 +128,7 @@ const { data } = project;
               <p class="text-[13px] sm:text-sm text-foreground-secondary leading-relaxed line-clamp-2 sm:line-clamp-3">
                 {data.description}
               </p>
-
             </div>
-            
           </div>
         </div>
       </div>
@@ -128,12 +140,14 @@ const { data } = project;
   /* =========================================================================
      FireStone: Project Card Interactive Overlay & Animation Engine
      ========================================================================= */
-  
+
   /* 1. 纯毛玻璃层 (无 Opacity 动画，彻底根除 WebKit/Blink 模糊失效 Bug) */
   .project-card-blur {
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
-    transition: backdrop-filter 500ms var(--ease-fluid), -webkit-backdrop-filter 500ms var(--ease-fluid);
+    transition:
+      backdrop-filter 500ms var(--ease-fluid),
+      -webkit-backdrop-filter 500ms var(--ease-fluid);
     mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
     -webkit-mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
   }
@@ -146,9 +160,9 @@ const { data } = project;
   /* 2. 纯强化渐变层 (配合 HTML 中的 translateY 实现向上生长) */
   .project-card-gradient {
     background: linear-gradient(
-      to top, 
-      color-mix(in oklch, var(--color-background) 95%, transparent) 0%, 
-      color-mix(in oklch, var(--color-background) 65%, transparent) 50%, 
+      to top,
+      color-mix(in oklch, var(--color-background) 95%, transparent) 0%,
+      color-mix(in oklch, var(--color-background) 65%, transparent) 50%,
       transparent 100%
     );
     mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);

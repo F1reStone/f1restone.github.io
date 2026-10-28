@@ -14,7 +14,14 @@
  */
 import { t, getLocaleFromPath } from '@/i18n';
 const locale = getLocaleFromPath(Astro.originPathname);
-const labels = { system: t('theme.systemLabel', locale), light: t('theme.lightLabel', locale), dark: t('theme.darkLabel', locale), title: t('common.themeModeTitle', locale), systemLight: t('theme.systemLight', locale), systemDark: t('theme.systemDark', locale) };
+const labels = {
+  system: t('theme.systemLabel', locale),
+  light: t('theme.lightLabel', locale),
+  dark: t('theme.darkLabel', locale),
+  title: t('common.themeModeTitle', locale),
+  systemLight: t('theme.systemLight', locale),
+  systemDark: t('theme.systemDark', locale),
+};
 import { cn } from '@/lib/cn';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 
@@ -62,7 +69,13 @@ const { class: className } = Astro.props;
     role="menu"
     aria-label={t('theme.modeLabel', locale)}
   >
-    <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="system">
+    <button
+      type="button"
+      class="ttg-row"
+      role="menuitemradio"
+      aria-checked="false"
+      data-mode="system"
+    >
       <span class="ttg-row-icon">
         <Icon name="sun-moon" size="sm" />
       </span>
@@ -70,32 +83,74 @@ const { class: className } = Astro.props;
         <span class="ttg-row-title">{labels.system}</span>
         <span class="ttg-system-sub">{labels.systemLight}</span>
       </span>
-      <svg class="ttg-check h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5"/>
+      <svg
+        class="ttg-check h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M20 6L9 17l-5-5" />
       </svg>
     </button>
 
-    <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="light">
+    <button
+      type="button"
+      class="ttg-row"
+      role="menuitemradio"
+      aria-checked="false"
+      data-mode="light"
+    >
       <span class="ttg-row-icon">
         <Icon name="sun" size="sm" />
       </span>
       <span class="ttg-row-label">
         <span class="ttg-row-title">{labels.light}</span>
       </span>
-      <svg class="ttg-check h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5"/>
+      <svg
+        class="ttg-check h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M20 6L9 17l-5-5" />
       </svg>
     </button>
 
-    <button type="button" class="ttg-row" role="menuitemradio" aria-checked="false" data-mode="dark">
+    <button
+      type="button"
+      class="ttg-row"
+      role="menuitemradio"
+      aria-checked="false"
+      data-mode="dark"
+    >
       <span class="ttg-row-icon">
         <Icon name="moon" size="sm" />
       </span>
       <span class="ttg-row-label">
         <span class="ttg-row-title">{labels.dark}</span>
       </span>
-      <svg class="ttg-check h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M20 6L9 17l-5-5"/>
+      <svg
+        class="ttg-check h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M20 6L9 17l-5-5" />
       </svg>
     </button>
   </div>
@@ -104,16 +159,20 @@ const { class: className } = Astro.props;
 <style>
   /* Trigger icons: hidden by default, exactly one shown via [data-theme-mode]
      on <html> (set synchronously by the inline bootstrap before paint). */
-  .ttg-trigger .ttg-icon { display: none; }
+  .ttg-trigger .ttg-icon {
+    display: none;
+  }
 
   :global(html[data-theme-mode='system']) .ttg-trigger .ttg-icon-system,
-  :global(html[data-theme-mode='light'])  .ttg-trigger .ttg-icon-light,
-  :global(html[data-theme-mode='dark'])   .ttg-trigger .ttg-icon-dark {
+  :global(html[data-theme-mode='light']) .ttg-trigger .ttg-icon-light,
+  :global(html[data-theme-mode='dark']) .ttg-trigger .ttg-icon-dark {
     display: block;
   }
 
   /* Fallback in case <html> is missing the attribute (script disabled / pre-bootstrap) */
-  :global(html:not([data-theme-mode])) .ttg-trigger .ttg-icon-system { display: block; }
+  :global(html:not([data-theme-mode])) .ttg-trigger .ttg-icon-system {
+    display: block;
+  }
 
   /* Menu rows */
   .ttg-row {
@@ -172,14 +231,18 @@ const { class: className } = Astro.props;
   }
 
   /* Show sub-line only on the System row */
-  .ttg-row:not([data-mode='system']) .ttg-system-sub { display: none; }
+  .ttg-row:not([data-mode='system']) .ttg-system-sub {
+    display: none;
+  }
 
   /* Checkmark only visible on the active row */
   .ttg-check {
     display: none;
     color: var(--color-foreground);
   }
-  .ttg-row[aria-checked='true'] .ttg-check { display: block; }
+  .ttg-row[aria-checked='true'] .ttg-check {
+    display: block;
+  }
 </style>
 
 <script>
@@ -192,7 +255,9 @@ const { class: className } = Astro.props;
     try {
       const v = localStorage.getItem(STORAGE_KEY);
       if (v === 'system' || v === 'light' || v === 'dark') return v;
-    } catch { /* private mode */ }
+    } catch {
+      /* private mode */
+    }
     return 'system';
   }
 
@@ -280,7 +345,11 @@ const { class: className } = Astro.props;
         row.addEventListener('click', () => {
           const next = (row.dataset.mode as Mode) || 'system';
           if (VALID_MODES.indexOf(next) === -1) return;
-          try { localStorage.setItem(STORAGE_KEY, next); } catch { /* private mode */ }
+          try {
+            localStorage.setItem(STORAGE_KEY, next);
+          } catch {
+            /* private mode */
+          }
           applyMode(next);
           syncAllRows(next);
           syncAllTriggerLabels(next);

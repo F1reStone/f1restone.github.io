@@ -20,14 +20,7 @@ interface Props {
   class?: string;
 }
 
-const {
-  label,
-  value,
-  trend,
-  trendText,
-  icon,
-  class: className,
-} = Astro.props;
+const { label, value, trend, trendText, icon, class: className } = Astro.props;
 
 const trendColors = {
   up: 'text-[var(--success-strong)]',

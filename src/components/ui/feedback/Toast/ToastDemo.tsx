@@ -7,7 +7,7 @@ function ToastButtons() {
     <div className="flex flex-wrap gap-3">
       <button
         type="button"
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+        className="border-border bg-background text-foreground hover:bg-secondary inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors"
         onClick={() =>
           toast({
             title: '默认提示',

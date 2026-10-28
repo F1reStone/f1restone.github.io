@@ -24,7 +24,16 @@ export default [
     },
   },
   {
-    ignores: ['test-results/', 'dist/', 'node_modules/', '.astro/', '.vercel/', '.netlify/', 'public/pagefind/', '.agents/'],
+    ignores: [
+      'test-results/',
+      'dist/',
+      'node_modules/',
+      '.astro/',
+      '.vercel/',
+      '.netlify/',
+      'public/pagefind/',
+      '.agents/',
+    ],
   },
   {
     rules: {

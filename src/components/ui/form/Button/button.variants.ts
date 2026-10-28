@@ -15,19 +15,16 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-foreground text-background hover-glow-box',
+        primary: 'bg-foreground text-background hover-glow-box',
         secondary:
           'bg-secondary text-secondary-foreground border border-border/50 hover-glow-box hover-solid-fill',
-        outline:
-          'glass-panel text-foreground hover-solid-fill hover-glow-outline',
+        outline: 'glass-panel text-foreground hover-solid-fill hover-glow-outline',
         'brand-outline':
           'bg-transparent text-brand-700 border border-brand-500/40 hover:bg-brand-500/10 hover:border-brand-500/80 hover-glow-box dark:text-brand-400',
-        ghost:
-          'bg-transparent text-foreground-secondary hover-glow-box hover-solid-fill',
+        ghost: 'bg-transparent text-foreground-secondary hover-glow-box hover-solid-fill',
         destructive:
           'bg-destructive text-destructive-foreground hover-glow-box hover-glow-outline hover:bg-destructive/80',
-        link: 
+        link:
           /* FireStone: 文本按钮仅使用发光，不能使用 weight-shift，防止破坏内部 Icon Flex 布局 */
           'text-foreground-secondary hover:text-foreground focus-visible:text-foreground hover-glow-text',
       },

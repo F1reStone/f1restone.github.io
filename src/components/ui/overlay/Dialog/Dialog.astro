@@ -72,10 +72,7 @@ const sizes = {
       {(title || description) && (
         <div class="p-6 pb-0">
           {title && (
-            <h2
-              id={`${id}-title`}
-              class="text-xl font-bold tracking-tight text-foreground pr-8"
-            >
+            <h2 id={`${id}-title`} class="text-xl font-bold tracking-tight text-foreground pr-8">
               {title}
             </h2>
           )}
@@ -223,4 +220,3 @@ const sizes = {
   initDialogs();
   document.addEventListener('astro:page-load', initDialogs);
 </script>
-

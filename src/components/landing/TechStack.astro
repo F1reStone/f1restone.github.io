@@ -1,7 +1,7 @@
 ---
 /**
  * TechStack — responsive stack showcase
- * FireStone Refactored: Removed mobile static 2x2 grid fallback. 
+ * FireStone Refactored: Removed mobile static 2x2 grid fallback.
  * Now enforcing the highly-performant double-row marquee across ALL breakpoints.
  */
 import Badge from '@/components/ui/data-display/Badge/Badge.astro';
@@ -21,13 +21,14 @@ const bgClass = background === 'primary' ? 'bg-background' : 'bg-background-seco
 
 <section class={`${bgClass} py-[var(--space-section-md)] overflow-hidden`}>
   <div class="mx-auto max-w-8xl px-6 flex flex-col gap-8 lg:gap-12">
-    
     {(badge || title || description) && (
       <div class="flex flex-col items-center gap-4 text-center" data-reveal>
         {(badge || title) && (
           <div class="flex flex-col items-center gap-6">
             {badge && (
-              <Badge variant="brand" pill>{badge}</Badge>
+              <Badge variant="brand" pill>
+                {badge}
+              </Badge>
             )}
             {title && (
               <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">{title}</h2>
@@ -43,6 +44,5 @@ const bgClass = background === 'primary' ? 'bg-background' : 'bg-background-seco
     <div class="w-full mt-4" data-reveal data-reveal-delay="1">
       <StackMarquee duration={70} />
     </div>
-
   </div>
 </section>

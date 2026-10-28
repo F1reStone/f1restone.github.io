@@ -5,8 +5,6 @@ import { getPublishedPosts, getPostUrl, getRssUrl } from '@/lib/blog';
 import { getRoutableProjects, getProjectUrl } from '@/lib/projects';
 import { getNavItems } from '@/config/nav.config';
 
-
-
 export const GET: APIRoute = async ({ site }) => {
   const base = (site?.toString() || siteConfig.url).replace(/\/$/, '');
 
@@ -18,20 +16,25 @@ export const GET: APIRoute = async ({ site }) => {
 
   const postLines = [...posts]
     .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
-    .map((post) => line(post.data.title, `${base}${getPostUrl(post.id, defaultLocale)}`, post.data.description))
+    .map((post) =>
+      line(post.data.title, `${base}${getPostUrl(post.id, defaultLocale)}`, post.data.description)
+    )
     .join('\n');
 
   const projectLines = [...projects]
     .sort((a, b) => a.data.order - b.data.order)
     .map((project) =>
-      line(project.data.title, `${base}${getProjectUrl(project.id, defaultLocale)}`, project.data.description)
+      line(
+        project.data.title,
+        `${base}${getProjectUrl(project.id, defaultLocale)}`,
+        project.data.description
+      )
     )
     .join('\n');
 
   const pageLines = getNavItems(defaultLocale)
     .filter((item) => !item.external)
     .map((item) => line(item.label, `${base}${item.href}`));
-
 
   const sections = [
     `# ${siteConfig.name}`,

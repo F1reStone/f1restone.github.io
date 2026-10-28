@@ -18,9 +18,7 @@ describe('collectSlugRecords', () => {
 
   it('maps pages to /<slug> at the site root', () => {
     const records = collectSlugRecords([], [post('en/about')]);
-    expect(records).toEqual([
-      { source: 'pages: en/about', locale: 'en', path: '/about' },
-    ]);
+    expect(records).toEqual([{ source: 'pages: en/about', locale: 'en', path: '/about' }]);
   });
 
   it('keeps nested slugs intact after the locale prefix', () => {

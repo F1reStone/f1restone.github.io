@@ -345,11 +345,7 @@
           "Amateur Tech Artist",
           "THE FINALS Player"
         ],
-        "typingWordsMobile": [
-          "Amateur Designer",
-          "Amateur Developer",
-          "Content Creator"
-        ],
+        "typingWordsMobile": ["Amateur Designer", "Amateur Developer", "Content Creator"],
         "description": "A personal website of an amateur developer, designer, and content creator."
       }
     },

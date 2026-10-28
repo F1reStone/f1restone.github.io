@@ -16,11 +16,7 @@ import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 import siteConfig from '@/config/site.config';
 import { getProjectOgPath } from '@/lib/og';
 import { getLocaleFromPath, localizedPath, getLocales, t } from '@/i18n';
-import {
-  getProjectSlug,
-  getProjectUrl,
-  getProjectTranslations,
-} from '@/lib/projects';
+import { getProjectSlug, getProjectUrl, getProjectTranslations } from '@/lib/projects';
 
 interface Props {
   title: string;
@@ -72,7 +68,9 @@ const locale = getLocaleFromPath(Astro.url.pathname);
 // Prefer the project's own image; otherwise serve the per-project dynamic OG
 // image (see src/pages/og/projects/[slug].svg.ts).
 const ogSlug = slug ? getProjectSlug(slug, locale) : '';
-const ogImage = (image && image.format !== 'svg' ? image.src : undefined) || (ogSlug ? getProjectOgPath(ogSlug, locale) : siteConfig.ogImage);
+const ogImage =
+  (image && image.format !== 'svg' ? image.src : undefined) ||
+  (ogSlug ? getProjectOgPath(ogSlug, locale) : siteConfig.ogImage);
 
 // Mirror the blog TOC wiring — projects use the same site-wide config.
 const tocConfig = siteConfig.articleFeatures?.toc;
@@ -90,13 +88,14 @@ const projectTranslations = slug
   : [];
 const translationByLocale = new Map(projectTranslations.map((tr) => [tr.locale, tr.url]));
 const languageAlternates = Object.fromEntries(
-  getLocales().map((loc) => [loc, translationByLocale.get(loc) ?? withLocaleFallback(Astro.url.pathname, locale, loc)])
+  getLocales().map((loc) => [
+    loc,
+    translationByLocale.get(loc) ?? withLocaleFallback(Astro.url.pathname, locale, loc),
+  ])
 );
 
 const localizedHeadings = headings.map((heading) =>
-  heading.slug === 'footnote-label'
-    ? { ...heading, text: t('common.footnotes', locale) }
-    : heading
+  heading.slug === 'footnote-label' ? { ...heading, text: t('common.footnotes', locale) } : heading
 );
 ---
 
@@ -108,15 +107,10 @@ const localizedHeadings = headings.map((heading) =>
   imageAlt={imageAlt || title}
   localeAlternates={projectTranslations}
 >
-  <Header
-    slot="header"
-    position="sticky"
-    showCta={false}
-    maxWidth="8xl"
-  />
+  <Header slot="header" position="sticky" showCta={false} maxWidth="8xl" />
   <!-- FireStone: [Update Header width] -->
 
-  <div class="min-h-screen ">
+  <div class="min-h-screen">
     <ProjectHero
       title={title}
       description={description}
@@ -135,13 +129,16 @@ const localizedHeadings = headings.map((heading) =>
     />
 
     <article class="pt-8 pb-[var(--space-section-md)]">
-      <div class:list={[
-        // FireStone: [Update main project wrapper to 8xl]
-        'mx-auto px-6 max-w-8xl',
-        sidebarActive && (sidebarOnLeft
-          ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
-          : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
-      ]}>
+      <div
+        class:list={[
+          // FireStone: [Update main project wrapper to 8xl]
+          'mx-auto px-6 max-w-8xl',
+          sidebarActive &&
+            (sidebarOnLeft
+              ? 'xl:grid xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-10'
+              : 'xl:grid xl:grid-cols-[minmax(0,1fr)_15rem] xl:gap-10'),
+        ]}
+      >
         {sidebarActive && sidebarOnLeft && (
           <aside class="hidden xl:block" aria-label={t('blog.toc', locale)}>
             <TableOfContents
@@ -204,14 +201,20 @@ const localizedHeadings = headings.map((heading) =>
     {related.length > 0 && (
       <section class="py-[var(--space-section-md)] bg-background" data-reveal>
         <div class="mx-auto max-w-8xl px-6">
-          <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8">{t('projects.moreProjects', locale)}</h2>
+          <h2 class="font-display text-2xl md:text-3xl font-bold text-foreground mb-8">
+            {t('projects.moreProjects', locale)}
+          </h2>
           <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((project) => (
               <Card
                 variant="elevated"
                 hover
                 padding="none"
-                href={project.data.placeholder ? undefined : getProjectUrl(project.id, project.data.locale)}
+                href={
+                  project.data.placeholder
+                    ? undefined
+                    : getProjectUrl(project.id, project.data.locale)
+                }
                 class="group flex flex-col"
               >
                 <div class="flex flex-1 flex-col p-6">
@@ -219,20 +222,35 @@ const localizedHeadings = headings.map((heading) =>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/20 to-brand-500/5 flex items-center justify-center text-brand-500 shrink-0">
                       <Icon name={project.data.icon ?? 'layers'} size="sm" />
                     </div>
-                    <Icon name="arrow-up-right" size="sm" class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto" />
+                    <Icon
+                      name="arrow-up-right"
+                      size="sm"
+                      class="text-foreground-muted group-hover:text-brand-500 transition-colors shrink-0 ml-auto"
+                    />
                   </div>
                   <div class="mb-2 flex items-baseline gap-2">
-                    <h3 class="font-display text-lg font-bold text-foreground">{project.data.title}</h3>
+                    <h3 class="font-display text-lg font-bold text-foreground">
+                      {project.data.title}
+                    </h3>
                     {project.data.year && (
-                      <span class="text-xs font-mono text-foreground-muted">{project.data.year}</span>
+                      <span class="text-xs font-mono text-foreground-muted">
+                        {project.data.year}
+                      </span>
                     )}
                   </div>
-                  <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1 line-clamp-3">{project.data.description}</p>
+                  <p class="text-sm text-foreground-muted leading-relaxed mb-4 flex-1 line-clamp-3">
+                    {project.data.description}
+                  </p>
                   {project.data.tags && project.data.tags.length > 0 && (
                     <div class="flex flex-wrap items-center gap-2">
                       {project.data.tags.map((tag, index) => (
                         <>
-                          {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
+                          {index > 0 && (
+                            <span
+                              class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0"
+                              aria-hidden="true"
+                            />
+                          )}
                           <Badge variant="brand">{tag}</Badge>
                         </>
                       ))}
@@ -247,9 +265,5 @@ const localizedHeadings = headings.map((heading) =>
     )}
   </div>
 
-  <Footer
-    slot="footer"
-    languageAlternates={languageAlternates}
-    breadcrumbs={breadcrumbs}
-  />
+  <Footer slot="footer" languageAlternates={languageAlternates} breadcrumbs={breadcrumbs} />
 </BaseLayout>

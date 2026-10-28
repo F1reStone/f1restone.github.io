@@ -18,13 +18,7 @@ interface Props {
   class?: string;
 }
 
-const {
-  avatars,
-  avatarCount = 3,
-  text,
-  size = 'sm',
-  class: className,
-} = Astro.props;
+const { avatars, avatarCount = 3, text, size = 'sm', class: className } = Astro.props;
 
 const sizes = {
   sm: 'h-8 w-8 text-[10px]',
@@ -37,15 +31,12 @@ const displayAvatars = avatars || Array.from({ length: avatarCount }, () => null
 
 <div class={cn('flex items-center gap-4 text-sm text-foreground-subtle', className)}>
   <div class="flex -space-x-2" role="img" aria-label={`${displayAvatars.length} contributors`}>
-    {displayAvatars.map((src, i) => (
+    {displayAvatars.map((src, i) =>
       src ? (
         <img
           src={src}
           alt=""
-          class={cn(
-            'rounded-full border-2 object-cover ring-2 ring-background',
-            sizes[size]
-          )}
+          class={cn('rounded-full border-2 object-cover ring-2 ring-background', sizes[size])}
           loading="lazy"
           decoding="async"
         />
@@ -61,7 +52,7 @@ const displayAvatars = avatars || Array.from({ length: avatarCount }, () => null
           {i === displayAvatars.length - 1 ? '+' : ''}
         </div>
       )
-    ))}
+    )}
   </div>
   <p>{text}</p>
 </div>

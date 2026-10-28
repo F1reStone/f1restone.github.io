@@ -16,26 +16,23 @@ export const progressTrackVariants = cva(
   }
 );
 
-export const progressBarVariants = cva(
-  'h-full rounded-full transition-all duration-500 ease-out',
-  {
-    variants: {
-      variant: {
-        default: 'bg-foreground',
-        brand: 'bg-brand-500',
-        success: 'bg-[var(--success)]',
-        warning: 'bg-[var(--warning)]',
-        error: 'bg-[var(--error)]',
-      },
-      indeterminate: {
-        true: 'animate-indeterminate w-1/3',
-      },
+export const progressBarVariants = cva('h-full rounded-full transition-all duration-500 ease-out', {
+  variants: {
+    variant: {
+      default: 'bg-foreground',
+      brand: 'bg-brand-500',
+      success: 'bg-[var(--success)]',
+      warning: 'bg-[var(--warning)]',
+      error: 'bg-[var(--error)]',
     },
-    defaultVariants: {
-      variant: 'default',
+    indeterminate: {
+      true: 'animate-indeterminate w-1/3',
     },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 export type ProgressVariants = VariantProps<typeof progressTrackVariants> &
   VariantProps<typeof progressBarVariants>;

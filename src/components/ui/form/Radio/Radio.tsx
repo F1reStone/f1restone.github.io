@@ -10,7 +10,16 @@ interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' 
   variant?: 'default' | 'card';
 }
 
-export function Radio({ ref, label, description, error, variant = 'default', className, id, ...props }: RadioProps) {
+export function Radio({
+  ref,
+  label,
+  description,
+  error,
+  variant = 'default',
+  className,
+  id,
+  ...props
+}: RadioProps) {
   const generatedId = useId();
   const radioId = id || generatedId;
 
@@ -20,19 +29,19 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
         <label
           htmlFor={radioId}
           className={cn(
-            'relative flex items-start gap-4 p-4 cursor-pointer',
-            'rounded-xl border-2 border-border',
+            'relative flex cursor-pointer items-start gap-4 p-4',
+            'border-border rounded-xl border-2',
             'bg-background',
             'transition-all duration-150 ease-out',
             'hover:border-foreground-subtle hover:bg-secondary/30',
             'has-[:checked]:border-foreground has-[:checked]:bg-secondary/50',
-            'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2',
+            'has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2',
             props.disabled && 'cursor-not-allowed opacity-50',
             error && 'border-destructive'
           )}
         >
           {/* Radio indicator with checkmark inside */}
-          <div className="relative flex items-center justify-center mt-0.5 shrink-0">
+          <div className="relative mt-0.5 flex shrink-0 items-center justify-center">
             <input
               ref={ref}
               type="radio"
@@ -46,7 +55,7 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
             <div
               className={cn(
                 'h-5 w-5 rounded-full',
-                'border-2 border-border',
+                'border-border border-2',
                 'bg-background',
                 'transition-all duration-150 ease-out',
                 'peer-checked:border-foreground peer-checked:bg-foreground',
@@ -56,10 +65,10 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
             {/* Checkmark inside circle */}
             <svg
               className={cn(
-                'absolute h-3 w-3 text-background',
-                'opacity-0 scale-50',
+                'text-background absolute h-3 w-3',
+                'scale-50 opacity-0',
                 'transition-all duration-150 ease-out',
-                'peer-checked:opacity-100 peer-checked:scale-100'
+                'peer-checked:scale-100 peer-checked:opacity-100'
               )}
               viewBox="0 0 12 12"
               fill="none"
@@ -74,16 +83,12 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
 
           {/* Content */}
           {(label || description) && (
-            <div className="flex-1 grid gap-0.5">
-              {label && (
-                <span className="text-sm font-semibold text-foreground">
-                  {label}
-                </span>
-              )}
+            <div className="grid flex-1 gap-0.5">
+              {label && <span className="text-foreground text-sm font-semibold">{label}</span>}
               {description && (
                 <span
                   id={`${radioId}-description`}
-                  className="text-xs text-foreground-subtle leading-normal"
+                  className="text-foreground-subtle text-xs leading-normal"
                 >
                   {description}
                 </span>
@@ -92,9 +97,7 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
           )}
         </label>
 
-        {error && (
-          <p className="mt-2 text-sm text-destructive">{error}</p>
-        )}
+        {error && <p className="text-destructive mt-2 text-sm">{error}</p>}
       </div>
     );
   }
@@ -105,13 +108,13 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
       <label
         htmlFor={radioId}
         className={cn(
-          'relative flex items-start gap-3 cursor-pointer',
+          'relative flex cursor-pointer items-start gap-3',
           'select-none',
           props.disabled && 'cursor-not-allowed opacity-50'
         )}
       >
         {/* Custom radio visual */}
-        <div className="relative flex items-center justify-center mt-0.5 shrink-0">
+        <div className="relative mt-0.5 flex shrink-0 items-center justify-center">
           <input
             ref={ref}
             type="radio"
@@ -125,10 +128,10 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
           <div
             className={cn(
               'h-[18px] w-[18px] rounded-full',
-              'border-2 border-border',
+              'border-border border-2',
               'bg-background',
               'transition-all duration-150 ease-out',
-              'peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background',
+              'peer-focus-visible:ring-ring peer-focus-visible:ring-offset-background peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2',
               'peer-checked:border-foreground',
               'group-hover:border-foreground-muted',
               error && 'border-destructive peer-focus-visible:ring-destructive'
@@ -139,9 +142,9 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
             className={cn(
               'absolute h-2 w-2 rounded-full',
               'bg-foreground',
-              'opacity-0 scale-0',
+              'scale-0 opacity-0',
               'transition-all duration-150 ease-out',
-              'peer-checked:opacity-100 peer-checked:scale-100'
+              'peer-checked:scale-100 peer-checked:opacity-100'
             )}
           />
         </div>
@@ -149,15 +152,11 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
         {/* Label and description */}
         {(label || description) && (
           <div className="grid gap-0.5 leading-tight">
-            {label && (
-              <span className="text-sm font-medium text-foreground">
-                {label}
-              </span>
-            )}
+            {label && <span className="text-foreground text-sm font-medium">{label}</span>}
             {description && (
               <span
                 id={`${radioId}-description`}
-                className="text-xs text-foreground-subtle leading-normal"
+                className="text-foreground-subtle text-xs leading-normal"
               >
                 {description}
               </span>
@@ -166,9 +165,7 @@ export function Radio({ ref, label, description, error, variant = 'default', cla
         )}
       </label>
 
-      {error && (
-        <p className="mt-2 text-sm text-destructive pl-[30px]">{error}</p>
-      )}
+      {error && <p className="text-destructive mt-2 pl-[30px] text-sm">{error}</p>}
     </div>
   );
 }

@@ -101,7 +101,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- **Post & project tags now sit directly below the abstract** — the tag chips previously rendered *above* the title on a blog post, and *below* the meta line on a project page; both detail heroes (`ArticleHero` and `ProjectHero`) now place the `TagList` immediately beneath the intro/abstract paragraph (above the meta row), so the single-post and single-project pages share one consistent layout. Purely presentational. (#423)
+- **Post & project tags now sit directly below the abstract** — the tag chips previously rendered _above_ the title on a blog post, and _below_ the meta line on a project page; both detail heroes (`ArticleHero` and `ProjectHero`) now place the `TagList` immediately beneath the intro/abstract paragraph (above the meta row), so the single-post and single-project pages share one consistent layout. Purely presentational. (#423)
 - **Global UI chrome now uses the i18n dictionary instead of hard-coded English** — the always-on, server-rendered chrome that appears on every page across locales now reads its strings from `src/i18n/<locale>.json` via `t()` rather than literal English: the skip-to-content link and back-to-top button (`BaseLayout`), the blog `Pagination` aria-labels, the "Related Posts" heading (`RelatedPosts`), the `ShareButtons` label and per-network share/copy aria-labels, and the Footer's "Follow us on …" social aria-label. New keys (`blog.relatedPosts`, `blog.share`, `blog.shareOn`, `blog.copyLink`, `pagination.label`, `footer.followOn`) were added to both `en.json` and `nl.json`, so default-locale output is byte-for-byte unchanged while translated locales now get localized chrome. This is the first pass of #414 (building on the locale-aware footer copyright from #413); the client-JS-driven strings (the contact/newsletter forms' submit + status text, search-modal results, theme mode/selector live states) and the unused-key audit are tracked as a follow-up. (#414)
 - **Contact & newsletter forms are now localized** — `ContactForm` and `NewsletterForm` read their field labels, submit/placeholder text, and client-side status messages (sending/subscribing, success, and error states) from the i18n dictionary. Server-rendered strings use `t()` directly; the strings the submit handler needs are passed through `data-*` attributes (extending the form's existing `data-success-message` pattern) and read at runtime, so no dictionary ships to the browser. The `contact.*` / `newsletter.*` values were aligned to the forms' previous English text (and `genericError` keys added) in both `en.json` and `nl.json`, so default-locale output is unchanged. Second pass of #414; the search-modal results, theme mode/selector live states, the 404 copy, and the unused-key prune remain. (#414)
 - **404 page is now localized** — the visible copy on the 404 page (the "404 — page not found" badge, the "Page not found." heading, the lead paragraph, the "Back to home" / "Browse the blog" buttons, the "Try one of these instead" heading, and the three recovery cards) now comes from the i18n dictionary via `t()`, with new `errors.*` keys added to `en.json` and `nl.json`. The page's `<title>`/meta `description` are deliberately left for a separate, site-wide meta-title pass. Default-locale output is byte-for-byte unchanged. This wraps the high-value surface of #414; the theme-mode/selector and search-modal **client-side** live strings and an unused-key prune are intentionally out of scope (low-traffic, JS-only, and — for a distributed theme — removing dictionary keys is mildly breaking). (#414)
@@ -142,7 +142,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - **Upgraded to Astro 6.4.4** — bumped `astro` from `6.0.0` to the latest `6.4.4`, picking up the new pluggable Markdown pipeline, resilient island hydration, finer-grained image-optimization controls, and the bug fixes and security/performance work shipped across the 6.1–6.4 minor releases. These minor releases contain no breaking changes, so the upgrade is drop-in for this theme and required no code changes.
 - **Astro integrations updated to latest** — `@astrojs/mdx` `5.0.0` → `6.0.2`, `@astrojs/react` `5.0.0` → `5.0.7`, `@astrojs/sitemap` `^3.7.1` → `^3.7.3`, `@astrojs/vercel` `^10.0.0` → `^10.0.8`, `@astrojs/netlify` `^7.0.2` → `^7.0.12`, and `@astrojs/check` `0.9.7` → `0.9.9`. Both the Vercel (default) and Netlify (`DEPLOY_TARGET=netlify`) build paths were verified.
-- **`@astrojs/mdx` v6 note** — v6 adds an *optional* Rust-based Markdown processor (`@astrojs/markdown-satteri`) and deprecates the top-level `markdown.remarkPlugins` / `markdown.rehypePlugins` config. This theme uses neither, so the optional Rust engine is not installed, the default `unified()` processor stays in use, and rendered output is unchanged.
+- **`@astrojs/mdx` v6 note** — v6 adds an _optional_ Rust-based Markdown processor (`@astrojs/markdown-satteri`) and deprecates the top-level `markdown.remarkPlugins` / `markdown.rehypePlugins` config. This theme uses neither, so the optional Rust engine is not installed, the default `unified()` processor stays in use, and rendered output is unchanged.
 
 ---
 
@@ -231,12 +231,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Verified zero output-size delta with i18n disabled (the default):
 
-|                | i18n off (1.3.0)  | i18n off (1.2.1)  |
-|----------------|-------------------|-------------------|
-| `dist/` size   | 12 M              | 12 M              |
-| Files          | 80                | 80                |
-| `hreflang`     | 0                 | 0 (didn't exist)  |
-| LanguageSwitcher | 0 instances     | n/a               |
+|                  | i18n off (1.3.0) | i18n off (1.2.1) |
+| ---------------- | ---------------- | ---------------- |
+| `dist/` size     | 12 M             | 12 M             |
+| Files            | 80               | 80               |
+| `hreflang`       | 0                | 0 (didn't exist) |
+| LanguageSwitcher | 0 instances      | n/a              |
 
 The new code paths are gated on `i18nIsEnabled()`, which returns `false` whenever the flag is off OR `locales.length === 1`. When that returns false, the LanguageSwitcher wrapping `<div>` is skipped, the `hreflang` block compiles to an empty fragment, and `astro.config.mjs` omits the `i18n` option entirely.
 

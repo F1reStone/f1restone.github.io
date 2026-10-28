@@ -84,7 +84,11 @@ import { selectorThemes as themes } from '@/lib/themes';
 
   function setTheme(id: string) {
     document.documentElement.setAttribute('data-theme', id);
-    try { sessionStorage.setItem(STORAGE_KEY, id); } catch { /* private mode */ }
+    try {
+      sessionStorage.setItem(STORAGE_KEY, id);
+    } catch {
+      /* private mode */
+    }
 
     // Update every swatch on the page (handles multiple selector instances)
     const swatches = document.querySelectorAll<HTMLButtonElement>('.theme-swatch');

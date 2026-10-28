@@ -3,7 +3,11 @@ import { buildBreadcrumbs } from '@/lib/breadcrumbs';
 import siteConfig from '@/config/site.config';
 import { t } from '@/i18n';
 import { defaultLocale, localizedPath } from '@/i18n';
-interface Props { locale?: string; page: number; totalPages: number; }
+interface Props {
+  locale?: string;
+  page: number;
+  totalPages: number;
+}
 const { locale = defaultLocale } = Astro.props;
 /**
  * Paginated projects listing
@@ -28,8 +32,6 @@ import {
   PROJECTS_PER_PAGE,
 } from '@/lib/projects';
 
-
-
 const { page, totalPages } = Astro.props;
 
 const projects = await getVisibleProjects(locale);
@@ -40,7 +42,12 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
 ---
 
 <PageLayout
-  breadcrumbs={buildBreadcrumbs(t('pagination.pageLabel', locale, { page }), Astro.url.pathname, locale, 'projects')}
+  breadcrumbs={buildBreadcrumbs(
+    t('pagination.pageLabel', locale, { page }),
+    Astro.url.pathname,
+    locale,
+    'projects'
+  )}
   title={t('projects.pageMetaTitle', locale, { page })}
   description={t('projects.pageMetaDescription', locale, { page, total: totalPages })}
   eagerReveal
@@ -54,9 +61,7 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
 
     <h1 slot="title">{t('projects.title', locale)}</h1>
 
-    <p slot="description">
-      {t('projects.heroDescription', locale)}
-    </p>
+    <p slot="description">{t('projects.heroDescription', locale)}</p>
   </Hero>
 
   <section class="bg-background py-[var(--space-section-md)]">
@@ -68,7 +73,12 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
         </Button>
 
         {topTags.length > 0 && (
-          <TagList locale={locale} tags={topTags} hrefForTag={getProjectTagUrl} class="justify-center" />
+          <TagList
+            locale={locale}
+            tags={topTags}
+            hrefForTag={getProjectTagUrl}
+            class="justify-center"
+          />
         )}
       </div>
 
@@ -90,13 +100,13 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
   <section class="relative z-10 py-[var(--space-section-md)] bg-background">
     <!-- Mobile: flat section, no card -->
     <div class="glitch:hidden mx-auto max-w-2xl px-6 text-center" data-reveal>
-      <Badge variant="brand" pill class="mb-6">{t('projects.ctaBadge', locale)}</Badge>
+      <Badge variant="brand" pill class="mb-6">
+        {t('projects.ctaBadge', locale)}
+      </Badge>
       <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
         {t('projects.ctaHeading', locale)}
       </h2>
-      <p class="text-lg text-foreground-muted mb-8 text-balance">
-        {t('projects.ctaLead', locale)}
-      </p>
+      <p class="text-lg text-foreground-muted mb-8 text-balance">{t('projects.ctaLead', locale)}</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <Button size="lg" href={`mailto:${siteConfig.email}`} variant="primary">
           {t('projects.ctaPrimary', locale)}
@@ -114,9 +124,7 @@ const topTags = collectTopProjectTags(projects, PROJECT_TAG_CLOUD_LIMIT);
       <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
         {t('projects.ctaHeading', locale)}
       </h2>
-      <p class="text-lg text-foreground-muted mb-8 text-balance">
-        {t('projects.ctaLead', locale)}
-      </p>
+      <p class="text-lg text-foreground-muted mb-8 text-balance">{t('projects.ctaLead', locale)}</p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <Button size="lg" href={`mailto:${siteConfig.email}`} variant="primary">
           {t('projects.ctaPrimary', locale)}

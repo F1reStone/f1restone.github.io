@@ -11,13 +11,15 @@
  */
 export function tagToSlug(tag: string): string {
   const normalized = tag.trim().toLowerCase().normalize('NFKC');
-  return normalized
-    // FireStone: [Translate tech symbols (++, #, &) into standard words BEFORE stripping non-alphanumerics]
-    .replace(/\+/g, '-plus')  // C++ -> c-plus-plus
-    .replace(/#/g, '-sharp')   // C# -> c-sharp
-    .replace(/&/g, '-and')     // & -> and
-    .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
-    .replace(/^-+|-+$/g, '');
+  return (
+    normalized
+      // FireStone: [Translate tech symbols (++, #, &) into standard words BEFORE stripping non-alphanumerics]
+      .replace(/\+/g, '-plus') // C++ -> c-plus-plus
+      .replace(/#/g, '-sharp') // C# -> c-sharp
+      .replace(/&/g, '-and') // & -> and
+      .replace(/[^\p{Letter}\p{Number}]+/gu, '-')
+      .replace(/^-+|-+$/g, '')
+  );
 }
 
 /** Find the original tag string given its slug, from a list of known tags. */

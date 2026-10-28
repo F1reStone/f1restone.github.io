@@ -1,4 +1,5 @@
 # FireStone Website
+
 FireStone's personal website built on [Astro Rocket](https://astrorocket.dev/), prioritizes visual appeal and interactive experience.
 
 <p align="left">
@@ -22,6 +23,7 @@ runs production and bilingual browser checks; only a successful push to `main`
 deploys to Cloudflare. See [CI operation and maintenance](docs/ci.md).
 
 Powered by:
+
 - [Astro](https://astro.build/)
 - [Astro Rocket](https://astrorocket.dev/)
 - [Cloudflare](https://cloudflare.com/)

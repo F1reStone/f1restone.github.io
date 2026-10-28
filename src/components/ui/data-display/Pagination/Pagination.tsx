@@ -70,7 +70,8 @@ function getPageRange(current: number, total: number, max: number): (number | '.
   return pages;
 }
 
-export function Pagination({ locale = defaultLocale,
+export function Pagination({
+  locale = defaultLocale,
   currentPage,
   totalPages,
   onPageChange,
@@ -84,7 +85,11 @@ export function Pagination({ locale = defaultLocale,
   const hasNext = currentPage < totalPages;
 
   return (
-    <nav className={cn('flex items-center gap-1', className)} aria-label={t('pagination.label', locale)} {...attrs}>
+    <nav
+      className={cn('flex items-center gap-1', className)}
+      aria-label={t('pagination.label', locale)}
+      {...attrs}
+    >
       {/* Previous */}
       {hasPrev ? (
         <button
@@ -137,7 +142,7 @@ export function Pagination({ locale = defaultLocale,
             key={`ellipsis-${index}`}
             className={cn(
               paginationItemVariants({ variant: 'default', size }),
-              'cursor-default hover:bg-transparent',
+              'cursor-default hover:bg-transparent'
             )}
             role="separator"
             aria-label={t('pagination.morePages', locale)}
@@ -161,7 +166,7 @@ export function Pagination({ locale = defaultLocale,
           >
             {page}
           </button>
-        ),
+        )
       )}
 
       {/* Next */}

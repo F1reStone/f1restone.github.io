@@ -11,7 +11,13 @@ import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
 import DynamicEffectsSettings from '@/components/layout/DynamicEffectsSettings.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
 //import CursorTrail from '@/components/effects/CursorTrail.astro';
-import { createBreadcrumbSchema, createWebsiteSchema, createOrganizationSchema, createPersonSchema, createProfessionalServiceSchema } from '@/lib/schema';
+import {
+  createBreadcrumbSchema,
+  createWebsiteSchema,
+  createOrganizationSchema,
+  createPersonSchema,
+  createProfessionalServiceSchema,
+} from '@/lib/schema';
 import type { Thing, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
 import { t, getLocaleFromPath, getLocales, defaultLocale, isEnabled, i18nConfig } from '@/i18n';
@@ -69,28 +75,56 @@ if (includeProfessionalServiceSchema) {
 }
 schemas.push(...extraSchemas);
 if (breadcrumbs.length > 1) {
-  schemas.push(createBreadcrumbSchema(breadcrumbs.map(item => ({
-    name: item.label,
-    url: new URL(item.href ?? Astro.url.pathname, Astro.site).toString(),
-  }))));
+  schemas.push(
+    createBreadcrumbSchema(
+      breadcrumbs.map((item) => ({
+        name: item.label,
+        url: new URL(item.href ?? Astro.url.pathname, Astro.site).toString(),
+      }))
+    )
+  );
 }
 
 const locales = getLocales();
 const locale = Astro.locals.contentLocale ?? getLocaleFromPath(Astro.url.pathname);
-const localeFallback = getLocaleFallback(Astro.originPathname, Astro.url.pathname, Astro.locals.contentLocale);
-const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeURI(Astro.url.pathname).replace(/\/$/, '');
+const localeFallback = getLocaleFallback(
+  Astro.originPathname,
+  Astro.url.pathname,
+  Astro.locals.contentLocale
+);
+const rewritten =
+  decodeURI(Astro.originPathname).replace(/\/$/, '') !==
+  decodeURI(Astro.url.pathname).replace(/\/$/, '');
 ---
 
 <!doctype html>
-<html lang={locale} data-locale-fallback-source={localeFallback?.contentLocale} class="scroll-smooth dark" data-theme="firestone" data-theme-mode="system">
+<html
+  lang={locale}
+  data-locale-fallback-source={localeFallback?.contentLocale}
+  class="scroll-smooth dark"
+  data-theme="firestone"
+  data-theme-mode="system"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Preload display + body fonts so they're ready for first paint -->
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/neue-regrade-variable.woff2" crossorigin="anonymous" />
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/wix-madefor-text-variable.woff2" crossorigin="anonymous" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/neue-regrade-variable.woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/wix-madefor-text-variable.woff2"
+      crossorigin="anonymous"
+    />
 
     <!-- Preload Giscus -->
     {siteConfig.articleFeatures?.comments?.enabled && (
@@ -98,8 +132,7 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
         rel="preconnect"
         href={
           siteConfig.articleFeatures?.comments?.provider === 'cusdis'
-            ? (siteConfig.articleFeatures?.comments?.cusdis?.host ??
-              'https://cusdis.com')
+            ? (siteConfig.articleFeatures?.comments?.cusdis?.host ?? 'https://cusdis.com')
             : 'https://giscus.app'
         }
         crossorigin
@@ -107,16 +140,19 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     )}
 
     <!-- FireStone: Preload Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link 
-      rel="stylesheet" 
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap" 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap"
       media="print"
       onload="this.onload=null;this.media='all'"
-    >
+    />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap">
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap"
+      />
     </noscript>
 
     <!-- Favicon -->
@@ -144,7 +180,12 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     />
 
     <!-- RSS Feed -->
-    <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS Feed`} href={getRssUrl(locale)} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${siteConfig.name} RSS Feed`}
+      href={getRssUrl(locale)}
+    />
 
     <!-- JSON-LD Structured Data -->
     <JsonLd schema={schemas} />
@@ -157,18 +198,27 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
       (function () {
         function updateFavicon() {
           // 1. 获取当前操作系统的深浅模式 (不依赖网页本身的暗黑模式设置)
-          const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          
+          const isSystemDark =
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
           // 2. 根据系统模式设定颜色：深色模式用白色，浅色模式用近黑色
           const fillColor = isSystemDark ? '#FFFFFF' : '#222526';
 
           // 3. 把 SVG Logo 拼成字符串，并注入动态颜色
-          const svg = 
+          const svg =
             '<svg viewBox="0 0 75 70" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-            '<path d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z" fill="' + fillColor + '"/>' +
-            '<path d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z" fill="' + fillColor + '"/>' +
-            '<path d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z" fill="' + fillColor + '"/>' +
-            '<path d="M0 56.823L14.2634 69.9948L20.8454 70L48.7419 2.12105L47.2519 0H34.2695L0.00381908 32.0278L0 56.823Z" fill="' + fillColor + '"/>' +
+            '<path d="M35.1208 69.9946H47.6777L64.7041 28.8463L57.1487 16.12L35.1208 69.9946Z" fill="' +
+            fillColor +
+            '"/>' +
+            '<path d="M52.36 65.5404L74.3879 44.9663L66.3004 31.6036L52.36 65.5404Z" fill="' +
+            fillColor +
+            '"/>' +
+            '<path d="M27.8846 69.9946H32.1411L55.5525 13.4686L52.8921 9.12051L27.8846 69.9946Z" fill="' +
+            fillColor +
+            '"/>' +
+            '<path d="M0 56.823L14.2634 69.9948L20.8454 70L48.7419 2.12105L47.2519 0H34.2695L0.00381908 32.0278L0 56.823Z" fill="' +
+            fillColor +
+            '"/>' +
             '</svg>';
 
           // 4. 找到页面的 icon 标签并替换为 Data URI
@@ -189,10 +239,11 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
         if (!window.__faviconSystemListenerInit && window.matchMedia) {
           window.__faviconSystemListenerInit = true;
           const mql = window.matchMedia('(prefers-color-scheme: dark)');
-          
+
           if (mql.addEventListener) {
             mql.addEventListener('change', updateFavicon);
-          } else if (mql.addListener) { // 兼容旧版 Safari
+          } else if (mql.addListener) {
+            // 兼容旧版 Safari
             mql.addListener(updateFavicon);
           }
 
@@ -203,8 +254,11 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     </script>
 
     <!-- Auto-redirect based on browser locale -->
-    {isEnabled() && i18nConfig.detectBrowserLocale && Astro.url.pathname === '/' && <script is:inline define:vars={{ defaultLocale, locales }}>
-      (function() {
+    {isEnabled() && i18nConfig.detectBrowserLocale && Astro.url.pathname === '/' && <script
+      is:inline
+      define:vars={{ defaultLocale, locales }}
+    >
+      (function () {
         try {
           // 1. 如果用户已经手动选过语言，尊重用户选择，不再自动跳转
           if (localStorage.getItem('preferred_locale')) return;
@@ -215,14 +269,14 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
 
           // 3. 智能匹配目标语言
           // A. 精确匹配 (比如 zh-CN 完美匹配 zh-CN)
-          let targetLang = locales.find(function(l) { 
-            return l.toLowerCase() === browserLang.toLowerCase(); 
+          let targetLang = locales.find(function (l) {
+            return l.toLowerCase() === browserLang.toLowerCase();
           });
 
           // B. 模糊前缀匹配 (比如 en-GB 也能匹配到 en-US)
           if (!targetLang) {
-            targetLang = locales.find(function(l) { 
-              return l.toLowerCase().startsWith(baseBrowserLang); 
+            targetLang = locales.find(function (l) {
+              return l.toLowerCase().startsWith(baseBrowserLang);
             });
           }
 
@@ -239,7 +293,9 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
 
             if (targetLang === defaultLocale) {
               // 场景 A: 跳转到默认语言，需剥离前缀 (如 /en-US/about -> /about)
-              const nonDefaultLocales = locales.filter(function(l) { return l !== defaultLocale; });
+              const nonDefaultLocales = locales.filter(function (l) {
+                return l !== defaultLocale;
+              });
               const prefixRegex = new RegExp('^/(' + nonDefaultLocales.join('|') + ')(/|$)');
               newPath = currentPath.replace(prefixRegex, '/');
             } else {
@@ -247,7 +303,7 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
               // 先确保去掉可能存在的旧语言前缀
               const allLocalesRegex = new RegExp('^/(' + locales.join('|') + ')(/|$)');
               const pathWithoutLocale = currentPath.replace(allLocalesRegex, '/');
-              
+
               if (pathWithoutLocale === '/') {
                 newPath = '/' + targetLang + '/';
               } else {
@@ -262,9 +318,7 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           // 忽略隐私模式下的异常。使用 _e 开头绕过 ESLint 检查
         }
       })();
-    </script>
-
-    }
+    </script>}
     <!-- Client-side view transitions disabled: animations run cleanly from frame 0 on normal page loads. -->
 
     <!-- Theme bootstrap: localStorage.theme in {system, light, dark}. Default system. Resolves to dark class on html element. -->
@@ -278,7 +332,9 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           try {
             const stored = localStorage.getItem('theme');
             if (VALID_MODES.indexOf(stored) !== -1) return stored;
-          } catch { /* private mode / disabled storage */ }
+          } catch {
+            /* private mode / disabled storage */
+          }
           return 'system';
         }
 
@@ -299,7 +355,9 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
             if (saved && COLOR_THEMES.indexOf(saved) !== -1) {
               el.setAttribute('data-theme', saved);
             }
-          } catch { /* ignored */ }
+          } catch {
+            /* ignored */
+          }
         }
 
         function applyTheme(el) {
@@ -356,8 +414,7 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           const physicalPixels =
             window.screen.width * window.screen.height * (window.devicePixelRatio || 1) ** 2;
           const demandingDisplay =
-            physicalPixels >= 5_000_000 &&
-            (cores < 12 || (memory !== undefined && memory < 8));
+            physicalPixels >= 5_000_000 && (cores < 12 || (memory !== undefined && memory < 8));
 
           if (
             isMobileLike ||
@@ -466,7 +523,9 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           root.dataset.effectFooterQuality = effective.footerGradientQuality;
           root.dataset.effectFooter = effective.footerGradient;
           root.dataset.effectVariableFont = effective.variableFont;
-          effectsWindow.dispatchEvent(new CustomEvent('firestone-effects-change', { detail: effective }));
+          effectsWindow.dispatchEvent(
+            new CustomEvent('firestone-effects-change', { detail: effective })
+          );
         }
 
         function persistSettings() {
@@ -484,7 +543,8 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
             runtimeStaticFallback ||
             prefersReducedMotion() ||
             getEffectiveSettings().footerGradient === 'static'
-          ) return;
+          )
+            return;
 
           runtimeProfileRunning = true;
           let startedAt = 0;
@@ -527,21 +587,37 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
         }
 
         effectsWindow.__firestoneEffects = {
-          getState: function () { return { ...getEffectiveSettings() }; },
-          getDefaults: function () { return { ...getDefaultSettings() }; },
+          getState: function () {
+            return { ...getEffectiveSettings() };
+          },
+          getDefaults: function () {
+            return { ...getDefaultSettings() };
+          },
           getPerformanceTier: getPerformanceTier,
           setSettings: function (next) {
             if (!isValidSettings(next)) return;
             settings = { ...next };
             hasUserSettings = true;
             runtimeStaticFallback = false;
-            try { sessionStorage.removeItem(RUNTIME_STATIC_KEY); } catch { /* ignored */ }
+            try {
+              sessionStorage.removeItem(RUNTIME_STATIC_KEY);
+            } catch {
+              /* ignored */
+            }
             persistSettings();
             applySettings();
           },
           reset: function () {
-            try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignored */ }
-            try { sessionStorage.removeItem(RUNTIME_STATIC_KEY); } catch { /* ignored */ }
+            try {
+              localStorage.removeItem(STORAGE_KEY);
+            } catch {
+              /* ignored */
+            }
+            try {
+              sessionStorage.removeItem(RUNTIME_STATIC_KEY);
+            } catch {
+              /* ignored */
+            }
             settings = getDefaultSettings();
             hasUserSettings = false;
             runtimeStaticFallback = false;
@@ -572,7 +648,10 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     </script>
   </head>
 
-  <body class="min-h-screen bg-background text-foreground antialiased" data-eager-reveal={eagerReveal ? '' : undefined}>
+  <body
+    class="min-h-screen bg-background text-foreground antialiased"
+    data-eager-reveal={eagerReveal ? '' : undefined}
+  >
     <!-- Skip to content link -->
     <a
       href="#main-content"
@@ -588,7 +667,10 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     </main>
 
     <slot name="footer" />
-    <div data-banner-stack class="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-3 px-4 pb-6 pt-8 md:px-6 md:pb-8 [&_[data-dialog]]:pointer-events-auto">
+    <div
+      data-banner-stack
+      class="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-3 px-4 pb-6 pt-8 md:px-6 md:pb-8 [&_[data-dialog]]:pointer-events-auto"
+    >
       <LocaleFallbackNotice />
       <ConsentBanner stacked showReopener={false} />
     </div>
@@ -607,12 +689,36 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
       <!-- Scroll-progress ring (rotated so arc starts at 12 o'clock) -->
       <svg class="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 48 48" aria-hidden="true">
         <!-- Faint grey track -->
-        <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-border" stroke-width="2" opacity="0.5" />
+        <circle
+          cx="24"
+          cy="24"
+          r="21"
+          fill="none"
+          stroke="currentColor"
+          class="text-border"
+          stroke-width="2"
+          opacity="0.5"
+        />
         <!-- Brand progress arc -->
-        <circle id="back-to-top-ring" cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-brand-500" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="131.95" stroke-dashoffset="131.95" />
+        <circle
+          id="back-to-top-ring"
+          cx="24"
+          cy="24"
+          r="21"
+          fill="none"
+          stroke="currentColor"
+          class="text-brand-500"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-dasharray="131.95"
+          stroke-dashoffset="131.95"
+        />
       </svg>
       <!-- Inner face -->
-      <span class="absolute inset-[5px] flex items-center justify-center rounded-full glass-panel text-foreground-muted shadow-md hover-solid-fill hover-glow-box" aria-hidden="true">
+      <span
+        class="absolute inset-[5px] flex items-center justify-center rounded-full glass-panel text-foreground-muted shadow-md hover-solid-fill hover-glow-box"
+        aria-hidden="true"
+      >
         <Icon name="chevron-up" size="md" />
       </span>
     </button>
@@ -657,7 +763,8 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
             if (reducedMotion) {
               btn.style.transition = 'none';
             } else {
-              btn.style.transition = 'opacity 250ms cubic-bezier(0,0,0.2,1), translate 250ms cubic-bezier(0,0,0.2,1)';
+              btn.style.transition =
+                'opacity 250ms cubic-bezier(0,0,0.2,1), translate 250ms cubic-bezier(0,0,0.2,1)';
             }
             btn.style.opacity = '1';
             btn.style.translate = '0 0';
@@ -669,7 +776,8 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
             if (reducedMotion) {
               btn.style.transition = 'none';
             } else {
-              btn.style.transition = 'opacity 300ms cubic-bezier(0.4,0,1,1), translate 300ms cubic-bezier(0.4,0,1,1)';
+              btn.style.transition =
+                'opacity 300ms cubic-bezier(0.4,0,1,1), translate 300ms cubic-bezier(0.4,0,1,1)';
             }
             btn.style.opacity = '0';
             btn.style.translate = '0 2rem';
@@ -678,7 +786,8 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           }
 
           function updateFrame() {
-            const pct = docMaxScrollY > 0 ? Math.min(1, Math.max(0, window.scrollY / docMaxScrollY)) : 0;
+            const pct =
+              docMaxScrollY > 0 ? Math.min(1, Math.max(0, window.scrollY / docMaxScrollY)) : 0;
             if (ring) {
               ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
             }
@@ -702,9 +811,13 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
             window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
           });
 
-          document.addEventListener('astro:before-swap', function () {
-            window.removeEventListener('scroll', onScroll);
-          }, { once: true });
+          document.addEventListener(
+            'astro:before-swap',
+            function () {
+              window.removeEventListener('scroll', onScroll);
+            },
+            { once: true }
+          );
 
           // Run the first frame on rAF so it picks up the initial scroll
           // position after layout has settled — and read scrollHeight here
@@ -725,18 +838,20 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
         function initReveal() {
           // FireStone: 动态扫描所有元素，为其注入索引 CSS 变量
           // 1. 处理单独带有 data-reveal-delay 的元素
-          document.querySelectorAll('[data-reveal-delay]').forEach(function(el) {
+          document.querySelectorAll('[data-reveal-delay]').forEach(function (el) {
             el.style.setProperty('--reveal-idx', el.getAttribute('data-reveal-delay'));
           });
           // 2. 处理 [data-reveal-children] 网格内无限数量的子元素
-          document.querySelectorAll('[data-reveal-children]').forEach(function(container) {
-            Array.prototype.forEach.call(container.children, function(child, idx) {
+          document.querySelectorAll('[data-reveal-children]').forEach(function (container) {
+            Array.prototype.forEach.call(container.children, function (child, idx) {
               child.style.setProperty('--reveal-index', idx);
             });
           });
 
           const els = Array.prototype.slice.call(
-            document.querySelectorAll('[data-reveal]:not(.is-visible), [data-reveal-children]:not(.is-visible)')
+            document.querySelectorAll(
+              '[data-reveal]:not(.is-visible), [data-reveal-children]:not(.is-visible)'
+            )
           );
 
           // Also observe each direct child of [data-reveal-content] so long
@@ -756,23 +871,29 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           // elements (taller than ~85% of the viewport) use threshold 0 so
           // they still fire; shorter elements use 0.15 so animations feel
           // earned (the user actually sees them play).
-          const shortObs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                shortObs.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0.15, rootMargin: belowFoldMargin });
+          const shortObs = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  shortObs.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.15, rootMargin: belowFoldMargin }
+          );
 
-          const tallObs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                tallObs.unobserve(entry.target);
-              }
-            });
-          }, { threshold: 0, rootMargin: belowFoldMargin });
+          const tallObs = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  tallObs.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0, rootMargin: belowFoldMargin }
+          );
 
           // First-pass observer: hands us boundingClientRect and rootBounds
           // for each element without forcing a synchronous layout read. The
@@ -782,31 +903,39 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
           // rootMargin -25% bottom defines "above-the-fold" as the top 75%
           // of the viewport, matching the prior `rect.top < vh*0.75` rule.
           let revealIndex = 0;
-          const firstPass = new IntersectionObserver(function (entries) {
-            // Preserve document order so the above-fold stagger is stable.
-            entries.sort(function (a, b) {
-              const pos = a.target.compareDocumentPosition(b.target);
-              if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
-              if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
-              return 0;
-            });
+          const firstPass = new IntersectionObserver(
+            function (entries) {
+              // Preserve document order so the above-fold stagger is stable.
+              entries.sort(function (a, b) {
+                const pos = a.target.compareDocumentPosition(b.target);
+                if (pos & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+                if (pos & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+                return 0;
+              });
 
-            entries.forEach(function (entry) {
-              firstPass.unobserve(entry.target);
-              if (entry.isIntersecting) {
-                const i = revealIndex++;
-                setTimeout(function () {
-                  entry.target.classList.add('is-visible');
-                }, 250 + i * 80);
-              } else {
-                const rb = entry.rootBounds;
-                const tall = rb ? entry.boundingClientRect.height > rb.height * 0.85 : false;
-                (tall ? tallObs : shortObs).observe(entry.target);
-              }
-            });
-          }, { threshold: 0, rootMargin: '0px 0px -25% 0px' });
+              entries.forEach(function (entry) {
+                firstPass.unobserve(entry.target);
+                if (entry.isIntersecting) {
+                  const i = revealIndex++;
+                  setTimeout(
+                    function () {
+                      entry.target.classList.add('is-visible');
+                    },
+                    250 + i * 80
+                  );
+                } else {
+                  const rb = entry.rootBounds;
+                  const tall = rb ? entry.boundingClientRect.height > rb.height * 0.85 : false;
+                  (tall ? tallObs : shortObs).observe(entry.target);
+                }
+              });
+            },
+            { threshold: 0, rootMargin: '0px 0px -25% 0px' }
+          );
 
-          els.forEach(function (el) { firstPass.observe(el); });
+          els.forEach(function (el) {
+            firstPass.observe(el);
+          });
         }
 
         if (document.readyState === 'loading') {
@@ -820,8 +949,9 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
     <!-- FireStone: 可变字重放大计算：读取 .weight-shift 元素的当前 computed font-weight 并自动 +300 (最高 900)，传到 CSS 变量 -->
     <script is:inline>
       function initSmartWeightShift() {
-        const cjkPattern = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
-        const chromiumBrand = navigator.userAgentData?.brands?.some(function(brand) {
+        const cjkPattern =
+          /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+        const chromiumBrand = navigator.userAgentData?.brands?.some(function (brand) {
           return brand.brand === 'Chromium';
         });
         const isChromium = chromiumBrand || /(?:Chrome|Chromium|Edg\/)/.test(navigator.userAgent);
@@ -829,36 +959,47 @@ const rewritten = decodeURI(Astro.originPathname).replace(/\/$/, '') !== decodeU
 
         if (isChromium) {
           root.dataset.browserEngine = 'chromium';
-          document.querySelectorAll('.weight-shift, .weight-shift-non-centered, .hero-title-text, .hero-title-serif').forEach(function(el) {
-            const text = el.getAttribute('data-text') || el.textContent || '';
-            if (!cjkPattern.test(text) || el.hasAttribute('data-ws-variable-axis')) return;
+          document
+            .querySelectorAll(
+              '.weight-shift, .weight-shift-non-centered, .hero-title-text, .hero-title-serif'
+            )
+            .forEach(function (el) {
+              const text = el.getAttribute('data-text') || el.textContent || '';
+              if (!cjkPattern.test(text) || el.hasAttribute('data-ws-variable-axis')) return;
 
-            const baseWeight = parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
-            const targetWeight = el.classList.contains('hero-title-serif') ? 600 :
-              el.classList.contains('hero-title-text') ? 800 : Math.min(baseWeight + 300, 900);
-            el.style.setProperty('--ws-base', baseWeight);
-            el.style.setProperty('--ws-target', targetWeight);
-            el.setAttribute('data-ws-variable-axis', '');
-          });
+              const baseWeight = parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
+              const targetWeight = el.classList.contains('hero-title-serif')
+                ? 600
+                : el.classList.contains('hero-title-text')
+                  ? 800
+                  : Math.min(baseWeight + 300, 900);
+              el.style.setProperty('--ws-base', baseWeight);
+              el.style.setProperty('--ws-target', targetWeight);
+              el.setAttribute('data-ws-variable-axis', '');
+            });
         }
 
-        const els = Array.from(document.querySelectorAll('.weight-shift:not([data-ws-init]), .weight-shift-non-centered:not([data-ws-init])'));
+        const els = Array.from(
+          document.querySelectorAll(
+            '.weight-shift:not([data-ws-init]), .weight-shift-non-centered:not([data-ws-init])'
+          )
+        );
         if (!els.length) return;
 
         // 1. 集中读取: 连续读取属性不会触发浏览器重排
-        const weights = els.map(function(el) {
+        const weights = els.map(function (el) {
           return parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
         });
 
         // 2. 集中写入: 在浏览器的下一帧统一应用 DOM 和 CSS 修改，彻底杜绝 Layout Thrashing
-          requestAnimationFrame(function() {
-            els.forEach(function(el, index) {
-              el.setAttribute('data-ws-init', 'true');
-              el.style.setProperty('--ws-base', weights[index]);
-              const targetWeight = Math.min(weights[index] + 300, 900);
-              el.style.setProperty('--ws-target', targetWeight);
-            });
+        requestAnimationFrame(function () {
+          els.forEach(function (el, index) {
+            el.setAttribute('data-ws-init', 'true');
+            el.style.setProperty('--ws-base', weights[index]);
+            const targetWeight = Math.min(weights[index] + 300, 900);
+            el.style.setProperty('--ws-target', targetWeight);
           });
+        });
       }
       document.addEventListener('DOMContentLoaded', initSmartWeightShift);
       document.addEventListener('astro:page-load', initSmartWeightShift);

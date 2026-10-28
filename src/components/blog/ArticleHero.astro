@@ -44,11 +44,13 @@ const readingTime = getReadingTime(body ?? description);
 
 <!-- FireStone: [Immersive Article Hero with cover background, blur, and invert-section] -->
 <header class="relative isolate overflow-hidden min-h-[70svh] flex flex-col justify-center invert-section border-b border-white/10">
-  
   <!-- Background Image Layer -->
   <div class="absolute inset-0 -z-20 w-full h-full bg-[#080C13]">
     {svgSlug ? (
-      <div class="w-full h-full opacity-80 [&>svg]:w-full [&>svg]:h-full [&>svg]:object-cover" style="color: var(--color-brand-500);">
+      <div
+        class="w-full h-full opacity-80 [&>svg]:w-full [&>svg]:h-full [&>svg]:object-cover"
+        style="color: var(--color-brand-500);"
+      >
         <BlogImageSVG slug={svgSlug} title={imageAlt || title} />
       </div>
     ) : image ? (
@@ -65,7 +67,7 @@ const readingTime = getReadingTime(body ?? description);
   </div>
 
   <!-- 压低亮度并做毛玻璃处理 -->
-    <div class="absolute inset-0 -z-10 bg-black/40 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 -z-10 bg-black/40 backdrop-blur-sm"></div>
 
   <!-- Content Container -->
   <div class="relative z-10 mx-auto w-full max-w-8xl px-6 pt-24 pb-16">
@@ -76,10 +78,13 @@ const readingTime = getReadingTime(body ?? description);
           {tags.map((tag, index) => (
             <>
               {/* FireStone: Geometric separator dot. */}
-              {index > 0 && <span class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0" aria-hidden="true" />}
-              <Badge class="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">
-                #{tag}
-              </Badge>
+              {index > 0 && (
+                <span
+                  class="h-0.5 w-0.5 rounded-full bg-foreground-subtle/50 shrink-0"
+                  aria-hidden="true"
+                />
+              )}
+              <Badge class="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">#{tag}</Badge>
             </>
           ))}
         </div>
@@ -97,28 +102,43 @@ const readingTime = getReadingTime(body ?? description);
 
       <!-- Meta info -->
       <div class="flex flex-wrap items-center gap-[var(--space-stack-lg)] text-sm text-foreground-muted">
-        
         <!-- Published date -->
         <div class="flex items-center gap-2 font-mono text-foreground/75">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+            />
           </svg>
-          <time datetime={publishedAt.toISOString()}>
-            发布于 {formatDate(publishedAt)}
-          </time>
+          <time datetime={publishedAt.toISOString()}>发布于 {formatDate(publishedAt)}</time>
         </div>
 
         {updatedAt && (
           <>
             <div class="h-8 w-[1.5px] bg-foreground-subtle/30 hidden md:block"></div>
-            
+
             <div class="flex items-center gap-2 font-mono text-foreground/75">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              <svg
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                />
               </svg>
-              <time datetime={updatedAt.toISOString()}>
-                最后更新于 {formatDate(updatedAt)}
-              </time>
+              <time datetime={updatedAt.toISOString()}>最后更新于 {formatDate(updatedAt)}</time>
             </div>
           </>
         )}
@@ -127,8 +147,18 @@ const readingTime = getReadingTime(body ?? description);
 
         <!-- Reading time -->
         <div class="flex items-center gap-2 font-mono text-foreground/75">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <span>{t('blog.readingTime', locale, { minutes: readingTime })}</span>
         </div>

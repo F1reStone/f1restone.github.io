@@ -37,11 +37,11 @@ pnpm dev
 
 ## Branch naming
 
-| Type | Pattern | Example |
-|---|---|---|
-| New feature | `feature/short-description` | `feature/add-breadcrumbs` |
-| Bug fix | `fix/short-description` | `fix/mobile-nav-overflow` |
-| Content or config | `update/short-description` | `update/readme-installation` |
+| Type              | Pattern                     | Example                      |
+| ----------------- | --------------------------- | ---------------------------- |
+| New feature       | `feature/short-description` | `feature/add-breadcrumbs`    |
+| Bug fix           | `fix/short-description`     | `fix/mobile-nav-overflow`    |
+| Content or config | `update/short-description`  | `update/readme-installation` |
 
 Always branch from `main`.
 

@@ -16,7 +16,18 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'ref' |
   size?: InputSize;
 }
 
-export function Input({ ref, label, error, hint, leadingIcon, trailingIcon, size = 'md', className, id, ...props }: InputProps) {
+export function Input({
+  ref,
+  label,
+  error,
+  hint,
+  leadingIcon,
+  trailingIcon,
+  size = 'md',
+  className,
+  id,
+  ...props
+}: InputProps) {
   const generatedId = useId();
   const inputId = id || generatedId;
   const config = inputSizeConfig[size];
@@ -37,17 +48,13 @@ export function Input({ ref, label, error, hint, leadingIcon, trailingIcon, size
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium leading-none">
+        <label htmlFor={inputId} className="text-sm leading-none font-medium">
           {label}
         </label>
       )}
 
       <div className="relative">
-        {leadingIcon && (
-          <div className={cn(iconStyles, 'left-0')}>
-            {leadingIcon}
-          </div>
-        )}
+        {leadingIcon && <div className={cn(iconStyles, 'left-0')}>{leadingIcon}</div>}
 
         <input
           ref={ref}
@@ -58,21 +65,17 @@ export function Input({ ref, label, error, hint, leadingIcon, trailingIcon, size
           {...props}
         />
 
-        {trailingIcon && (
-          <div className={cn(iconStyles, 'right-0')}>
-            {trailingIcon}
-          </div>
-        )}
+        {trailingIcon && <div className={cn(iconStyles, 'right-0')}>{trailingIcon}</div>}
       </div>
 
       {error && (
-        <p id={`${inputId}-error`} className="text-sm text-destructive">
+        <p id={`${inputId}-error`} className="text-destructive text-sm">
           {error}
         </p>
       )}
 
       {hint && !error && (
-        <p id={`${inputId}-hint`} className="text-sm text-muted-foreground">
+        <p id={`${inputId}-hint`} className="text-muted-foreground text-sm">
           {hint}
         </p>
       )}

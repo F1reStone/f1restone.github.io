@@ -12,7 +12,17 @@ interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>
   size?: TextareaSize;
 }
 
-export function Textarea({ ref, label, error, hint, size = 'md', className, id, rows = 4, ...props }: TextareaProps) {
+export function Textarea({
+  ref,
+  label,
+  error,
+  hint,
+  size = 'md',
+  className,
+  id,
+  rows = 4,
+  ...props
+}: TextareaProps) {
   const generatedId = useId();
   const textareaId = id || generatedId;
 
@@ -24,7 +34,7 @@ export function Textarea({ ref, label, error, hint, size = 'md', className, id, 
   return (
     <div className={cn('space-y-1.5', className)}>
       {label && (
-        <label htmlFor={textareaId} className="text-sm font-medium leading-none">
+        <label htmlFor={textareaId} className="text-sm leading-none font-medium">
           {label}
         </label>
       )}
@@ -40,13 +50,13 @@ export function Textarea({ ref, label, error, hint, size = 'md', className, id, 
       />
 
       {error && (
-        <p id={`${textareaId}-error`} className="text-sm text-destructive">
+        <p id={`${textareaId}-error`} className="text-destructive text-sm">
           {error}
         </p>
       )}
 
       {hint && !error && (
-        <p id={`${textareaId}-hint`} className="text-sm text-muted-foreground">
+        <p id={`${textareaId}-hint`} className="text-muted-foreground text-sm">
           {hint}
         </p>
       )}

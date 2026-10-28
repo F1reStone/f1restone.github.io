@@ -6,10 +6,17 @@ import { defaultLocale, isEnabled, getLocales } from '@/i18n';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const projects = await getCollection('projects', ({ data }) => {
-    return (data.locale === defaultLocale || (isEnabled() && getLocales().includes(data.locale))) && (import.meta.env.PROD ? data.draft !== true : true);
+    return (
+      (data.locale === defaultLocale || (isEnabled() && getLocales().includes(data.locale))) &&
+      (import.meta.env.PROD ? data.draft !== true : true)
+    );
   });
   return projects.map((project) => ({
-    params: { slug: (project.data.locale === defaultLocale ? '' : project.data.locale + '/') + getProjectSlug(project.id, project.data.locale) },
+    params: {
+      slug:
+        (project.data.locale === defaultLocale ? '' : project.data.locale + '/') +
+        getProjectSlug(project.id, project.data.locale),
+    },
     props: {
       title: project.data.title,
       description: project.data.description,

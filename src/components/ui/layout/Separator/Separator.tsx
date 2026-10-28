@@ -8,14 +8,20 @@ interface SeparatorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ref'> {
   label?: string;
 }
 
-export function Separator({ ref, orientation = 'horizontal', label, className, ...rest }: SeparatorProps) {
+export function Separator({
+  ref,
+  orientation = 'horizontal',
+  label,
+  className,
+  ...rest
+}: SeparatorProps) {
   if (label) {
     return (
       <div
         ref={ref}
         className={cn(
           'flex items-center gap-3',
-          orientation === 'vertical' && 'flex-col h-full',
+          orientation === 'vertical' && 'h-full flex-col',
           className
         )}
         role="separator"
@@ -23,7 +29,7 @@ export function Separator({ ref, orientation = 'horizontal', label, className, .
         {...rest}
       >
         <div className={cn(separatorVariants({ orientation }), 'flex-1')} />
-        <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">{label}</span>
+        <span className="text-muted-foreground text-xs font-medium whitespace-nowrap">{label}</span>
         <div className={cn(separatorVariants({ orientation }), 'flex-1')} />
       </div>
     );

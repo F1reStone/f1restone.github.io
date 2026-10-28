@@ -49,7 +49,7 @@ import { selectorThemes as themes } from '@/lib/themes';
       stroke-linejoin="round"
       aria-hidden="true"
     >
-      <path d="m6 9 6 6 6-6"/>
+      <path d="m6 9 6 6 6-6" />
     </svg>
   </button>
 
@@ -65,7 +65,9 @@ import { selectorThemes as themes } from '@/lib/themes';
       'hidden'
     )}
   >
-    <p class="text-xs font-medium text-foreground-muted mb-2.5 px-0.5">{t('theme.colourTheme', locale)}</p>
+    <p class="text-xs font-medium text-foreground-muted mb-2.5 px-0.5">
+      {t('theme.colourTheme', locale)}
+    </p>
     <div class="grid grid-cols-4 gap-1.5">
       {themes.map((theme) => (
         <button
@@ -74,10 +76,7 @@ import { selectorThemes as themes } from '@/lib/themes';
           data-theme-id={theme.id}
           aria-label={t('theme.namedTheme', locale, { name: theme.name })}
         >
-          <span
-            class="h-4 w-4 rounded-full block"
-            style={`background-color:${theme.color}`}
-          />
+          <span class="h-4 w-4 rounded-full block" style={`background-color:${theme.color}`} />
           <span class="text-[9px] font-medium text-foreground-muted group-hover:text-foreground group-focus-visible:text-foreground leading-none">
             {theme.name}
           </span>
@@ -117,7 +116,11 @@ import { selectorThemes as themes } from '@/lib/themes';
 
   function setTheme(id: string) {
     document.documentElement.setAttribute('data-theme', id);
-    try { sessionStorage.setItem(STORAGE_KEY, id); } catch { /* private mode */ }
+    try {
+      sessionStorage.setItem(STORAGE_KEY, id);
+    } catch {
+      /* private mode */
+    }
 
     // Update dropdown swatches
     const ddSwatches = document.querySelectorAll<HTMLButtonElement>('.theme-swatch-dd');
@@ -182,7 +185,9 @@ import { selectorThemes as themes } from '@/lib/themes';
       e.stopPropagation();
       const willOpen = panel.classList.contains('hidden');
       // Close Pill A (theme-mode) panels
-      document.querySelectorAll<HTMLElement>('.ttg-panel').forEach((p) => p.classList.add('hidden'));
+      document
+        .querySelectorAll<HTMLElement>('.ttg-panel')
+        .forEach((p) => p.classList.add('hidden'));
       document.querySelectorAll<HTMLButtonElement>('.ttg-trigger').forEach((t) => {
         t.setAttribute('aria-expanded', 'false');
         t.querySelector('.ttg-chevron')?.classList.remove('rotate-180');

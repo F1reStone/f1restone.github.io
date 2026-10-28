@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 for (const width of [390, 1440]) {
-  test(`icon glow follows controls without changing their surface at ${width}px`, async ({ page }) => {
-    await page.route('**/*', route =>
+  test(`icon glow follows controls without changing their surface at ${width}px`, async ({
+    page,
+  }) => {
+    await page.route('**/*', (route) =>
       new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort()
     );
     await page.setViewportSize({ width, height: 844 });
@@ -15,8 +17,10 @@ for (const width of [390, 1440]) {
       const button = document.querySelector<HTMLButtonElement>('button.group')!;
       const fixture = document.createElement('div');
       fixture.id = 'glow-fixture';
-      fixture.style.cssText = 'position:fixed;inset:100px 0 auto;z-index:9999;display:grid;gap:16px;padding:16px;background:var(--color-background)';
-      const svg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12h16M12 4l8 8-8 8" /></svg>';
+      fixture.style.cssText =
+        'position:fixed;inset:100px 0 auto;z-index:9999;display:grid;gap:16px;padding:16px;background:var(--color-background)';
+      const svg =
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12h16M12 4l8 8-8 8" /></svg>';
       for (const mode of ['control', 'icon', 'wrapper', 'disabled', 'link']) {
         const control = document.createElement(mode === 'link' ? 'a' : 'button');
         control.id = `glow-${mode}`;
@@ -40,7 +44,7 @@ for (const width of [390, 1440]) {
       const control = page.locator(`#glow-${mode}`);
       const icon = control.locator('svg');
       if (mode !== 'link') await expect(icon).toHaveCSS('pointer-events', 'none');
-      const surface = await control.evaluate(el => getComputedStyle(el).backgroundColor);
+      const surface = await control.evaluate((el) => getComputedStyle(el).backgroundColor);
       // Hovering the label must activate the icon, even when the SVG cannot be hit.
       await control.locator('span').first().hover();
       await expect(icon).toHaveCSS('scale', '1.03');
@@ -54,7 +58,7 @@ for (const width of [390, 1440]) {
       await page.keyboard.press('Shift+Tab');
       await expect(control).toBeFocused();
       await expect(icon).toHaveCSS('scale', '1.03');
-      await control.evaluate(el => (el as HTMLElement).blur());
+      await control.evaluate((el) => (el as HTMLElement).blur());
     }
 
     const disabled = page.locator('#glow-disabled');

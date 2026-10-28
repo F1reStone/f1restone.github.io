@@ -56,10 +56,7 @@ export function Tooltip({
       onBlur={hide}
     >
       {children}
-      <span
-        className={cn('tooltip-bubble', visible && 'visible')}
-        role="tooltip"
-      >
+      <span className={cn('tooltip-bubble', visible && 'visible')} role="tooltip">
         {content}
       </span>
     </span>

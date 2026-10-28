@@ -51,7 +51,8 @@ interface TabsProps {
  *   <div data-tab-content="tab2">Content for tab 2</div>
  * </Tabs>
  */
-export function Tabs({ locale = defaultLocale,
+export function Tabs({
+  locale = defaultLocale,
   tabs,
   defaultValue,
   value,
@@ -73,7 +74,7 @@ export function Tabs({ locale = defaultLocale,
       }
       onChange?.(id);
     },
-    [isControlled, onChange],
+    [isControlled, onChange]
   );
 
   const handleKeyDown = useCallback(
@@ -106,7 +107,7 @@ export function Tabs({ locale = defaultLocale,
         tabButton?.focus();
       }
     },
-    [tabs, generatedId, handleTabChange],
+    [tabs, generatedId, handleTabChange]
   );
 
   // Process children to add panel attributes and visibility control
@@ -114,8 +115,7 @@ export function Tabs({ locale = defaultLocale,
     if (!isValidElement(child)) return null;
 
     const tabContentId = (child.props as Record<string, unknown>)?.['data-tab-content'] as
-      | string
-      | undefined;
+      string | undefined;
     if (!tabContentId) return child;
 
     const isActive = tabContentId === activeTabId;
@@ -129,7 +129,7 @@ export function Tabs({ locale = defaultLocale,
       className: cn(
         (child.props as Record<string, string | undefined>)?.className,
         'outline-none rounded-md',
-        'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
       ),
     });
   });
@@ -139,7 +139,7 @@ export function Tabs({ locale = defaultLocale,
       {/* Tab List */}
       <div
         ref={tablistRef}
-        className="flex border-b border-border"
+        className="border-border flex border-b"
         role="tablist"
         aria-label={t('common.tabs', locale)}
       >
@@ -158,11 +158,11 @@ export function Tabs({ locale = defaultLocale,
               onClick={() => handleTabChange(tab.id)}
               onKeyDown={(e) => handleKeyDown(e, index)}
               className={cn(
-                'px-4 py-2.5 text-sm font-medium -mb-px border-b-2 transition-colors',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                '-mb-px border-b-2 px-4 py-2.5 text-sm font-medium transition-colors',
+                'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                 isActive
                   ? 'border-foreground text-foreground'
-                  : 'border-transparent text-foreground-muted hover:text-foreground focus-visible:text-foreground hover:border-border focus-visible:border-border',
+                  : 'text-foreground-muted hover:text-foreground focus-visible:text-foreground hover:border-border focus-visible:border-border border-transparent'
               )}
             >
               {tab.label}

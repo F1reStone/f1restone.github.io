@@ -1,4 +1,16 @@
-import { useState, useId, useCallback, useRef, useEffect, Children, isValidElement, cloneElement, type ReactNode, type ReactElement, type KeyboardEvent } from 'react';
+import {
+  useState,
+  useId,
+  useCallback,
+  useRef,
+  useEffect,
+  Children,
+  isValidElement,
+  cloneElement,
+  type ReactNode,
+  type ReactElement,
+  type KeyboardEvent,
+} from 'react';
 import { cn } from '@/lib/cn';
 import { ChevronDown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -47,7 +59,8 @@ interface VerticalTabsProps {
  *   <div data-tab-content="b">Content B</div>
  * </VerticalTabs>
  */
-export function VerticalTabs({ locale = defaultLocale,
+export function VerticalTabs({
+  locale = defaultLocale,
   tabs,
   defaultValue,
   value,
@@ -66,7 +79,7 @@ export function VerticalTabs({ locale = defaultLocale,
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const activeTabId = isControlled ? value : internalValue;
-  const activeTabData = tabs.find(t => t.id === activeTabId);
+  const activeTabData = tabs.find((t) => t.id === activeTabId);
   const ActiveIcon = activeTabData?.icon;
 
   // Close dropdown with exit animation
@@ -79,13 +92,16 @@ export function VerticalTabs({ locale = defaultLocale,
     }, 200); // Match animation duration
   }, [isDropdownOpen, isClosing]);
 
-  const handleTabChange = useCallback((id: string) => {
-    if (!isControlled) {
-      setInternalValue(id);
-    }
-    onChange?.(id);
-    closeDropdown();
-  }, [isControlled, onChange, closeDropdown]);
+  const handleTabChange = useCallback(
+    (id: string) => {
+      if (!isControlled) {
+        setInternalValue(id);
+      }
+      onChange?.(id);
+      closeDropdown();
+    },
+    [isControlled, onChange, closeDropdown]
+  );
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -119,92 +135,99 @@ export function VerticalTabs({ locale = defaultLocale,
       setFocusedIndex(-1);
     } else {
       // Set initial focus to active tab
-      const activeIndex = tabs.findIndex(t => t.id === activeTabId);
+      const activeIndex = tabs.findIndex((t) => t.id === activeTabId);
       setFocusedIndex(activeIndex >= 0 ? activeIndex : 0);
     }
   }, [isDropdownOpen, tabs, activeTabId]);
 
-  const handleDropdownKeyDown = useCallback((e: KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
-    if (!isDropdownOpen) {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        setIsDropdownOpen(true);
-      }
-      return;
-    }
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setFocusedIndex(prev => (prev < tabs.length - 1 ? prev + 1 : 0));
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setFocusedIndex(prev => (prev > 0 ? prev - 1 : tabs.length - 1));
-        break;
-      case 'Home':
-        e.preventDefault();
-        setFocusedIndex(0);
-        break;
-      case 'End':
-        e.preventDefault();
-        setFocusedIndex(tabs.length - 1);
-        break;
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
-        if (focusedIndex >= 0 && tabs[focusedIndex]) {
-          handleTabChange(tabs[focusedIndex].id);
-          triggerRef.current?.focus();
+  const handleDropdownKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLButtonElement | HTMLDivElement>) => {
+      if (!isDropdownOpen) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          setIsDropdownOpen(true);
         }
-        break;
-      case 'Tab':
-        closeDropdown();
-        break;
-    }
-  }, [isDropdownOpen, tabs, focusedIndex, handleTabChange, closeDropdown]);
-
-  const handleDesktopKeyDown = useCallback((e: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
-    let newIndex: number;
-
-    switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault();
-        newIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        newIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
-        break;
-      case 'Home':
-        e.preventDefault();
-        newIndex = 0;
-        break;
-      case 'End':
-        e.preventDefault();
-        newIndex = tabs.length - 1;
-        break;
-      default:
         return;
-    }
-
-    const newTab = tabs[newIndex];
-    if (newTab) {
-      if (!isControlled) {
-        setInternalValue(newTab.id);
       }
-      onChange?.(newTab.id);
-      // Focus the new tab button
-      const tabButton = document.getElementById(`vtab-${generatedId}-${newTab.id}`);
-      tabButton?.focus();
-    }
-  }, [tabs, generatedId, isControlled, onChange]);
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedIndex((prev) => (prev < tabs.length - 1 ? prev + 1 : 0));
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedIndex((prev) => (prev > 0 ? prev - 1 : tabs.length - 1));
+          break;
+        case 'Home':
+          e.preventDefault();
+          setFocusedIndex(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          setFocusedIndex(tabs.length - 1);
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          if (focusedIndex >= 0 && tabs[focusedIndex]) {
+            handleTabChange(tabs[focusedIndex].id);
+            triggerRef.current?.focus();
+          }
+          break;
+        case 'Tab':
+          closeDropdown();
+          break;
+      }
+    },
+    [isDropdownOpen, tabs, focusedIndex, handleTabChange, closeDropdown]
+  );
+
+  const handleDesktopKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
+      let newIndex: number;
+
+      switch (e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          newIndex = currentIndex > 0 ? currentIndex - 1 : tabs.length - 1;
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          newIndex = currentIndex < tabs.length - 1 ? currentIndex + 1 : 0;
+          break;
+        case 'Home':
+          e.preventDefault();
+          newIndex = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          newIndex = tabs.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      const newTab = tabs[newIndex];
+      if (newTab) {
+        if (!isControlled) {
+          setInternalValue(newTab.id);
+        }
+        onChange?.(newTab.id);
+        // Focus the new tab button
+        const tabButton = document.getElementById(`vtab-${generatedId}-${newTab.id}`);
+        tabButton?.focus();
+      }
+    },
+    [tabs, generatedId, isControlled, onChange]
+  );
 
   // Process children to add visibility control - render only once
   const contentPanels = Children.map(children, (child) => {
     if (!isValidElement(child)) return null;
 
-    const tabContentId = (child.props as Record<string, unknown>)?.['data-tab-content'] as string | undefined;
+    const tabContentId = (child.props as Record<string, unknown>)?.['data-tab-content'] as
+      string | undefined;
     if (!tabContentId) return child;
 
     const isActive = tabContentId === activeTabId;
@@ -238,9 +261,9 @@ export function VerticalTabs({ locale = defaultLocale,
         aria-selected={isActive}
         onClick={() => handleTabChange(tab.id)}
         className={cn(
-          'group relative w-full flex items-center gap-3 p-4 text-left',
+          'group relative flex w-full items-center gap-3 p-4 text-left',
           'transition-all duration-200',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-1',
+          'focus-visible:ring-ring/40 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none',
           isSheet ? 'rounded-xl' : 'rounded-lg',
           isActive
             ? cn(
@@ -261,12 +284,12 @@ export function VerticalTabs({ locale = defaultLocale,
           <div
             className={cn(
               'relative flex items-center justify-center',
-              'w-10 h-10 rounded-xl shrink-0',
+              'h-10 w-10 shrink-0 rounded-xl',
               'transition-all duration-200',
               isActive
                 ? cn(
                     'bg-brand-100 dark:bg-brand-900/40',
-                    'ring-1 ring-brand-200 dark:ring-brand-800'
+                    'ring-brand-200 dark:ring-brand-800 ring-1'
                   )
                 : cn(
                     'bg-secondary',
@@ -292,26 +315,24 @@ export function VerticalTabs({ locale = defaultLocale,
         {!Icon && (
           <div
             className={cn(
-              'w-10 h-10 rounded-xl shrink-0 flex items-center justify-center',
+              'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
               'transition-all duration-200',
-              isActive
-                ? 'bg-brand-100 dark:bg-brand-900/40'
-                : 'bg-secondary'
+              isActive ? 'bg-brand-100 dark:bg-brand-900/40' : 'bg-secondary'
             )}
           >
             <div
               className={cn(
                 'rounded-full transition-all duration-200',
                 isActive
-                  ? 'w-2.5 h-2.5 bg-brand-500'
-                  : 'w-1.5 h-1.5 bg-foreground-subtle group-hover:w-2 group-hover:h-2'
+                  ? 'bg-brand-500 h-2.5 w-2.5'
+                  : 'bg-foreground-subtle h-1.5 w-1.5 group-hover:h-2 group-hover:w-2'
               )}
             />
           </div>
         )}
 
         {/* Label & Description */}
-        <div className="flex-1 min-w-0 py-0.5">
+        <div className="min-w-0 flex-1 py-0.5">
           <span
             className={cn(
               'block font-medium transition-colors duration-150',
@@ -325,7 +346,7 @@ export function VerticalTabs({ locale = defaultLocale,
           {tab.description && (
             <span
               className={cn(
-                'block text-sm mt-0.5 transition-colors duration-150',
+                'mt-0.5 block text-sm transition-colors duration-150',
                 isActive
                   ? 'text-foreground-muted'
                   : 'text-foreground-subtle group-hover:text-foreground-muted group-focus-visible:text-foreground-muted'
@@ -339,10 +360,8 @@ export function VerticalTabs({ locale = defaultLocale,
         {/* Active indicator - vertical accent bar */}
         <div
           className={cn(
-            'w-1 rounded-full transition-all duration-200 shrink-0',
-            isActive
-              ? 'h-8 bg-brand-500'
-              : 'h-0 group-hover:h-4 group-hover:bg-brand-500/25'
+            'w-1 shrink-0 rounded-full transition-all duration-200',
+            isActive ? 'bg-brand-500 h-8' : 'group-hover:bg-brand-500/25 h-0 group-hover:h-4'
           )}
         />
       </button>
@@ -352,7 +371,7 @@ export function VerticalTabs({ locale = defaultLocale,
   return (
     <div className={cn('w-full', className)}>
       {/* Mobile: Custom Dropdown (hidden on lg+) */}
-      <div className="lg:hidden mb-[var(--space-heading-gap)]" ref={dropdownRef}>
+      <div className="mb-[var(--space-heading-gap)] lg:hidden" ref={dropdownRef}>
         <div className="relative">
           {/* Trigger Button */}
           <button
@@ -364,30 +383,28 @@ export function VerticalTabs({ locale = defaultLocale,
             aria-haspopup="listbox"
             aria-controls={`vtab-dropdown-${generatedId}`}
             className={cn(
-              'w-full flex items-center gap-3 p-4 rounded-xl',
-              'border-2 border-border bg-gradient-to-b from-background to-background-secondary',
-              'shadow-sm hover:shadow-md hover:border-brand-300/50 dark:hover:border-brand-700/50',
+              'flex w-full items-center gap-3 rounded-xl p-4',
+              'border-border from-background to-background-secondary border-2 bg-gradient-to-b',
+              'hover:border-brand-300/50 dark:hover:border-brand-700/50 shadow-sm hover:shadow-md',
               'transition-all duration-200',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 focus-visible:ring-offset-2',
-              isDropdownOpen && 'shadow-md border-brand-300/50 dark:border-brand-700/50'
+              'focus-visible:ring-brand-500/30 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+              isDropdownOpen && 'border-brand-300/50 dark:border-brand-700/50 shadow-md'
             )}
           >
             {ActiveIcon && (
-              <ActiveIcon className="h-5 w-5 text-brand-500 shrink-0" strokeWidth={2} />
+              <ActiveIcon className="text-brand-500 h-5 w-5 shrink-0" strokeWidth={2} />
             )}
-            <div className="flex-1 min-w-0 text-left">
-              <span className="font-semibold text-foreground block">
-                {activeTabData?.label}
-              </span>
+            <div className="min-w-0 flex-1 text-left">
+              <span className="text-foreground block font-semibold">{activeTabData?.label}</span>
               {activeTabData?.description && (
-                <span className="text-foreground-muted text-xs truncate block">
+                <span className="text-foreground-muted block truncate text-xs">
                   {activeTabData.description}
                 </span>
               )}
             </div>
             <ChevronDown
               className={cn(
-                'h-5 w-5 text-foreground-muted transition-transform duration-200',
+                'text-foreground-muted h-5 w-5 transition-transform duration-200',
                 isDropdownOpen && 'rotate-180'
               )}
               strokeWidth={2}
@@ -398,11 +415,7 @@ export function VerticalTabs({ locale = defaultLocale,
           {(isDropdownOpen || isClosing) && mobileVariant === 'dropdown' && (
             <>
               {/* Backdrop - click to close */}
-              <div
-                className="fixed inset-0 z-40"
-                onClick={closeDropdown}
-                aria-hidden="true"
-              />
+              <div className="fixed inset-0 z-40" onClick={closeDropdown} aria-hidden="true" />
               {/* Panel */}
               <div
                 id={`vtab-dropdown-${generatedId}`}
@@ -410,8 +423,8 @@ export function VerticalTabs({ locale = defaultLocale,
                 aria-labelledby={`vtab-trigger-${generatedId}`}
                 onKeyDown={handleDropdownKeyDown}
                 className={cn(
-                  'absolute z-50 w-full mt-2 p-1.5',
-                  'rounded-xl border border-border bg-background/95 backdrop-blur-sm shadow-xl',
+                  'absolute z-50 mt-2 w-full p-1.5',
+                  'border-border bg-background/95 rounded-xl border shadow-xl backdrop-blur-sm',
                   isClosing ? 'animate-dropdown-out' : 'animate-dropdown-in',
                   'flex flex-col gap-0.5'
                 )}
@@ -428,7 +441,7 @@ export function VerticalTabs({ locale = defaultLocale,
             {/* Backdrop - frosted glass effect like mobile menu */}
             <div
               className={cn(
-                'fixed inset-0 z-40 bg-background/60 backdrop-blur-sm',
+                'bg-background/60 fixed inset-0 z-40 backdrop-blur-sm',
                 isClosing ? 'animate-backdrop-out' : 'animate-backdrop'
               )}
               onClick={closeDropdown}
@@ -442,21 +455,21 @@ export function VerticalTabs({ locale = defaultLocale,
               onKeyDown={handleDropdownKeyDown}
               className={cn(
                 'fixed inset-x-0 bottom-0 z-50 max-h-[70vh] overflow-auto',
-                'rounded-t-2xl border-t border-border bg-background shadow-2xl',
+                'border-border bg-background rounded-t-2xl border-t shadow-2xl',
                 isClosing ? 'animate-sheet-down' : 'animate-sheet-up',
                 'pb-safe'
               )}
             >
               {/* Drag Handle */}
-              <div className="sticky top-0 flex justify-center py-3 bg-background z-10">
-                <div className="w-10 h-1 rounded-full bg-border" />
+              <div className="bg-background sticky top-0 z-10 flex justify-center py-3">
+                <div className="bg-border h-1 w-10 rounded-full" />
               </div>
               {/* Header */}
               <div className="px-4 pb-2">
-                <h3 className="text-sm font-medium text-foreground-muted">Select Tab</h3>
+                <h3 className="text-foreground-muted text-sm font-medium">Select Tab</h3>
               </div>
               {/* Options */}
-              <div className="px-2 pb-4 flex flex-col gap-1">
+              <div className="flex flex-col gap-1 px-2 pb-4">
                 {tabs.map((tab, index) => renderMobileOption(tab, index, true))}
               </div>
             </div>
@@ -468,7 +481,7 @@ export function VerticalTabs({ locale = defaultLocale,
       <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-[var(--space-stack-lg)]">
         {/* Desktop Tab List Sidebar (hidden on mobile) */}
         <div
-          className="hidden lg:flex lg:col-span-4 flex-col gap-1"
+          className="hidden flex-col gap-1 lg:col-span-4 lg:flex"
           role="tablist"
           aria-orientation="vertical"
           aria-label={t('common.verticalTabs', locale)}
@@ -490,7 +503,7 @@ export function VerticalTabs({ locale = defaultLocale,
                 onKeyDown={(e) => handleDesktopKeyDown(e, index)}
                 className={cn(
                   'group flex flex-col items-start rounded-md p-4 text-left transition-all',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                  'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                   isActive
                     ? 'bg-secondary ring-border shadow-sm ring-1'
                     : 'hover:bg-background-secondary hover:pl-5'
@@ -518,10 +531,7 @@ export function VerticalTabs({ locale = defaultLocale,
                   {tab.label}
                 </span>
                 {tab.description && (
-                  <span className={cn(
-                    'text-foreground-muted mt-1 text-sm',
-                    Icon ? 'pl-7' : ''
-                  )}>
+                  <span className={cn('text-foreground-muted mt-1 text-sm', Icon ? 'pl-7' : '')}>
                     {tab.description}
                   </span>
                 )}
@@ -531,9 +541,7 @@ export function VerticalTabs({ locale = defaultLocale,
         </div>
 
         {/* Content Area - single render, works for both mobile and desktop */}
-        <div className="col-span-1 lg:col-span-8">
-          {contentPanels}
-        </div>
+        <div className="col-span-1 lg:col-span-8">{contentPanels}</div>
       </div>
     </div>
   );

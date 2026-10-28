@@ -1,8 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import config from '@/config/i18n.config';
 const originalEnabled = config.enabled;
-beforeEach(() => { config.enabled = false; });
-afterEach(() => { config.enabled = originalEnabled; });
+beforeEach(() => {
+  config.enabled = false;
+});
+afterEach(() => {
+  config.enabled = originalEnabled;
+});
 import {
   t,
   localizedPath,

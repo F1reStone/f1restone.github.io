@@ -61,10 +61,7 @@ export function Accordion({
               type="button"
               aria-expanded={isOpen}
               aria-controls={panelId}
-              className={cn(
-                accordionTriggerVariants({ size }),
-                'cursor-pointer',
-              )}
+              className={cn(accordionTriggerVariants({ size }), 'cursor-pointer')}
               onClick={() => toggle(index)}
             >
               {item.title}
@@ -79,8 +76,8 @@ export function Accordion({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className={cn(
-                  'shrink-0 text-foreground-muted transition-transform duration-200',
-                  isOpen && 'rotate-180',
+                  'text-foreground-muted shrink-0 transition-transform duration-200',
+                  isOpen && 'rotate-180'
                 )}
                 aria-hidden="true"
               >
@@ -92,7 +89,7 @@ export function Accordion({
               role="region"
               aria-labelledby={triggerId}
               hidden={!isOpen}
-              className="pb-4 text-sm text-foreground-muted leading-relaxed"
+              className="text-foreground-muted pb-4 text-sm leading-relaxed"
             >
               {item.content}
             </div>

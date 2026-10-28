@@ -23,10 +23,9 @@ const {
   ...attrs
 } = Astro.props;
 
-const style = [
-  width && `width: ${width}`,
-  height && `height: ${height}`,
-].filter(Boolean).join('; ');
+const style = [width && `width: ${width}`, height && `height: ${height}`]
+  .filter(Boolean)
+  .join('; ');
 ---
 
 <div
@@ -39,7 +38,8 @@ const style = [
 
 <style>
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {

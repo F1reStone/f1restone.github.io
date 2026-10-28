@@ -1,6 +1,10 @@
 import { useId, type HTMLAttributes, type Ref, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
-import { progressTrackVariants, progressBarVariants, type ProgressVariants } from './progress.variants';
+import {
+  progressTrackVariants,
+  progressBarVariants,
+  type ProgressVariants,
+} from './progress.variants';
 import { t, defaultLocale, type Locale } from '@/i18n';
 
 interface ProgressProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ref'> {
@@ -24,9 +28,22 @@ interface ProgressProps extends Omit<HTMLAttributes<HTMLDivElement>, 'ref'> {
   children?: ReactNode;
 }
 
-export function Progress({ locale = defaultLocale, ref, value, max = 100, variant = 'default', size = 'md', showLabel = false, label, className, children, ...rest }: ProgressProps) {
+export function Progress({
+  locale = defaultLocale,
+  ref,
+  value,
+  max = 100,
+  variant = 'default',
+  size = 'md',
+  showLabel = false,
+  label,
+  className,
+  children,
+  ...rest
+}: ProgressProps) {
   const isIndeterminate = value === undefined;
-  const percentage = isIndeterminate || max <= 0 ? 0 : Math.min(100, Math.max(0, (value / max) * 100));
+  const percentage =
+    isIndeterminate || max <= 0 ? 0 : Math.min(100, Math.max(0, (value / max) * 100));
 
   // See the note in Progress.astro: `aria-valuenow` alone is announced as a
   // bare number, so the bar needs a name from the visible label or a fallback.
@@ -38,9 +55,11 @@ export function Progress({ locale = defaultLocale, ref, value, max = 100, varian
   return (
     <div ref={ref} className={cn('w-full', className)} {...rest}>
       {showLabel && !isIndeterminate && (
-        <div className="flex justify-between mb-1.5">
+        <div className="mb-1.5 flex justify-between">
           <span id={labelId}>{children}</span>
-          <span className="text-xs font-medium text-foreground-muted">{Math.round(percentage)}%</span>
+          <span className="text-foreground-muted text-xs font-medium">
+            {Math.round(percentage)}%
+          </span>
         </div>
       )}
       <div

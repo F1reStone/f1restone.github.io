@@ -61,7 +61,9 @@ const hasBody = Astro.slots.has('default');
   {(title || hasBody) && (
     <div>
       {title && (
-        <TitleTag class={cn('font-semibold text-foreground', size === 'sm' ? 'text-sm' : 'text-base')}>
+        <TitleTag
+          class={cn('font-semibold text-foreground', size === 'sm' ? 'text-sm' : 'text-base')}
+        >
           {title}
         </TitleTag>
       )}

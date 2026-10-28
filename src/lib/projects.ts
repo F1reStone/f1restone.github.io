@@ -80,7 +80,7 @@ export function getSecondaryLocales(): string[] {
  * filtered out in production, kept visible in dev so authors can preview them.
  */
 export async function getVisibleProjects(
-  locale: string = defaultLocale,
+  locale: string = defaultLocale
 ): Promise<CollectionEntry<'projects'>[]> {
   const all = await getCollection('projects', ({ data }) => {
     return data.locale === locale && (import.meta.env.PROD ? data.draft !== true : true);
@@ -99,7 +99,7 @@ export async function getProjectPageCount(locale: string = defaultLocale): Promi
 
 /** Published entries with a detail page; solo projects keep their dedicated route. */
 export async function getRoutableProjects(locale: string = defaultLocale) {
-  return (await getVisibleProjects(locale)).filter(project => !project.data.placeholder);
+  return (await getVisibleProjects(locale)).filter((project) => !project.data.placeholder);
 }
 
 /**
@@ -111,7 +111,7 @@ export async function getRoutableProjects(locale: string = defaultLocale) {
  */
 export async function getProjectTranslations(
   slug: string,
-  _currentLocale: string = defaultLocale,
+  _currentLocale: string = defaultLocale
 ): Promise<{ locale: string; url: string }[]> {
   if (!isEnabled()) return [];
   const all = await getCollection('projects', ({ data }) => {
@@ -120,9 +120,10 @@ export async function getProjectTranslations(
   const results: { locale: string; url: string }[] = [];
   for (const locale of getLocales()) {
     const match = all.find(
-      (p) => p.data.locale === locale && getProjectSlug(p.id, locale) === slug,
+      (p) => p.data.locale === locale && getProjectSlug(p.id, locale) === slug
     );
-    if (match && !match.data.placeholder && (!match.data.soloPage || locale === defaultLocale)) results.push({ locale, url: getProjectUrl(match.id, locale) });
+    if (match && !match.data.placeholder && (!match.data.soloPage || locale === defaultLocale))
+      results.push({ locale, url: getProjectUrl(match.id, locale) });
   }
   return results;
 }

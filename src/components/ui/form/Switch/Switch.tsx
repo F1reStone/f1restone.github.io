@@ -64,22 +64,28 @@ export function Switch({
       </button>
 
       {/* Hidden input for form submission */}
-      {name && (
-        <input type="hidden" name={name} value={isChecked ? (value || 'on') : ''} />
-      )}
+      {name && <input type="hidden" name={name} value={isChecked ? value || 'on' : ''} />}
 
       {(label || description) && (
         <div className="grid gap-0.5">
           {label && (
             <label
               htmlFor={switchId}
-              className={cn('text-sm font-medium text-foreground cursor-pointer', disabled && 'cursor-not-allowed')}
+              className={cn(
+                'text-foreground cursor-pointer text-sm font-medium',
+                disabled && 'cursor-not-allowed'
+              )}
             >
               {label}
             </label>
           )}
           {description && (
-            <p id={`${switchId}-description`} className="text-xs text-foreground-subtle leading-normal">{description}</p>
+            <p
+              id={`${switchId}-description`}
+              className="text-foreground-subtle text-xs leading-normal"
+            >
+              {description}
+            </p>
           )}
         </div>
       )}
