@@ -8,8 +8,15 @@ const registry = JSON.parse(readFileSync('component-registry.json', 'utf8'));
 // Guard author-facing promises against drifting away from the actual checkout.
 describe('original-project documentation', () => {
   it('names the installed version ranges and pinned package manager accurately', () => {
-    for (const [label, dependency] of [['Astro', 'astro'], ['Tailwind', 'tailwindcss'], ['TypeScript', 'typescript']]) {
-      const version = (pkg.dependencies[dependency] ?? pkg.devDependencies[dependency]).replace(/^[~^]/, '');
+    for (const [label, dependency] of [
+      ['Astro', 'astro'],
+      ['Tailwind', 'tailwindcss'],
+      ['TypeScript', 'typescript'],
+    ]) {
+      const version = (pkg.dependencies[dependency] ?? pkg.devDependencies[dependency]).replace(
+        /^[~^]/,
+        ''
+      );
       expect(readme).toContain(`${label}-${version}-`);
     }
     expect(readme).toContain(`**pnpm ${pkg.packageManager.split('@')[1]}**`);
@@ -17,7 +24,8 @@ describe('original-project documentation', () => {
   });
 
   it('documents runnable package scripts', () => {
-    const commands = [...readme.matchAll(/\| `pnpm ([\w:-]+)` \|/g)].map(match => match[1]);
+    // Prettier pads Markdown table cells, so allow spaces before the closing pipe.
+    const commands = [...readme.matchAll(/\| `pnpm ([\w:-]+)`[ \t]*\|/g)].map((match) => match[1]);
     expect(commands.length).toBeGreaterThan(5);
     for (const command of commands) expect(pkg.scripts, command).toHaveProperty(command);
   });
