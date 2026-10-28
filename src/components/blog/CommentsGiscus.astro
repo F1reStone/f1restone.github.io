@@ -77,10 +77,19 @@ const dataAttrs = isConfigured
 
 <script>
   // FireStone: Dynamic Giscus Theme Management
+  // Keep the themes on our own origin. GitHub's raw endpoint serves CSS as
+  // text/plain, which browsers refuse to apply when nosniff is enabled.
+  const giscusThemePaths = {
+    dark: '/giscus/firestone-dark.css',
+    light: '/giscus/firestone-light.css',
+  };
+
   function getGiscusTheme() {
     const isDark = document.documentElement.classList.contains('dark');
-    // 使用我们在 public 目录下自定义的独立主题文件
-    return isDark ? `https://raw.githubusercontent.com/F1reStone/f1restone.github.io/refs/heads/main/public/giscus/firestone-dark.css` : `https://raw.githubusercontent.com/F1reStone/f1restone.github.io/refs/heads/main/public/giscus/firestone-light.css`;
+    const path = isDark ? giscusThemePaths.dark : giscusThemePaths.light;
+    // giscus resolves relative theme URLs against giscus.app, so send an
+    // absolute URL for the origin this copy of the site is served from.
+    return new URL(path, window.location.origin).href;
   }
 
   function updateGiscusTheme() {

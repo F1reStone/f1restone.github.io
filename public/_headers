@@ -1,0 +1,13 @@
+# Giscus loads custom themes from inside its iframe on giscus.app. The
+# stylesheet link is crossorigin="anonymous", so these assets must be
+# CORS-readable. Cloudflare Workers static assets do not add CORS headers by
+# default (GitHub Pages did).
+/giscus/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
+
+# The Giscus themes reference site fonts through @font-face. Font requests
+# from the giscus.app iframe are cross-origin as well.
+/fonts/*
+  Access-Control-Allow-Origin: *
+  Cross-Origin-Resource-Policy: cross-origin
