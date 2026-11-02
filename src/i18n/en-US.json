@@ -241,6 +241,8 @@
     "footerGradientDescription": "Enable or disable the footer's dynamic gradient.",
     "variableFont": "Variable-font interaction",
     "variableFontDescription": "Increase font weight when hovering, clicking, or selecting certain options.",
+    "smoothScroll": "Smooth scrolling",
+    "smoothScrollDescription": "Enable Lenis smooth scrolling on desktop. Touch devices keep native scrolling, and touch/low-performance devices default to off; you can turn it on here.",
     "options": {
       "static": "Static",
       "dynamic": "Dynamic",

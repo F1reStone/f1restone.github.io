@@ -1,6 +1,9 @@
-import Lenis from 'lenis';
+import type Lenis from 'lenis';
 
 const SCROLL_LOCK_CLASS = 'firestone-scroll-locked';
+
+type SmoothScrollSetting = 'off' | 'on';
+type LenisConstructor = (typeof import('lenis'))['default'];
 
 function normalisePath(pathname: string): string {
   return pathname.replace(/\/+$/, '') || '/';
@@ -10,37 +13,65 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function isLenisAllowed(): boolean {
+  return document.documentElement.dataset.effectSmoothScroll === 'on' && !prefersReducedMotion();
+}
+
 /**
- * Initialise Lenis once per document and expose the page-scroll controls used
- * by dialogs, the search overlay, the mobile menu, and back-to-top.
+ * Set up the page-scroll API used by dialogs, search, the mobile menu, and
+ * back-to-top. Lenis itself is loaded lazily and only when the performance
+ * gate in BaseLayout allows it.
  *
- * Lenis scrolls the native document (it does not transform a wrapper), so
- * `position: sticky`, IntersectionObserver, and the existing `window.scrollY`
- * consumers keep working. Overlays request a ref-counted lock from this
- * controller so stacked dialogs do not unlock the page early.
+ * Lenis smooths wheel/trackpad input. On touch devices it adds non-passive
+ * touch listeners and a continuous rAF loop without smoothing native touch
+ * scrolling, so those devices keep native scrolling and skip the library
+ * entirely unless the user explicitly enables it in the motion settings.
  */
 export function initSmoothScroll(): void {
   if (typeof window === 'undefined' || window.__firestoneScroll) return;
 
   let lenis: Lenis | null = null;
   let lockCount = 0;
+  let generation = 0;
 
-  try {
-    lenis = new Lenis({
-      autoRaf: true,
-      lerp: 0.1,
-      smoothWheel: true,
-      // Touch stays native: Lenis recommends this for iOS stability, and the
-      // page's overlays already manage their own touch behaviour.
-      syncTouch: false,
-      autoResize: true,
-      anchors: false,
-      respectReducedMotion: true,
-    });
-  } catch {
-    // Smooth scrolling is an enhancement; native scrolling remains usable.
+  const disableLenis = (): void => {
+    generation += 1;
+    if (!lenis) return;
+    lenis.destroy();
     lenis = null;
-  }
+  };
+
+  const enableLenis = async (): Promise<void> => {
+    if (lenis || !isLenisAllowed()) return;
+
+    const token = ++generation;
+    let LenisClass: LenisConstructor;
+    try {
+      LenisClass = (await import('lenis')).default;
+    } catch {
+      return;
+    }
+
+    if (token !== generation || lenis || !isLenisAllowed()) return;
+
+    try {
+      lenis = new LenisClass({
+        autoRaf: true,
+        lerp: 0.1,
+        smoothWheel: true,
+        // Touch stays native. Lenis' syncTouch mode has a history of mobile
+        // jitter and pull-to-refresh conflicts; this site does not use it.
+        syncTouch: false,
+        autoResize: true,
+        anchors: false,
+        respectReducedMotion: true,
+      });
+      if (lockCount > 0) lenis.stop();
+    } catch {
+      // Smooth scrolling is an enhancement; native scrolling remains usable.
+      lenis = null;
+    }
+  };
 
   const scrollTo: FirestoneScrollApi['scrollTo'] = (target, options = {}) => {
     if (lenis) {
@@ -88,7 +119,8 @@ export function initSmoothScroll(): void {
   // Own same-page hash navigation so the URL hash, the fixed-header offset
   // (`scroll-padding-top`), and Lenis' animation stay in sync. Lenis' built-in
   // anchor handler does not update the hash; doing it here also lets the TOC's
-  // click lock run before the scroll starts.
+  // click lock run before the scroll starts. This stays active without Lenis
+  // and falls back to native smooth scrolling.
   document.addEventListener('click', (event) => {
     if (lockCount > 0 || event.defaultPrevented || event.button !== 0) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -131,5 +163,16 @@ export function initSmoothScroll(): void {
     scrollTo(target);
   });
 
+  window.addEventListener('firestone-effects-change', (event) => {
+    const detail = (event as CustomEvent<{ smoothScroll?: SmoothScrollSetting }>).detail;
+    if (detail?.smoothScroll === 'on') {
+      void enableLenis();
+    } else if (detail?.smoothScroll === 'off') {
+      disableLenis();
+    }
+  });
+
   window.__firestoneScroll = api;
+
+  if (isLenisAllowed()) void enableLenis();
 }

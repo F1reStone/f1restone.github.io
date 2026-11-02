@@ -37,6 +37,11 @@ const variableFontOptions = [
   { value: 'off', label: text('options.off') },
   { value: 'on', label: text('options.on') },
 ];
+
+const smoothScrollOptions = [
+  { value: 'off', label: text('options.off') },
+  { value: 'on', label: text('options.on') },
+];
 ---
 
 {showTrigger && (
@@ -116,7 +121,7 @@ const variableFontOptions = [
       </div>
     </section>
 
-    <section class="grid items-center gap-3 pt-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
+    <section class="grid items-center gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
       <div>
         <h3 class="text-foreground text-sm font-sans tracking-normal normal-case font-medium">
           {text('variableFont')}
@@ -130,6 +135,26 @@ const variableFontOptions = [
           options={variableFontOptions}
           value="on"
           ariaLabel={text('variableFont')}
+          size="sm"
+          class="w-full sm:w-40"
+        />
+      </div>
+    </section>
+
+    <section class="grid items-center gap-3 pt-4 sm:grid-cols-[minmax(0,1fr)_10rem] sm:gap-4">
+      <div>
+        <h3 class="text-foreground text-sm font-sans tracking-normal normal-case font-medium">
+          {text('smoothScroll')}
+        </h3>
+        <p class="text-foreground-subtle mt-1 text-xs leading-relaxed">
+          {text('smoothScrollDescription')}
+        </p>
+      </div>
+      <div data-effect-setting="smoothScroll">
+        <SegmentedControl
+          options={smoothScrollOptions}
+          value="off"
+          ariaLabel={text('smoothScroll')}
           size="sm"
           class="w-full sm:w-40"
         />
@@ -154,6 +179,7 @@ const variableFontOptions = [
     footerGradientQuality: 'low' | 'high';
     footerGradient: 'static' | 'dynamic';
     variableFont: 'off' | 'on';
+    smoothScroll: 'off' | 'on';
   };
 
   type EffectsController = {
@@ -186,6 +212,7 @@ const variableFontOptions = [
       footerGradientQuality: 'low',
       footerGradient: 'dynamic',
       variableFont: 'on',
+      smoothScroll: 'off',
     };
 
     const getControl = (name: string) =>
@@ -197,6 +224,7 @@ const variableFontOptions = [
         footerGradientQuality: draft.footerGradientQuality,
         footerGradient: draft.footerGradient,
         variableFont: draft.variableFont,
+        smoothScroll: draft.smoothScroll,
       };
 
       Object.entries(values).forEach(([name, value]) => {
@@ -245,6 +273,8 @@ const variableFontOptions = [
         draft.footerGradient = value;
       } else if (setting === 'variableFont' && (value === 'off' || value === 'on')) {
         draft.variableFont = value;
+      } else if (setting === 'smoothScroll' && (value === 'off' || value === 'on')) {
+        draft.smoothScroll = value;
       }
     });
 

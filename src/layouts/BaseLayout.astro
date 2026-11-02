@@ -392,6 +392,7 @@ const rewritten =
         const VALID_FOOTER_QUALITY = ['low', 'high'];
         const VALID_FOOTER_MOTION = ['static', 'dynamic'];
         const VALID_VARIABLE_FONT = ['off', 'on'];
+        const VALID_SMOOTH_SCROLL = ['off', 'on'];
         const root = document.documentElement;
         const effectsWindow = window;
 
@@ -424,6 +425,24 @@ const rewritten =
           return 'standard';
         }
 
+        function getDefaultSmoothScroll() {
+          if (prefersReducedMotion()) return 'off';
+
+          const cores = navigator.hardwareConcurrency || 1;
+          const memory = navigator.deviceMemory;
+          const isMobileLike =
+            navigator.userAgentData?.mobile === true ||
+            window.matchMedia?.('(hover: none) and (pointer: coarse)').matches === true;
+
+          // Lenis only smooths wheel/trackpad input; on touch devices it adds
+          // listeners without improving the native touch scroll. Keep it off
+          // there, and on genuinely low-end hardware, but do not disable it on
+          // every 8-core desktop.
+          if (isMobileLike || navigator.connection?.saveData === true) return 'off';
+          if (cores <= 4 || (memory !== undefined && memory <= 4)) return 'off';
+          return 'on';
+        }
+
         function getDefaultSettings() {
           if (prefersReducedMotion()) {
             return {
@@ -431,6 +450,7 @@ const rewritten =
               footerGradientQuality: 'low',
               footerGradient: 'static',
               variableFont: 'off',
+              smoothScroll: 'off',
             };
           }
 
@@ -441,6 +461,7 @@ const rewritten =
               footerGradientQuality: 'low',
               footerGradient: 'static',
               variableFont: 'off',
+              smoothScroll: getDefaultSmoothScroll(),
             };
           }
 
@@ -450,6 +471,7 @@ const rewritten =
               footerGradientQuality: 'low',
               footerGradient: 'dynamic',
               variableFont: 'on',
+              smoothScroll: getDefaultSmoothScroll(),
             };
           }
 
@@ -458,23 +480,38 @@ const rewritten =
             footerGradientQuality: 'high',
             footerGradient: 'dynamic',
             variableFont: 'on',
+            smoothScroll: getDefaultSmoothScroll(),
           };
         }
 
-        function isValidSettings(value) {
-          return Boolean(
-            value &&
-            VALID_HERO.includes(value.heroGradient) &&
-            VALID_FOOTER_QUALITY.includes(value.footerGradientQuality) &&
-            VALID_FOOTER_MOTION.includes(value.footerGradient) &&
-            VALID_VARIABLE_FONT.includes(value.variableFont)
-          );
+        function normaliseSettings(value) {
+          if (
+            !value ||
+            !VALID_HERO.includes(value.heroGradient) ||
+            !VALID_FOOTER_QUALITY.includes(value.footerGradientQuality) ||
+            !VALID_FOOTER_MOTION.includes(value.footerGradient) ||
+            !VALID_VARIABLE_FONT.includes(value.variableFont)
+          ) {
+            return null;
+          }
+
+          return {
+            heroGradient: value.heroGradient,
+            footerGradientQuality: value.footerGradientQuality,
+            footerGradient: value.footerGradient,
+            variableFont: value.variableFont,
+            // Settings saved before smooth scrolling existed inherit the
+            // device-appropriate default instead of becoming invalid.
+            smoothScroll: VALID_SMOOTH_SCROLL.includes(value.smoothScroll)
+              ? value.smoothScroll
+              : getDefaultSettings().smoothScroll,
+          };
         }
 
         function readStoredSettings() {
           try {
             const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-            return isValidSettings(stored) ? stored : null;
+            return normaliseSettings(stored);
           } catch {
             return null;
           }
@@ -493,8 +530,9 @@ const rewritten =
           return;
         }
 
-        let settings = readStoredSettings() || getDefaultSettings();
-        let hasUserSettings = readStoredSettings() !== null;
+        const storedSettings = readStoredSettings();
+        let settings = storedSettings || getDefaultSettings();
+        let hasUserSettings = storedSettings !== null;
         let runtimeStaticFallback = hasRuntimeStaticFallback();
         let runtimeProfileRunning = false;
 
@@ -505,6 +543,7 @@ const rewritten =
               footerGradientQuality: 'low',
               footerGradient: 'static',
               variableFont: 'off',
+              smoothScroll: 'off',
             };
           }
           return { ...settings };
@@ -517,6 +556,7 @@ const rewritten =
           root.dataset.effectFooterQuality = effective.footerGradientQuality;
           root.dataset.effectFooter = effective.footerGradient;
           root.dataset.effectVariableFont = effective.variableFont;
+          root.dataset.effectSmoothScroll = effective.smoothScroll;
           effectsWindow.dispatchEvent(
             new CustomEvent('firestone-effects-change', { detail: effective })
           );
@@ -531,12 +571,13 @@ const rewritten =
         }
 
         function startRuntimeProfile() {
+          const effective = getEffectiveSettings();
           if (
             runtimeProfileRunning ||
             hasUserSettings ||
             runtimeStaticFallback ||
             prefersReducedMotion() ||
-            getEffectiveSettings().footerGradient === 'static'
+            (effective.footerGradient === 'static' && effective.smoothScroll === 'off')
           )
             return;
 
@@ -589,8 +630,9 @@ const rewritten =
           },
           getPerformanceTier: getPerformanceTier,
           setSettings: function (next) {
-            if (!isValidSettings(next)) return;
-            settings = { ...next };
+            const normalised = normaliseSettings(next);
+            if (!normalised) return;
+            settings = normalised;
             hasUserSettings = true;
             runtimeStaticFallback = false;
             try {

@@ -241,6 +241,8 @@
     "footerGradientDescription": "开启或关闭页脚动态渐变效果。",
     "variableFont": "可变字体交互",
     "variableFontDescription": "在悬停、点击、选择特定选项时增大字重。",
+    "smoothScroll": "平滑滚动",
+    "smoothScrollDescription": "桌面端启用 Lenis 平滑滚动；触屏仍使用原生滚动，触屏和低性能设备默认关闭，可在这里手动开启。",
     "options": {
       "static": "静态",
       "dynamic": "动态",
