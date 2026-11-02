@@ -101,7 +101,7 @@ const rewritten =
 <html
   lang={locale}
   data-locale-fallback-source={localeFallback?.contentLocale}
-  class="scroll-smooth dark"
+  class="dark"
   data-theme="firestone"
   data-theme-mode="system"
 >
@@ -649,6 +649,7 @@ const rewritten =
     <!-- Skip to content link -->
     <a
       href="#main-content"
+      data-no-smooth-scroll
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
     >
       {t('nav.skipToContent', locale)}
@@ -716,6 +717,12 @@ const rewritten =
         <Icon name="chevron-up" size="md" />
       </span>
     </button>
+
+    <script>
+      import { initSmoothScroll } from '@/lib/smoothScroll';
+
+      initSmoothScroll();
+    </script>
 
     <script is:inline>
       (function () {
@@ -802,7 +809,11 @@ const rewritten =
 
           window.addEventListener('scroll', onScroll, { passive: true });
           btn.addEventListener('click', function () {
-            window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+            if (window.__firestoneScroll) {
+              window.__firestoneScroll.scrollTo(0);
+            } else {
+              window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+            }
           });
 
           document.addEventListener(

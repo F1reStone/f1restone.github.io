@@ -52,6 +52,12 @@ meaningful route, content, schema, or shared-component change, finish with
 Pagefind index exists after `pnpm build`, not during `pnpm dev`. Do not leave a
 server or watch process running when the task is complete.
 
+Automated tests cover basic, stable behavior. Advanced scroll behavior such as
+Lenis smoothing, inertia, scroll-driven animation, and its feel are confirmed
+manually by the site owner; do not add brittle automated tests for those
+features. If such behavior is hard to verify reliably, stop and ask the user to
+check it instead of encoding it in the test suite.
+
 ## How to work
 
 1. Inspect the target route/component, its callers, and related config before

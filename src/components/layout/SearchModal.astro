@@ -108,6 +108,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
             class="search-results overflow-y-auto overscroll-contain p-3 sm:p-5"
             role="listbox"
             aria-label={t('search.results', locale)}
+            data-lenis-prevent
           >
             <!-- 规范化提示字号 -->
             <p class="search-hint text-foreground-muted px-3 py-10 text-center text-sm">
@@ -216,6 +217,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
       let heightAnimation: Animation | undefined;
       let revision = 0;
       let triggerScrollY: number | null = null;
+      let scrollLocked = false;
       const inactive = new Map<HTMLElement, boolean>();
       const events = new AbortController();
       const preventBackgroundScroll = (event: Event) => event.preventDefault();
@@ -240,6 +242,20 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
 
       const setHeaderExpanded = (expanded: boolean) => {
         header.toggleAttribute('data-search-expanded', expanded);
+      };
+
+      // Stop Lenis while the overlay is open so wheel input cannot scroll the
+      // page behind it. Nested results keep scrolling via data-lenis-prevent.
+      const lockPage = () => {
+        if (scrollLocked) return;
+        scrollLocked = true;
+        window.__firestoneScroll?.lock();
+      };
+
+      const unlockPage = () => {
+        if (!scrollLocked) return;
+        scrollLocked = false;
+        window.__firestoneScroll?.unlock();
       };
 
       const restorePage = () => {
@@ -337,6 +353,9 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
         header.setAttribute('data-search-active', '');
         setHeaderExpanded(true);
         header.dispatchEvent(new Event('header:search-open'));
+        // Lock after notifying the header: closing the mobile menu releases its
+        // own lock and must not undo the lock this overlay needs.
+        lockPage();
         modal.classList.remove('hidden');
         modal.style.pointerEvents = 'auto';
         modal.inert = false;
@@ -364,20 +383,19 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           trigger.focus({ preventScroll: true });
         }
         modal.inert = true;
-        void animateSurface(false).then(
-          () => {
-            if (isOpen || revision !== closingRevision) return;
-            modal.classList.add('hidden');
-            modal.style.pointerEvents = 'none';
-            modal.inert = true;
-            header.removeAttribute('data-search-active');
-            restorePage();
-            if (document.activeElement === trigger && previousActiveElement?.isConnected) {
-              previousActiveElement.focus({ preventScroll: true });
-            }
-          },
-          () => {}
-        );
+        const finishClose = () => {
+          if (isOpen || revision !== closingRevision) return;
+          modal.classList.add('hidden');
+          modal.style.pointerEvents = 'none';
+          modal.inert = true;
+          header.removeAttribute('data-search-active');
+          restorePage();
+          unlockPage();
+          if (document.activeElement === trigger && previousActiveElement?.isConnected) {
+            previousActiveElement.focus({ preventScroll: true });
+          }
+        };
+        void animateSurface(false).then(finishClose, finishClose);
       };
 
       modal.inert = true;
@@ -535,6 +553,7 @@ const modalId = `search-modal-${Math.random().toString(36).slice(2, 9)}`;
           panelAnimation?.cancel();
           backdropAnimation?.cancel();
           heightAnimation?.cancel();
+          unlockPage();
           if (!modal.classList.contains('hidden')) restorePage();
           modal.remove();
           w.__searchToggle = undefined;

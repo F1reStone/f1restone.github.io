@@ -305,10 +305,10 @@ input[type='reset'] {
   html {
     font-family: var(--font-sans);
     font-feature-settings: 'palt';
-    scroll-behavior: smooth;
     /* Offset all hash-link scroll targets by the fixed header height (h-20 = 5rem).
        Without this, headings land at the very top of the viewport, hidden behind
-       the header *and* outside the TOC IntersectionObserver's observable zone. */
+       the header *and* outside the TOC IntersectionObserver's observable zone.
+       Lenis reads this value for programmatic anchor scrolls too. */
     scroll-padding-top: calc(5rem + 1px);
     /* Vendor-only font smoothing; there is no standard equivalent. */
     -webkit-font-smoothing: antialiased;
@@ -395,6 +395,41 @@ input[type='reset'] {
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-foreground-muted);
   }*/
+}
+
+/* -------------------------------------------------------------------------
+   Lenis smooth scrolling
+   -------------------------------------------------------------------------
+   Mirrors the recommended stylesheet (lenis/dist/lenis.css). Lenis scrolls the
+   native document, so sticky positioning and IntersectionObserver keep working.
+   Nested scrollers opt out with data-lenis-prevent so their wheel/touch input
+   stays native. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Ref-counted by the shared smooth-scroll controller. Keeps the page locked
+   while a dialog, the search overlay, or the mobile menu is open. Lock the
+   root rather than <body> so sticky headers keep their position. */
+html.firestone-scroll-locked {
+  overflow: clip;
 }
 
 /* -------------------------------------------------------------------------
@@ -1471,7 +1506,9 @@ input[type='reset'] {
 .reveal-instant[data-reveal-children] > *,
 .reveal-instant [data-reveal-children] > *,
 .reveal-instant[data-reveal-content] > *,
-.reveal-instant [data-reveal-content] > * {
+.reveal-instant [data-reveal-content] > *,
+[data-reveal-children] > .reveal-instant,
+[data-reveal-content] > .reveal-instant {
   opacity: 1;
   transform: none;
   transition: none;

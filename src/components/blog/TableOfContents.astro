@@ -170,6 +170,17 @@ const Wrapper = collapsible ? 'details' : 'nav';
 
   const tocs = document.querySelectorAll<HTMLElement>('[data-toc]');
   for (const toc of tocs) {
+    // Only let Lenis yield when the sticky TOC actually has its own scrollbar;
+    // otherwise wheel input over the sidebar should keep scrolling the page.
+    if (toc.classList.contains('toc-sticky')) {
+      const syncLenisPrevent = () => {
+        toc.toggleAttribute('data-lenis-prevent', toc.scrollHeight > toc.clientHeight + 1);
+      };
+      syncLenisPrevent();
+      new ResizeObserver(syncLenisPrevent).observe(toc);
+      document.fonts?.ready.then(syncLenisPrevent).catch(() => {});
+    }
+
     // Close a mobile disclosure after choosing a section, retaining native anchor navigation.
     toc.addEventListener('click', (event) => {
       if (

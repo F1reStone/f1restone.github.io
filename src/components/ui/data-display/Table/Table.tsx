@@ -41,7 +41,11 @@ export function Table({
   const cellPadding = compact ? 'px-3 py-2' : 'px-4 py-3';
 
   return (
-    <div className={cn('border-border overflow-auto rounded-lg border', className)} {...attrs}>
+    <div
+      className={cn('border-border overflow-auto rounded-lg border', className)}
+      data-lenis-prevent-horizontal
+      {...attrs}
+    >
       <table className="w-full text-sm">
         <thead>
           <tr className="border-border bg-secondary/50 border-b">

@@ -38,6 +38,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
       id={`track-${id}`}
       class="flex overflow-x-auto snap-x snap-mandatory rounded-3xl border border-border shadow-xl"
       style="scrollbar-width: none;"
+      data-lenis-prevent-horizontal
     >
       {images.map((img, i) => (
         <div
@@ -239,7 +240,7 @@ const dotsWidth = 12 * (images.length - 1) + 24;
     let current = 0;
     let lbCurrent = 0;
     let previousFocus = null;
-    let previousOverflow = '';
+    let lightboxScrollLocked = false;
 
     function scrollTo(index) {
       current = Math.max(0, Math.min(index, total - 1));
@@ -331,13 +332,15 @@ const dotsWidth = 12 * (images.length - 1) + 24;
 
     function openLightbox(index) {
       previousFocus = document.activeElement;
-      previousOverflow = document.body.style.overflow;
       slides.forEach((slide) => slide.querySelector('video')?.pause());
       lbCurrent = index;
       lbSync(index);
       lightbox.classList.remove('hidden');
       lightbox.classList.add('flex');
-      document.body.style.overflow = 'hidden';
+      if (!lightboxScrollLocked) {
+        lightboxScrollLocked = true;
+        window.__firestoneScroll?.lock();
+      }
       lbClose.focus();
     }
 
@@ -345,7 +348,10 @@ const dotsWidth = 12 * (images.length - 1) + 24;
       lightbox.classList.add('hidden');
       lightbox.classList.remove('flex');
       lbVideo.pause();
-      document.body.style.overflow = previousOverflow;
+      if (lightboxScrollLocked) {
+        lightboxScrollLocked = false;
+        window.__firestoneScroll?.unlock();
+      }
       previousFocus?.focus();
     }
 

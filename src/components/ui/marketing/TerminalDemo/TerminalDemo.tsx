@@ -184,7 +184,11 @@ export function TerminalDemo() {
       </div>
 
       {/* Terminal Content */}
-      <div ref={scrollRef} className="h-[380px] overflow-y-auto p-4 font-mono text-xs leading-5">
+      <div
+        ref={scrollRef}
+        className="h-[380px] overflow-y-auto p-4 font-mono text-xs leading-5"
+        data-lenis-prevent
+      >
         {lines.map((line, idx) => (
           <div key={idx} className={getLineClass(line.type)}>
             {line.text}

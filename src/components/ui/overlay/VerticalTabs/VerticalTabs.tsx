@@ -453,6 +453,7 @@ export function VerticalTabs({
               role="listbox"
               aria-labelledby={`vtab-trigger-${generatedId}`}
               onKeyDown={handleDropdownKeyDown}
+              data-lenis-prevent
               className={cn(
                 'fixed inset-x-0 bottom-0 z-50 max-h-[70vh] overflow-auto',
                 'border-border bg-background rounded-t-2xl border-t shadow-2xl',

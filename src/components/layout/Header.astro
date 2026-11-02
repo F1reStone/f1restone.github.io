@@ -515,6 +515,7 @@ const buttonId = `${menuId}-button`;
         role="navigation"
         inert
         aria-label={t('nav.mobileNav', locale)}
+        data-lenis-prevent
       >
         <slot name="mobile-menu" />
       </div>
@@ -529,6 +530,7 @@ const buttonId = `${menuId}-button`;
         role="navigation"
         inert
         aria-label={t('nav.mobileNav', locale)}
+        data-lenis-prevent
       >
         <div class={cn('mobile-menu-body py-3', cn('mx-auto px-4', maxWidthClass))}>
           <section class="mobile-menu-section">
@@ -667,6 +669,19 @@ const buttonId = `${menuId}-button`;
       let isOpen = false;
       let menuAnimation: Animation | undefined;
       let socialExits: Animation[] = [];
+      let scrollLocked = false;
+
+      const lockPage = () => {
+        if (scrollLocked) return;
+        scrollLocked = true;
+        window.__firestoneScroll?.lock();
+      };
+
+      const unlockPage = () => {
+        if (!scrollLocked) return;
+        scrollLocked = false;
+        window.__firestoneScroll?.unlock();
+      };
 
       function fitMenu() {
         const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
@@ -706,6 +721,7 @@ const buttonId = `${menuId}-button`;
         if (isOpen) return;
         header.dispatchEvent(new Event('header:menu-open'));
         isOpen = true;
+        lockPage();
         socialExits.forEach((animation) => animation.cancel());
         socialExits = [];
 
@@ -740,6 +756,7 @@ const buttonId = `${menuId}-button`;
       function close() {
         if (!isOpen) return;
         isOpen = false;
+        unlockPage();
 
         button!.setAttribute('aria-expanded', 'false');
         menuIcon!.classList.remove('hidden');

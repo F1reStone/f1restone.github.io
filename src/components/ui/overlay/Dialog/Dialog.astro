@@ -44,7 +44,10 @@ const sizes = {
   />
 
   <!-- Dialog Panel -->
-  <div class="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto">
+  <div
+    class="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto"
+    data-lenis-prevent
+  >
     <div
       class={cn(
         'relative w-full',
@@ -111,6 +114,19 @@ const sizes = {
 
       let previousActiveElement: HTMLElement | null = null;
       let closeTimeout: ReturnType<typeof setTimeout> | undefined;
+      let scrollLocked = false;
+
+      function lockPage() {
+        if (scrollLocked) return;
+        scrollLocked = true;
+        window.__firestoneScroll?.lock();
+      }
+
+      function unlockPage() {
+        if (!scrollLocked) return;
+        scrollLocked = false;
+        window.__firestoneScroll?.unlock();
+      }
 
       function getFocusableElements(): HTMLElement[] {
         return Array.from(
@@ -162,7 +178,7 @@ const sizes = {
           }
         });
 
-        document.body.classList.add('overflow-hidden');
+        lockPage();
         document.addEventListener('keydown', trapFocus);
       }
 
@@ -176,7 +192,7 @@ const sizes = {
         closeTimeout = setTimeout(() => {
           closeTimeout = undefined;
           dialog.classList.add('hidden');
-          document.body.classList.remove('overflow-hidden');
+          unlockPage();
           previousActiveElement?.focus();
         }, 300);
 

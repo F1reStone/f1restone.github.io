@@ -49,24 +49,25 @@ export function Dialog({
 
   // Body scroll lock and focus management on open/close
   useEffect(() => {
-    if (open) {
-      previousActiveElementRef.current = document.activeElement as HTMLElement;
-      document.body.classList.add('overflow-hidden');
+    if (!open) return;
 
-      // Focus first focusable element after render
-      requestAnimationFrame(() => {
-        const focusable = getFocusableElements();
-        if (focusable.length > 0) {
-          focusable[0].focus();
-        }
-      });
-    } else {
-      document.body.classList.remove('overflow-hidden');
-      previousActiveElementRef.current?.focus();
-    }
+    previousActiveElementRef.current = document.activeElement as HTMLElement;
+    window.__firestoneScroll?.lock();
+
+    // Focus first focusable element after render
+    const focusFrame = requestAnimationFrame(() => {
+      const focusable = getFocusableElements();
+      if (focusable.length > 0) {
+        focusable[0].focus();
+      }
+    });
 
     return () => {
-      document.body.classList.remove('overflow-hidden');
+      cancelAnimationFrame(focusFrame);
+      window.__firestoneScroll?.unlock();
+      if (previousActiveElementRef.current?.isConnected) {
+        previousActiveElementRef.current.focus();
+      }
     };
   }, [open, getFocusableElements]);
 
@@ -128,7 +129,10 @@ export function Dialog({
       />
 
       {/* Dialog Panel */}
-      <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4">
+      <div
+        className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4"
+        data-lenis-prevent
+      >
         <div
           ref={panelRef}
           className={cn(
