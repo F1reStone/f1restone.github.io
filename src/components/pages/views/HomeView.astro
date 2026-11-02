@@ -90,47 +90,51 @@ const posts = blogItems
     data-about-expand
     aria-labelledby="home-about-heading"
   >
-    <div class="about-expand-surface" aria-hidden="true"></div>
-    <div class="about-expand-content relative mx-auto w-full">
-      <div class="grid gap-12 lg:grid-cols-2">
-        <div class="flex flex-col justify-center">
-          <div class="mb-6 flex flex-col gap-6">
-            <Badge variant="brand" pill class="self-start">
-              关于 FireStone
-            </Badge>
-            <h2
-              id="home-about-heading"
-              class="font-display text-foreground text-3xl font-bold md:text-4xl"
-            >
-              一位兴趣使然的
-              <br />
-              <span class="text-brand-500">
-                <TypingEffect
-                  words={[
-                    '业余设计师',
-                    '业余开发者',
-                    '内容创作者',
-                    '业余技术美术师',
-                    '《THE FINALS》选手',
-                    '奇袭者',
-                    'Sensei',
-                    '豪华版《战地风云 5》预购冤种',
-                    '（前）特勤干员',
-                    '《赛博朋克 2077》预购冤种',
-                    '《边境》首发冤种',
-                  ]}
-                />
-              </span>
-            </h2>
+    <div class="about-expand-shell max-w-8xl mx-auto px-6">
+      <div class="about-expand-window relative">
+        <div class="about-expand-surface" aria-hidden="true"></div>
+        <div class="about-expand-content relative">
+          <div class="grid gap-12 lg:grid-cols-2">
+            <div class="flex flex-col justify-center">
+              <div class="mb-6 flex flex-col gap-6">
+                <Badge variant="brand" pill class="self-start">
+                  关于 FireStone
+                </Badge>
+                <h2
+                  id="home-about-heading"
+                  class="font-display text-foreground text-3xl font-bold md:text-4xl"
+                >
+                  一位兴趣使然的
+                  <br />
+                  <span class="text-brand-500">
+                    <TypingEffect
+                      words={[
+                        '业余设计师',
+                        '业余开发者',
+                        '内容创作者',
+                        '业余技术美术师',
+                        '《THE FINALS》选手',
+                        '奇袭者',
+                        'Sensei',
+                        '豪华版《战地风云 5》预购冤种',
+                        '（前）特勤干员',
+                        '《赛博朋克 2077》预购冤种',
+                        '《边境》首发冤种',
+                      ]}
+                    />
+                  </span>
+                </h2>
+              </div>
+              <Button
+                variant="outline"
+                href={localizedPath('/about', requestedLocale) + ''}
+                class="self-start"
+              >
+                进一步了解
+                <Icon name="chevron-right" size="sm" />
+              </Button>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            href={localizedPath('/about', requestedLocale) + ''}
-            class="self-start"
-          >
-            进一步了解
-            <Icon name="chevron-right" size="sm" />
-          </Button>
         </div>
       </div>
     </div>
@@ -177,23 +181,19 @@ const posts = blogItems
 
   <style>
     /* The About teaser starts as a full-width band. As it scrolls into view,
-       its clipped background contracts to a rounded, site-width window and its
-       height eases down to the content. The section height is fixed, so the
-       content never moves and the contraction never reflows the page. */
+       its background contracts to a rounded window matching the site's
+       max-w-8xl content column and its height eases down to the content. The
+       section height is fixed, so the content never moves and the contraction
+       never reflows the page. */
     .about-expand {
       --about-expand-progress: 0;
       --about-expand-peek: clamp(1.5rem, 5svh, 3rem);
       --about-expand-radius: clamp(1.5rem, 3vw, 3rem);
-      --about-expand-window-width: min(calc(100% - 3rem), max(70rem, 90%));
-      --about-expand-inset-x: calc((100% - var(--about-expand-window-width)) / 2);
       padding-block: var(--about-expand-peek);
     }
 
     .about-expand-content {
       position: relative;
-      /* Match the initial window width so the inner gutter is measured from
-         the rounded edge, not from the viewport edge on narrow screens. */
-      max-width: var(--about-expand-window-width);
       padding-block: var(--space-section-md);
       /* Keep the content visibly inside the rounded window rather than letting
          it ride the section's normal 24px gutter. */
@@ -211,7 +211,14 @@ const posts = blogItems
 
     .about-expand-surface {
       position: absolute;
-      inset: 0;
+      /* Grow out of the max-w-8xl + px-6 content box: the surface is 100% of
+         that column when contracted and reaches the full viewport width at
+         full progress. */
+      top: calc(-1 * var(--about-expand-peek) * var(--about-expand-progress));
+      bottom: calc(-1 * var(--about-expand-peek) * var(--about-expand-progress));
+      left: 50%;
+      width: calc(100% + (100vw - 100%) * var(--about-expand-progress));
+      transform: translateX(-50%);
       border-radius: calc(var(--about-expand-radius) * (1 - var(--about-expand-progress)));
       background:
         radial-gradient(
@@ -220,12 +227,6 @@ const posts = blogItems
           transparent 62%
         ),
         linear-gradient(160deg, var(--color-background-secondary), var(--color-background));
-      clip-path: inset(
-        calc(var(--about-expand-peek) * (1 - var(--about-expand-progress)))
-          calc(var(--about-expand-inset-x) * (1 - var(--about-expand-progress))) round
-          calc(var(--about-expand-radius) * (1 - var(--about-expand-progress)))
-      );
-      will-change: clip-path;
     }
 
     .about-expand-surface::after {
@@ -236,12 +237,6 @@ const posts = blogItems
       border-radius: inherit;
       opacity: calc(1 - var(--about-expand-progress));
       pointer-events: none;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .about-expand-surface {
-        will-change: auto;
-      }
     }
   </style>
 
