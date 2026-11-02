@@ -378,7 +378,7 @@ input[type='reset'] {
   }
 
   /* Scrollbar */
-  ::-webkit-scrollbar {
+  /*::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
@@ -394,7 +394,7 @@ input[type='reset'] {
 
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-foreground-muted);
-  }
+  }*/
 }
 
 /* -------------------------------------------------------------------------
