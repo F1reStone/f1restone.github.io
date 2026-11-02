@@ -111,8 +111,8 @@ const projects = defineCollection({
       description: z.string(),
       /** Optional project identity for compact cards; custom image/logo cards keep priority. */
       icon: z.string().optional(),
-      url: z.string().url().optional(),
-      repo: z.string().url().optional(),
+      url: z.url().optional(),
+      repo: z.url().optional(),
       image: image().optional(),
       imageAlt: z.string().optional(),
       /**
@@ -178,7 +178,7 @@ const stack = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
-    url: z.string().url(),
+    url: z.url(),
     // FireStone: 移除了外置 icon、colorOklch 和无用的 version，改用自定义矢量 logo 文件名
     logo: z.string(),
     order: z.number().default(0),

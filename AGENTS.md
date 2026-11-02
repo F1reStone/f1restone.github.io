@@ -137,6 +137,13 @@ remote side effect unless the user explicitly requests it.
   match the behavior; do not add a second hover system without a reason.
 - Keep controls keyboard reachable with an accessible name and visible focus.
   Avoid layout-shifting animations and respect reduced motion.
+- Keep standard CSS declarations in the main rule and put vendor-prefixed
+  fallbacks in `@supports` blocks. Lightning CSS collapses adjacent
+  standard/prefixed declarations to the last one, which can remove the standard
+  property from production CSS. The practical baseline is Safari 16.2+
+  (`color-mix()`); keep prefixed fallbacks only where Safari still needs them
+  (`backdrop-filter` through Safari 17, `user-select`). `::-webkit-*`
+  pseudo-elements and vendor-only properties are exceptions.
 - Logos use the Chameleon/currentColor pattern. Inline SVGs need a `viewBox`;
   size classes belong on the SVG itself. Preserve the Header's secondary-logo
   and mobile crossfade behavior when touching its markup.

@@ -409,6 +409,13 @@ const favoriteGames = [
     mask-image: linear-gradient(to top, black 0%, black 25%, transparent 80%);
   }
 
+  /* Safari 16.2–17 still needs the prefixed property until Safari 18. */
+  @supports (-webkit-backdrop-filter: blur(12px)) {
+    .game-card-overlay {
+      -webkit-backdrop-filter: blur(12px);
+    }
+  }
+
   /* FireStone: 游戏卡片右上角按钮入场动画
      利用 global.css 中的 --engine-transition 自动接管 opacity 和 transform 过渡 */
   .game-card-btn {

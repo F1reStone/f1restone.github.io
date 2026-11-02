@@ -310,6 +310,7 @@ input[type='reset'] {
        Without this, headings land at the very top of the viewport, hidden behind
        the header *and* outside the TOC IntersectionObserver's observable zone. */
     scroll-padding-top: calc(5rem + 1px);
+    /* Vendor-only font smoothing; there is no standard equivalent. */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
@@ -338,7 +339,6 @@ input[type='reset'] {
     text-transform: uppercase;
     font-feature-settings: 'dlig', 'liga', 'palt';
     color: var(--color-foreground);
-    -webkit-text-fill-color: currentColor;
   }
 
   h1,
@@ -554,7 +554,6 @@ input[type='reset'] {
   .hero-title-text {
     background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
     background-clip: text;
-    -webkit-text-fill-color: transparent;
     color: transparent;
 
     font-weight: 700;
@@ -577,7 +576,6 @@ input[type='reset'] {
   .hero-title-serif {
     background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.45) 100%);
     background-clip: text;
-    -webkit-text-fill-color: transparent;
     color: transparent;
 
     font-family:
@@ -636,8 +634,14 @@ input[type='reset'] {
     border-color: color-mix(in oklch, var(--color-brand-400) 55%, transparent);
     color: var(--color-brand-100);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     box-shadow: 0 0 24px -4px color-mix(in oklch, var(--color-brand-500) 35%, transparent);
+  }
+
+  /* Safari 16.2–17 still needs the prefixed property until Safari 18. */
+  @supports (-webkit-backdrop-filter: blur(8px)) {
+    .hero-effect-1-hero .bg-brand-500\/10 {
+      -webkit-backdrop-filter: blur(8px);
+    }
   }
   .hero-effect-1-hero .bg-brand-500\/10 .bg-brand-500 {
     background-color: var(--color-brand-400);
@@ -1584,7 +1588,6 @@ input[type='reset'] {
 .glass-panel {
   background-color: color-mix(in oklch, var(--color-background) 8%, transparent);
   border: 1.25px solid color-mix(in oklch, var(--color-foreground) 12%, transparent) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(1.15);
   backdrop-filter: blur(6px) saturate(1.15);
   /* 保留 4 层占位，以对齐 Hover 时的 4 层阴影，避免动画将出现断层跳变 */
   box-shadow:
@@ -1592,6 +1595,13 @@ input[type='reset'] {
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 0 0 transparent,
     0 0 0 transparent !important;
+}
+
+/* Safari 16.2–17 still needs the prefixed property until Safari 18. */
+@supports (-webkit-backdrop-filter: blur(6px)) {
+  .glass-panel {
+    -webkit-backdrop-filter: blur(6px) saturate(1.15);
+  }
 }
 
 /* 1.5 实色填充 */
@@ -1720,7 +1730,6 @@ input[type='reset'] {
   visibility: hidden;
   overflow: hidden;
   pointer-events: none;
-  -webkit-user-select: none;
   user-select: none;
   font-weight: 1000; /* 设置为 1000 以避免非线性动画导致顶到布局 */
 }
@@ -1747,7 +1756,6 @@ input[type='reset'] {
   visibility: hidden;
   overflow: hidden;
   pointer-events: none;
-  -webkit-user-select: none;
   user-select: none;
   font-weight: 1000; /* 设置为 1000 以避免非线性动画导致顶到布局 */
 }
@@ -1758,6 +1766,14 @@ input[type='reset'] {
 .group:hover .weight-shift-non-centered,
 .group:focus-visible .weight-shift-non-centered {
   font-weight: var(--ws-target, 900);
+}
+
+/* Safari still only ships the prefixed user-select property. */
+@supports (-webkit-user-select: none) {
+  .weight-shift::after,
+  .weight-shift-non-centered::after {
+    -webkit-user-select: none;
+  }
 }
 
 /* Animate the variable font's weight axis directly to avoid Blink's font-weight repaint path for CJK glyphs. */

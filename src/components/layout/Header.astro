@@ -935,7 +935,6 @@ const buttonId = `${menuId}-button`;
   header.hdr-progressive-glass {
     background-color: transparent !important;
     border: none !important;
-    -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     box-shadow: none !important;
   }
@@ -943,8 +942,18 @@ const buttonId = `${menuId}-button`;
   header.hdr-blur-glass {
     background: color-mix(in oklab, var(--color-background) 82%, transparent);
     border-bottom: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
-    -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
+  }
+
+  /* Safari 16.2–17 still needs the prefixed property until Safari 18. */
+  @supports (-webkit-backdrop-filter: blur(0px)) {
+    header.hdr-progressive-glass {
+      -webkit-backdrop-filter: none !important;
+    }
+
+    header.hdr-blur-glass {
+      -webkit-backdrop-filter: blur(18px);
+    }
   }
 
   /* One solid surface fades over the existing transparent/glass header. */
@@ -1022,14 +1031,17 @@ const buttonId = `${menuId}-button`;
   }
 
   .hdr-progressive-blur-layer {
-    -webkit-backdrop-filter: blur(var(--hdr-blur));
     backdrop-filter: blur(var(--hdr-blur));
-    -webkit-mask-image: var(--hdr-blur-mask);
     mask-image: var(--hdr-blur-mask);
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
+  }
+
+  /* Safari 16.2–17 still needs the prefixed property until Safari 18. */
+  @supports (-webkit-backdrop-filter: blur(0px)) {
+    .hdr-progressive-blur-layer {
+      -webkit-backdrop-filter: blur(var(--hdr-blur));
+    }
   }
 
   /* Overlapping bands reproduce the reference's strong-to-soft blur profile. */

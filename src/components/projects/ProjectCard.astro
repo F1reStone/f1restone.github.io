@@ -81,7 +81,7 @@ const { data } = project;
             /* FireStone 修复：放大了 Logo 尺寸，使其更具气场 */
             <div
               class="h-9 sm:h-11 w-72 bg-foreground transition-colors duration-300"
-              style={`mask-image: url(${data.logo.src}); -webkit-mask-image: url(${data.logo.src}); mask-size: contain; mask-repeat: no-repeat; mask-position: left bottom;`}
+              style={`mask-image: url(${data.logo.src}); mask-size: contain; mask-repeat: no-repeat; mask-position: left bottom;`}
               aria-label={data.title}
             />
           ) : (
@@ -141,23 +141,36 @@ const { data } = project;
      FireStone: Project Card Interactive Overlay & Animation Engine
      ========================================================================= */
 
-  /* 1. 纯毛玻璃层 (无 Opacity 动画，彻底根除 WebKit/Blink 模糊失效 Bug) */
+  /* 1. 纯毛玻璃层 (无 Opacity 动画，避免 WebKit/Blink 模糊失效 Bug) */
   .project-card-blur {
     backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
     transition:
       backdrop-filter 500ms var(--ease-fluid),
       -webkit-backdrop-filter 500ms var(--ease-fluid);
     mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
-    -webkit-mask-image: linear-gradient(to top, black 0%, black 45%, transparent 90%);
   }
+
   .group:hover .project-card-blur,
   .group:active .project-card-blur {
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
   }
 
-  /* 2. 纯强化渐变层 (配合 HTML 中的 translateY 实现向上生长) */
+  /* FireStone: Lightning CSS collapses a plain `backdrop-filter` and
+     `-webkit-backdrop-filter` pair into the last declaration. Keeping the
+     legacy fallback in @supports preserves both declarations in production,
+     where Chromium only accepts the unprefixed property. */
+  @supports (-webkit-backdrop-filter: blur(0px)) {
+    .project-card-blur {
+      -webkit-backdrop-filter: blur(0px);
+    }
+
+    .group:hover .project-card-blur,
+    .group:active .project-card-blur {
+      -webkit-backdrop-filter: blur(16px);
+    }
+  }
+
+  /* 2. 强化渐变层 (配合 HTML 中的 translateY 实现向上生长) */
   .project-card-gradient {
     background: linear-gradient(
       to top,
@@ -172,8 +185,8 @@ const { data } = project;
   .project-desc-wrapper {
     display: grid;
     grid-template-rows: 0fr;
-    /* FireStone 修复：将 ease-bouncy 替换为 ease-fluid！
-       这能彻底杜绝高度在临近结束时“上下抽搐”的生硬感，让 Logo 被推上去的动作如水般平滑！ */
+    /* FireStone: 替换 ease-bouncy 为 ease-fluid
+       以解决高度在临近结束时上下抽搐的生硬感，平滑 Logo 被推上去的动作 */
     transition: grid-template-rows 400ms var(--ease-fluid) 100ms;
   }
   .group:hover .project-desc-wrapper,
@@ -193,7 +206,7 @@ const { data } = project;
   .group:hover .project-desc-inner,
   .group:active .project-desc-inner {
     opacity: 1;
-    /* 等高度推开 100ms 后，文字再优雅浮现 */
+    /* 等高度推开 100ms 后，文字再浮现 */
     transition: opacity 400ms var(--ease-fluid) 250ms;
   }
 </style>
