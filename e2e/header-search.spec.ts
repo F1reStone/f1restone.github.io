@@ -6,40 +6,6 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-test('sticky headers keep their inverted tone and occupy layout while fixed headers use immersive contrast', async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/projects/firestone-website/');
-
-  const stickyHeader = page.locator('body > header');
-  await expect(stickyHeader).toHaveCSS('position', 'sticky');
-  await expect(stickyHeader).toHaveClass(/invert-section/);
-  const stickyLayout = await page.evaluate(() => {
-    const header = document.querySelector<HTMLElement>('body > header')!;
-    const main = document.querySelector<HTMLElement>('body > main')!;
-    return {
-      headerBottom: header.getBoundingClientRect().bottom,
-      mainTop: main.getBoundingClientRect().top,
-    };
-  });
-  expect(stickyLayout.mainTop).toBeCloseTo(stickyLayout.headerBottom, 0);
-
-  await page.evaluate(() => window.scrollTo(0, 400));
-  await expect(stickyHeader).toHaveAttribute('data-scrolled', '');
-  await expect
-    .poll(() => stickyHeader.evaluate((el) => el.getBoundingClientRect().top))
-    .toBeCloseTo(0, 0);
-
-  await page.goto('/');
-  const fixedHeader = page.locator('body > header');
-  const fixedLink = fixedHeader.locator('nav a').first();
-  await expect(fixedHeader).toHaveCSS('position', 'fixed');
-  const initialColour = await fixedLink.evaluate((link) => getComputedStyle(link).color);
-  expect(initialColour).toBe('rgba(255, 255, 255, 0.85)');
-});
-
 test('searching from a top-of-page sticky header keeps the page content in place', async ({
   page,
 }) => {

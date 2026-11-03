@@ -1877,5 +1877,9 @@ html[data-effect-variable-font='off'][data-browser-engine='chromium'] [data-ws-v
   .weight-shift,
   .weight-shift-non-centered {
     font-weight: var(--ws-base, 400) !important;
+    /* The base rules consume these variables with !important. Changing the
+       variables is the reliable way to remove transitions under reduced motion. */
+    --engine-transition: none;
+    --engine-transition-no-font-weight: none;
   }
 }

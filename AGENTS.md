@@ -52,11 +52,21 @@ meaningful route, content, schema, or shared-component change, finish with
 Pagefind index exists after `pnpm build`, not during `pnpm dev`. Do not leave a
 server or watch process running when the task is complete.
 
-Automated tests cover basic, stable behavior. Advanced scroll behavior such as
-Lenis smoothing, inertia, scroll-driven animation, and its feel are confirmed
-manually by the site owner; do not add brittle automated tests for those
-features. If such behavior is hard to verify reliably, stop and ask the user to
-check it instead of encoding it in the test suite.
+Automated tests cover basic, stable behavior. The test suite is primarily
+backend, build, content, and routing coverage; frontend tests cover basic
+functional behavior only. Advanced scroll behavior such as Lenis smoothing,
+inertia, scroll-driven animation, and its feel are confirmed manually by the
+site owner; do not add brittle automated tests for those features. If such
+behavior is hard to verify reliably, stop and ask the user to check it instead
+of encoding it in the test suite.
+
+Do not add narrow regression tests for frequently changing visual design,
+animation timing, color transitions, or complex interaction details; those
+tests encode the current implementation and become false failures whenever the
+design direction changes. The site owner owns that verification. If a proposed
+test would depend on a specific animation, color serialization, layout rhythm,
+or transient design decision, leave it out and ask the owner to verify it
+manually.
 
 ## How to work
 

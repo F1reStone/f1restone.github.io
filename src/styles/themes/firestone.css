@@ -137,8 +137,8 @@ html[data-theme='firestone'] {
     'Microsoft YaHei';
 
   --theme-font-serif-zh-cn:
-    'Source Han Serif SC', 'Source Han Serif CN', 'Source Han Serif CN Variable',
-    'Noto Serif SC', 'Noto Serif CJK SC', 'STSongti-SC';
+    'Source Han Serif SC', 'Source Han Serif CN', 'Source Han Serif CN Variable', 'Noto Serif SC',
+    'Noto Serif CJK SC', 'STSongti-SC';
 
   --theme-font-emoji: 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
