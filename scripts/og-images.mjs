@@ -13,7 +13,7 @@ const decode = (value) =>
 // Outline the bundled CJK font so headless Linux builds need no system fonts.
 export async function generateOgImages(root) {
   const font = openSync(
-    fileURLToPath(new URL('../public/fonts/source-han-sans-sc-variable.woff2', import.meta.url))
+    fileURLToPath(new URL('../src/assets/fonts/source-han-sans-cn-variable.woff2', import.meta.url))
   );
   async function walk(directory) {
     let entries;

@@ -258,7 +258,7 @@ test('mobile menu overlays sticky content, restores localized icons and animates
     ).toEqual(['layers', 'pen-line', 'sparkles', 'user']);
     const backdrop = page.locator('body > .mobile-menu-backdrop');
     await expect(backdrop).toHaveCSS('opacity', '1');
-    await expect(backdrop).toHaveCSS('transition-duration', '0.8s');
+    await expect(backdrop).toHaveCSS('transition-duration', '0.8s, 0s');
     await expect(backdrop).toHaveCSS('backdrop-filter', 'blur(12px)');
     await menu.evaluate((el) =>
       Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished))

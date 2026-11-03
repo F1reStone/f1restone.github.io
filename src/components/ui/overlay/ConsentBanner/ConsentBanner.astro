@@ -597,6 +597,18 @@ const dialogDescHtml = injectPrivacyLink(dialogDescRaw);
 )}
 
 <style>
+  /* This is the largest translucent surface over the page on first visit.
+     On touch devices its backdrop blur forces a full-width readback every
+     scroll frame while the visitor decides. Keep the opaque glass tint but
+     drop the blur there. */
+  @media (hover: none), (pointer: coarse) {
+    #consent-banner {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+      background-color: color-mix(in srgb, var(--background) 94%, transparent) !important;
+    }
+  }
+
   /* ─── Settings (inside Dialog) ─── */
   .consent-settings-body {
     padding: 0;

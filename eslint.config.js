@@ -33,6 +33,7 @@ export default [
       '.netlify/',
       'public/pagefind/',
       '.agents/',
+      'temp/',
     ],
   },
   {

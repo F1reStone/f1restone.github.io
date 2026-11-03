@@ -37,6 +37,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Temporary profiling/audit output
+temp/
+
 # Testing
 coverage/
 playwright-report/
@@ -48,6 +51,9 @@ test-results/
 
 # Pagefind
 public/pagefind/
+
+# Generated CJK font chunks and their @font-face stylesheet
+public/fonts/source-han-sans-cn/
 
 # Claude Code
 .claude/

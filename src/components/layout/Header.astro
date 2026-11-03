@@ -886,9 +886,15 @@ const buttonId = `${menuId}-button`;
         requestAnimationFrame(() => {
           // ── READS (gather everything before touching the DOM) ──
           const currentScrollY = window.scrollY;
+          // Only touch the DOM when the state actually changes. Re-setting
+          // data-scrolled every frame invalidated the header subtree's style
+          // (75 elements in a DevTools trace) throughout every scroll.
           if (currentScrollY > SCROLL_THRESHOLD) {
-            header.setAttribute('data-scrolled', '');
-          } else if (!header.matches('[data-menu-expanded], [data-search-expanded]')) {
+            if (!header.hasAttribute('data-scrolled')) header.setAttribute('data-scrolled', '');
+          } else if (
+            header.hasAttribute('data-scrolled') &&
+            !header.matches('[data-menu-expanded], [data-search-expanded]')
+          ) {
             header.removeAttribute('data-scrolled');
           }
 
@@ -1101,6 +1107,27 @@ const buttonId = `${menuId}-button`;
     }
   }
 
+  /* Touch devices rarely have the GPU headroom for five simultaneous
+     backdrop-filter passes under a scrolling header. Keep the two bands that
+     carry the progressive-glass shape and drop the intermediate passes. */
+  @media (hover: none), (pointer: coarse) {
+    .hdr-progressive-blur-layer--2,
+    .hdr-progressive-blur-layer--3,
+    .hdr-progressive-blur-layer--5 {
+      display: none;
+    }
+
+    .hdr-progressive-blur-layer--1 {
+      --hdr-blur: 6px;
+      --hdr-blur-mask: linear-gradient(to bottom, transparent 40%, black 60% 80%, transparent 100%);
+    }
+
+    .hdr-progressive-blur-layer--4 {
+      --hdr-blur: 16px;
+      --hdr-blur-mask: linear-gradient(to bottom, black 0% 24%, transparent 58%);
+    }
+  }
+
   .mobile-menu-panel {
     max-height: var(--mobile-menu-height, calc(100svh - 6rem));
     overflow-y: auto;
@@ -1109,12 +1136,22 @@ const buttonId = `${menuId}-button`;
 
   .mobile-menu-backdrop {
     opacity: 0;
-    transition: opacity 800ms var(--ease-default);
+    /* Keep the full-screen blur out of the compositor while the menu is
+       closed; visibility alone already avoids painting, and the delayed
+       transition preserves the closing fade. */
+    visibility: hidden;
+    transition:
+      opacity 800ms var(--ease-default),
+      visibility 0s linear 800ms;
     touch-action: none;
   }
 
   .mobile-menu-backdrop[data-open] {
     opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 800ms var(--ease-default),
+      visibility 0s linear 0s;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -27,7 +27,6 @@ Powered by:
 - [Astro](https://astro.build/)
 - [Astro Rocket](https://astrorocket.dev/)
 - [Cloudflare](https://cloudflare.com/)
-- [Google Fonts](https://fonts.google.com/)
 - [Lucide](https://lucide.dev/)
 - [React](https://react.dev/)
 - [Simple Icons](https://simpleicons.org/)

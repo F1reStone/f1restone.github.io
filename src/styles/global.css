@@ -76,7 +76,7 @@ input[type='reset'] {
 /* NKDuy Mono (Local) */
 @font-face {
   font-family: 'NKDuy Mono Variable';
-  src: url('/fonts/nkduy-mono-variable.woff2') format('woff2');
+  src: url('/fonts/nkduy-mono-variable-subset.woff2') format('woff2');
   /*font-style: normal;*/
   font-weight: 100 800;
   font-display: swap;
@@ -117,14 +117,10 @@ input[type='reset'] {
   font-feature-settings: 'liga';
 }*/
 
-/* Source Han Sans CN (Local) */
-@font-face {
-  font-family: 'Source Han Sans CN Variable';
-  src: url('/fonts/source-han-sans-cn-variable.woff2') format('woff2');
-  font-weight: 250 900;
-  font-display: swap;
-  font-feature-settings: 'palt';
-}
+/* Source Han Sans CN (generated)
+   `scripts/build-font-subsets.mjs` splits the master font into unicode-range
+   chunks. BaseLayout loads the generated stylesheet asynchronously so the CJK
+   webfont never blocks first paint. */
 
 /* Metric-adjusted fallback fonts.
    The variable fonts above arrive after first paint, so headings and body
@@ -555,7 +551,8 @@ html.firestone-scroll-locked {
      修复浏览器 filter 无法插值的 Bug，双阴影配合确定的 CSS 变量，确保动画丝滑。
      ------------------------------------------------------------------------- */
   .hdr-logo-glow {
-    /* 提权至独立的 GPU 合成器图层 */
+    /* Small logo layers are cheap and keep the colour transition stable in
+       Chromium; the large cards/buttons below no longer carry will-change. */
     will-change: filter, transform;
     transform: translateZ(0) scale(1);
 
@@ -1408,7 +1405,6 @@ html.firestone-scroll-locked {
   transition:
     opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
     transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
 }
 
 [data-reveal='down'] {
@@ -1489,7 +1485,6 @@ html.firestone-scroll-locked {
   transition:
     opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
 }
 
 [data-reveal-content] > *.is-visible {
@@ -1655,7 +1650,6 @@ html.firestone-scroll-locked {
 
 /* 2. 实体盒状发光 */
 .hover-glow-box {
-  will-change: transform, box-shadow, border-color;
   /* 保留 3 层占位，对齐 Hover 时的 3 层发光 */
   box-shadow:
     inset 0 0 0 transparent,
@@ -1680,7 +1674,6 @@ html.firestone-scroll-locked {
 
 /* 3. 轮廓发光 */
 .hover-glow-outline {
-  will-change: transform, box-shadow, border-color;
   transition: var(--engine-transition) !important;
 }
 .hover-glow-outline:hover,

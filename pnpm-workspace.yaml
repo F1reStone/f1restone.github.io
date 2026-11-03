@@ -3,12 +3,18 @@ packages:
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - cn-font-split
   - esbuild
+  - koffi
+  - protobufjs
   - sharp
 
 allowBuilds:
   '@parcel/watcher': true
+  cn-font-split: true
   esbuild: true
+  koffi: true
+  protobufjs: true
   sharp: true
   workerd: false
 

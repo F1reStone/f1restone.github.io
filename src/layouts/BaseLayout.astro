@@ -1,5 +1,6 @@
 ---
 import '@/styles/global.css';
+import { readFileSync } from 'node:fs';
 import type { BreadcrumbItem } from '@/lib/breadcrumbs';
 import { getRssUrl } from '@/lib/blog';
 import LocaleFallbackNotice from '@/components/layout/LocaleFallbackNotice.astro';
@@ -95,6 +96,19 @@ const localeFallback = getLocaleFallback(
 const rewritten =
   decodeURI(Astro.originPathname).replace(/\/$/, '') !==
   decodeURI(Astro.url.pathname).replace(/\/$/, '');
+
+// The font script writes this manifest before Astro starts. Minimal mode
+// exposes its single face for a low-priority preload; full mode intentionally
+// leaves preload unset because its unicode-range chunks are fetched on demand.
+let fontPreload: string | null = null;
+try {
+  const manifest = JSON.parse(
+    readFileSync('public/fonts/source-han-sans-cn/manifest.json', 'utf8')
+  ) as { preload?: string | null };
+  fontPreload = typeof manifest.preload === 'string' ? manifest.preload : null;
+} catch {
+  // `astro dev` without a prior fonts:build has no manifest yet; skip preload.
+}
 ---
 
 <!doctype html>
@@ -125,6 +139,19 @@ const rewritten =
       href="/fonts/wix-madefor-text-variable.woff2"
       crossorigin="anonymous"
     />
+    {/* A head preload competes with the mobile hero paint and delayed its LCP
+        by about 1s in testing; keep the early hint for desktop only. */}
+    {fontPreload && (
+      <link
+        rel="preload"
+        as="font"
+        type="font/woff2"
+        href={fontPreload}
+        crossorigin="anonymous"
+        fetchpriority="low"
+        media="(min-width: 1024px)"
+      />
+    )}
 
     <!-- Preload Giscus -->
     {siteConfig.articleFeatures?.comments?.enabled && (
@@ -139,20 +166,42 @@ const rewritten =
       />
     )}
 
-    <!-- FireStone: Preload Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap"
-      media="print"
-      onload="this.setAttribute('media', 'all')"
-    />
+    <!--
+      FireStone: CJK text uses self-hosted Source Han Sans CN. The master font
+      is subsetted before dev/build by scripts/build-font-subsets.mjs, so
+      there is no Google Fonts request.
+      The generated @font-face stylesheet is appended after the first frames
+      instead of being render-blocking, so it never delays the Latin hero.
+    -->
+    <script is:inline>
+      (function () {
+        function loadCjkFont() {
+          if (document.querySelector('link[data-firestone-cjk-font]')) return;
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = '/fonts/source-han-sans-cn/font.css';
+          link.setAttribute('data-firestone-cjk-font', '');
+          document.head.appendChild(link);
+        }
+
+        function scheduleCjkFont() {
+          // Two frames let the browser paint the fallback (and the Latin
+          // fonts) first. A longer timer/idle wait only postponed the Source
+          // Han swap by 4-6s in testing and did not improve FCP or LCP.
+          requestAnimationFrame(function () {
+            requestAnimationFrame(loadCjkFont);
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', scheduleCjkFont, { once: true });
+        } else {
+          scheduleCjkFont();
+        }
+      })();
+    </script>
     <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap"
-      />
+      <link rel="stylesheet" href="/fonts/source-han-sans-cn/font.css" />
     </noscript>
 
     <!-- Favicon -->
@@ -829,12 +878,14 @@ const rewritten =
           }
 
           function updateFrame() {
-            const pct =
-              docMaxScrollY > 0 ? Math.min(1, Math.max(0, window.scrollY / docMaxScrollY)) : 0;
-            if (ring) {
-              ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
-            }
-            if (window.scrollY > THRESHOLD) {
+            const scrollY = window.scrollY;
+            if (scrollY > THRESHOLD) {
+              const pct = docMaxScrollY > 0 ? Math.min(1, Math.max(0, scrollY / docMaxScrollY)) : 0;
+              // The ring is hidden above the threshold; don't rewrite its
+              // stroke every frame while the button cannot be seen.
+              if (ring) {
+                ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
+              }
               if (!visible) show();
             } else {
               if (visible) hide();
@@ -996,6 +1047,10 @@ const rewritten =
     <!-- FireStone: 可变字重放大计算：读取 .weight-shift 元素的当前 computed font-weight 并自动 +300 (最高 900)，传到 CSS 变量 -->
     <script is:inline>
       function initSmartWeightShift() {
+        // The variable-weight interaction is disabled on constrained devices;
+        // skip the computed-style pass and its forced style invalidation.
+        if (document.documentElement.dataset.effectVariableFont === 'off') return;
+
         const cjkPattern =
           /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
         const chromiumBrand = navigator.userAgentData?.brands?.some(function (brand) {
@@ -1038,7 +1093,7 @@ const rewritten =
           return parseInt(window.getComputedStyle(el).fontWeight, 10) || 400;
         });
 
-        // 2. 集中写入: 在浏览器的下一帧统一应用 DOM 和 CSS 修改，彻底杜绝 Layout Thrashing
+        // 2. 集中写入: 在浏览器的下一帧统一应用 DOM 和 CSS 修改，防止 Layout Thrashing
         requestAnimationFrame(function () {
           els.forEach(function (el, index) {
             el.setAttribute('data-ws-init', 'true');
